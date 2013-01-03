@@ -1,0 +1,15 @@
+VAR [
+    connection [
+        CONNECTION: "host=localhost dbname=ne user=ne port=5432"
+        CONNECTIONTYPE: POSTGIS
+    ]
+    layerconfig [
+        GROUP: 'default'
+        STATUS: ON
+        PROJECTION [
+            @'init=epsg:4326'
+        ]
+        PROCESSING: 'LABEL_NO_CLIP=ON'
+        PROCESSING: 'CLOSE_CONNECTION=DEFER'
+    ]
+]

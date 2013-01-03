@@ -1,0 +1,42 @@
+SYMBOL
+  	NAME "ellipse"
+  	TYPE ellipse
+  	FILLED TRUE
+  	POINTS 
+    	10 8
+  	END
+END
+
+SYMBOL
+	NAME "one_way_from"
+	TYPE truetype
+	FONT scb
+	CHARACTER "→"
+END
+
+SYMBOL
+	NAME "square"
+        TYPE vector
+  	POINTS 
+  	 	0 0
+	 	0 1
+	 	1 1
+	 	1 0
+	 	0 0
+  	END
+  	FILLED true
+END
+
+SYMBOL
+    name "circle"
+    TYPE ellipse
+    points 1 1 end
+    filled true
+END
+
+SYMBOL
+  	NAME "Bsymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER 'B'
+END

@@ -1,0 +1,7 @@
+from runserver.py import app as application
+
+import sys
+
+sys.path.insert(0,'/opt/TileSwarm/application/runserver.py')
+
+WSGIScriptAlias /tileswarm /opt/TileSwarm/application/runserver.py

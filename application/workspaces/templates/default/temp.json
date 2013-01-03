@@ -1,0 +1,66 @@
+{"SCALES":[
+   {"1":"100000"},
+{"2":"50000"},
+{"3":"25000"},
+{"4":"12500"},
+{"5":"6250"},
+{"6":"2625"},
+{"7":"1312"},
+{"8":"656"}],"VAR":[
+   {"connection":[
+       {"CONNECTION":"\"host=192.168.6.20 dbname=osm user=osm password=osm port=5432\""},
+{"CONNECTIONTYPE":"POSTGIS"}]},{"layerconfig":[
+       {"GROUP":"'default'"},
+{"STATUS":"ON"},
+{"PROJECTION":[
+           {"VOID":"'init=epsg:900913'"}]},{"PROCESSING":"'LABEL_NO_CLIP=ON'"},
+{"PROCESSING":"'CLOSE_CONNECTION=DEFER'"}]}],"MAP":[
+   {"CONFIG":"'ON_MISSING_DATA' 'IGNORE'"},
+{"CONFIG":"'MSERRORFILE' '../debugFile.log'"},
+{"CONFIG":"'PROJ_LIB' '../'"},
+{"FONTSET":"'../fonts.lst'"},
+{"IMAGETYPE":"png"},
+{"MAXSIZE":"4000"},
+{"SIZE":"800 800"},
+{"UNITS":"meters"},
+{"EXTENT":"-20000000 -20000000 20000000 20000000"},
+{"IMAGECOLOR":"'#A5BFE0'"},
+{"WEB":[
+       {"METADATA":[
+	   {"VOID":"'ows_enable_request' '*'"},
+{"VOID":"'wms_srs' 'EPSG:900913 EPSG:4326'"},
+{"VOID":"'labelcache_map_edge_buffer' '-10'"},
+{"VOID":"'wms_title' 'JSON WMS'"}]},{"IMAGEPATH":"'/tmp/ms_tmp/'"},
+{"IMAGEURL":"'/ms_tmp/'"}]},{"DEBUG":"5"},
+{"PROJECTION":[
+       {"VOID":"'init=epsg:900913'"}]}],"LAYERS":[
+   {"LAYER":[
+       {"1:6":[
+           {"NAME":"'landuse'"},
+{"TYPE":"POLYGON"},
+{"VOID":"VAR.connection"},
+{"VOID":"VAR.layerconfig"},
+{"DATA":[
+               {"1:2":"\"geometry from (select geometry ,osm_id, type, name as name from osm_new_landusages_gen0 where type in ('forest', 'wood', 'residential') order by area desc) as foo using unique osm_id using srid=900913\""},
+{"3:4":"\"geometry from (select geometry ,osm_id, type, name as name from osm_new_landusages_gen1 where type in ('forest', 'wood', 'residential') order by area desc) as foo using unique osm_id using srid=900913\""},
+{"5:8":"\"geometry from (select geometry ,osm_id, type, name as name from osm_new_landusages where type in ('forest', 'wood', 'residential') order by area desc) as foo using unique osm_id using srid=900913\""}]},{"CLASSITEM":"'type'"},
+{"LABELITEM":"'name'"},
+{"CLASS":[
+               {"EXPRESSION":[
+                   {"1:2":"/forest|wood/"},{"3:8":"/forest/"}                ]},{"STYLE":[
+                   {"COLOR":[
+                       {"1:3":"'#C2D1B2'"},
+{"4:8":"'#DCDCB4'"}]},{"OUTLINEWIDTH":[
+                       {"1:3":"1"},
+{"4:8":"2"}]},{"OUTLINECOLOR":"193 181 157"}]}
+            ]},{"CLASS":[
+               {"EXPRESSION":"/residential/"},{"STYLE":[
+                   {"COLOR":[
+                       {"1:2":"'#D1D1D1'"},
+{"3:8":"'#E3DED4'"}]},{"OUTLINEWIDTH":[
+                       {"3:5":"1"},
+{"6:8":"2"}]},{"OUTLINECOLOR":"0 0 0"}]}
+            ]}
+        ]}
+    ]}   
+]} 
