@@ -234,7 +234,8 @@ def string2json(string):
     t = re.sub(r"\s(?=([0-9]|[0-9]{2})+\":)", "{\"", t)
 
     for i in range (0, len(expressions)):
-        t = re.sub(r"FLAGEXP", expressions[i].lstrip(), t, 1)
+        exp = re.sub(r"\"", re.escape("\\") + "\"", expressions[i].lstrip())
+        t = re.sub(r"FLAGEXP", exp, t, 1)
 
     return ("{\"" + t)
 
