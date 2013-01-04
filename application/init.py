@@ -576,7 +576,8 @@ def load_mapfile_generated():
 @app.route('/_load_debug',methods=['GET'])
 def load_debug():
     if ('ws_name' in session):
-        pathDebug = path+"workspaces/"+session['ws_name']+"/debugFile.log"
+        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/debugFile.log"
+        
         if (os.path.isfile(pathDebug)):
             document = open(pathDebug, 'r')
             content = document.read()
@@ -590,9 +591,9 @@ def load_debug():
 @app.route('/_clear_debug',methods=['GET'])
 def clear_debug():
     if ('ws_name' in session):
-        pathDebug = path+"workspaces/"+session['ws_name']+"/debugFile.log"
+        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/debugFile.log"
         if (os.path.isfile(pathDebug)):
-             subprocess.call(['rm', pathDebug])
+            subprocess.call(['rm', pathDebug])
     return "OK"
 
 #===============================  

@@ -110,7 +110,6 @@ jQuery(function() {
     $("a[href = '#workspace-tab'], a[href = '#log-tab'], a[href = '#editor-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
          if(_workspace.openedMap){
              unregisterDebug();
-             clearDebug();
          }
     });
 

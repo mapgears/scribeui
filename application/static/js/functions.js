@@ -298,21 +298,23 @@ function registerDebug(){
 }
 
 function clearDebug(){
+    $('#txt-debug').val("");
     $.getJSON($SCRIPT_ROOT + '/_clear_debug', {
     }, function(data) {
-        $('#txt-debug').val("");
     });
 }
 
 function displayDebug(){
     if($('.olTileImage').css('visibility')=='hidden'){
 	onMapMoveEnd();
+        alert("la");
     }else{
         _workspace.openedMap.getDebug();
     }
 }
 
 
-function onMapMoveEnd() {
-    setTimeout(function(){displayDebug()},1000);
+function onMapMoveEnd(){
+    
+    setTimeout(function(){displayDebug()},500);
 }
