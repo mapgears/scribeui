@@ -67,8 +67,10 @@ function openWorkspace(options){
 }
 
 function openNewMapWindow(){
-    $("#newmap-template").empty();
-    $("#newmap-template").append($("<option></option>").val("*default").text("*default"));
+    //$("#newmap-template").empty();
+    //$("#newmap-template").append($("<option></option>").val("*default").text("*default"));
+    displayTemplates("templates");
+    displayTemplates("");
 
     $("#createmap-form").dialog({
         autoOpen: false,
@@ -97,16 +99,21 @@ function openNewMapWindow(){
             },
             "+": function(){
                 $("#newmap-ws").removeClass("hidden");
+                displayTemplates("templates");
                 $("#newmap-workspace-select").empty();
+                $("#newmap-workspace-select").append($("<option></option>").attr("value", " ").text(" "));
                 displayWorkspaces("newmap-workspace-select");
-                $("#newmap-refresh-button").click(function(e){
-                    e.preventDefault();
-                    e.stopPropagation();
+                //$("#newmap-refresh-button").click(function(e){
+                $("#newmap-workspace-select").bind('blur', function(){
+                    //e.preventDefault();
+                    //e.stopPropagation();
                     var password = $("#newmap-workspace-password").val();
-                    var options = {"password": password};
- 
-                    var workspace = new Workspace($("#newmap-workspace-select").val(), options);
-                    workspace.getMaps(displayTemplates);    
+                    //var options = {"password": password};
+                    var wsname = $("#newmap-workspace-select").val()
+                    //var workspace = new Workspace($("#newmap-workspace-select").val(), options);
+                    displayTemplates("templates");
+                    displayTemplates(wsname);
+                    //workspace.getMaps(displayTemplates);    
                 });
                 
             },
@@ -121,12 +128,22 @@ function openNewMapWindow(){
     }).dialog("open");
 }
 
-function displayTemplates(){
+function displayTemplates(ws_name){
     $("#newmap-template").empty();
-    $("#newmap-template").append($("<option></option>").val("*default").text("*default"));
+    $.post($SCRIPT_ROOT + '/_get_templates', {
+        ws_name: ws_name
+    }, function(templates) {
+        if(templates){
+            for(temp in templates){
+                $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
+            }
+        }
+    });
+   
+   /* $("#newmap-template").append($("<option></option>").val("*default").text("*default"));
     for(var i = 0; i < this.maps.length; i++){
         $("#newmap-template").append($("<option></option>").val(this.maps[i].name).text(this.maps[i].name));
-    }
+    }*/
 }
 
 function openMap(){

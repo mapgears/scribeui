@@ -354,16 +354,18 @@ def get_templates():
         ws_name = request.form['ws_name']
         if ws_name == 'templates':
            ws_id = '0';
+        elif ws_name == '':
+            ws_id = get_ws_id(session['ws_name'])
         else:
             ws_id = get_ws_id(ws_name)
     except:
         ws_id = get_ws_id(session['ws_name'])
         
     wsmap = query_db('''select map_name from maps where ws_id = ?''', [ws_id], one=False)
-    maps = {}
+    templates = {}
     for i in range(len(wsmap)): 
-        maps[i] = wsmap[i]['map_name']
-    return jsonify(maps)
+        templates[i] = wsmap[i]['map_name']
+    return jsonify(templates)
 
 #===============================  
 #           Groups
