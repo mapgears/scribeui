@@ -9,7 +9,7 @@ MAP [
     UNITS: meters
     EXTENT: -20000000 -20000000 20000000 20000000
     IMAGECOLOR: '#A5BFE0'
-    SHAPEPATH: '../data/'
+    SHAPEPATH: '../../../../data/osm/'
     WEB [
         METADATA [
             @"ows_enable_request" "*"
