@@ -27,7 +27,7 @@ app.config.update(
     SECRET_KEY = 'development key',
     USERNAME = 'admin',
     PASSWORD = 'default',
-    PERMANENT_SESSION_LIFETIME = 3600
+    #PERMANENT_SESSION_LIFETIME = 3600
 )
 
 #List of files in map

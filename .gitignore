@@ -1,6 +1,6 @@
+*.db
 *~
 *.pyc
-*.db
 config.*
 application/workspaces/*
 #*#
