@@ -594,7 +594,7 @@ def load_debug():
 @app.route('/_clear_debug',methods=['GET'])
 def clear_debug():
     if ('ws_name' in session):
-        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/debugFile.log"
+        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/debugFile.log"
         if (os.path.isfile(pathDebug)):
             subprocess.call(['rm', pathDebug])
     return "OK"
