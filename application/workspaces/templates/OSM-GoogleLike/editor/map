@@ -1,6 +1,6 @@
 MAP [
     CONFIG: 'ON_MISSING_DATA' 'IGNORE'
-    CONFIG: 'MS_ERRORFILE' 'debugFile.log'
+    CONFIG: 'MS_ERRORFILE' '../debugFile.log'
     CONFIG: 'PROJ_LIB' '../'
     FONTSET: '../fonts.lst'
     IMAGETYPE: png

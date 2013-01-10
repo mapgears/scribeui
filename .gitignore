@@ -1,9 +1,8 @@
-application/db/database.db
 *~
 *.pyc
 *.db
-application/workspaces/*
 config.*
+application/workspaces/*
 #*#
 .#*
 application/data/*
