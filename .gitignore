@@ -1,0 +1,8 @@
+*~
+*.pyc
+*.db
+application/workspaces/*
+config.*
+#*#
+.#*
+application/data/*

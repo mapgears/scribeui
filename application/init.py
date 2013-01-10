@@ -23,7 +23,7 @@ app.config.from_object(__name__)
 #Config de l'application 
 app.config.update(
     DEBUG=True,
-    DATABASE = path+'db/tileswarm.db',
+    DATABASE = path+'db/database.db',
     SECRET_KEY = 'development key',
     USERNAME = 'admin',
     PASSWORD = 'default',
@@ -31,9 +31,9 @@ app.config.update(
 )
 
 #List of files in map
-listfiles = [{'name':'scales','url':'tileswarm/scales','fusion':'true'},
-             {'name':'variables','url':'tileswarm/variables','fusion':'true'},
-             {'name':'map','url':'tileswarm/map','fusion':'true'},
+listfiles = [{'name':'scales','url':'editor/scales','fusion':'true'},
+             {'name':'variables','url':'editor/variables','fusion':'true'},
+             {'name':'map','url':'editor/map','fusion':'true'},
              {'name':'projections','url':'epsg','fusion':'false'}, 
              {'name':'fonts','url':'fonts.lst','fusion':'false'},
              {'name':'symbols','url':'symbols.map','fusion':'false'},
@@ -266,7 +266,7 @@ def open_map():
     for j in range(len(groups)):
         unGroup = {}
         unGroup["name"] = groups[j]['group_name']
-        document = open(pathMap + "tileswarm/groups/"+ unGroup["name"], "r")
+        document = open(pathMap + "editor/groups/"+ unGroup["name"], "r")
         unGroup["content"] = document.read()
         document.close()
         contentfiles["groups"].append(unGroup)
@@ -395,7 +395,7 @@ def add_layer():
         g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
         g.db.commit()
         
-        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/tileswarm/groups/"+groupname 
+        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname 
         file(pathGroup, 'w+')
 
     return "1"
@@ -411,7 +411,7 @@ def remove_group():
         g.db.commit()
 
         groupname = groupname
-        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/tileswarm/groups/"+groupname
+        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname
         if os.path.isfile(pathGroup) :
             subprocess.call(['rm', pathGroup])
     return "1" 
@@ -507,7 +507,7 @@ def save(data):
     pathMap = path+"workspaces/"+session['ws_name']+"/"+session["map_name"]+"/"
     
     #subprocess.call(['rm', pathMap+"map/"+session["map_name"]+".map"])
-    #subprocess.call(['rm', pathMap+"tileswarm/temp/"+session["map_name"]])
+    #subprocess.call(['rm', pathMap+"editor/temp/"+session["map_name"]])
 
     fusionStr = ""
     for i in range(len(listfiles)):
@@ -519,13 +519,13 @@ def save(data):
 
     fusionStr = fusionStr + "LAYERS [\n"
     for i in range(len(data['groups'])):
-        document = open(pathMap + "tileswarm/groups/" + data['groups'][i]['name'], "w+")
+        document = open(pathMap + "editor/groups/" + data['groups'][i]['name'], "w+")
         document.write(data['groups'][i]['content'].encode('utf-8'))
         document.close()
         fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
     fusionStr = fusionStr + "]"
 
-    fusionFile = open(pathMap + "tileswarm/temp/" + session['map_name'],"w+" )
+    fusionFile = open(pathMap + "editor/temp/" + session['map_name'],"w+" )
     fusionFile.write(fusionStr.encode('utf-8'))
     fusionFile.close()
         
@@ -536,7 +536,7 @@ def execute():
     if ('ws_name' not in session) or ('map_name' not in session):
         return "No workspace or no map open"
     pathMap = (path+"workspaces/"+session['ws_name']+"/"+session['map_name'])+"/"
-    sub = subprocess.Popen('python decoder.py '+pathMap+'tileswarm/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sub = subprocess.Popen('python decoder.py '+pathMap+'editor/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
     if (sub.stderr.read() == ""):
         symbolsFile = open(pathMap+"symbols.map", "r")

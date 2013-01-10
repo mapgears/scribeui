@@ -32,16 +32,16 @@ create table pois (
 );
 
 
-INSERT INTO maps(map_id, map_name, map_desc, ws_id) VALUES("0","*default","Template par defaut","0");
+INSERT INTO maps(map_id, map_name, map_desc, ws_id) VALUES("0","*OSM-GoogleLike","Template OSM-GoogleLike","0");
 INSERT INTO maps(map_id, map_name, map_desc, ws_id) VALUES("1","*NaturalEarth","Template Natural Earth","0");
 
-INSERT INTO groups(group_name, group_index, map_id) VALUES("cities", "6", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("roads", "5", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("admin", "4", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("water", "3", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("urban", "2", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("land", "1", "0");
-INSERT INTO groups(group_name, group_index, map_id) VALUES("ocean", "0", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("places", "6", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("borders", "5", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("buildings", "4", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("roads", "3", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("water", "2", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("landusage", "1", "0");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("land", "0", "0");
 
 INSERT INTO groups(group_name, group_index, map_id) VALUES("cities", "6", "1");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("roads", "5", "1");

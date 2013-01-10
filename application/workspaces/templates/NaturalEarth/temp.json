@@ -27,7 +27,7 @@
 {"watercolor_lbl":"'#80C0FF'"},
 {"rivercolor":"'#6CAAC3'"}],"MAP":[
    {"CONFIG":"'ON_MISSING_DATA' 'IGNORE'"},
-{"CONFIG":"\"MSERRORFILE\"\"/tmp/debugFile.log\""},
+{"CONFIG":"\"MS_ERRORFILE\"\"/tmp/debugFile.log\""},
 {"CONFIG":"'PROJ_LIB' '../'"},
 {"FONTSET":"'../fonts.lst'"},
 {"IMAGETYPE":"png"},
@@ -36,7 +36,7 @@
 {"UNITS":"meters"},
    {"EXTENT":"-20000000 -20000000 20000000 20000000"},
 {"IMAGECOLOR":"'#C6E2F2'"},
-{"SHAPEPATH":"'../data/'"},
+{"SHAPEPATH":"'../../../../data/naturalEarth'"},
 {"WEB":[
        {"METADATA":[
            {"VOID":"\"ows_enable_request\"\"*\""},
