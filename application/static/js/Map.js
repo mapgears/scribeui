@@ -230,7 +230,7 @@ Map.prototype.display = function(){
 
         if(this.OLUnits == "meters"){
             units = "m";
-        } else if(this.OLUnits == "degrees"){
+        } else if(this.OLUnits == "dd"){
             units= "d";
         }
 

@@ -324,7 +324,6 @@ function clearDebug(){
 function displayDebug(){
     if($('.olTileImage').css('visibility')=='hidden'){
 	onMapMoveEnd();
-        alert("la");
     }else{
         _workspace.openedMap.getDebug();
     }

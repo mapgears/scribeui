@@ -245,6 +245,9 @@ def string2json(string):
     expressions = re.findall(r"(?<=EXPRESSION:).+", t)
     t = re.sub(r"(?<=EXPRESSION:).+", "FLAGEXP", t)
 
+    rangeitem = re.findall(r"(?<=RANGEITEM:).+", t)
+    t = re.sub(r"(?<=RANGEITEM:).+", "FLAGRANGE", t)
+
     text = re.findall(r"(?<=TEXT:).+", t)
     t = re.sub(r"(?<=TEXT:).+", "FLAGTEXT", t)
 
@@ -292,6 +295,10 @@ def string2json(string):
     for i in range (0, len(expressions)):
         exp = re.sub(r"\"", re.escape("\\") + "\"", expressions[i].lstrip())
         t = re.sub(r"FLAGEXP", exp, t, 1)
+
+    for i in range (0, len(rangeitem)):
+        rng = re.sub(r"\"", re.escape("\\") + "\"", rangeitem[i].lstrip())
+        t = re.sub(r"FLAGRANGE", rng, t, 1)
 
     for i in range (0, len(text)):
         txt = re.sub(r"\"", re.escape("\\") + "\"", text[i].lstrip())

@@ -499,8 +499,9 @@ def commit():
     
     if save(data) != "1":
         return "Error: save()"
-    
-    return execute()
+    else:
+        #print "EXECUTE"
+        return execute()
 
 #Save changements
 def save(data):
@@ -528,7 +529,7 @@ def save(data):
     fusionFile = open(pathMap + "editor/temp/" + session['map_name'],"w+" )
     fusionFile.write(fusionStr.encode('utf-8'))
     fusionFile.close()
-        
+    #print "SAVE"
     return "1"
 
 #Execute python decoder
@@ -578,7 +579,7 @@ def load_mapfile_generated():
 @app.route('/_load_debug',methods=['GET'])
 def load_debug():
     if ('ws_name' in session):
-        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/debugFile.log"
+        pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/debugFile.log"
         
         if (os.path.isfile(pathDebug)):
             document = open(pathDebug, 'r')
