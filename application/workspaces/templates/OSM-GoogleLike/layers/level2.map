@@ -1,0 +1,170 @@
+LAYER
+MAXSCALEDENOM 268435455
+MINSCALEDENOM 134217728
+NAME 'land2'
+TYPE POLYGON
+GROUP 'default'
+STATUS ON
+PROJECTION
+'init=epsg:4326'
+END
+PROCESSING 'LABEL_NO_CLIP=ON'
+PROCESSING 'CLOSE_CONNECTION=DEFER'
+DATA "TM_WORLD_BORDERS-0.3.shp"
+CLASS
+STYLE
+COLOR '#F4F3F0'
+OUTLINECOLOR '#F4F3F0'
+END
+END
+END
+LAYER
+MAXSCALEDENOM 268435455
+MINSCALEDENOM 134217728
+NAME 'landusage2'
+TYPE POLYGON
+GROUP 'default'
+STATUS ON
+PROJECTION
+'init=epsg:900913'
+END
+PROCESSING 'LABEL_NO_CLIP=ON'
+PROCESSING 'CLOSE_CONNECTION=DEFER'
+CONNECTION "host=192.168.6.20 dbname=osmqc user=osmqc password=osmqc port=5432"
+CONNECTIONTYPE POSTGIS
+DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
+CLASSITEM 'type'
+LABELITEM 'name'
+CLASS
+EXPRESSION /forest|wood/
+STYLE
+COLOR '#C2D182'
+END
+END
+CLASS
+EXPRESSION 'residential'
+STYLE
+COLOR '#E3DED4'
+END
+END
+CLASS
+EXPRESSION 'pedestrian'
+STYLE
+OUTLINEWIDTH 1
+OUTLINECOLOR 193 181 157
+COLOR '#FFFFFF'
+END
+END
+CLASS
+EXPRESSION 'industrial'
+STYLE
+COLOR '#D1D1D1'
+END
+END
+CLASS
+EXPRESSION 'commercial'
+STYLE
+COLOR '#D1D1D1'
+END
+END
+CLASS
+EXPRESSION 'cemetery'
+STYLE
+COLOR '#D1D1D1'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'park' AND length('[name]') = 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'park' AND length('[name]') > 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'golf_course' AND length('[name]') = 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'golf_course' AND length('[name]') > 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'nature_reserve' AND length('[name]') = 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION ('[type]' = 'nature_reserve' AND length('[name]') > 0)
+STYLE
+COLOR '#DCDCB4'
+END
+END
+CLASS
+EXPRESSION 'hospital'
+STYLE
+COLOR '#E6C8C3'
+END
+END
+CLASS
+EXPRESSION /school|college|university/
+STYLE
+COLOR '#DED1AB'
+END
+END
+CLASS
+EXPRESSION /sports_center|stadium|pitch/
+STYLE
+COLOR '#DED1AB'
+END
+END
+CLASS
+EXPRESSION 'parking'
+STYLE
+COLOR '#AAAAAA'
+END
+TEXT 'P'
+END
+END
+LAYER
+MAXSCALEDENOM 268435455
+MINSCALEDENOM 134217728
+NAME 'places2'
+TYPE ANNOTATION
+CONNECTION "host=192.168.6.20 dbname=osmqc user=osmqc password=osmqc port=5432"
+CONNECTIONTYPE POSTGIS
+GROUP 'default'
+STATUS ON
+PROJECTION
+'init=epsg:900913'
+END
+PROCESSING 'LABEL_NO_CLIP=ON'
+PROCESSING 'CLOSE_CONNECTION=DEFER'
+DATA "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+LABELITEM 'name'
+CLASSITEM 'type'
+CLASS
+EXPRESSION 'continents'
+LABEL
+FONT 'scb'
+TYPE TRUETYPE
+ENCODING 'utf-8'
+SIZE 8
+COLOR 100 100 100
+OUTLINECOLOR -1 -1 -1
+OUTLINEWIDTH 1
+BUFFER 4
+PARTIALS FALSE
+POSITION CC
+END
+END
+END

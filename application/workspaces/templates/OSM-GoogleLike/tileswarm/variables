@@ -1,0 +1,349 @@
+VAR [
+    ##Layers configurations (included in almost all layers)
+    connection [
+        CONNECTION: "host=192.168.6.20 dbname=osmqc user=osmqc password=osmqc port=5432"
+        CONNECTIONTYPE: POSTGIS
+    ]
+    layerconfig [
+        GROUP: 'default'
+        STATUS: ON
+        PROJECTION [
+            @'init=epsg:900913'
+        ]
+        PROCESSING: 'LABEL_NO_CLIP=ON'
+        PROCESSING: 'CLOSE_CONNECTION=DEFER'
+    ]
+
+	##Label configurations
+	labelconfig [
+		TYPE: TRUETYPE
+        PARTIALS: FALSE
+        MINFEATURESIZE: AUTO
+	]
+	labelconfig_mainroads [
+        @VAR.labelconfig
+		FONT: 'sc'
+        MINDISTANCE: 300
+        REPEATDISTANCE: 10
+        OUTLINEWIDTH: 2
+        ANGLE: FOLLOW
+        BUFFER: 3
+	]
+	labelconfig_minorroads [
+        @VAR.labelconfig                    
+		FONT: 'sc'
+        MINDISTANCE: 500
+        REPEATDISTANCE: 10
+        OUTLINEWIDTH: 2
+        ANGLE: FOLLOW
+        BUFFER: 3
+	]
+	labelconfig_shields [
+        @VAR.labelconfig
+		PRIORITY [
+			1-13: 8
+            14-17: 1
+		]
+ 		FONT: 'scb'
+ 		REPEATDISTANCE: 20
+        MINDISTANCE: 200
+      	BUFFER: 20
+	]
+	labelconfig_landusage [
+        @VAR.labelconfig
+		FONT: 'sc'
+ 		SIZE: 8
+        OUTLINECOLOR: 255 255 255
+        OUTLINEWIDTH: 2
+ 		WRAP: ' '
+        MAXLENGTH: 6
+        ALIGN: CENTER
+	]
+	labelconfig_park_golf_nature [
+		@VAR.labelconfig_landusage
+        ENCODING: 'utf-8'
+        COLOR: 0 100 0
+ 		PRIORITY: 2
+        REPEATDISTANCE: 1
+        POSITION: LC
+        BUFFER: 5
+        OFFSET: @VAR.park_golf_nature_offset        
+	]
+	labelconfig_public_transport [
+		FONT: 'scb'
+		TYPE: TRUETYPE
+        PARTIALS: FALSE
+        COLOR: 0 0 0
+        OUTLINECOLOR: 0 0 0
+        BUFFER: 12
+        POSITION: AUTO
+	]
+	labelconfig_places [
+		@VAR.labelconfig
+        ENCODING: 'utf-8'
+        WRAP: ' '
+        MAXLENGTH: 8
+        ALIGN: CENTER
+        BUFFER: 10
+        POSITION: AUTO
+	]
+	labelconfig_waterways [
+		@VAR.labelconfig
+        FONT: 'sc'
+        ENCODING: 'utf-8'
+        MINDISTANCE: 200
+        REPEATDISTANCE: 400
+        SIZE [
+			1-15: 8
+            16-17: 9
+		]
+    	COLOR: '#6B94B0'
+        OUTLINECOLOR: 255 255 255
+        OUTLINEWIDTH: 2
+        ANGLE: FOLLOW
+        BUFFER: 3
+	]
+
+	##Water
+	waterarea_clr: '#A5BFE0'
+	waterways_clr: '#B3C6D4'
+    
+    waterways_width [
+		1-14: 0
+        15: 0.3
+        16: 0.5
+        17: 1
+	]
+
+	##Landusage    
+	public_transport_symbol_size [
+		1-16: 13
+        17: 15
+	]
+ 	public_transport_symbol: 'transportsquare'
+    public_transport_lbl_size: 8
+
+	park_golf_nature_clr: '#DCDCB4'
+	park_golf_nature_offset: 0 -20
+    
+    transport_clr: 200 200 200
+    transport_offset: 0 -20
+    
+    ##Roads
+    roads_lbl_priority [
+		1-13: 1
+        14-17: 9
+	]
+
+	##Motorway links
+	motorway_links_clr: 255 235 140
+    motorway_links_width [
+		1-13: 2
+        14-15: 2.5
+        16: 5
+        17: 6
+	]
+
+	##Motorways
+    motorway_clr: 255 195 69
+    motorway_width [
+		1-5: 0.5
+        6-8: 1
+        9: 2
+        10-12: 2.5
+        13: 3
+        14-15: 5.5
+        16-17: 12
+	]
+	motorway_ol_clr: 186 110 39
+	motorway_ol_width [
+        1-13: 1
+        14: 0.8
+        15-17: 0.5
+	]
+	motorway_lbl_size [
+		1-14: 7
+        15-17: 9
+	]
+	motorway_lbl_clr: '#333333'
+    motorway_lbl_priority: 9
+    
+    ##Trunk links
+    trunk_links_clr [
+		6-6: 193 181 157
+        7-17: 255 253 139	
+	]
+	trunk_links_width [
+		1-13: 2
+		13-16: 2.5
+        17: 5
+	]
+
+	##Trunks
+	trunk_clr [
+		1-6: '#DAAF85'
+        7-17: 255 253 139
+	]
+	trunk_width [
+		1-5: 0.5
+        6-8: 1
+        9-11: 2.5
+        12-13: 3
+        14-15: 5.5
+        16-17: 12
+	]
+	trunk_ol_clr: 193 181 157
+	trunk_ol_width [
+        1-8: 0
+        9: 0.2
+        10-14: 1
+        15-17: 0.5
+	]
+	trunk_lbl_size [
+		1-14: 8
+        15-17: 9
+	]
+	trunk_lbl_clr: '#555555'
+    
+    ##Primaries
+	primary_clr [
+		1-9: 193 181 157
+        10-17: 255 253 133 
+	]
+	primary_width [
+		1-9: 0.5
+        10: 0.75
+        11: 1
+        12-15: 2
+        16: 8
+        17: 12
+	]
+	primary_ol_clr: 193 181 157
+	primary_ol_width: 0.3
+	primary_lbl_size [
+		1-12: 7
+        13-17: 8
+	]
+	primary_lbl_clr: '#333333'
+    
+    ##Secondaries
+	secondary_clr [
+		1-9: 193 181 157
+        10-17: 255 253 133 
+	]
+	secondary_width [
+		1-8: 0
+        9-10: 0.5
+        11: 0.75
+        12: 1.5
+        13: 2
+        14-15: 3.5
+        16: 5.5
+        17: 11
+	]
+	secondary_ol_clr: 193 181 157
+	secondary_ol_width: 0.3
+	secondary_lbl_size [
+		1-12: 7
+        13-17: 8
+	]
+	secondary_lbl_clr: '#333333'
+    
+    ##Tertiaries
+	tertiary_clr [
+		1-13: '#D9CFC6'
+        14-17: '#FFFFFF'
+	]
+	tertiary_width [
+		1-8: 0
+        9-11: 0.5
+        12-14: 0.75
+        15: 5
+        16-17: 11
+	]
+	tertiary_ol_clr: 193 181 157
+	tertiary_ol_width: 0.3
+	tertiary_lbl_size [
+		1-15: 6
+        16-17: 7
+	]
+	tertiary_lbl_clr: '#000000'
+    
+    ##Others
+    other_clr [
+		1-13: '#D9CFC6'
+        14-17: '#FFFFFF'
+	]
+	other_width [
+		1-8: 0
+        9-13: 0.3
+        14: 1.2
+        15: 1.8
+        16: 5
+        17: 11
+	]
+	other_ol_clr: 193 181 157
+	other_ol_width: 0.3
+	other_lbl_size [
+		1-15: 6
+        16-17: 7
+	]
+	other_lbl_clr: '#000000'
+    
+    ##Tracks
+    track_clr [
+		1-15: '#AAAAAA'
+        16-17: '#FFFFFF'
+	]
+	track_width [
+		1-11: 0
+        12: 0.5
+        13: 0.75
+        14-17: 1
+	]
+	track_ol_clr: 193 181 157
+	track_ol_width: 1
+	track_lbl_size [
+		1-15: 6
+        16-17: 8
+	]
+	track_lbl_clr: '#333333'
+    
+    ##Pedestrians
+	pedestrian_clr: '#FFFFFF'
+    pedestrian_width [
+		1-11: 0
+        12: 0.5
+        13: 0.75
+        14: 1
+        15: 1.5
+        16: 2
+        17: 2.5
+	]
+	pedestrian_ol_clr: 193 181 157
+	pedestrian_ol_width: 1
+	pedestrian_lbl_size [
+		1-15: 0
+        16-17: 8
+	]
+	pedestrian_lbl_clr: '#333333'
+    
+    ##Tunnels
+	tunnel_opacity: 40
+    
+    ##Oneways
+    oneway_from [
+		GAP: -80
+        ANGLE: -180
+        SYMBOL: 'oneway'
+        COLOR: '#A9C5EB'
+        SIZE: 8
+	]
+	oneway_to [
+		GAP: -80
+        ANGLE: 0
+        SYMBOL: 'oneway'
+        COLOR: '#A9C5EB'
+        SIZE: 8
+	]
+]

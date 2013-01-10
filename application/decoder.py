@@ -12,29 +12,30 @@ def parseDict(data, scales, files):
             if isScale(d) == False:
                 parseDict(data[d], scales, files)
         elif dType == type(list()):
-            if isScaleList(data[d]):
-                maxScale = maximumScale(scales)
-                minScale = minimumScale(scales)
-                parseScale(d, data, files, minScale, maxScale)
-            else:
-                write(d, scales, files)
-                parseList(data[d], scales, files, True)
+            parseList(d, data[d], scales, files)
         elif dType == type(unicode()):
             if isVar(data[d]):
-                value = VAR[data[d][4:]]
+                key = data[d][4:]
+                value = VAR[key]
             else:
-                value = data[d]
-
+                key = d
+                value = data[key]
+            
             vType = type(value)
             if d == "VOID":
                 if vType == type(dict()):
                     parseDict(value, scales, files)
                 elif vType == type(list()):
-                    parseList(value, scales, files, False)
+                    parseList(key, value, scales, files, False)
                 elif vType == type(unicode()):
                     write(value, scales, files)
                 elif vType == type(int()):
-                    write(str(value), scales, files)                
+                    write(str(value), scales, files)
+            elif vType == type(list()):
+                if isScaleList(value):
+                    maxScale = maximumScale(scales)
+                    minScale = minimumScale(scales)
+                    parseScaleList(d, value, files, minScale, maxScale)
             else:
                  if isScale(d) == False:
                      write(d + " " + value, scales, files)
@@ -43,50 +44,43 @@ def parseDict(data, scales, files):
             if isScale(value) == False:
                 write(d + " " + value, scales, files)
 
-def parseList(data, scales, files, close):
-    scale = False
+def parseList(d, data, scales, files, close=True):
+    if (closeTag(data) == True and isScale(d) == False and isScaleList(data) == False and isVar(d) == False and close == True):
+        write(d, scales, files)
 
-    for item in data:
-        dType = type(item)
-        if dType == type(dict()):
-            for d in item:
-                if isScale(d):
-                    scale = True
-                    
-            parseDict(item, scales, files)
-        else:
-            print "Erreur: JSON mal formé"
+    if (isScaleList(data) == True and close == True):
+        maxScale = maximumScale(scales)
+        minScale = minimumScale(scales)
+        parseScaleList(d, data, files, minScale, maxScale, close)
+    else:
+        for item in data:
+            dType = type(item)
+            if dType == type(dict()):
+                for i in item:
+                    if isScale(i):
+                        maxScale = maximumScale(scales)
+                        minScale = minimumScale(scales)
+                        parseScale(i, item[i], files, minScale, maxScale)
+                    else:
+                        parseDict(item, scales, files)
+            else:
+                print "Erreur: JSON mal formé"
 
-    if (scale == False) and (close == True):
+    if (closeTag(data) == True and isScale(d) == False and isScaleList(data) == False and close == True):
         write("END", scales, files)
 
-def parseScale(d, data, files, minScale, maxScale):
-    for item in data[d]:
-        scales = {}
+def parseScaleList(d, data, files, minScale, maxScale, close=True):
+    for item in data:
         for scale in item:
-            if re.match(r"[0-9]{1,2}:{1}[0-9]{1,2}", scale):
-                s1 = int(re.search('(?<!:)\w+', scale).group(0))
-                s2 = int(re.search('(?<=:)\w+', scale).group(0))
-                scales = {}
-                for i in range(s1, s2 + 1):
-                    if (i >= minScale) and (i <= maxScale):
-                        scales[str(i)] = SCALES[str(i)]
-                
-                if isVar(item[scale]):
-                    value = VAR[item[scale][4:]]
-                else:
-                    value = item[scale]                          
-                
-            elif re.match(r"[0-9]{1,2}", scale, files):
-                scales = {}
-                if (int(scale) >= minScale) and (int(scale) <= maxScale): 
-                    scales[i] = SCALES[scale]
-                
-                if isVar(item[scale]):
-                    value = VAR[item[scale][4:]]
-                else:
-                    value = item[scale]
-                    
+            scales = scaleToScaleList(scale, minScale, maxScale)
+           
+            if isVar(item[scale]):
+                key = item[scale][4:]
+                value = VAR[key]
+            else:
+                key = scale
+                value = item[key]
+
             vType = type(value)
 
             if vType == type(dict()):
@@ -94,14 +88,56 @@ def parseScale(d, data, files, minScale, maxScale):
                 parseDict(value, scales, files)
             elif vType == type(list()):
                 write(d, scales, files)
-                parseList(value, scales, files, True)
+                parseList(key, value, scales, files)
             elif vType == type(unicode()):
                 write(d + " " + value, scales, files)
             elif vType == type(int()):
-                write(d + " " + str(value), scales, files)             
+                write(d + " " + str(value), scales, files)
+
+        if closeTag(data) == True:
+            write("END", scales, files) 
+
+def parseScale(scale, data, files, minScale, maxScale):
+    scales = scaleToScaleList(scale, minScale, maxScale)
+
+    for d in data:
+        for item in d:
+            if isVar(d[item]):
+                key = item
+                value = VAR[d[item][4:]]
+            else:
+                key = item
+                value = d[key]
+   
+            vType = type(value)
+
+            if vType == type(dict()):
+                write(item, scales, files)
+                parseDict(value, scales, files)
+            elif vType == type(list()):
+                parseList(key, value, scales, files)
+            elif vType == type(unicode()):
+                write(item + " " + value, scales, files)
+            elif vType == type(int()):
+                write(item + " " + str(value), scales, files)
+
+def scaleToScaleList(scale, minScale, maxScale):
+    scales = {}
+    if re.match(r"[0-9]{1,2}:{1}[0-9]{1,2}", scale):
+        s1 = int(re.search('(?<!:)\w+', scale).group(0))
+        s2 = int(re.search('(?<=:)\w+', scale).group(0))
+        for i in range(s1, s2 + 1):
+            if (i >= minScale) and (i <= maxScale):
+                scales[str(i)] = SCALES[str(i)]
+                
+    elif re.match(r"[0-9]+", scale):
+        if (int(scale) >= minScale) and (int(scale) <= maxScale): 
+            scales[scale] = SCALES[scale]
+
+    return scales
 
 def isScale(string):
-    if re.match(r"[0-9]:*[0-9]*", string):
+    if re.match(r"[0-9]+(:[0-9]+)*", string):
         return True
     else:
         return False
@@ -109,11 +145,22 @@ def isScale(string):
 def isScaleList(data):
     scale = False
     for value in data:
-        for d in value:
-                if isScale(d):
-                    scale = True
-                
+        for d in value: 
+            if isScale(d) == True:
+                scale = True
+            else:
+                return False
     return scale
+
+def closeTag(data):
+    close = True
+    for d in data:
+        for item in d:
+            if (isScale(item) == True and type(d[item]) != type(list())):
+                close = False
+            else:
+                close = True
+    return close
 
 def isVar(string):
     if string[:4]== "VAR.":
@@ -178,8 +225,8 @@ def jsonToLayer():
 def jsonToMap():
     jsonToLayer()
     mapFile = openMapFile()
-    write("MAP", {"1": None}, mapFile)
-    parseList(MAP, {"1": None}, mapFile, True)
+    #write("MAP", {"1": None}, mapFile)
+    parseList("MAP", MAP, {"1": None}, mapFile, True)
     mapFile["1"].seek(-4, 2)
     write("###SYMBOLS###", {"1": None}, mapFile)    
     for value in range(1,len(SCALES) + 1):
@@ -190,11 +237,19 @@ def jsonToMap():
     closeFiles(mapFile)
 
 def string2json(string):
-    t = re.sub(r"(?<=\w)+:\s*@", ":", string)
+    t = re.sub(r"\##.*", "", string)
+
+    t = re.sub(r"(?<=\w)+:\s*@", ":", t)
     t = re.sub(r"@", "VOID:", t)
     
     expressions = re.findall(r"(?<=EXPRESSION:).+", t)
     t = re.sub(r"(?<=EXPRESSION:).+", "FLAGEXP", t)
+
+    text = re.findall(r"(?<=TEXT:).+", t)
+    t = re.sub(r"(?<=TEXT:).+", "FLAGTEXT", t)
+
+    escape = re.findall(r"(?<=ESCAPE/).+(?=/ESCAPE)", t)
+    t = re.sub(r"ESCAPE/.+/ESCAPE", "FLAGESCAPE", t)
 
     t = re.sub(r"(?<!\()\s*\[", ":[", t)
     t = re.sub(r"\]", "]", t)
@@ -210,16 +265,17 @@ def string2json(string):
     t = re.sub(r"/\s", "/\"", t)
     t = re.sub(r"/\"", "/\"}", t)
 
-    t = re.sub(r"(?<!'wms_title')(?<!\s)*(?<!')(?<!(\w|,|\)))+\s(?=[a-zA-Z_])(?!(epsg|EPSG|\)))", "{\"", t)
-    t = re.sub(r"\s(?=([0-9]|[0-9]{2})-)", "{\"", t)
+    t = re.sub(r"(?<!'wms_title')(?<!\s)*(?<!')(?<!(\w|,|\)|\(|\*))+\s(?=[a-zA-Z_])(?!(epsg|EPSG|\)))", "{\"", t)
+    t = re.sub(r"\s(?=([0-9]|[0-9]{2})(?=(-|\")))", "{\"", t)
+    #t = re.sub(r"\s(?=([0-9]|[0-9]{2})-)", "{\"", t)
 
-    t = re.sub(r"\"\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!))", "\\\"\"},\n", t)
-    t = re.sub(r"(?<=\))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!))", "\"},\n", t)
+    t = re.sub(r"\"\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\\\"\"},\n", t)
+    t = re.sub(r"(?<=\))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
     
     t = re.sub(r"(?<=([a-zA-Z_][0-9]))\s(?!\w)", "\"},\n", t)
-    t = re.sub(r"(?<=[a-zA-Z_])\s(?!(\w|'|-|\(|\)|,|\"|=|<|>|!))", "\"},\n", t)
+    t = re.sub(r"(?<=[a-zA-Z_])\s(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
     #t = re.sub(r"(?<=([0-9]|'))\s+(?!(\w|'|-))", "\"},\n", t)
-    t = re.sub(r"(?<=([0-9]|'))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!))", "\"},\n", t)
+    t = re.sub(r"(?<=([0-9]|'))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
     
     t = re.sub(r",\s+\n*\]", "]", t)
     
@@ -236,6 +292,13 @@ def string2json(string):
     for i in range (0, len(expressions)):
         exp = re.sub(r"\"", re.escape("\\") + "\"", expressions[i].lstrip())
         t = re.sub(r"FLAGEXP", exp, t, 1)
+
+    for i in range (0, len(text)):
+        txt = re.sub(r"\"", re.escape("\\") + "\"", text[i].lstrip())
+        t = re.sub(r"FLAGTEXT", txt, t, 1)
+
+    for i in range (0, len(escape)):
+        t = re.sub(r"FLAGESCAPE", escape[i], t, 1)
 
     return ("{\"" + t)
 
