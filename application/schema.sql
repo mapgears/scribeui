@@ -52,4 +52,4 @@ INSERT INTO groups(group_name, group_index, map_id) VALUES("land", "1", "1");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("ocean", "0", "1");
 
 
-INSERT INTO pois(poi_name, latitude, longitude, scalelvl, ws_id) VALUES("Quebec - Quebec","46","-71","10","0");
+INSERT INTO pois(poi_name, latitude, longitude, scalelvl, ws_id) VALUES("Quebec - Quebec","46.83","-71.11","524288","0");

@@ -161,6 +161,7 @@ def delete_ws():
         connectorFile = "/usr/lib/cgi-bin/elfinder-python/connector-"+wsToDelete+"-"+wsmap[i]['map_name']+".py"
         subprocess.call(['rm','-f',connectorFile])
     g.db.execute('''DELETE FROM maps WHERE ws_id=?''', [ws['ws_id']])
+    g.db.execute('''DELETE FROM pois WHERE ws_id=?''', [ws['ws_id']])
     g.db.execute('''DELETE FROM workspaces WHERE ws_id=?''', [ws['ws_id']])
     g.db.commit()
  

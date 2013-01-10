@@ -322,15 +322,14 @@ function clearDebug(){
 }
 
 function displayDebug(){
-    if($('.olTileImage').css('visibility')=='hidden'){
+    if($('.olTileImage').filter(function(){ return this.style && this.style.visibility === 'hidden' }).length > 0){
 	onMapMoveEnd();
     }else{
-        _workspace.openedMap.getDebug();
+       _workspace.openedMap.getDebug();
     }
 }
 
 
 function onMapMoveEnd(){
-    
     setTimeout(function(){displayDebug()},500);
 }
