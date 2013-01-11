@@ -28,7 +28,7 @@ def parseDict(data, scales, files):
                 elif vType == type(list()):
                     parseList(key, value, scales, files, False)
                 elif vType == type(unicode()):
-                    write(value, scales, files)
+                    write(comment(value), scales, files)
                 elif vType == type(int()):
                     write(str(value), scales, files)
             elif vType == type(list()):
@@ -201,6 +201,9 @@ def write(string, scales, files):
         else:
             files[value].write(string + "\n")
 
+def comment(string):
+    return re.sub(r"##",  "\n#", string)
+
 def openLayerFiles():
     layerFiles = {}
     for value in SCALES:
@@ -239,73 +242,59 @@ def jsonToMap():
 def string2json(string):
     t = re.sub(r"\##.*", "", string)
 
+    comments = re.findall(r"(?<=/\*).*?\t*?(?=\*/)", t, flags=re.DOTALL)
+    t = re.sub(r"/\*.*?\*/", "VOID:FLAGCOMMENT", t, flags=re.DOTALL)
+
     t = re.sub(r"(?<=\w)+:\s*@", ":", t)
+
     t = re.sub(r"@", "VOID:", t)
-    
-    expressions = re.findall(r"(?<=EXPRESSION:).+", t)
-    t = re.sub(r"(?<=EXPRESSION:).+", "FLAGEXP", t)
 
-    rangeitem = re.findall(r"(?<=RANGEITEM:).+", t)
-    t = re.sub(r"(?<=RANGEITEM:).+", "FLAGRANGE", t)
+    values = re.findall(r"(?<=:).+", t)
+    t = re.sub(r"(?<=:).+", "FLAGVALUE", t)
 
-    text = re.findall(r"(?<=TEXT:).+", t)
-    t = re.sub(r"(?<=TEXT:).+", "FLAGTEXT", t)
-
-    escape = re.findall(r"(?<=ESCAPE/).+(?=/ESCAPE)", t)
-    t = re.sub(r"ESCAPE/.+/ESCAPE", "FLAGESCAPE", t)
+    params = re.findall(r"\n*\s*[\w0-9\-]+\s*(?=[:\[])", t)
+    t = re.sub(r"[\w0-9\-]+\s*(?=[:\[])", "FLAGPARAM", t)
 
     t = re.sub(r"(?<!\()\s*\[", ":[", t)
+    
     t = re.sub(r"\]", "]", t)
 
-    t = re.sub(r"\"\s*(?=(\"|'))",  re.escape("\\") + "\"", t)
-    t = re.sub(r"(?<=(\"|'))\s*\"",  re.escape("\\") + "\"", t)
+    t = re.sub(r":\s*", "\":", t)
 
-    t = re.sub(r"(?<!(epsg|EPSG)):\s*", "\":", t)
-    t = re.sub(r"(?<!(epsg|EPSG))\s*:(?=\")", ":\"" + re.escape("\\"), t)
-    t = re.sub(r"(?<!(epsg|EPSG))\s*:(?=(\w|'|-))", ":\"", t)
+    t = re.sub(r"\s*:(?=\w)", ":\"", t)
 
-    t = re.sub(r":/", ":\"/", t)
-    t = re.sub(r"/\s", "/\"", t)
-    t = re.sub(r"/\"", "/\"}", t)
+    t = re.sub(r"\s(?=\w)", "{\"", t)
 
-    t = re.sub(r"(?<!'wms_title')(?<!\s)*(?<!')(?<!(\w|,|\)|\(|\*))+\s(?=[a-zA-Z_])(?!(epsg|EPSG|\)))", "{\"", t)
-    t = re.sub(r"\s(?=([0-9]|[0-9]{2})(?=(-|\")))", "{\"", t)
-    #t = re.sub(r"\s(?=([0-9]|[0-9]{2})-)", "{\"", t)
+    t = re.sub(r"\"[\s\n]+", "\\\"\"},\n", t)
 
-    t = re.sub(r"\"\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\\\"\"},\n", t)
-    t = re.sub(r"(?<=\))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
-    
-    t = re.sub(r"(?<=([a-zA-Z_][0-9]))\s(?!\w)", "\"},\n", t)
-    t = re.sub(r"(?<=[a-zA-Z_])\s(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
-    #t = re.sub(r"(?<=([0-9]|'))\s+(?!(\w|'|-))", "\"},\n", t)
-    t = re.sub(r"(?<=([0-9]|'))\s+(?!(\w|'|-|\(|\)|,|\"|=|<|>|!|\*))", "\"},\n", t)
+    t = re.sub(r"(?<=[a-zA-Z_])\s", "\"},\n", t)
     
     t = re.sub(r",\s+\n*\]", "]", t)
     
-    t = re.sub(r"(?<!(\w|'))\]", "]}", t)
+    t = re.sub(r"(?<!\w)\]", "]}", t) 
+
+    for i in range (0, len(values)):
+        value = re.sub(r"\"", re.escape("\\") + "\"", values[i].strip())
+        t = re.sub(r"FLAGVALUE", value, t, 1)
+
+    for i in range (0, len(params)):
+        param = re.sub(r"\"", re.escape("\\") + "\"", params[i].strip())
+        t = re.sub(r"FLAGPARAM", param, t, 1)
+
+    for i in range (0, len(comments)):
+        comment = re.sub(r"\"", re.escape("\\") + "\"", comments[i])
+        comment = re.sub(r"\t", "", comment)
+        comment = re.sub(r"\n", "##", comment)
+        t = re.sub(r"FLAGCOMMENT",  "#" + comment, t, 1)
 
     t = re.sub(r"\}\s*\n*\{", "},{", t)
     t = re.sub(r"\}\n*\s*\]\},\{\"LAYERS\"", "}],\"LAYERS\"", t)
     t = re.sub(r"\}\n*\s*\]\},\{\"MAP\"", "}],\"MAP\"", t)
     t = re.sub(r"\}\n*\s*\]\},\{\"VAR\"", "}],\"VAR\"", t)
     t = re.sub(r"^\s*\n*{\"", "", t)
+
     t = re.sub(r"(?<=[0-9])-(?=[0-9])", ":", t)
     t = re.sub(r"\s(?=([0-9]|[0-9]{2})+\":)", "{\"", t)
-
-    for i in range (0, len(expressions)):
-        exp = re.sub(r"\"", re.escape("\\") + "\"", expressions[i].lstrip())
-        t = re.sub(r"FLAGEXP", exp, t, 1)
-
-    for i in range (0, len(rangeitem)):
-        rng = re.sub(r"\"", re.escape("\\") + "\"", rangeitem[i].lstrip())
-        t = re.sub(r"FLAGRANGE", rng, t, 1)
-
-    for i in range (0, len(text)):
-        txt = re.sub(r"\"", re.escape("\\") + "\"", text[i].lstrip())
-        t = re.sub(r"FLAGTEXT", txt, t, 1)
-
-    for i in range (0, len(escape)):
-        t = re.sub(r"FLAGESCAPE", escape[i], t, 1)
 
     return ("{\"" + t)
 

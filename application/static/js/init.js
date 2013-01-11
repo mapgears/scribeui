@@ -33,7 +33,7 @@ jQuery(function() {
                singleLineStringErrors: false},
         indentUnit: 4,
         autofocus: true,
-        tabMode: "shift",
+        tabMode: "spaces",
         matchBrackets: true
     }
 /*
