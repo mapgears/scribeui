@@ -82,8 +82,8 @@ function openNewMapWindow(){
             "Create": function() {
                 var name = $("#newmap-name").val();
 		var template = $("#newmap-template option:selected").val();
-                var templateLocation = $("#newmap-templateLocation").val();
-                var locationPassword = $("#newmap-locationPassword").val();
+                var templateLocation = $("#newmap-workspace-select").val();
+                var locationPassword = $("#newmap-workspace-password").val();
                 var description = $("#newmap-description").val();
 
 		var map = new Map(name, {
@@ -104,15 +104,16 @@ function openNewMapWindow(){
                 $("#newmap-workspace-select").append($("<option></option>").attr("value", " ").text(" "));
                 displayWorkspaces("newmap-workspace-select");
                 //$("#newmap-refresh-button").click(function(e){
+                $("#newmap-workspace-select").unbind('blur');
                 $("#newmap-workspace-select").bind('blur', function(){
                     //e.preventDefault();
                     //e.stopPropagation();
                     var password = $("#newmap-workspace-password").val();
                     //var options = {"password": password};
-                    var wsname = $("#newmap-workspace-select").val()
+                    var workspaceSelect = $("#newmap-workspace-select").val()
                     //var workspace = new Workspace($("#newmap-workspace-select").val(), options);
                     displayTemplates("templates");
-                    displayTemplates(wsname);
+                    displayTemplates(workspaceSelect);
                     //workspace.getMaps(displayTemplates);    
                 });
                 

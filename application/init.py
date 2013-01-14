@@ -210,19 +210,19 @@ def create_map():
 
     #Copy the template directory to the directory of the new map    
     if ws_template == "templates":
-        templateDir = template[1:]
-        pathTemplate = path+"workspaces/templates/"+templateDir
-        map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))
+        map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))['map_id']
+        template = template[1:]
+        pathTemplate = path+"workspaces/templates/"+template
     else:
         pathTemplate = path+"workspaces/"+ws_template+"/"+template
         map_cur = get_map_id(template, ws_template)
 
     pathMap = path+"workspaces/"+session['ws_name']+"/"+name
     subprocess.call(['cp','-R', pathTemplate, pathMap])
-    subprocess.call(['mv', pathMap+"/map/"+templateDir+".map", pathMap+"/map/"+name+".map"])                                
-
+    subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])                                
+    
     #Add layers in the bd
-    groups = query_db('''select * from groups where map_id = ?''', [map_cur['map_id']], one=False)
+    groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
     for j in range(len(groups)):
         g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
     g.db.commit()
