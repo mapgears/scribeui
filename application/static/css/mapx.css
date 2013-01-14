@@ -198,9 +198,15 @@ html, body {
 
 .tab-container {
     overflow-x: auto;
-    /*height: 44px;*/
-    /*border-bottom: 1px solid #AAAAAA !important;*/
-    /*border-right: 1px solid #AAAAAA !important;*/
+    height: 44px;
+    border-bottom: 1px solid #AAAAAA !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+.tab-container-small {
+    overflow-x: auto;
+    height: 28px;
+    border-bottom: 1px solid #AAAAAA !important;
 }
 
 .ui-tabs {
@@ -219,8 +225,8 @@ html, body {
 }
 
 .tabheader {
-    border-bottom: 1px solid #AAAAAA !important;
-    border-right: 1px solid #AAAAAA !important;
+    /*border-bottom: 1px solid #AAAAAA !important;
+    border-right: 1px solid #AAAAAA !important;*/
     border-radius: 0 !important;
     border-left-width: 0px !important;
     border-top-width: 0px !important;
@@ -233,7 +239,7 @@ html, body {
 }
 
 .tabheader-small {
-    border-bottom: 1px solid #AAAAAA !important;
+   /* border-bottom: 1px solid #AAAAAA !important;*/
     border-radius: 0 !important;
     border-left-width: 0px !important;
     border-right-width: 0px !important;
@@ -262,7 +268,7 @@ html, body {
     overflow-y: auto;
     
     position: absolute;
-    top: 44px;
+    top: 45px;
     bottom: 0;
     right: 0;
     left: 0;
