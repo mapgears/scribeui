@@ -103,11 +103,11 @@ jQuery(function() {
     $(".map-button").button('disable');
     $(".group-button").button('disable');
 
-    $("a[href = '#workspace-tab'], a[href = '#log-tab'], a[href = '#debug-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
+    $("a[href = '#manager-tab'], a[href = '#log-tab'], a[href = '#debug-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
         $("div[class='CodeMirror']").hide();
     }); 
 
-    $("a[href = '#workspace-tab'], a[href = '#log-tab'], a[href = '#editor-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
+    $("a[href = '#manager-tab'], a[href = '#log-tab'], a[href = '#editor-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
          if(_workspace.openedMap){
              unregisterDebug();
          }

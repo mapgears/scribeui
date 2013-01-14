@@ -51,14 +51,15 @@
   <body>
    
     <div class="navbar">	
-      <p id="title" class="title">MapX</p>
-      <p id="info" class="title"></p>
+      <div id="title" class="title title-left">MapX</div>
+      <div id="info" class="title title-right"></div>
     </div>
 
     <div class="main">
       <div id="tab1" class="tabpanel">
+        <div class="tab-container">
           <ul class="tabheader">
-	    <li class="tab-large"><a href="#workspace-tab">Manager</a></li>
+	    <li class="tab-large"><a href="#manager-tab">Manager</a></li>
             <li class="tab-large"><a href="#editor-tab">Editor</a></li>
             <li class="tab-large"><a href="#data-tab">Data</a></li>
 	    <li class="tab-large"><a href="#mapfile-tab">Result</a></li>
@@ -66,63 +67,65 @@
 	    <li class="tab-large"><a href="#debug-tab">Debug</a></li>
             <li class="tab-large"><a href="#help-tab">Help</a></li>
 	  </ul>
-	  <div id="workspace-tab" class="tabcontent">
-	    <div class="tabheader-ws-container">
-              <span class="separator">Workspaces</span>
+        </div>
+	<div id="manager-tab" class="tabcontent">
+	  <div class="tabheader-ws-container">
+            <span class="separator">Workspaces</span>
+            <div class="content">
+	      <div class="tabheader-content">
+		<label>Name</label><br>
+		<select id="workspace-select" class="workspace-select" class="shadow_select"></select><br>
+		<label>Password</label><br>
+		<input id="workspace-password" class="workspace-input"/>
+	      </div>
+	      <div class="tabheader-buttons">
+		<div class="buttons-container">
+		  <button id="btn_new_ws" class="workspace-button top-button">New Workspace</button>
+		  <button id="btn_open_ws" class="workspace-button middle-button">Open Workspace</button>
+		  <button id="btn_delete_ws" class="workspace-button bottom-button">Delete Workspace</button>
+		</div>
+	      </div>
+            </div>
+	  </div>
+	  <div class="tabfooter-ws-container">
+	    <div class="manager-maps">
+	      <span class="separator">Maps</span>
               <div class="content">
-	        <div class="tabheader-content">
-		  <label>Name</label><br>
-		  <select id="workspace-select" class="workspace-select" class="shadow_select"></select><br>
-		  <label>Password</label><br>
-		  <input id="workspace-password" class="workspace-input"/>
-	        </div>
-	        <div class="tabheader-buttons">
-		  <div class="buttons-container">
-		    <button id="btn_new_ws" class="workspace-button top-button">New Workspace</button>
-		    <button id="btn_open_ws" class="workspace-button middle-button">Open Workspace</button>
-		    <button id="btn_delete_ws" class="workspace-button bottom-button">Delete Workspace</button>
+		<div class="maps-content">
+		  <div class="table-container">
+		    <table id="map-table" class="map-table">
+		      <tbody>
+                      </tbody>
+		    </table>
 		  </div>
-	        </div>
+                  <div id="map-description" class="map-description-container">
+                  </div>
+		</div>
+		<div class="maps-buttons">
+		  <div class="buttons-container">
+		    <button id="btn_new_map" class="workspace-button top-button map-button">New Map</button>
+		    <button id="btn_open_map" class="workspace-button middle-button map-button">Open Map</button>
+		    <button id="btn_backup_map" class="workspace-button middle-button map-button">Backup Map</button>
+		    <button id="btn_export_map" class="workspace-button middle-button map-button">Export Map</button>
+		    <button id="btn_cache_map" class="workspace-button ui-state-default middle-button map-button">Tile Map</button>
+		    <button id="btn_delete_map" class="workspace-button bottom-button map-button">Delete Map</button>
+		  </div>
+		</div>
               </div>
 	    </div>
-	    <div class="tabfooter-ws-container">
-	      <div class="workspace-maps">
-		<span class="separator">Maps</span>
-                <div class="content">
-		  <div class="maps-content">
-		    <div class="table-container">
-		      <table id="map-table" class="map-table">
-		        <tbody>
-                        </tbody>
-		      </table>
-		    </div>
-                    <div id="map-description" class="map-description-container">
-                    </div>
-		  </div>
-		  <div class="maps-buttons">
-		    <div class="buttons-container">
-		      <button id="btn_new_map" class="workspace-button top-button map-button">New Map</button>
-		      <button id="btn_open_map" class="workspace-button middle-button map-button">Open Map</button>
-		      <button id="btn_backup_map" class="workspace-button middle-button map-button">Backup Map</button>
-		      <button id="btn_export_map" class="workspace-button middle-button map-button">Export Map</button>
-		      <button id="btn_cache_map" class="workspace-button ui-state-default middle-button map-button">Tile Map</button>
-		      <button id="btn_delete_map" class="workspace-button bottom-button map-button">Delete Map</button>
-		    </div>
-		  </div>
-                </div>
+	    <div class="manager-jobs">
+	      <span class="separator">Jobs</span>
+	      <div class="jobs-content">
 	      </div>
-	      <div class="workspace-jobs">
-		<span class="separator">Jobs</span>
-		<div class="jobs-content">
-		</div>
-		<div class="jobs-buttons">
-		</div>
+	      <div class="jobs-buttons">
 	      </div>
 	    </div>
-          </div>
-	  <div id="editor-tab" class="tabcontent">
-	    <div id="tab2" class="tabpanel-small">
-	      <div class="tabheader-editor-container">
+	  </div>
+        </div>
+	<div id="editor-tab" class="tabcontent">
+	  <div id="tab2" class="tabpanel-small">
+	    <div class="tabheader-editor-container">
+              <div class="tab-container">
 	        <ul class="tabheader-small">
 		  <li class="tab-small"><a href="#map-tab">Map</a></li>
 		  <li class="tab-small"><a href="#variable-tab">Variables</a></li>
@@ -131,67 +134,72 @@
 		  <li class="tab-small"><a href="#font-tab">Fonts</a></li>
 		  <li class="tab-small"><a href="#projection-tab">Projections</a></li>
 	        </ul>
-	        <div id="map-tab" class="tabcontent-small">
-		  <textarea id="map-editor" display="none"></textarea>
-                </div>
-	        <div id="variable-tab" class="tabcontent-small">
-		  <textarea id="variable-editor" display="none"></textarea>
-                </div>
-                <div id="scale-tab" class="tabcontent-small">
-		  <textarea id="scale-editor" display="none"></textarea>
-                </div>
-	        <div id="symbol-tab" class="tabcontent-small">
-		  <textarea id="symbol-editor" display="none"></textarea>
-                </div>
-                <div id="font-tab" class="tabcontent-small">
-		  <textarea id="font-editor" display="none"></textarea>
-                </div>
-	        <div id="projection-tab" class="tabcontent-small">
-		  <textarea id="projection-editor" display="none"></textarea>
-                </div>
-	      </div>
-	       <div class="tabfooter-editor-container">
-		 <div id="group-toolbar" class="group-toolbar">
-		   <select id="group-select" class="group-select" class="shadow_select"></select>
-		   <button id="btn_new_group" class="group-button">New Group</button>
-		   <button id="btn_delete_group" class="group-button">Delete Group</button>
-                   <button id="btn_change_group_order" class="group-button">Group order</button>
-		 </div>
-		 <div class="editor-container">
-		   <textarea id="editor" display="none"></textarea>
-		 </div>
-	       </div>
+              </div>
+	      <div id="map-tab" class="tabcontent-small">
+		<textarea id="map-editor" display="none"></textarea>
+              </div>
+	      <div id="variable-tab" class="tabcontent-small">
+		<textarea id="variable-editor" display="none"></textarea>
+              </div>
+              <div id="scale-tab" class="tabcontent-small">
+		<textarea id="scale-editor" display="none"></textarea>
+              </div>
+	      <div id="symbol-tab" class="tabcontent-small">
+		<textarea id="symbol-editor" display="none"></textarea>
+              </div>
+              <div id="font-tab" class="tabcontent-small">
+		<textarea id="font-editor" display="none"></textarea>
+              </div>
+	      <div id="projection-tab" class="tabcontent-small">
+		<textarea id="projection-editor" display="none"></textarea>
+              </div>
 	    </div>
-          </div>
-          <div id="data-tab" class="datacontent">
-          </div>
-	  <div id="mapfile-tab" class="tabcontent">
-            <textarea id="txt-result" class="logs" readonly="readonly"></textarea>
-          </div>
-          <div id="log-tab" class="tabcontent">
-            <textarea id="txt-logs" class="logs" readonly="readonly"></textarea>
-          </div>
-	  <div id="debug-tab" class="tabcontent">
-            <textarea id="txt-debug" class="logs" readonly="readonly"></textarea>
-          </div>
-          <div id="help-tab" class="tabcontent">
-            <textarea id="txt-help" class="logs" readonly="readonly"></textarea>
-          </div>
+	    <div class="tabfooter-editor-container">
+	      <div id="group-toolbar" class="group-toolbar">
+		<select id="group-select" class="group-select" class="shadow_select"></select>
+		<button id="btn_new_group" class="group-button">New Group</button>
+		<button id="btn_delete_group" class="group-button">Delete Group</button>
+                <button id="btn_change_group_order" class="group-button">Group order</button>
+	      </div>
+	      <div class="editor-container">
+		<textarea id="editor" display="none"></textarea>
+	      </div>
+	    </div>
+	  </div>
+        </div>
+        <div id="data-tab" class="datacontent">
+        </div>
+	<div id="mapfile-tab" class="tabcontent">
+          <textarea id="txt-result" class="logs" readonly="readonly"></textarea>
+        </div>
+        <div id="log-tab" class="tabcontent">
+          <textarea id="txt-logs" class="logs" readonly="readonly"></textarea>
+        </div>
+	<div id="debug-tab" class="tabcontent">
+          <textarea id="txt-debug" class="logs" readonly="readonly"></textarea>
+        </div>
+        <div id="help-tab" class="tabcontent">
+          <textarea id="txt-help" class="logs" readonly="readonly"></textarea>
+        </div>
       </div>
-      <div class="tool_map">
+      <div class="map-container">
         <div id="map" class="map">
 	</div>
       </div>
     </div>
 
     <div class="tools">
-      <button id="btn_commit" class="button-commit button-14">Commit</button>
-      <div class="poi-container">
-        <select id="poi-select" class="shadow_select"></select>
-        <button class="button-14" text="Go!" id="btn-zoom-poi">Go!</button>
-	<button class="button-14" text="+" id="btn-add-poi">+</button>
+      <div class="tools-left">
+        <button id="btn_commit" class="button-commit button-14">Commit</button>
       </div>
-      <div id="scale-level" class="scale-level"></div>
+      <div class="tools-right">
+        <div class="poi-container">
+          <select id="poi-select" class="shadow_select"></select>
+          <button class="button-14" text="Go!" id="btn-zoom-poi">Go!</button>
+	  <button class="button-14" text="+" id="btn-add-poi">+</button>
+        </div>
+        <div id="scale-level" class="scale-level"></div>
+      </div>
     </div>
     
     <div id="createws-form" title="Create new workspace">

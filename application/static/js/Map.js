@@ -158,9 +158,9 @@ Map.prototype.displayGroups = function(){
 Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).empty();
     $("#" + this.workspace.mapDescription).append("<span class=\"underline\">Description</span>\n");
-    $("#" + this.workspace.mapDescription).append("<textarea class=\"map-description\">" + this.description + "</textarea>");
+    $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
     $("#" + this.workspace.mapDescription).append("<span class=\"underline\">URL</span>\n");
-    $("#" + this.workspace.mapDescription).append("<textarea class=\"map-description\">" + this.url + "</textarea>");
+    $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.url + "</p>");
     //$("#" + this.workspace.mapDescription).text(this.description);
 };
 

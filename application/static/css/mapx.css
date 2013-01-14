@@ -19,11 +19,10 @@ html, body {
 
 /*=== Title ===*/
 .navbar {
+    position: relative;
+
     border-bottom: 2px solid rgba(82, 168, 236, 0.8);
     margin-top: 0px;
-
-    padding-left: 20px;
-    padding-right: 20px;
 
     width: 100%;
     height: 5%;
@@ -31,19 +30,60 @@ html, body {
 
 .title {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    width: 45%;
     color: #999999;
     font-size: 20px;
     line-height: 1;
+ 
+    padding-top: 10px;
 }
 
-#info {
-    text-align: right;
+.title-left {
     position: relative;
-    left:50%;
-    top: -40px;
+    float: left;
+    padding-left: 20px;
 }
 
+.title-right {
+    position: relative;
+    float: right;
+    padding-right: 20px;
+    text-align: right;
+}
+
+/*=== Bottom ===*/
+.tools {
+    height: 10%;
+    width: 100%;
+    border-top: 2px solid rgba(82, 168, 236, 0.8);
+    padding-top: 10px;
+}
+
+.tools-left {
+    position: relative;
+    float: left;
+    width: 42%;
+}
+
+.tools-right {
+    position: relative;
+    float: right;
+    width: 58%;
+}
+
+.poi-container {
+    position: relative;
+    float: left;
+    padding-left: 10px;
+}
+
+.scale-level {
+    position: relative;
+    float:right;
+    padding-right: 10px;
+    color: white;
+}
+
+/*=== Elfinder ===*/
 .elfinder-dialog {
     visibility: hidden !important;
 }
@@ -64,14 +104,6 @@ html, body {
     border-radius: 0px !important;
 }
 
-.scale-level {
-    width: 120px;
-    position: relative;
-    float:right;
-    color: white;
-    margin-top:15px;
-}
-
 .file-manager {
     position: absolute !important;
     left: 0 !important;
@@ -81,253 +113,7 @@ html, body {
     height: auto !important;
 }
 
-.poi-container {
-    position: relative;
-    float: right;
-    margin-top:10px;
-    right: 24%;
-}
-
-.table-container {
-    position: absolute;
-    left: 0;
-    right: 60%;
-    top: 0;
-    bottom: 0;
-    /*overflow-y: auto;*/
-   /* padding: 5px;*/
-    
-}
-
-.map-table {
-    width: 100%;
-}
-
-.map-td { 
-    border: 2px outset #444444;
-    border-radius: 6px;
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_35_222222_1x100.png") repeat-x scroll 50% 50% #222222
-}
-/*
-.map-description {
-    position: absolute;
-    border: none !important;
-    border-radius: 6px;
-    width:100%;
-    height:100%; 
-    box-sizing: border-box;         
-    -moz-box-sizing: border-box;    
-    -webkit-box-sizing: border-box; 
-
-    background-color: rgba(0,0,0,0);
-    opacity: 1;
-    color: white;
-    resize: none; 
-}
-*/
-.map-description {
-    position: relative;
-    border: none !important;
-    /*border-radius: 6px;*/
-    width:100%;
-    /*height:100%;*/
-    height: 60px;
-    box-sizing: border-box;         /* For IE and modern versions of Chrome */
-    -moz-box-sizing: border-box;    /* For Firefox                          */
-    -webkit-box-sizing: border-box; /* For Safari                           */
-
-    background-color: rgba(0,0,0,0);
-    opacity: 1;
-    color: white;
-    resize: none;
-}
-
-.underline{
-    border-bottom: 1px solid rgba(82, 168, 236, 0.8);
-    color: rgba(82, 168, 236, 0.8);
-}
-
-.map-description-container {
-    /*border: 2px outset rgba(82, 168, 236, 0.8); */
-    position: absolute;
-    left: 41%;
-    right: 0;
-    top: 2px;
-    bottom: 0;
-    border-radius: 6px;
-    background-color: rgba(0,0,0,0);
-    opacity: 1;
-    overflow-y: hidden;
-}
-
-.map-selected {
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-hard_20_0972a5_1x100.png") repeat-x scroll 50% 50% #0972A5;
-    border: 2px inset #26B3F7;
-    /*background-color: green;*/
-}
-
-.tabs-left{
-    border-width: 0px !important;
-    background: none !important;
-}
-
-.tabheader-left{
-    background: none !important;
-    border-width: 0px !important;
-}
-
-.map-desc {
-    position: relative;
-    float: left;
-}
-
-/*=== Tabs (outer) ===*/
-.tabpanel {
-    float: left;
-    
-    width: 42%;
-    height: 100%;
-
-    border-width: 0px !important;
-
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-left-radius: 0px !important;
-
-    position: relative;
-}
-
-.tabpanel-small {
-    width: 100%;
-    height: 100%;
-
-    border-width: 0px !important;
-
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-left-radius: 0px !important;
-
-    /*position: absolute !important;*/
-}
-
-.ui-tabs {
-    padding: 0.0em !important;
-}
-
-.tab-large{
-    height: 20px !important;
-}
-
-.tab-large{
-    height: 40px !important;
-}
-
-
-.tabheader {
-    border-bottom: 1px solid #AAAAAA !important;
-    border-right: 1px solid #AAAAAA !important;
-    border-radius: 0 !important;
-    border-left-width: 0px !important;
-    /*border-right-width: 0px !important;*/
-    border-top-width: 0px !important;
-   
-    line-height: 1.3 !important;
-    padding-top: 5px !important;
-    padding-left: 5px !important;;
-}
-
-.tabheader-small {
-    border-bottom: 1px solid #AAAAAA !important;
-    border-radius: 0 !important;
-    border-left-width: 0px !important;
-    border-right-width: 0px !important;
-    border-top-width: 0px !important;
-    
-    padding-top: 5px !important;
-    padding-left: 5px !important;
-    line-height: 0.4 !important;
-
-    background-image: none !important;
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444 !important;
-}
-
-/*== Toolbar + map ===*/
-.tool_map {
-    float: left;
-    width: 58%;
-    height: 100%;
-}
-
-/*=== Toolbar ===*/
-.toolbar {
-    float: left;
-    width: 2%;
-    height: 100%;
-
-    background-color: rgba(82, 168, 236, 0.8);
-}
-
-.toolbarbtn {
-    background-repeat: no-repeat;
-    background-color: transparent;
-    display: block;
-
-    height: 100%;
-    width: 100%;
-
-    padding: 5px;
-
-    border-radius: 0px 0px 0px 0px;
-    border: 0px;
-}
-
-.toolstable {
-    position: relative;
-    top: 100px;
-
-    border-collapse: collapse;
-}
-
-/*=== Map ===*/
-.map {
-    float: left;
-
-    width: 100%;
-    height: 100%;
-}
-
-/*=== Search tools ===*/
-.tools {
-    height: 10%;
-    width: 100%;
-    border-top: 2px solid rgba(82, 168, 236, 0.8);
-}
-
-.findByLonLat {
-    float: right;
-    margin: 10px;
-    margin-right: 100px;
-}
-
-.findHotSpot {
-    float: right;
-    margin: 10px;
-    margin-right: 50px;
-}
-
-#selectHotSpot {
-    width: 230px;
-}
-
-.lon-lat {
-    height: 20px;
-    resize: none;
-    width: 60px;
-}
-
-/*=== Style and layer editors ===*/
+/*=== Codemirror ===*/
 .CodeMirror {
     position: absolute;
     bottom: 0;
@@ -379,13 +165,351 @@ html, body {
     color: #6699FF !important;
 }
 
-.layerMirror {
-    height: 300px !important;
-    border: 1px solid #bbbbbb !important;
-    position: relative !important;
-    top: 0 !important;
+/* === Tabs ===*/
+.tabpanel {
+    float: left;
+    
+    width: 42%;
+    height: 100%;
+
+    border-width: 0px !important;
+
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+
+    position: relative;
 }
 
+.tabpanel-small {
+    width: 100%;
+    height: 100%;
+
+    border-width: 0px !important;
+
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+}
+
+.tab-container {
+    overflow-x: auto;
+    /*height: 44px;*/
+    /*border-bottom: 1px solid #AAAAAA !important;*/
+    /*border-right: 1px solid #AAAAAA !important;*/
+}
+
+.ui-tabs {
+    padding: 0.0em !important;
+    /*font-size: medium !important;*/
+}
+
+.tab-small{
+    height: 20px !important;
+    font-size: medium !important;
+}
+
+.tab-large{
+    height: 36px !important;
+    font-size: medium !important;
+}
+
+.tabheader {
+    border-bottom: 1px solid #AAAAAA !important;
+    border-right: 1px solid #AAAAAA !important;
+    border-radius: 0 !important;
+    border-left-width: 0px !important;
+    border-top-width: 0px !important;
+   
+    line-height: 1.3 !important;
+    padding-top: 5px !important;
+    padding-left: 5px !important;
+
+    font-size: 10 !important;
+}
+
+.tabheader-small {
+    border-bottom: 1px solid #AAAAAA !important;
+    border-radius: 0 !important;
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+    border-top-width: 0px !important;
+    
+    padding-top: 5px !important;
+    padding-left: 5px !important;
+    line-height: 0.4 !important;
+
+    background-image: none !important;
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444 !important;
+}
+
+.tabs-left{
+    border-width: 0px !important;
+    background: none !important;
+}
+
+.tabheader-left{
+    background: none !important;
+    border-width: 0px !important;
+}
+
+.tabcontent {
+    padding: 0em !important;
+    overflow-y: auto;
+    
+    position: absolute;
+    top: 44px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-radius: 0px !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+.tabcontent-small {
+    padding: 0em !important;
+    overflow-y: auto;
+    
+    width: 100%;
+
+    /*border: 3px solid white;*/
+    
+    position: absolute;
+    bottom: 0;
+    top: 33px;
+    border-radius: 0px !important;
+}
+
+/*=== Manager ===*/
+.tabheader-ws-container {
+    overflow-y: auto;
+    position: relative;
+    height: 25%;  
+}
+
+.tabfooter-ws-container {
+    overflow-y: auto;
+    position: relative;
+    height: 75%;
+}
+
+.tabheader-content {
+    position: absolute;
+    right: 30%;
+    left: 0;
+    bottom: 0;
+    top: 0px;
+}
+
+.tabheader-buttons {
+    position: absolute;
+    right: 0;
+    left: 70%;
+    bottom: 0;
+    top: 0;
+}
+
+.manager-maps {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 55%;
+    top: 0;
+    overflow-y: auto; 
+}
+
+.manager-jobs{
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 45%;
+    overflow-y: auto;
+}
+
+.content {
+    overflow-y: auto;
+    position: absolute;
+    right: 25px;
+    left: 25px;
+    bottom: 0;
+    top: 40px;
+}
+
+.maps-content {
+    position: absolute;
+    right: 30%;
+    left: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.maps-buttons {
+    position: absolute;
+    right: 0;
+    left: 70%;
+    bottom: 0;
+    top: 0;
+}
+
+.jobs-content {
+    position: absolute;
+    right: 30%;
+    left: 25px;
+    bottom: 0;
+    top: 60%;
+    margin-top: 25px;
+}
+
+.jobs-buttons {
+    position: absolute;
+    right: 25px;
+    left: 70%;
+    bottom: 0;
+    top: 60%;
+    margin-top: 25px;
+}
+
+.separator{
+    position: absolute;
+    left: 25px;
+    right: 25px;
+    border-bottom: 1px solid #AAAAAA;
+    height: 20px;
+    padding-top: 10px;
+}
+
+.buttons-container {
+    display: inline-block;
+}
+
+.underline{
+    border-bottom: 1px solid rgba(82, 168, 236, 0.8);
+    color: rgba(82, 168, 236, 0.8);
+}
+
+.table-container {
+    position: absolute;
+    left: 0;
+    right: 60%;
+    top: 0;
+    bottom: 0;    
+}
+
+.map-table {
+    width: 100%;
+}
+
+.map-td { 
+    border: 2px outset #444444;
+    border-radius: 6px;
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_35_222222_1x100.png") repeat-x scroll 50% 50% #222222
+}
+
+.map-description-container {
+    position: absolute;
+    left: 41%;
+    right: 0;
+    top: 2px;
+    bottom: 0;
+
+    border-radius: 6px;
+
+    background-color: rgba(0,0,0,0);
+    opacity: 1;
+}
+
+.map-description {
+    width:100%;
+    height: 60px;
+
+    border: none !important;
+    
+    box-sizing: border-box;         
+    -moz-box-sizing: border-box;   
+    -webkit-box-sizing: border-box;
+
+    background-color: rgba(0,0,0,0);
+    opacity: 1;
+    color: white;
+
+    resize: none;
+}
+
+.map-selected {
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-hard_20_0972a5_1x100.png") repeat-x scroll 50% 50% #0972A5;
+    border: 2px inset #26B3F7;
+}
+
+/*== Editor ===*/
+.tabheader-editor-container {
+    overflow-y: hidden;
+    position: relative;
+    height: 30%;
+}
+
+.tabfooter-editor-container {
+    overflow-y: hidden;
+    position: relative;
+    height: 70%;
+}
+
+.editor-container {
+    overflow-y: auto;
+    position: absolute;
+    top: 33px;
+    bottom: 0;
+    width: 100%;
+    border-radius: 0px !important;
+}
+
+/*=== Data ===*/
+.datacontent {
+    padding: 0em !important;
+    overflow-y: auto !important;
+    
+    position: absolute !important;
+    top: 48px !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    border-radius: 0px !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+/*== Logs ===*/
+.logs {
+    width: 100%;
+    height: 100%;
+
+    margin: 0px;
+
+    background-color: transparent;
+    color: white;
+
+    border-width: 0px !important;
+
+    resize: none;
+}
+
+/*== Map ===*/
+.map-container {
+    float: left;
+    width: 58%;
+    height: 100%;
+}
+
+/*=== Map ===*/
+.map {
+    float: left;
+
+    width: 100%;
+    height: 100%;
+}
+
+/*=== Others ===*/
 .group-toolbar {
     position: relative;
     border-bottom: 1px solid #AAAAAA !important;
@@ -450,205 +574,8 @@ html, body {
 }
 
 .button-commit {
-    margin-top:10px;
-    margin-left: 18%;
-}
-
-/*=== Tabs (inner) ===*/
-.tabcontent {
-    padding: 0em !important;
-    overflow-y: auto;
-    
-    position: absolute;
-    top: 48px;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    border-radius: 0px !important;
-    border-right: 1px solid #AAAAAA !important;
-}
-
-.tabcontent-small {
-    padding: 0em !important;
-    overflow-y: auto;
-    
-    width: 100%;
-
-    /*border: 3px solid white;*/
-    
-    position: absolute;
-    bottom: 0;
-    top: 33px;
-    border-radius: 0px !important;
-}
-
-.datacontent {
-    padding: 0em !important;
-    overflow-y: auto !important;
-    
-    position: absolute !important;
-    top: 48px !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    left: 0 !important;
-    border-radius: 0px !important;
-    border-right: 1px solid #AAAAAA !important;
-}
-
-.editor-container {
-    overflow-y: auto;
-    position: absolute;
-    top: 33px;
-    bottom: 0;
-    width: 100%;
-    border-radius: 0px !important;
-}
-
-.tabheader-ws-container {
-    overflow-y: auto;
     position: relative;
-    height: 25%;
-    /*position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 82%;
-    top: 0;*/
-    /*min-height:200px;*/    
-}
-
-.tabfooter-ws-container {
-    overflow-y: auto;
-    position: relative;
-    height: 75%;
-    /*position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    top: 18%;*/
-    /*min-height:200px;*/
-}
-
-.tabheader-editor-container {
-    overflow-y: hidden;
-    position: relative;
-    height: 30%;
-}
-
-.tabfooter-editor-container {
-    overflow-y: hidden;
-    position: relative;
-    height: 70%;
-}
-
-.tabheader-content {
-    position: absolute;
-    right: 30%;
-    left: 0;
-    bottom: 0;
-    top: 0px;
-}
-
-.tabheader-buttons {
-    /*padding-top: 15px;*/
-    position: absolute;
-    right: 0;
-    left: 70%;
-    bottom: 0;
-    top: 0;
-}
-
-.content {
-    overflow-y: auto;
-    position: absolute;
-    right: 25px;
-    left: 25px;
-    bottom: 0;
-    top: 40px;
-}
-
-.maps-content {
-    /*overflow-y: auto;*/
-    position: absolute;
-    right: 25%;
-    left: 0;
-    bottom: 0;
-    top: 0;
-}
-
-.maps-buttons {
-    /*padding-top: 110px;*/
-    /*overflow-y: auto;*/
-    position: absolute;
-    right: 0;
-    left: 70%;
-    bottom: 0;
-    top: 0;
-}
-
-.jobs-content {
-    position: absolute;
-    right: 30%;
-    left: 25px;
-    bottom: 0;
-    top: 60%;
-    margin-top: 25px;
-}
-
-.jobs-buttons {
-    position: absolute;
-    right: 25px;
-    left: 70%;
-    bottom: 0;
-    top: 60%;
-    margin-top: 25px;
-}
-
-.workspace-maps {
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 55%;
-    top: 0;
-    /*height: 45%;*/
-    overflow-y: auto; 
-}
-
-.workspace-jobs{
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    top: 45%;
-    /*height: 55%;*/
-    overflow-y: auto;
-}
-
-.separator{
-    position: absolute;
-    left: 25px;
-    right: 25px;
-    border-bottom: 1px solid #AAAAAA;
-    height: 20px;
-    padding-top: 10px;
-    /*width: 100%;*/
-}
-
-.buttons-container {
-    display: inline-block;
-}
-
-.logs {
-    width: 100%;
-    height: 100%;
-
-    margin: 0px;
-
-    background-color: transparent;
-    color: white;
-
-    border-width: 0px !important;
-
-    resize: none;
+    left: 48%;
 }
 
 .newmap-description{
@@ -660,87 +587,12 @@ html, body {
     display: none;
 }
 
-.acc-btn-edit-editing {
-    position: relative;
-    float: right;
-    right: 10px;
-    top: 5px;
-
-    height: 20px;
-    width: 20px;
-
-    display: block;
-
-    background-repeat: no-repeat;
-    background-color: transparent;
-
-    border-radius: 0px 0px 0px 0px;
-    border: 0px;
-}
-
-.acc-btn-edit {
-    background-image: url("http://projects.opengeo.org/common/geosilk/trunk/silk/pencil.png");
-}
-
-.acc-btn-stop-editing {
-    background-image: url("images/stop-editing.png");
-}
-
-.acc-btn-delete {
-    background-image: url("images/delete-map.png");
-}
-
-.acc-btn-editing {
-    background-image: url("http://projects.opengeo.org/common/geosilk/trunk/silk/disk.png");
-}
-
-.acc-btn-add {
-    background-image: url("http://www.pensacolabusiness.com/images/icons/addIcon.gif");
-}
-
-.acc-btn-remove {
-    background-image: url("images/moins.png");
-}
-
-.acc-btn-upload {
-    background-image: url("images/Upload.png");
-}
-
-.acc-btn-lock-unlock {
-    position: relative;
-    float: right;
-    right: 10px;
-    top: 5px;
-
-    height: 20px;
-    width: 20px;
-
-    display: block;
-
-    background-repeat: no-repeat;
-    background-color: transparent;
-
-    border-radius: 0px 0px 0px 0px;
-    border: 0px;
-}
-
-.acc-btn-unlocked {
-    background-image: url("images/icon-cadenas-unlocked.png");
-}
-
-.acc-btn-locked {
-    background-image: url("images/icon_cadenas_locked.png");
-}
-
 li {
     list-style: disc outside none; 
 }
 
-.acc-container {
-    margin: 10px;
-}
-
 /*=== Text, select, button ===*/
+/*
 label {
     color: white;
     font: normal 15px !important;
@@ -779,7 +631,7 @@ button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="but
 .layer:hover {
     cursor: crosshair;
 }
-
+*/
 /*=== Other ===*/
 div.olControlZoom a {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5) !important;
@@ -810,12 +662,11 @@ div.olControlZoom a {
     left: 20px;
     margin-right:16px;
 }
-
+/*
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected {
     padding-bottom: 0px !important;
 }
 
-/* remove extra button width in IE */
 button.fg-button { 
     width:auto; 
     overflow:visible;
@@ -832,8 +683,6 @@ button.fg-button {
     border-top-right-radius: 0px;
 }
 
-
-
 .right-button {
     border-bottom-left-radius: 0px;
     border-top-left-radius: 0px;
@@ -847,66 +696,5 @@ button.fg-button {
 .fg-buttonset .fg-button { float: left; }
 .fg-buttonset-single .fg-button, 
 .fg-buttonset-multi .fg-button { margin-right: -0.3px;}
-
-.cm-s-default span.cm-number{
-    color: #FFFFFF; /* #0066FF;*/
-}
-
-.cm-s-default span.cm-string {
-    color: #FFFF00;
-}
-
-.cm-s-default span.cm-comment {
-    color: #CC0033;
-}
-
-.cm-s-default span.cm-operator {
-    color: #33FF00;
-}
-
-.cm-s-default span.cm-keyword {
-    color: #9900C9;
-}
-
-.cm-s-default span.cm-error {
-    color: #990099;
-}
-
-.loadingMap {
-    bottom: 52%;
-    left: 50%;
-    position: relative;
-    z-index: 999;
-    display: none;
-}
-
-.loadingCode {
-    bottom: 55%;
-    left: 20%;
-    position: relative;
-    z-index: 999;
-    display: none;
-}
-
-#scalelbl {
-    bottom: 70px;
-    left: 160px;
-    position: absolute;
-}
-
-#scalelevel {
-    bottom: 35px;
-    left: 160px;
-    position: absolute;
-}
-
-#addHotSpot {
-    height:auto !important;
-}
-
-.progress { position:relative; display:none, border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
-.bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
-.percent { position:absolute; display:none; top:3px; left:48%; }
-#status {position:relative}
-.uploadSend {position:relative; left:60px; padding:4px !important; margin-bottom:5px; width:85px;}
+*/
 
