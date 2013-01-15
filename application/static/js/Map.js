@@ -223,26 +223,25 @@ Map.prototype.display = function(){
     } else{
         var scales = [];
 
-        if(this.OLUnits == "meters" || this.OLUnits == null){
-            units = "m";         
+        if(this.OLUnits == "meters" || this.OLUnits == null){     
             for(i in this.OLScales){
                 scales[i] = Math.ceil(parseInt(this.OLScales[i])/10) * 10;
             }
         } else if(this.OLUnits == "dd"){
-            units= "degrees";
             for(i in this.OLScales){
                 scales[i] = this.OLScales[i];
             }
         }
 
         var extent = this.OLExtent.split(" ");    
+        var projection = new OpenLayers.Projection(this.OLProjection);
 
         var mapOptions = {
             allOverlays: true,
-            projection: new OpenLayers.Projection(this.OLProjection),
+            projection: projection,
             maxExtent: extent,
             scales:  scales,
-            units: units
+            units: projection.getUnits()
         };
 
         var OLMap = new OpenLayers.Map(this.workspace.mapDiv, mapOptions);
@@ -256,7 +255,7 @@ Map.prototype.display = function(){
                 format: "image/png"
             }, {
                 singleTile: true,
-                projection: new OpenLayers.Projection(this.OLProjection)
+                projection: projection
             }
         );
 
