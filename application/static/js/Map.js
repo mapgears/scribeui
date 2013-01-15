@@ -222,23 +222,25 @@ Map.prototype.display = function(){
         $("#" + this.workspace.logTextarea).val(error);
     } else{
         var scales = [];
-        for(i in this.OLScales){
-            scales[i] = Math.ceil(parseInt(this.OLScales[i])/10) * 10;
-        }
 
-        var extent = this.OLExtent.split(" ");
-
-        if(this.OLUnits == "meters"){
-            units = "m";
+        if(this.OLUnits == "meters" || this.OLUnits == null){
+            units = "m";         
+            for(i in this.OLScales){
+                scales[i] = Math.ceil(parseInt(this.OLScales[i])/10) * 10;
+            }
         } else if(this.OLUnits == "dd"){
-            units= "d";
+            units= "degrees";
+            for(i in this.OLScales){
+                scales[i] = this.OLScales[i];
+            }
         }
+
+        var extent = this.OLExtent.split(" ");    
 
         var mapOptions = {
             allOverlays: true,
             projection: new OpenLayers.Projection(this.OLProjection),
             maxExtent: extent,
-            maxResolution: scales[1],
             scales:  scales,
             units: units
         };

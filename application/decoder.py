@@ -325,4 +325,11 @@ LAYERS = data["LAYERS"]
 VAR = list2dict(data["VAR"])
 SCALES = list2dict(data["SCALES"])
 
+#mapDict = list2dict(MAP)
+#if mapDict['UNITS'] is None:
+#    print "Map units undefined"
+#elif mapDict["UNITS"] == "dd":
+#    for scale in SCALES:
+#        SCALES[scale] = float(SCALES[scale])/111000;
+
 jsonToMap()
