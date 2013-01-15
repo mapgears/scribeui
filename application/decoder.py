@@ -193,7 +193,7 @@ def write(string, scales, files):
                 #files[value].write("MAXSCALEDENOM " + str(int(SCALES[str(int(value) - 1)])-1) + "\n")
 
             files[value].write("MINSCALEDENOM " + str(scales[value]) + "\n")
-        elif re.match(r"^NAME", string):
+        elif re.match(r"^(NAME|MASK)", string):
             text = string
             text = re.sub(r"'$", value + "'", text)
             text = re.sub(r"\"$", value + "\"", text)
