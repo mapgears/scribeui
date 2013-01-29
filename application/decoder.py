@@ -5,14 +5,14 @@ import json
 import re
 import sys
 
-def parseDict(data, scales, files):
+def parseDict(data, scales, files, indentation):
     for d in data:
         dType =  type(data[d])
         if dType == type(dict()):
             if isScale(d) == False:
-                parseDict(data[d], scales, files)
+                parseDict(data[d], scales, files, indentation)
         elif dType == type(list()):
-            parseList(d, data[d], scales, files)
+            parseList(d, data[d], scales, files, indentation)
         elif dType == type(unicode()):
             if isVar(data[d]):
                 key = data[d][4:]
@@ -24,34 +24,35 @@ def parseDict(data, scales, files):
             vType = type(value)
             if d == "VOID":
                 if vType == type(dict()):
-                    parseDict(value, scales, files)
+                    parseDict(value, scales, files, indentation)
                 elif vType == type(list()):
-                    parseList(key, value, scales, files, False)
-                elif vType == type(unicode()):
-                    write(comment(value), scales, files)
+                    parseList(key, value, scales, files, indentation, False)
+                elif vType == type(unicode()):                    
+                    write(comment(value), scales, files, indentation)
                 elif vType == type(int()):
-                    write(str(value), scales, files)
+                    write(str(value), scales, files, indentation)
             elif vType == type(list()):
                 if isScaleList(value):
                     maxScale = maximumScale(scales)
                     minScale = minimumScale(scales)
-                    parseScaleList(d, value, files, minScale, maxScale)
+                    parseScaleList(d, value, files, minScale, maxScale, indentation)
             else:
                  if isScale(d) == False:
-                     write(d + " " + value, scales, files)
+                     write(d + " " + value, scales, files, indentation)
         elif dType == type(int()):
             value = str(data[d])    
             if isScale(value) == False:
-                write(d + " " + value, scales, files)
+                write(d + " " + value, scales, files, indentation)
 
-def parseList(d, data, scales, files, close=True):
+def parseList(d, data, scales, files, indentation, close=True):
     if (closeTag(data) == True and isScale(d) == False and isScaleList(data) == False and isVar(d) == False and close == True):
-        write(d, scales, files)
+        write(d, scales, files, indentation)
+        indentation = addIndentation(indentation, INDENTATION)
 
     if (isScaleList(data) == True and close == True):
         maxScale = maximumScale(scales)
         minScale = minimumScale(scales)
-        parseScaleList(d, data, files, minScale, maxScale, close)
+        parseScaleList(d, data, files, minScale, maxScale, indentation, close)
     else:
         for item in data:
             dType = type(item)
@@ -60,16 +61,17 @@ def parseList(d, data, scales, files, close=True):
                     if isScale(i):
                         maxScale = maximumScale(scales)
                         minScale = minimumScale(scales)
-                        parseScale(i, item[i], files, minScale, maxScale)
+                        parseScale(i, item[i], files, minScale, maxScale, indentation)
                     else:
-                        parseDict(item, scales, files)
+                        parseDict(item, scales, files, indentation)
             else:
                 print "Erreur: JSON mal formé"
 
     if (closeTag(data) == True and isScale(d) == False and isScaleList(data) == False and close == True):
-        write("END", scales, files)
+        indentation = substractIndentation(indentation, INDENTATION)
+        write("END", scales, files, indentation)
 
-def parseScaleList(d, data, files, minScale, maxScale, close=True):
+def parseScaleList(d, data, files, minScale, maxScale, indentation, close=True):
     for item in data:
         for scale in item:
             scales = scaleToScaleList(scale, minScale, maxScale)
@@ -84,20 +86,22 @@ def parseScaleList(d, data, files, minScale, maxScale, close=True):
             vType = type(value)
 
             if vType == type(dict()):
-                write(d, scales, files)
-                parseDict(value, scales, files)
+                write(d, scales, files, indentation)
+                parseDict(value, scales, files, indentation)
             elif vType == type(list()):
-                write(d, scales, files)
-                parseList(key, value, scales, files)
+                write(d, scales, files, indentation)
+                indentation = addIndentation(indentation, INDENTATION)
+                parseList(key, value, scales, files, indentation)               
             elif vType == type(unicode()):
-                write(d + " " + value, scales, files)
+                write(d + " " + value, scales, files, indentation)
             elif vType == type(int()):
-                write(d + " " + str(value), scales, files)
+                write(d + " " + str(value), scales, files, indentation)
 
         if closeTag(data) == True:
-            write("END", scales, files) 
+            indentation = substractIndentation(indentation, INDENTATION)
+            write("END", scales, files, indentation) 
 
-def parseScale(scale, data, files, minScale, maxScale):
+def parseScale(scale, data, files, minScale, maxScale, indentation):
     scales = scaleToScaleList(scale, minScale, maxScale)
 
     for d in data:
@@ -112,14 +116,14 @@ def parseScale(scale, data, files, minScale, maxScale):
             vType = type(value)
 
             if vType == type(dict()):
-                write(item, scales, files)
-                parseDict(value, scales, files)
+                write(item, scales, files, indentation)
+                parseDict(value, scales, files, indentation)
             elif vType == type(list()):
-                parseList(key, value, scales, files)
+                parseList(key, value, scales, files, indentation)
             elif vType == type(unicode()):
-                write(item + " " + value, scales, files)
+                write(item + " " + value, scales, files, indentation)
             elif vType == type(int()):
-                write(item + " " + str(value), scales, files)
+                write(item + " " + str(value), scales, files, indentation)
 
 def scaleToScaleList(scale, minScale, maxScale):
     scales = {}
@@ -182,24 +186,34 @@ def minimumScale(scales):
             minScale = int(scale)
     return minScale
 
-def write(string, scales, files):
+def addIndentation(string, n):
+    for i in range (0, n):
+        string += " "
+    return string
+
+def substractIndentation(string, n):
+    n = -n;
+    return string[:n]
+
+def write(string, scales, files, indentation):
     for value in scales:
         if string == "LAYER":
-            files[value].write(string + "\n")
+            files[value].write(indentation + string + "\n")
+            indentation = addIndentation(indentation, INDENTATION)
             if value == str(minimumScale(SCALES)):
-                files[value].write("MAXSCALEDENOM 999999999" + "\n")
+                files[value].write(indentation + "MAXSCALEDENOM 999999999" + "\n")
             else:
-                files[value].write("MAXSCALEDENOM " + str(int(SCALES[str(int(value) - 1)])-1) + "\n")
-                #files[value].write("MAXSCALEDENOM " + str(int(SCALES[str(int(value) - 1)])-1) + "\n")
+                files[value].write(indentation + "MAXSCALEDENOM " + str(SCALES[str(int(value) -1)]) + "\n")
 
-            files[value].write("MINSCALEDENOM " + str(scales[value]) + "\n")
+            files[value].write(indentation + "MINSCALEDENOM " + str(scales[value]) + "\n")
+            indentation = substractIndentation(indentation, INDENTATION)
         elif re.match(r"^(NAME|MASK)", string):
             text = string
             text = re.sub(r"'$", value + "'", text)
             text = re.sub(r"\"$", value + "\"", text)
-            files[value].write(text + "\n")
+            files[value].write(indentation + text + "\n")
         else:
-            files[value].write(string + "\n")
+            files[value].write(indentation + string + "\n")
 
 def comment(string):
     return re.sub(r"##",  "\n#", string)
@@ -219,24 +233,24 @@ def closeFiles(files):
     for value in files:
         files[value].close()
 
-def jsonToLayer():
+def jsonToMap():
+    indentation = "    "
     layerFiles = openLayerFiles()
-    for layer in LAYERS:
-        parseDict(layer, SCALES, layerFiles)
+    parseList("", LAYERS, SCALES, layerFiles, indentation, False)
     closeFiles(layerFiles)
 
-def jsonToMap():
-    jsonToLayer()
     mapFile = openMapFile()
-    #write("MAP", {"1": None}, mapFile)
-    parseList("MAP", MAP, {"1": None}, mapFile, True)
+    parseList("MAP", MAP, {"1": None}, mapFile, "")
     mapFile["1"].seek(-4, 2)
-    write("###SYMBOLS###", {"1": None}, mapFile)    
+    write("#---- SYMBOLS ----#", {"1": None}, mapFile, "")
+    
     for value in range(1,len(SCALES) + 1):
-        layerfile = open(sys.argv[2]+"layers/level" + str(value) + ".map", "r")
-        write(layerfile.read(),{"1": None},mapFile)
+        layerfile = open(sys.argv[2] + "layers/level" + str(value) + ".map", "r")
+        write("#---- LEVEL " + str(value) + " ----#", {"1": None}, mapFile, "")
+        write(layerfile.read(), {"1": None}, mapFile, "")
         closeFiles(layerfile)
-    write("END", {"1": None}, mapFile)
+
+    write("END", {"1": None}, mapFile, "")
     closeFiles(mapFile)
 
 def string2json(string):
@@ -325,11 +339,6 @@ LAYERS = data["LAYERS"]
 VAR = list2dict(data["VAR"])
 SCALES = list2dict(data["SCALES"])
 
-#mapDict = list2dict(MAP)
-#if mapDict['UNITS'] is None:
-#    print "Map units undefined"
-#elif mapDict["UNITS"] == "dd":
-#    for scale in SCALES:
-#        SCALES[scale] = float(SCALES[scale])/111000;
+INDENTATION = 4
 
 jsonToMap()
