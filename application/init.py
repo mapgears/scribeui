@@ -555,7 +555,7 @@ def execute():
         destination.write(contentD)#.encode('utf-8'))
         destination.close()
 
-        result = "**Success**\n\n\n**LOG**----------\n" + logMsg
+        result = "**Success**\n\n**LOG**\n----------\n" + logMsg
     else:
         result = "**ERRORS**\n----------\n" + errorMsg + "\n----------\n" + logMsg
 
