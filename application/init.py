@@ -539,22 +539,25 @@ def execute():
         return "No workspace or no map open"
     pathMap = (path+"workspaces/"+session['ws_name']+"/"+session['map_name'])+"/"
     sub = subprocess.Popen('python decoder.py '+pathMap+'editor/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    logMsg = sub.stdout.read()
+    errorMsg = sub.stderr.read()
     
-    if (sub.stderr.read() == ""):
+    if (errorMsg == ""):
         symbolsFile = open(pathMap+"symbols.map", "r")
         symbols = symbolsFile.read()
         symbolsFile.close()
         source = open(pathMap+"/map/"+session['map_name']+".map", "r")
         contentS = source.read()
         source.close()
-        contentD = contentS.replace("###SYMBOLS###", symbols)
+        contentD = contentS.replace("#---- SYMBOLS ----#","#---- SYMBOLS ----#\n" + symbols)
         destination = open(pathMap+"/map/"+session['map_name']+".map", "w")
         destination.write(contentD)#.encode('utf-8'))
         destination.close()
 
-        result = "Success"
+        result = "**Success**\n\n**LOG**\n----------\n" + logMsg
     else:
-        result = "**ERRORS**\n------\n" + sub.stderr.read()+sub.stdout.read()
+        result = "**ERRORS**\n----------\n" + errorMsg + "\n----------\n" + logMsg
 
     return jsonify(result=result)
 
