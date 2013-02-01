@@ -1,29 +1,29 @@
-LAYER {
-	3-17 {
+LAYER [
+	3-17 [
         NAME: 'waterarea'
         TYPE: POLYGON
-        @connection
-        @layerconfig
-        DATA {
+        @VAR.connection
+        @VAR.layerconfig
+        DATA [
 			1-4: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913"
 			5-12: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
 			13-17: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
-		}
+		]
     	LABELITEM: 'name'
         CLASSITEM: 'type'
-        CLASS {
+        CLASS [
 			EXPRESSION: 'riverbank'
-            STYLE {
-				COLOR: @waterarea_clr
-			}
-		}
-    	CLASS {
-			STYLE {
-				COLOR: @waterarea_clr
-			}
-        	LABEL {
-				5-17 {
-					@labelconfig
+            STYLE [
+				COLOR: @VAR.waterarea_clr
+			]
+		]
+    	CLASS [
+			STYLE [
+				COLOR: @VAR.waterarea_clr
+			]
+        	LABEL [
+				5-17 [
+					@VAR.labelconfig
                     FONT: 'sc'
         			ENCODING: 'utf-8'
 					MINDISTANCE: 200
@@ -34,53 +34,53 @@ LAYER {
                     WRAP: ' '
                     MAXLENGTH: 5
                     ALIGN: CENTER
-				}
-			}
-		}
-    }
-}
+				]
+			]
+		]
+    ]
+]
 
-LAYER {
-	4-17 {
+LAYER [
+	4-17 [
         NAME: 'waterways'
         TYPE: LINE
-        @connection
-        @layerconfig
-        DATA {
+        @VAR.connection
+        @VAR.layerconfig
+        DATA [
 			1-10: "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
 			11-17: "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
-		}
+		]
     	CLASSITEM: 'type'
         LABELITEM: 'name'
-        CLASS {
+        CLASS [
 			EXPRESSION: 'river'
-            STYLE {
-				COLOR: @waterways_clr
- 				WIDTH: @waterways_width
-			}
-        	LABEL {
-				@labelconfig_waterways
-			}
-		}
-    	CLASS {
+            STYLE [
+				COLOR: @VAR.waterways_clr
+ 				WIDTH: @VAR.waterways_width
+			]
+        	LABEL [
+				@VAR.labelconfig_waterways
+			]
+		]
+    	CLASS [
 			EXPRESSION: 'stream'
-            STYLE {
-				COLOR: @waterways_clr
- 				WIDTH: @waterways_width
-			}
-        	LABEL {
-				@labelconfig_waterways
-			}
-		}
-    	CLASS {
+            STYLE [
+				COLOR: @VAR.waterways_clr
+ 				WIDTH: @VAR.waterways_width
+			]
+        	LABEL [
+				@VAR.labelconfig_waterways
+			]
+		]
+    	CLASS [
 			EXPRESSION: 'canal'
-            STYLE {
-				COLOR: @waterways_clr
- 				WIDTH: @waterways_width
-			}
-        	LABEL {
-				@labelconfig_waterways
-			}
-		}
-    }
-}
+            STYLE [
+				COLOR: @VAR.waterways_clr
+ 				WIDTH: @VAR.waterways_width
+			]
+        	LABEL [
+				@VAR.labelconfig_waterways
+			]
+		]
+    ]
+]

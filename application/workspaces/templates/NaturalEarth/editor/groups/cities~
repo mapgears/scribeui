@@ -60,7 +60,7 @@ LAYER {
                         COLOR: '#AAAAAA'
                         SIZE: 6
                     }
-		        }
+		}
             }
         }
     }

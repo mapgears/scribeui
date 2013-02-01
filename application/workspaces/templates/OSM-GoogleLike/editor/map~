@@ -1,4 +1,4 @@
-MAP {
+MAP [
     CONFIG: 'ON_MISSING_DATA' 'IGNORE'
     CONFIG: 'MS_ERRORFILE' '../debugFile.log'
     CONFIG: 'PROJ_LIB' '../'
@@ -10,18 +10,18 @@ MAP {
     EXTENT: -20000000 -20000000 20000000 20000000
     IMAGECOLOR: '#A5BFE0'
     SHAPEPATH: '../../../../data/osm/'
-    WEB {
+    WEB [
         METADATA [
-            "ows_enable_request" "*"
-            "wms_srs" "EPSG:900913 EPSG:4326"
-            "labelcache_map_edge_buffer" "-10"
-            "wms_title" "JSON WMS"
+            @"ows_enable_request" "*"
+            @"wms_srs" "EPSG:900913 EPSG:4326"
+            @"labelcache_map_edge_buffer" "-10"
+            @"wms_title" "JSON WMS"
         ]
         IMAGEPATH: '/tmp/ms_tmp/'
         IMAGEURL: '/ms_tmp/'
-    }
+    ]
     DEBUG: 5
     PROJECTION [
-        "init=epsg:900913"
+        @"init=epsg:900913"
     ]
-}
+]

@@ -1,54 +1,54 @@
-LAYER {
+LAYER [
     NAME: 'places'
     TYPE: ANNOTATION
     @connection
     @layerconfig 
-	DATA {
+	DATA [
 		1-3: "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         4: "geometry from (select * from osm_new_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
 		5-7: "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
 		8: "geometry from (select * from osm_new_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
 		9-17: "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
-	} 
+	] 
 	LABELITEM: 'name'
     CLASSITEM: 'type'
-    CLASS {
-		0 {
+    CLASS [
+		0 [
 			EXPRESSION: ('[capital]' = '1')
-            0 {
-				STYLE {
+            0 [
+				STYLE [
 					SIZE: 6
                     SYMBOL: 'citycircle'
                     COLOR: 255 0 0
                     OUTLINECOLOR: 0 0 0
-				}
-            	STYLE {
+				]
+            	STYLE [
 					SIZE: 2
                     SYMBOL: 'citycircle'
                     COLOR: 0 0 0
-				}
-			}
-        	LABEL {
+				]
+			]
+        	LABEL [
 				@labelconfig_places
                 FONT: 'sc'
-                SIZE {
+                SIZE [
 					1-3: 0
                     4-8: 8
                     9-10: 9
                     11-13: 10
                     14-15: 11
                     16-17: 12
-				}
+				]
                 COLOR: 0 0 0
                 OUTLINECOLOR: 255 255 255
                 OUTLINEWIDTH: 2               
-			}
-		}
-	}
-	CLASS {
-		1-3 {
+			]
+		]
+	]
+	CLASS [
+		1-3 [
 			EXPRESSION: 'continents'
-        	LABEL {
+        	LABEL [
 				FONT: 'scb'
  				TYPE: TRUETYPE
                 ENCODING: 'utf-8'
@@ -59,176 +59,176 @@ LAYER {
                 BUFFER: 4
                 PARTIALS: FALSE
                 POSITION: CC
-			}
-		}
-	}
-	CLASS {
-		3-8 {
+			]
+		]
+	]
+	CLASS [
+		3-8 [
 			EXPRESSION: 'country'
-        	LABEL {
+        	LABEL [
 				@labelconfig_places
                 FONT: 'scb'
                 SIZE: 8
                 COLOR: 100 100 100
                 OUTLINECOLOR: -1 -1 -1
                 OUTLINEWIDTH: 2                
-			}
-		}
-	}
-	CLASS {
-		5-9 {
+			]
+		]
+	]
+	CLASS [
+		5-9 [
 			EXPRESSION: 'state'
-        	LABEL {
+        	LABEL [
 				@labelconfig_places
                 FONT: 'sc'
-                SIZE {
+                SIZE [
 					1-4: 0
                     5-6: 9
                     7-17: 10
-				}
-                COLOR {
+				]
+                COLOR [
 					1-6: 0 0 0
                     7-17: '#5F5F5F'
-				}
+				]
                 OUTLINECOLOR: 255 255 255
                 OUTLINEWIDTH: 2
                 PRIORITY: 9
-			}
-		}
-	}
-	CLASS {
-		6-16 {
+			]
+		]
+	]
+	CLASS [
+		6-16 [
 			EXPRESSION: 'city'
-            1-9 {
-				STYLE {
-					SIZE {
+            1-9 [
+				STYLE [
+					SIZE [
 						1-8: 5
                         9-17: 6
-					}
+					]
                     SYMBOL: 'citycircle'
-                    COLOR {
+                    COLOR [
 						1-6: 200 200 200
                         7-17: 255 255 255
-					}
+					]
                     OUTLINECOLOR: 0 0 0
-				}
-			}
-        	LABEL {
+				]
+			]
+        	LABEL [
 				@labelconfig_places
                 FONT: 'scb'
-                SIZE {
+                SIZE [
 					1-3: 0
                     4: 7
                     5-11: 8
                     12-13: 9
                     14-15: 10
                     16-17: 11
-				}
-                COLOR {
+				]
+                COLOR [
 					1-6: 0 0 0
                     7-17: 46 46 46
-				}
+				]
                 OUTLINECOLOR: 255 255 255
-                OUTLINEWIDTH {
+                OUTLINEWIDTH [
 					1-10: 1
                     10-17: 2
-				}
+				]
              	PRIORITY: 9  
-			}
-		}
-	}
-	CLASS {
-		9-17 {
+			]
+		]
+	]
+	CLASS [
+		9-17 [
 			EXPRESSION: 'town'
-            9-17 {
-				STYLE {
-					SIZE {
+            9-17 [
+				STYLE [
+					SIZE [
 						1-8: 0
                         9-10: 3
                         11-17: 5
-					}
+					]
                     SYMBOL: 'citycircle'
                     COLOR: 200 200 200
                     OUTLINECOLOR: 0 0 0
-				}
-			}
-        	LABEL {
+				]
+			]
+        	LABEL [
 				@labelconfig_places
                 FONT: 'sc'
-                SIZE {
+                SIZE [
 					1-8: 0
                     9-13: 8
                     14-15: 10
                     16-17: 11
-				}
-                COLOR {
+				]
+                COLOR [
 					1-8: '#66666'
                     9-17: 0 0 0
-				}
+				]
                 OUTLINECOLOR: 255 255 255
                 OUTLINEWIDTH: 1 
-			}
-		}
-	}
-	CLASS {
-		11-17 {
+			]
+		]
+	]
+	CLASS [
+		11-17 [
 			EXPRESSION: 'villages'
-            11-17 {
-				STYLE {
-					SIZE {
+            11-17 [
+				STYLE [
+					SIZE [
 						1-10: 0
                         11-13: 3
                         14-17: 4
-					}
+					]
                     SYMBOL: 'citycircle'
                     COLOR: 200 200 200
                     OUTLINECOLOR: 0 0 0
-				}
-			}
-        	LABEL {
+				]
+			]
+        	LABEL [
 				@labelconfig_places
                 FONT: 'sc'
-                SIZE {
+                SIZE [
 					1-10: 0
                     11-13: 8
                     14-15: 9
                     16-17: 10
-				}
-                COLOR {
+				]
+                COLOR [
 					1-13: '#444444'
                     14-17: 0 0 0
-				}
+				]
                 OUTLINECOLOR: 255 255 255
                 OUTLINEWIDTH: 1 
-			}
-		}
-	}
-	CLASS {
-		11-17 {
+			]
+		]
+	]
+	CLASS [
+		11-17 [
 			EXPRESSION: /suburb|hamlet|locality/
-            0 {
-				STYLE {
+            0 [
+				STYLE [
 					SIZE: 4
                     SYMBOL: 'citycircle'
                     COLOR: 200 200 200
                     OUTLINECOLOR: 0 0 0
-				}
-			}
-        	LABEL {
+				]
+			]
+        	LABEL [
 				@labelconfig_places
                 FONT: 'sc'
-                SIZE {
+                SIZE [
 					1-10: 0
                     11-15: 7
                     16-17: 9
-				}
-                COLOR {
+				]
+                COLOR [
 					1-15: '#444444'
                     16-17: 0 0 0
-				}
+				]
                 OUTLINECOLOR: 255 255 255
                 OUTLINEWIDTH: 1 
-			}
-		}
-	}
-} 
+			]
+		]
+	]
+] 
