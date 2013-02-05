@@ -1,9 +1,4 @@
-jQuery(function() {
-     MAPS = []; 
-    CURRENT_WORKSPACE = null;
-    MAP_EDITED = null;
-    DEBUG = 0;
-
+jQuery(function() {     
     _workspace = null;
     workspaceConfig = {
         "workspaceSelect": "workspace-select",

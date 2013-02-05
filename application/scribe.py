@@ -119,6 +119,9 @@ def parseScale(scale, data, files, minScale, maxScale, indentation):
             if item == "VARIABLE":
                 key = item
                 value = VAR[d[item]]
+            elif d[item][:9] == "VARIABLE:":
+                key = item
+                value = parseVariable(d[item][9:])
             else:
                 key = item
                 value = d[key]

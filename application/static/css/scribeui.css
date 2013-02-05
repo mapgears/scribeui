@@ -1,0 +1,711 @@
+/*=== html, body, main ===*/
+html, body {
+    height: 100%;
+    width: 100%;
+
+    margin: 0px;
+    padding: 0px;
+
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    background-color: #222222;
+}
+
+.main {
+    height: 90%;
+    width: 100%;
+}
+
+/*=== Header ===*/
+.navbar {
+    position: relative;
+
+    border-bottom: 2px solid rgba(82, 168, 236, 0.8);
+    margin-top: 0px;
+
+    width: 100%;
+    height: 2%;
+
+    min-height: 40px;
+
+    
+}
+
+.title {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #999999;
+    font-size: 20px;
+    line-height: 1;
+ 
+    padding-top: 10px;    
+}
+
+.title-left {
+    position: relative;
+    float: left;
+    padding-left: 20px;
+}
+
+.title-right {
+    position: relative;
+    float: right;
+    padding-right: 20px;
+    text-align: right;
+}
+
+/*=== Bottom ===*/
+.tools {
+    height: 8%;
+    width: 100%;
+    border-top: 2px solid rgba(82, 168, 236, 0.8);
+    padding-top: 10px;
+}
+
+.tools button {
+    font-size: 14px !important;    
+}
+
+.tools-left {
+    position: relative;
+    float: left;
+    width: 42%;
+}
+
+.tools-right {
+    position: relative;
+    float: right;
+    width: 58%;
+}
+
+.poi-container {
+    position: relative;
+    float: left;
+    padding-left: 10px;
+}
+
+.poi-container select{
+    width: 200px;
+}
+
+.scale-level {
+    position: relative;
+    float:right;
+    padding-right: 10px;
+    color: white;
+}
+
+/*=== Elfinder ===*/
+.elfinder-dialog {
+    visibility: hidden !important;
+}
+
+.elfinder-toolbar {
+    border-radius: 0px !important;
+}
+
+.elfinder-navbar {
+   height: 100% !important;
+}
+
+.elfinder-cwd-wrapper {
+   height: 100% !important;
+}
+
+.elfinder-statusbar {
+    border-radius: 0px !important;
+}
+
+.file-manager {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    height: auto !important;
+}
+
+/*=== Codemirror ===*/
+.CodeMirror {
+    position: relative;
+    height: 100%;
+
+    background-color: (0,0,0,0.7);
+    opacity: 1;
+
+    color: white;
+}
+
+.CodeMirror-gutter {
+    background-color: transparent !important;
+    border-right: 1px solid #AAAAAA;
+}
+
+.CodeMirror-gutter-text {
+    color: white;
+}
+
+.CodeMirror-scroll {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.CodeMirror pre.CodeMirror-cursor {
+    border-left: 1px solid white !important;
+}
+
+.cm-s-default span.cm-variable {
+    color: #009966 !important;
+}
+
+.cm-s-default span.cm-operator {
+    color: #FFFFFF !important;
+}
+
+.cm-s-default span.cm-meta {
+    color: yellow !important;
+}
+
+.cm-s-default span.cm-string {
+    color: #CC6633 !important;
+}
+
+.cm-s-default span.cm-number {
+    color: #6699FF !important;
+}
+
+/* === Tabs ===*/
+.main-left {
+    float: left;
+    
+    width: 42%;
+    height: 100%;
+
+    border-width: 0px !important;
+
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+
+    position: relative;
+}
+
+.tabpanel-small {
+    width: 100%;
+    height: 100%;
+
+    border-width: 0px !important;
+
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+}
+
+.tab-container {
+    overflow-x: auto;
+    height: 44px;
+    border-bottom: 1px solid #AAAAAA !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+.tab-container-small {
+    overflow-x: auto;
+    height: 28px;
+    border-bottom: 1px solid #AAAAAA !important;
+}
+
+.ui-tabs {
+    padding: 0.0em !important;
+    /*font-size: medium !important;*/
+}
+
+.tab-small{
+    height: 20px !important;
+    font-size: medium !important;
+}
+
+.tab-large{
+    height: 36px !important;
+    font-size: medium !important;
+}
+
+.tabheader {
+    /*border-bottom: 1px solid #AAAAAA !important;
+    border-right: 1px solid #AAAAAA !important;*/
+    border-radius: 0 !important;
+    border-left-width: 0px !important;
+    border-top-width: 0px !important;
+   
+    line-height: 1.3 !important;
+    padding-top: 5px !important;
+    padding-left: 5px !important;
+
+    font-size: 10 !important;
+}
+
+.tabheader-small {
+   /* border-bottom: 1px solid #AAAAAA !important;*/
+    border-radius: 0 !important;
+    border-left-width: 0px !important;
+    border-right-width: 0px !important;
+    border-top-width: 0px !important;
+    
+    padding-top: 5px !important;
+    padding-left: 5px !important;
+    line-height: 0.4 !important;
+
+    background-image: none !important;
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444 !important;
+}
+
+.tabs-left{
+    border-width: 0px !important;
+    background: none !important;
+}
+
+.tabheader-left{
+    background: none !important;
+    border-width: 0px !important;
+}
+
+.tabcontent {
+    padding: 0em !important;
+    overflow-y: auto;
+    
+    position: absolute;
+    top: 45px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    border-radius: 0px !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+.tabcontent-small {
+    padding: 0em !important;
+    overflow-y: auto;
+    
+    width: 100%;
+
+    /*border: 3px solid white;*/
+    
+    position: absolute;
+    bottom: 0;
+    top: 29px;
+    border-radius: 0px !important;
+}
+
+/*=== Manager ===*/
+.tabheader-ws-container {
+    overflow-y: auto;
+    position: relative;
+    height: 25%;  
+}
+
+.tabfooter-ws-container {
+    overflow-y: auto;
+    position: relative;
+    height: 75%;
+}
+
+.tabheader-content {
+    position: absolute;
+    right: 30%;
+    left: 0;
+    bottom: 0;
+    top: 0px;
+}
+
+.tabheader-buttons {
+    position: absolute;
+    right: 0;
+    left: 70%;
+    bottom: 0;
+    top: 0;
+}
+
+.manager-maps {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 55%;
+    top: 0;
+    overflow-y: auto; 
+}
+
+.manager-jobs{
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 45%;
+    overflow-y: auto;
+}
+
+.content {
+    overflow-y: auto;
+    position: absolute;
+    right: 25px;
+    left: 25px;
+    bottom: 0;
+    top: 40px;
+}
+
+.maps-content {
+    position: absolute;
+    right: 30%;
+    left: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.maps-buttons {
+    position: absolute;
+    right: 0;
+    left: 70%;
+    bottom: 0;
+    top: 0;
+}
+
+.jobs-content {
+    position: absolute;
+    right: 30%;
+    left: 25px;
+    bottom: 0;
+    top: 60%;
+    margin-top: 25px;
+}
+
+.jobs-buttons {
+    position: absolute;
+    right: 25px;
+    left: 70%;
+    bottom: 0;
+    top: 60%;
+    margin-top: 25px;
+}
+
+.separator{
+    position: absolute;
+    left: 25px;
+    right: 25px;
+    border-bottom: 1px solid #AAAAAA;
+    height: 20px;
+    padding-top: 10px;
+}
+
+.buttons-container {
+    display: inline-block;
+}
+
+.underline{
+    border-bottom: 1px solid rgba(82, 168, 236, 0.8);
+    color: rgba(82, 168, 236, 0.8);
+}
+
+.table-container {
+    position: absolute;
+    left: 0;
+    right: 60%;
+    top: 0;
+    bottom: 0;    
+}
+
+.map-table {
+    width: 100%;
+}
+
+.map-td { 
+    border: 2px outset #444444;
+    border-radius: 6px;
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_35_222222_1x100.png") repeat-x scroll 50% 50% #222222
+}
+
+.map-description-container {
+    position: absolute;
+    left: 41%;
+    right: 0;
+    top: 2px;
+    bottom: 0;
+
+    border-radius: 6px;
+
+    background-color: rgba(0,0,0,0);
+    opacity: 1;
+}
+
+.map-description {
+    width:100%;
+    height: 60px;
+
+    border: none !important;
+    
+    box-sizing: border-box;         
+    -moz-box-sizing: border-box;   
+    -webkit-box-sizing: border-box;
+
+    background-color: rgba(0,0,0,0);
+    opacity: 1;
+    color: white;
+
+    resize: none;
+}
+
+.map-selected {
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-hard_20_0972a5_1x100.png") repeat-x scroll 50% 50% #0972A5;
+    border: 2px inset #26B3F7;
+}
+
+/*== Editor ===*/
+.tabheader-editor-container {
+    overflow-y: hidden;
+    position: relative;
+    height: 30%;
+}
+
+.tabfooter-editor-container {
+    overflow-y: hidden;
+    position: relative;
+    height: 70%;
+}
+
+.editor-container {
+    overflow-y: auto;
+    position: absolute;
+    top: 33px;
+    bottom: 0;
+    width: 100%;
+    border-radius: 0px !important;
+}
+
+/*=== Data ===*/
+.datacontent {
+    padding: 0em !important;
+    overflow-y: auto !important;
+    
+    position: absolute !important;
+    top: 45px !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    border-radius: 0px !important;
+    border-right: 1px solid #AAAAAA !important;
+}
+
+/*== Logs ===*/
+.logs {
+    width: 100%;
+    height: 100%;
+
+    margin: 0px;
+
+    background-color: transparent;
+    color: white;
+
+    border-width: 0px !important;
+
+    resize: none;
+}
+
+/*== Map ===*/
+.main-right {
+    float: left;
+    width: 58%;
+    height: 100%;
+}
+
+/*=== Map ===*/
+.map {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+/*=== Others ===*/
+.group-toolbar {
+    position: absolute;
+    border-bottom: 1px solid #AAAAAA !important;
+    border-top: 1px solid #AAAAAA !important;
+    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444;
+    height: 31px;
+    width: 100%;
+    z-index: 15;
+}
+
+.group-button{
+    border-radius: 0 0 0 0 !important;
+    margin: 0 0 0 0 !important;
+    border-width: 0px !important;
+    font-size: 14px !important;
+}
+
+.group-select{
+    margin-left: 5px;
+    width: 200px;
+}
+
+.group-table{
+    width: 240px;
+}
+
+.workspace-select{
+    margin: 10px;
+    width: 205px;
+}
+
+.workspace-input{
+    margin: 10px;
+    width: 200px;
+}
+
+.workspace-button {
+    width: 150px;
+    float: right;
+    font-size: 14px !important;
+    background-color: #222222 !important;
+}
+
+.top-button {
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+
+.middle-button {
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important; 
+}
+
+.bottom-button {
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important; 
+}
+
+.button-commit {
+    position: relative;
+    left: 48%;
+}
+
+.newmap-description{
+    width: 350px;
+    height: 180px;
+}
+
+.hidden {
+    display: none;
+}
+
+li {
+    list-style: disc outside none; 
+}
+
+/*=== Text, select, button ===*/
+/*
+label {
+    color: white;
+    font: normal 15px !important;
+}
+
+.ui-button .ui-button-text
+{
+ line-height: 0.8;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    padding: 0.2em 1em !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    padding: 0px !important;
+}
+
+.dialog-select {
+    width: 270px;
+}
+
+.dialog-input {
+    width: 264px;
+}
+
+button, input, select, textarea {
+    font-size: 100%;
+    vertical-align: middle;
+}
+
+button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner {
+    border: none;
+}
+
+.layer:hover {
+    cursor: crosshair;
+}
+*/
+/*=== Other ===*/
+div.olControlZoom a {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+.extent-input {
+    width: 100px;
+    margin-top: 5px;
+}
+
+#maxY {
+    position: relative;
+    left: 86px;
+}
+
+#maxX {
+    position: relative;
+    left: 25px;
+}
+
+#minY {
+    left: 86px;
+    position: relative;
+}
+
+#minX {
+    position: relative;
+    left: 20px;
+    margin-right:16px;
+}
+/*
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+    padding-bottom: 0px !important;
+}
+
+button.fg-button { 
+    width:auto; 
+    overflow:visible;
+    margin-top: 10px;
+}
+
+.button-tools {
+    position: relative;
+    left: 1%;
+}
+
+.left-button {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+.right-button {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+
+.ui-widget {
+    font-size: 1.1em;
+}
+
+.fg-buttonset { float:left; }
+.fg-buttonset .fg-button { float: left; }
+.fg-buttonset-single .fg-button, 
+.fg-buttonset-multi .fg-button { margin-right: -0.3px;}
+*/
+

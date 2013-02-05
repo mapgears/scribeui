@@ -44,30 +44,35 @@ function deleteWorkspace(options){
     var msg = 'Are you sure you want to delete this workspace?';
     var div = $("<div>" + msg + "</div>");
 
-    div.dialog({
-        title: "Confirm",
-        resizable: false,
-        buttons: [{
-             text: "Yes",
-             click: function () {
-                var name = $("#" + options.workspaceSelect).val();
-                var password = $("#" + options.workspacePassword).val();
+    var name = $("#" + options.workspaceSelect).val();
+    if(name != null){
+        div.dialog({
+            title: "Confirm",
+            resizable: false,
+            buttons: [{
+                 text: "Yes",
+                 click: function () {
+                    var name = $("#" + options.workspaceSelect).val();
+                    var password = $("#" + options.workspacePassword).val();
 
-                if(_workspace && _workspace.name == name){
-                    _workspace.destroy(_workspace.close);
-                } else{
-                    var workspace = new Workspace(name, options);
-                    workspace.destroy();
+                    if(_workspace && _workspace.name == name){
+                        _workspace.destroy(_workspace.close);
+                    } else{
+                        var workspace = new Workspace(name, options);
+                        workspace.destroy();
+                    }
+
+                    div.dialog("close");
+                 }
+            },
+            {
+                text: "No",
+                click: function () {
+                    div.dialog("close");
                 }
-             }
-        },
-        {
-            text: "No",
-            click: function () {
-                div.dialog("close");
-            }
-        }]
-    });
+            }]
+        });
+    }
 }
 
 function openWorkspace(options){
@@ -164,31 +169,36 @@ function openMap(){
 function deleteMap(){
     var msg = 'Are you sure you want to delete this map?';
     var div = $("<div>" + msg + "</div>");
+    
+    var name = $("#map-table .map-selected").html();
+    if(name != null){
+        div.dialog({
+            title: "Confirm",
+            resizable: false,
+            buttons: [{
+                 text: "Yes",
+                 click: function () {
+                    
+                    var map = _workspace.getMapByName(name);
+                    map.workspace = _workspace;
 
-    div.dialog({
-        title: "Confirm",
-        resizable: false,
-        buttons: [{
-             text: "Yes",
-             click: function () {
-                var name = $("#map-table .map-selected").html();
-                var map = _workspace.getMapByName(name);
-                map.workspace = _workspace;
+                    if(_workspace.openedMap == map){
+                        map.destroy(map.close);
+                    } else{
+                        map.destroy();
+                    }
 
-                if(_workspace.openedMap == map){
-                    map.destroy(map.close);
-                } else{
-                    map.destroy();
+                    div.dialog("close");
                 }
-            }
-        },
-        {
-            text: "No",
-            click: function () {
-                div.dialog("close");
-            }
-        }]
-    });
+            },
+            {
+                text: "No",
+                click: function () {
+                    div.dialog("close");
+                }
+            }]
+        });
+    }
 }
 
 function createNewGroup(){
