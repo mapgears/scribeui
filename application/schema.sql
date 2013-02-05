@@ -9,7 +9,7 @@ drop table if exists maps;
 create table maps (
   map_id integer primary key autoincrement,
   map_name string not null,
-  map_type integer not null, 
+  map_type string not null, 
   map_desc string,
   ws_id integer not null
 );
@@ -33,8 +33,9 @@ create table pois (
 );
 
 
-INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", 1 ,"Template OSM-GoogleLike","0");
-INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("1","*NaturalEarth", 1, "Template Natural Earth","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", "Scribe","Template OSM-GoogleLike","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("1","*NaturalEarth", "Scribe", "Template Natural Earth","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("2","*OSM-Basemaps", "Basemaps", "Template Basemaps","0");
 
 INSERT INTO groups(group_name, group_index, map_id) VALUES("places", "6", "0");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("borders", "5", "0");
@@ -51,6 +52,14 @@ INSERT INTO groups(group_name, group_index, map_id) VALUES("water", "3", "1");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("urban", "2", "1");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("land", "1", "1");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("ocean", "0", "1");
+
+INSERT INTO groups(group_name, group_index, map_id) VALUES("places.map", "6", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("borders.map", "5", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("buildings.map", "4", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("roads.map", "3", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("water.map", "2", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("landusage.map", "1", "2");
+INSERT INTO groups(group_name, group_index, map_id) VALUES("land.map", "0", "2");
 
 
 INSERT INTO pois(poi_name, latitude, longitude, scalelvl, ws_id) VALUES("Quebec - Quebec","46.83","-71.11","524288","0");

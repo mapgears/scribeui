@@ -31,13 +31,22 @@ app.config.update(
 )
 
 #List of files in map
-listfiles = [{'name':'scales','url':'editor/scales','fusion':'true'},
-             {'name':'variables','url':'editor/variables','fusion':'true'},
-             {'name':'map','url':'editor/map','fusion':'true'},
-             {'name':'projections','url':'epsg','fusion':'false'}, 
-             {'name':'fonts','url':'fonts.lst','fusion':'false'},
-             {'name':'symbols','url':'symbols.map','fusion':'false'},
+listfiles = [{'name':'scales','url':'editor/scales'},
+             {'name':'variables','url':'editor/variables'},
+             {'name':'map','url':'editor/map'},
+             {'name':'projections','url':'epsg'}, 
+             {'name':'fonts','url':'fonts.lst'},
+             {'name':'symbols','url':'symbols.map'},
              ]
+
+listfilesBasemaps = [{'name':'scales','url':'Makefile'},
+                    {'name':'variables','url':'generate_style.py'},
+                    {'name':'map','url':'osmbase.map'},
+                    {'name':'projections','url':'epsg'},
+                    {'name':'fonts','url':'fonts.lst'},
+                    {'name':'symbols','url':'symbol.map'},
+                    ]
+
 #===============================
 #        DATABASE
 #===============================
@@ -178,7 +187,7 @@ def delete_ws():
 @app.route('/_create_map', methods=['POST'])
 def create_map():
     name = request.form['name']
-    maptype = 1 #-request.form['type'] #Scribe - Basemaps - Standard
+    maptype = request.form['type'] #Scribe - Basemaps - Standard
     template = request.form['template']
     description = request.form['description']
     ws_template = request.form['templatelocation']
@@ -220,9 +229,10 @@ def create_map():
 
     pathMap = path+"workspaces/"+session['ws_name']+"/"+name
     subprocess.call(['cp','-R', pathTemplate, pathMap])
-    subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])                                
-
-    if type == 2 :
+    if maptype == 'Scribe':
+        subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])                                
+    elif maptype == 'Basemaps':
+        subprocess.call(['mv', pathMap+"/osm-"+template+".map", pathMap+"/osm-"+name+".map"])
         #Change the map name in the Makefile           
         source = open(pathMap+"/Makefile","r" )
         contentS=source.read()
@@ -262,16 +272,26 @@ def get_maps():
 @app.route('/_open_map',methods=['POST'])
 def open_map():
     namemap = request.form['name']
-    pathMap = path + "workspaces/" + session['ws_name'] + "/" + namemap + "/"
     wsmap = query_db('''select * from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), namemap], one=True)
-    
+    pathMap = path + "workspaces/" + session['ws_name'] + "/" + namemap + "/"
+
     contentfiles = {}
     contentfiles['name'] = namemap
-    contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
-    for i in range(len(listfiles)):
-        document = open(pathMap + listfiles[i]['url'], "r")
-        contentfiles[listfiles[i]['name']] = document.read()
-        document.close()
+    
+    if wsmap['map_type'] == 'Scribe':
+        pathGroups = pathMap + "editor/groups/"
+        contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
+        for i in range(len(listfiles)):
+            document = open(pathMap + listfiles[i]['url'], "r")
+            contentfiles[listfiles[i]['name']] = document.read()
+            document.close()
+    elif wsmap['map_type'] == 'Basemaps':
+        pathGroups = pathMap
+        contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "osm-" + namemap +".map"
+        for i in range(len(listfilesBasemaps)):
+            document = open(pathMap + listfilesBasemaps[i]['url'], "r")
+            contentfiles[listfilesBasemaps[i]['name']] = document.read()
+            document.close()
 
     contentfiles['groups'] = []
     groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
@@ -279,20 +299,14 @@ def open_map():
     for j in range(len(groups)):
         unGroup = {}
         unGroup["name"] = groups[j]['group_name']
-        document = open(pathMap + "editor/groups/"+ unGroup["name"], "r")
+        document = open(pathGroups + unGroup["name"], "r")
         unGroup["content"] = document.read()
         document.close()
         contentfiles["groups"].append(unGroup)
 
     #Parameters map
-    if wsmap['map_type'] == 2:
-        print wsmap['map_type']
-        contentfiles['OLScales'] = "Bob Gratton"
-        contentfiles['OLExtent'] = "Elvis Gratton"
-        contentfiles['OLScales'] = "Metre Gratton"
-        contentfiles['OLProjection'] = "900913 Gratton"
-    else:
-        contentfiles['errorMsg']=[]
+    contentfiles['errorMsg']=[]
+    if wsmap['map_type'] == 'Scribe':
         try:
             json_file = open(pathMap+"editor/mapTemp.json")
             data = json.load(json_file);
@@ -320,6 +334,29 @@ def open_map():
             contentfiles['OLProjection'] = "NULL"  
             contentfiles['errorMsg'].append("PROJECTION not found")    
     
+    elif wsmap['map_type'] == 'Basemaps':
+        stringSearch = ["OSM_EXTENT", "OSM_UNITS", "OSM_SRID"]
+        makefile = open(pathMap + "Makefile", "r")
+        for line in makefile:
+            for string in stringSearch:
+                if string in line:
+                    if re.search('^OSM_EXTENT',line):
+                        contentfiles['OLExtent'] = line.split('=')[1].split('\n')[0]
+                    if re.search('^OSM_UNITS',line):
+                        contentfiles['OLUnits'] = line.split('=')[1].split('\n')[0]
+                    if re.search('^OSM_SRID',line):
+                        contentfiles['OLProjection'] = 'epsg:' + line.split('=')[1].split('\n')[0]
+        makefile.close()
+        scalefile = open(pathMap + "generate_style.py", "r")
+        content = scalefile.read().split('minscales = {\n')[1].split('\n}')[0].split(',\n')
+        scales = {}
+        i = 0
+        for scale in content:
+            scales[i] = scale.split(':')[1]
+            i = i + 1
+        contentfiles['OLScales'] = scales
+        scalefile.close()
+
     session['map_name'] = wsmap["map_name"]
 
     #Change path for data browser (/usr/lib/cgi-bin/elfinder-python/connector.py)
@@ -381,7 +418,7 @@ def get_templates():
     except:
         ws_id = get_ws_id(session['ws_name'])
         
-    wsmap = query_db('''select map_name from maps where ws_id = ?''', [ws_id], one=False)
+    wsmap = query_db('''select map_name from maps where ws_id = ?''', [ws_id], one=False) #and where type = ...
     templates = {}
     for i in range(len(wsmap)): 
         templates[i] = wsmap[i]['map_name']
@@ -396,11 +433,12 @@ def add_layer():
     if 'ws_name' in session and 'map_name' in session:
         groupname = request.form['name'] 
 
-        expression = r"^[A-Za-z0-9][A-Za-z0-9_]{1,99}$"
+        expression = r"^[A-Za-z0-9][A-Za-z0-9_.]{1,99}$"
         if (re.search(expression, groupname) is None):
             return "Invalid name"
                          
         mapid = get_map_id(session['map_name'],session['ws_name'])
+        
         groups = query_db("select group_name, group_index from groups where map_id = ?", [mapid], one=False)
         if groups:
             groups = sorted(groups)
@@ -415,7 +453,11 @@ def add_layer():
         g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
         g.db.commit()
         
-        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname 
+        wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
+        if wsmap['map_type'] == 'Scribe':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname 
+        elif wsmap['map_type'] == 'Basemaps':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
         file(pathGroup, 'w+')
 
     return "1"
@@ -430,8 +472,12 @@ def remove_group():
         g.db.execute("DELETE from groups where map_id = ? and group_name = ?", [mapid, groupname])
         g.db.commit()
 
-        groupname = groupname
-        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname
+        wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
+        if wsmap['map_type'] == 'Scribe':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname
+        elif wsmap['map_type'] == 'Basemaps':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+
         if os.path.isfile(pathGroup) :
             subprocess.call(['rm', pathGroup])
     return "1" 
@@ -526,31 +572,34 @@ def commit():
 #Save changements
 def save(data):
     pathMap = path+"workspaces/"+session['ws_name']+"/"+session["map_name"]+"/"
+    wsmap = query_db('''select map_type from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), session["map_name"]], one=True)
     
-    #subprocess.call(['rm', pathMap+"map/"+session["map_name"]+".map"])
-    #subprocess.call(['rm', pathMap+"editor/temp/"+session["map_name"]])
+    if wsmap['map_type'] == 'Scribe':
+        pathGroups = pathMap + "editor/groups/"
+        for i in range(len(listfiles)):
+            document = open(pathMap + listfiles[i]['url'], "w+")
+            document.write(data[listfiles[i]['name']].encode('utf-8'))
+            document.close()
+    elif wsmap['map_type'] == 'Basemaps':
+        pathGroups = pathMap
+        for i in range(len(listfilesBasemaps)):
+            document = open(pathMap + listfilesBasemaps[i]['url'], "w+")
+            document.write(data[listfilesBasemaps[i]['name']].encode('utf-8'))
+            document.close()
 
-#    fusionStr = ""
-    for i in range(len(listfiles)):
-        document = open(pathMap + listfiles[i]['url'], "w+")
-        document.write(data[listfiles[i]['name']].encode('utf-8'))
-        document.close()
-#        if listfiles[i]['fusion'] == 'true':
-#            fusionStr = fusionStr + data[listfiles[i]['name']]+"\n\n"
-
-#    fusionStr = fusionStr + "LAYERS [\n"
     fusionStr = "LAYERS {\n"
     for i in range(len(data['groups'])):
-        document = open(pathMap + "editor/groups/" + data['groups'][i]['name'], "w+")
+        document = open(pathGroups + data['groups'][i]['name'], "w+")
         document.write(data['groups'][i]['content'].encode('utf-8'))
         document.close()
         fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
     fusionStr = fusionStr + "}"
-    #print "ici"
-    fusionFile = open(pathMap + "editor/layers","w+" )
-    fusionFile.write(fusionStr.encode('utf-8'))
-    fusionFile.close()
-    #print "SAVE"
+    
+    if wsmap['map_type'] == 'Scribe':
+        fusionFile = open(pathMap + "editor/layers","w+" )
+        fusionFile.write(fusionStr.encode('utf-8'))
+        fusionFile.close()
+    
     return "1"
 
 #Execute python decoder
@@ -558,36 +607,47 @@ def execute():
     if ('ws_name' not in session) or ('map_name' not in session):
         return "No workspace or no map open"
     pathMap = (path+"workspaces/"+session['ws_name']+"/"+session['map_name'])+"/"
-#    sub = subprocess.Popen('python decoder.py '+pathMap+'editor/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
-    
+    wsmap = query_db('''select map_type from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), session["map_name"]], one=True)
+
+    if wsmap['map_type'] == 'Scribe':
+        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    elif wsmap['map_type'] == 'Basemaps':
+        os.chdir(pathMap)
+        sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        os.chdir(path)
+
     logMsg = sub.stdout.read()
     errorMsg = sub.stderr.read()
     
     if (errorMsg == ""):
-        symbolsFile = open(pathMap+"symbols.map", "r")
-        symbols = symbolsFile.read()
-        symbolsFile.close()
-        source = open(pathMap+"/map/"+session['map_name']+".map", "r")
-        contentS = source.read()
-        source.close()
-        contentD = contentS.replace("#---- SYMBOLS ----#","#---- SYMBOLS ----#\n" + symbols)
-        destination = open(pathMap+"/map/"+session['map_name']+".map", "w")
-        destination.write(contentD)#.encode('utf-8'))
-        destination.close()
+        if wsmap['map_type'] == 'Scribe':
+            symbolsFile = open(pathMap+"symbols.map", "r")
+            symbols = symbolsFile.read()
+            symbolsFile.close()
+            source = open(pathMap+"/map/"+session['map_name']+".map", "r")
+            contentS = source.read()
+            source.close()
+            contentD = contentS.replace("#---- SYMBOLS ----#","#---- SYMBOLS ----#\n" + symbols)
+            destination = open(pathMap+"/map/"+session['map_name']+".map", "w")
+            destination.write(contentD)#.encode('utf-8'))
+            destination.close()
 
         result = "**Success**\n\n**LOG**\n----------\n" + logMsg
     else:
-        result = "**ERRORS**\n----------\n" + errorMsg + "\n----------\n" + logMsg
+        result = "**ERRORS**\n----------\n" + errorMsg + "\n**LOG**\n----------\n" + logMsg
 
     return jsonify(result=result)
 
 #Return the contents of the mapfile generated 
 @app.route('/_load_mapfile_generated',methods=['GET'])
 def load_mapfile_generated():
-    mapToEdit = request.args.get('mapToEdit', '')
+    #mapToEdit = session["map_name"] #request.args.get('mapToEdit', '')
     if ('ws_name' in session):
-        pathMap = path+"workspaces/"+session['ws_name']+"/"+mapToEdit+"/map/"+mapToEdit+".map"
+        wsmap = query_db('''select map_type from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), session["map_name"]], one=True)
+        if wsmap['map_type'] == 'Scribe':
+            pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/"+session['map_name']+".map"
+        elif wsmap['map_type'] == 'Basemaps':
+            pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/osm-"+session['map_name']+".map"
         if (os.path.isfile(pathMap)):
             document = open(pathMap, "r") 
             content = document.read()

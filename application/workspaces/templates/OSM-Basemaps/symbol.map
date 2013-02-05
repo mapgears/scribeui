@@ -1,0 +1,66 @@
+##Roads
+SYMBOL
+  	NAME "ellipse"
+  	TYPE ellipse
+  	FILLED TRUE
+  	POINTS 
+    	10 8
+  	END
+END
+
+SYMBOL
+	NAME "one_way_from"
+	TYPE truetype
+	FONT scb
+	CHARACTER "→"
+END
+
+##Places
+SYMBOL
+	NAME "transportsquare"
+    TYPE vector
+  	POINTS 
+  	 	0 0
+	 	0 1
+	 	1 1
+	 	1 0
+	 	0 0
+  	END
+  	FILLED true
+END
+
+SYMBOL
+    name "citycircle"
+    TYPE ellipse
+    points 1 1 end
+    filled true
+END
+
+##Landusage
+SYMBOL
+  	NAME "bussymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER _bus_lbl_text
+END
+
+SYMBOL
+  	NAME "metrosymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER _subway_lbl_text
+END
+
+SYMBOL
+  	NAME "tramwaysymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER _tram_lbl_text
+END
+
+SYMBOL
+  	NAME "stationsymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER _station_lbl_text
+END
