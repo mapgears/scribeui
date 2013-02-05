@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 # -*- coding: iso-8859-1 -*-
 
 import json
@@ -262,6 +262,7 @@ def jsonToMap(content, outputDirectory, mapName, clean):
     mapFile = openMapFile(outputDirectory, mapName)
     parseList("MAP", MAP, {"1": None}, mapFile, "")
     mapFile["1"].seek(-4, 2)
+    write("#---- SYMBOLS ----#", {"1": None}, mapFile, "")
     
     for value in range(1, len(SCALES) + 1):
         if clean == True:
@@ -281,13 +282,14 @@ def string2json(string):
     #Remove the comments between /* and */
     t = re.sub(r"/\*.*?\t*?\*/", "", t, flags=re.DOTALL)
     #Find and replace the comments preceded by ##
-    comments = re.findall(r"\##.*", t)
-    t = re.sub(r"\##.*", "VOID:FLAGCOMMENT", t)   
+    comments = re.findall(r"\#\#.*", t, flags=0)
+    t = re.sub(r"\#\#.*", "VOID:FLAGCOMMENT\n", t, flags=0)   
     #Replace @ with VARIABLE:
     t = re.sub(r"@", "VARIABLE:", t)
-    #Find and replace the text between [ and ] (useful for blocks like PROJECTION, METADATA, PATTERN etc.)
-    texts = re.findall(r"(?<=\[).*?\t*?(?=\])", t, flags=re.DOTALL)
-    t = re.sub(r"(?<=\[).*?\t*?(?=\])", "\nVOID:FLAGTEXT\n", t, flags=re.DOTALL)
+    #Find and replace the text between {{ and }} (useful for blocks like PROJECTION, METADATA, PATTERN etc.)
+    texts = re.findall(r"(?<=\{\{).*?\t*?(?=\}\})", t, flags=re.DOTALL)
+    t = re.sub(r"\{\{.*?\t*?\}\}", "{\nVOID:FLAGTEXT\n}", t, flags=re.DOTALL)
+    #t = re.sub(r"(?<=\{{).*?\t*?(?=\}})", "\n{VOID:FLAGTEXT}\n", t, flags=re.DOTALL)
     #Find and replace values for the parameters (preceded by :)
     values = re.findall(r"(?<=:).+", t)
     t = re.sub(r"(?<=:).+", "FLAGVALUE", t)
@@ -329,7 +331,7 @@ def string2json(string):
     #Substitute the FLAGCOMMENT with the corresponding comment blocks. Each line of the comment block is preceded with ##  
     for i in range (0, len(comments)):
         comment = re.sub(r"\"", re.escape("\\") + "\"", comments[i].strip())
-        t = re.sub(r"FLAGCOMMENT",  "#" + comment, t, 1)
+        t = re.sub(r"FLAGCOMMENT",  comment, t, 1)
     #Make the JSON valid with some {},[]. SCALES has to be the first element in the file to be converted into a JSON.
     t = re.sub(r"\}\s*\n*\{", "},{", t)
     t = re.sub(r"\}\n*\s*\]\},\{\"LAYERS\"", "}],\"LAYERS\"", t)
@@ -414,7 +416,13 @@ def main():
     if ("inputScalesContent" in locals() and "inputVariablesContent" in locals() and "inputMapContent" in locals() and "inputLayersContent" in locals()):
        jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent;
        jsonContent = string2json(jsonInput);
+               
+       jsonFile = open(inputDirectory + "mapVariables.json", "w+")
+       jsonFile.write(jsonContent)
+       jsonFile.close()
+
        jsonToMap(jsonContent, outputDirectory, mapName, clean)
+       
     else:
         sys.exit(2)
 

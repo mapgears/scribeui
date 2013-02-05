@@ -13,11 +13,11 @@ html, body {
 }
 
 .main {
-    height: 85%;
+    height: 90%;
     width: 100%;
 }
 
-/*=== Title ===*/
+/*=== Header ===*/
 .navbar {
     position: relative;
 
@@ -25,9 +25,11 @@ html, body {
     margin-top: 0px;
 
     width: 100%;
-    height: 5%;
+    height: 2%;
 
-    min-height: 30px;
+    min-height: 40px;
+
+    
 }
 
 .title {
@@ -36,7 +38,7 @@ html, body {
     font-size: 20px;
     line-height: 1;
  
-    padding-top: 10px;
+    padding-top: 10px;    
 }
 
 .title-left {
@@ -54,10 +56,14 @@ html, body {
 
 /*=== Bottom ===*/
 .tools {
-    height: 10%;
+    height: 8%;
     width: 100%;
     border-top: 2px solid rgba(82, 168, 236, 0.8);
     padding-top: 10px;
+}
+
+.tools button {
+    font-size: 14px !important;    
 }
 
 .tools-left {
@@ -76,6 +82,10 @@ html, body {
     position: relative;
     float: left;
     padding-left: 10px;
+}
+
+.poi-container select{
+    width: 200px;
 }
 
 .scale-level {
@@ -117,11 +127,8 @@ html, body {
 
 /*=== Codemirror ===*/
 .CodeMirror {
-    position: absolute;
-    bottom: 0;
-    top: 0;
-    right: 0;
-    left: 0;
+    position: relative;
+    height: 100%;
 
     background-color: (0,0,0,0.7);
     opacity: 1;
@@ -168,7 +175,7 @@ html, body {
 }
 
 /* === Tabs ===*/
-.tabpanel {
+.main-left {
     float: left;
     
     width: 42%;
@@ -503,7 +510,7 @@ html, body {
 }
 
 /*== Map ===*/
-.map-container {
+.main-right {
     float: left;
     width: 58%;
     height: 100%;
@@ -512,19 +519,19 @@ html, body {
 /*=== Map ===*/
 .map {
     float: left;
-
     width: 100%;
     height: 100%;
 }
 
 /*=== Others ===*/
 .group-toolbar {
-    position: relative;
+    position: absolute;
     border-bottom: 1px solid #AAAAAA !important;
     border-top: 1px solid #AAAAAA !important;
-    /*background-color: #AAAAAA;*/
     background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444;
     height: 31px;
+    width: 100%;
+    z-index: 15;
 }
 
 .group-button{
@@ -575,10 +582,6 @@ html, body {
 .bottom-button {
     border-top-right-radius: 0px !important;
     border-top-left-radius: 0px !important; 
-}
-
-.button-14 {
-    font-size: 14px !important;
 }
 
 .button-commit {

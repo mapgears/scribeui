@@ -1,62 +1,62 @@
-LAYER [
-    1-16 [
+LAYER {
+    1-16 {
         NAME: 'coastline'
         TYPE: LINE
-        @VAR.layerconfig
-        DATA [
+        @layerconfig
+        DATA {
             1-5: '110m_physical/ne_110m_coastline'
 			6-10: '50m_physical/ne_50m_coastline'
             11-16: '10m_physical/ne_10m_coastline'
-		]
-        CLASS [
-            STYLE [
-                COLOR: @VAR.watercolor_ol
-            ]
-        ]
-    ]
-]
+		}
+        CLASS {
+            STYLE {
+                COLOR: @watercolor_ol
+            }
+        }
+    }
+}
 
-LAYER [
-    3-16 [
+LAYER {
+    3-16 {
         NAME: 'lakes'
         TYPE: POLYGON
-        @VAR.layerconfig
-        DATA [
+        @layerconfig
+        DATA {
             1-4: '110m_physical/ne_110m_lakes'
             5-10: '50m_physical/ne_50m_lakes'
             11-16: '10m_physical/ne_10m_lakes'		
-		]
-        CLASS [
-            STYLE [
-                COLOR: @VAR.watercolor
-                OUTLINECOLOR: @VAR.watercolor_ol
-            ]
-        ]
-    ]
-]
+		}
+        CLASS {
+            STYLE {
+                COLOR: @watercolor
+                OUTLINECOLOR: @watercolor_ol
+            }
+        }
+    }
+}
 
-LAYER [
-    5-16 [
+LAYER {
+    5-16 {
         NAME: 'rivers'
         TYPE: LINE
-        @VAR.layerconfig
-        DATA [
+        @layerconfig
+        DATA {
             5-10: '50m_physical/ne_50m_rivers_lake_centerlines_scale_rank'
             11-16: '10m_physical/ne_10m_rivers_lake_centerlines_scale_rank'	
-		]
+		}
     	LABELITEM: "name"
-        CLASS [
+        CLASS {
             EXPRESSION: ([strokeweig] >= 0 AND [strokeweig] <= 0.2)
-            STYLE [
-                COLOR: @VAR.rivercolor  
-                WIDTH [
+            STYLE {
+                COLOR: @rivercolor  
+                WIDTH {
 					5-6: 1.5
 					7-16: 3
-				]
-            ]
-            LABEL [
-                6-16 [
-                	COLOR: @VAR.watercolor_lbl
+				}
+            }
+            LABEL {
+                6-16 {
+                	COLOR: @watercolor_lbl
                 	OUTLINECOLOR: 255 255 255
                 	FONT: 'scb'
                 	TYPE: truetype
@@ -66,21 +66,21 @@ LAYER [
                 	ANGLE: FOLLOW
                 	POSITION: AUTO
                 	PARTIALS: FALSE
-                ]
-            ]    
-        ]
-    	CLASS [
+                }
+            }    
+        }
+    	CLASS {
             EXPRESSION: ([strokeweig] >= 0.200000001 AND [strokeweig] <= 0.35)
-            STYLE [
-                COLOR: @VAR.rivercolor
-                WIDTH [
+            STYLE {
+                COLOR: @rivercolor
+                WIDTH {
 					5-6: 2
 					7-16: 4
-				]
-            ]
-        	LABEL [
-                6-16 [
-                	COLOR: @VAR.watercolor_lbl
+				}
+            }
+        	LABEL {
+                6-16 {
+                	COLOR: @watercolor_lbl
                 	OUTLINECOLOR: 255 255 255
                 	FONT: 'scb'
                 	TYPE: truetype
@@ -90,21 +90,21 @@ LAYER [
                 	ANGLE: FOLLOW
                 	POSITION: AUTO
                 	PARTIALS: FALSE
-                ]
-            ] 
-        ]
-    	CLASS [
+                }
+            } 
+        }
+    	CLASS {
             EXPRESSION: ([strokeweig] >= 0.350000001 AND [strokeweig] <= 0.6)
-            STYLE [
-                COLOR: @VAR.rivercolor
-                WIDTH [
+            STYLE {
+                COLOR: @rivercolor
+                WIDTH {
 					5-6: 3
 					7-16: 6
-				]
-            ]
-        	LABEL [
-                6-16 [
-                	COLOR: @VAR.watercolor_lbl
+				}
+            }
+        	LABEL {
+                6-16 {
+                	COLOR: @watercolor_lbl
                 	OUTLINECOLOR: 255 255 255
                 	FONT: 'scb'
                 	TYPE: truetype
@@ -114,21 +114,21 @@ LAYER [
                 	ANGLE: FOLLOW
                 	POSITION: AUTO
                 	PARTIALS: FALSE
-                ]
-            ] 
-        ]
-    	CLASS [
+                }
+            } 
+        }
+    	CLASS {
             EXPRESSION: ([strokeweig] >= 0.600000001 AND [strokeweig] <= 1)
-            STYLE [
-                COLOR: @VAR.rivercolor
-                WIDTH [
+            STYLE {
+                COLOR: @rivercolor
+                WIDTH {
 					5-6: 4
 					7-16: 8
-				]
-            ]
-        	LABEL [
-                6-16 [
-                	COLOR: @VAR.watercolor_lbl
+				}
+            }
+        	LABEL {
+                6-16 {
+                	COLOR: @watercolor_lbl
                 	OUTLINECOLOR: 255 255 255
                 	FONT: 'scb'
                 	TYPE: truetype
@@ -138,21 +138,21 @@ LAYER [
                 	ANGLE: FOLLOW
                 	POSITION: AUTO
                 	PARTIALS: FALSE
-                ]
-            ] 
-        ]
-    	CLASS [
+                }
+            } 
+        }
+    	CLASS {
             EXPRESSION: ([strokeweig] >= 1.000000001 AND [strokeweig] <= 2)
-            STYLE [
-                COLOR: @VAR.rivercolor
-                WIDTH [
+            STYLE {
+                COLOR: @rivercolor
+                WIDTH {
 					5-6: 5
 					7-16: 10
-				]
-            ]
-        	LABEL [
-                6-16 [
-                	COLOR: @VAR.watercolor_lbl
+				}
+            }
+        	LABEL {
+                6-16 {
+                	COLOR: @watercolor_lbl
                 	OUTLINECOLOR: 255 255 255
                 	FONT: 'scb'
                 	TYPE: truetype
@@ -162,11 +162,11 @@ LAYER [
                 	ANGLE: FOLLOW
                 	POSITION: AUTO
                 	PARTIALS: FALSE
-                ]
-            ] 
-        ]
-    ]
-]
+                }
+            } 
+        }
+    }
+}
 
 
 

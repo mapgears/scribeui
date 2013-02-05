@@ -178,6 +178,7 @@ def delete_ws():
 @app.route('/_create_map', methods=['POST'])
 def create_map():
     name = request.form['name']
+    maptype = 1 #-request.form['type'] #Scribe - Basemaps - Standard
     template = request.form['template']
     description = request.form['description']
     ws_template = request.form['templatelocation']
@@ -204,8 +205,8 @@ def create_map():
             return "Existing"
 
     #Add the map in the bd      
-    g.db.execute('insert into maps (map_name, map_desc, ws_id) values (?, ?, ?)',
-                 [name, description, get_ws_id(session['ws_name'])])
+    g.db.execute('insert into maps (map_name, map_type, map_desc, ws_id) values (?, ?, ?, ?)',
+                 [name, maptype, description, get_ws_id(session['ws_name'])])
     g.db.commit()
 
     #Copy the template directory to the directory of the new map    
@@ -220,6 +221,17 @@ def create_map():
     pathMap = path+"workspaces/"+session['ws_name']+"/"+name
     subprocess.call(['cp','-R', pathTemplate, pathMap])
     subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])                                
+
+    if type == 2 :
+        #Change the map name in the Makefile           
+        source = open(pathMap+"/Makefile","r" )
+        contentS=source.read()
+        source.close()
+        contentD=contentS.replace("OUTPUT="+template,"OUTPUT="+name )
+        destination = open(pathMap+"/Makefile","w" )
+        destination.write(contentD)
+        destination.close()
+
     
     #Add layers in the bd
     groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
@@ -273,33 +285,40 @@ def open_map():
         contentfiles["groups"].append(unGroup)
 
     #Parameters map
-    contentfiles['errorMsg']=[]
-    try:
-        json_file = open(pathMap+"temp.json")
-        data = json.load(json_file);
-        json_file.close();
-    except:
-        contentfiles['errorMsg'].append("The header is bad")
-    try:
-        contentfiles['OLScales']=list2dict(data['SCALES'])
-    except:
-        contentfiles['OLScales'] = "NULL"
-        contentfiles['errorMsg'].append("SCALES not found")
-    try:
-        contentfiles['OLExtent']=list2dict(data['MAP'])['EXTENT']
-    except:
-        contentfiles['OLExtent'] = "NULL"
-        contentfiles['errorMsg'].append("EXTENT not found")    
-    try:
-        contentfiles['OLUnits']=list2dict(data['MAP'])['UNITS'] 
-    except:
-        contentfiles['OLUnits'] = "NULL"
-        contentfiles['errorMsg'].append("UNITS not found")
-    try:
-        contentfiles['OLProjection']=list2dict(list2dict(data['MAP'])['PROJECTION'])['VOID'].split('=',1)[1][0:-1]
-    except:
-        contentfiles['OLProjection'] = "NULL"  
-        contentfiles['errorMsg'].append("PROJECTION not found")    
+    if wsmap['map_type'] == 2:
+        print wsmap['map_type']
+        contentfiles['OLScales'] = "Bob Gratton"
+        contentfiles['OLExtent'] = "Elvis Gratton"
+        contentfiles['OLScales'] = "Metre Gratton"
+        contentfiles['OLProjection'] = "900913 Gratton"
+    else:
+        contentfiles['errorMsg']=[]
+        try:
+            json_file = open(pathMap+"editor/mapVariables.json")
+            data = json.load(json_file);
+            json_file.close();
+        except:
+            contentfiles['errorMsg'].append("The header is bad")
+        try:
+            contentfiles['OLScales']=list2dict(data['SCALES'])
+        except:
+            contentfiles['OLScales'] = "NULL"
+            contentfiles['errorMsg'].append("SCALES not found")
+        try:
+            contentfiles['OLExtent']=list2dict(data['MAP'])['EXTENT']
+        except:
+            contentfiles['OLExtent'] = "NULL"
+            contentfiles['errorMsg'].append("EXTENT not found")    
+        try:
+            contentfiles['OLUnits']=list2dict(data['MAP'])['UNITS'] 
+        except:
+            contentfiles['OLUnits'] = "NULL"
+            contentfiles['errorMsg'].append("UNITS not found")
+        try:
+            contentfiles['OLProjection']=list2dict(list2dict(data['MAP'])['PROJECTION'])['VOID'].split('=',1)[1][0:-1]
+        except:
+            contentfiles['OLProjection'] = "NULL"  
+            contentfiles['errorMsg'].append("PROJECTION not found")    
     
     session['map_name'] = wsmap["map_name"]
 
@@ -511,23 +530,24 @@ def save(data):
     #subprocess.call(['rm', pathMap+"map/"+session["map_name"]+".map"])
     #subprocess.call(['rm', pathMap+"editor/temp/"+session["map_name"]])
 
-    fusionStr = ""
-    for i in range(len(listfiles)):
-        document = open(pathMap + listfiles[i]['url'], "w+")
-        document.write(data[listfiles[i]['name']].encode('utf-8'))
-        document.close()
-        if listfiles[i]['fusion'] == 'true':
-            fusionStr = fusionStr + data[listfiles[i]['name']]+"\n\n"
+#    fusionStr = ""
+#    for i in range(len(listfiles)):
+#        document = open(pathMap + listfiles[i]['url'], "w+")
+#        document.write(data[listfiles[i]['name']].encode('utf-8'))
+#        document.close()
+#        if listfiles[i]['fusion'] == 'true':
+#            fusionStr = fusionStr + data[listfiles[i]['name']]+"\n\n"
 
-    fusionStr = fusionStr + "LAYERS [\n"
+#    fusionStr = fusionStr + "LAYERS [\n"
+    fusionStr = "LAYERS {\n"
     for i in range(len(data['groups'])):
         document = open(pathMap + "editor/groups/" + data['groups'][i]['name'], "w+")
         document.write(data['groups'][i]['content'].encode('utf-8'))
         document.close()
         fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
-    fusionStr = fusionStr + "]"
-
-    fusionFile = open(pathMap + "editor/temp/" + session['map_name'],"w+" )
+    fusionStr = fusionStr + "}"
+    #print "ici"
+    fusionFile = open(pathMap + "editor/layers","w+" )
     fusionFile.write(fusionStr.encode('utf-8'))
     fusionFile.close()
     #print "SAVE"
@@ -538,8 +558,9 @@ def execute():
     if ('ws_name' not in session) or ('map_name' not in session):
         return "No workspace or no map open"
     pathMap = (path+"workspaces/"+session['ws_name']+"/"+session['map_name'])+"/"
-    sub = subprocess.Popen('python decoder.py '+pathMap+'editor/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+#    sub = subprocess.Popen('python decoder.py '+pathMap+'editor/temp/'+session['map_name']+' '+pathMap+' '+session['map_name']+'.map', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    
     logMsg = sub.stdout.read()
     errorMsg = sub.stderr.read()
     

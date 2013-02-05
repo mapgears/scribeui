@@ -1,51 +1,51 @@
-LAYER [
-	3-17 [
+LAYER {
+	3-17 {
         NAME: 'admin_fr'
         TYPE: LINE
-        @VAR.connection
-        @VAR.layerconfig
+        @connection
+        @layerconfig
       	DATA: 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
-        CLASS [
-            STYLE [
-                COLOR [
+        CLASS {
+            STYLE {
+                COLOR {
                     1-3: '#C2D1B2'
                     4-17: '#DCDCB4'
-                ]
-                WIDTH [
+                }
+                WIDTH {
                     1-4: 0.7
                     5-17: 0.9
-                ]
+                }
                 PATTERN [
-					@5.0 5.0
+					5.0 5.0
 				]
-            ]
-        ]
-    ]
-]
+            }
+        }
+    }
+}
 
-LAYER [
-	3-17 [
+LAYER {
+	3-17 {
         NAME: 'border'
         TYPE: LINE
-        @VAR.layerconfig
+        @layerconfig
       	DATA: 'boundaries'
-        CLASS [
-        	1-17 [
-                STYLE [
-                	1-6 [
+        CLASS {
+        	1-17 {
+                STYLE {
+                	1-6 {
                         COLOR: '#CDCBC6'
                         WIDTH: 5
                         OPACITY: 50
-                    ]
-				]
-                STYLE [
-                    COLOR [
+                    }
+				}
+                STYLE {
+                    COLOR {
 						1-4: '#CDCBC6'
                         5-17: '#8D8B8D'
-					]
+					}
                     WIDTH: 1
-                ]
-        	]
-        ]
-    ]
-]
+                }
+        	}
+        }
+    }
+}

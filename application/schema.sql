@@ -9,6 +9,7 @@ drop table if exists maps;
 create table maps (
   map_id integer primary key autoincrement,
   map_name string not null,
+  map_type integer not null, 
   map_desc string,
   ws_id integer not null
 );
@@ -32,8 +33,8 @@ create table pois (
 );
 
 
-INSERT INTO maps(map_id, map_name, map_desc, ws_id) VALUES("0","*OSM-GoogleLike","Template OSM-GoogleLike","0");
-INSERT INTO maps(map_id, map_name, map_desc, ws_id) VALUES("1","*NaturalEarth","Template Natural Earth","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", 1 ,"Template OSM-GoogleLike","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("1","*NaturalEarth", 1, "Template Natural Earth","0");
 
 INSERT INTO groups(group_name, group_index, map_id) VALUES("places", "6", "0");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("borders", "5", "0");

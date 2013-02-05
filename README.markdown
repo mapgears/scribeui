@@ -1,7 +1,7 @@
-TileSwarm
+ScribeUI
 =========
 
-TileSwarm is an application to create mapfiles with many scale levels.
+ScribeUI is an application to create mapfiles with many scale levels.
 
 Requirements
 ------------
@@ -11,10 +11,9 @@ Requirements
  * Mod WSGI
     * sudo apt-get install libapache2-mod-wsgi
  * Flask
-    * pip install Flask
+    * sudo pip install Flask
  * Mapserver
     * must be version 6.0 or higher
- * Mapcache
  * Sqlite3
 
 Configuration
@@ -24,27 +23,29 @@ Configuration
     `from init import init_db`  
     `init_db()`
 
+ * Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
+
  * The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:
 
     `sudo chown -R www-data db`  
     `sudo chown -R www-data workspaces`
     `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/`   
 
- * Change the path of the application in runserver.wsgi
+ * Change the path of the application in application/runserver.wsgi
 
- * Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
+ * Change ip variable in config.py
 
 Apache configuration
 --------------------
 In /etc/apache2/mods-enabled/wsgi.conf, use the following configuration (change the path):
 
-    #Tile Swarm            
+    #ScribeUI     
     
-    WSGIScriptAlias /tileswarm /opt/TileSwarm/application/runserver.py
+    WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
     
     AddType text/html .py
     
-    <Directory /opt/TileSwarm/application/templates>
+    <Directory /opt/apps/ScribeUI/application/templates>
       Order deny,allow
       Allow from all
     </Directory>

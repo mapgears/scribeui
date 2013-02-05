@@ -7,9 +7,9 @@ VARIABLES {
     layerconfig {
         GROUP: 'default'
         STATUS: ON
-        PROJECTION {
+        PROJECTION [
             'init=epsg:900913'
-        }
+        ]
         PROCESSING: 'LABEL_NO_CLIP=ON'
         PROCESSING: 'CLOSE_CONNECTION=DEFER'
     }

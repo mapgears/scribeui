@@ -21,9 +21,9 @@ LAYER {
 					1-14: '#BFBFBF'
                     15-17: '#9D9D9D'
 				}
-                PATTERN [
+                PATTERN {{
 					2 2
-				]
+				}}
             	LINECAP: BUTT
             }
         }
@@ -37,9 +37,9 @@ LAYER {
 					1-14: '#BFBFBF'
                     15-17: '#9D9D9D'
 				}
-                PATTERN [
+                PATTERN {{
 					2 2
-				]
+				}}
             	OPACITY: @tunnel_opacity
             	LINECAP: BUTT
             }
@@ -800,12 +800,12 @@ LAYER {
                     	OUTLINECOLOR: @track_ol_clr
                 	}
                 	PATTERN {
-						1-15 [
+						1-15 {{
 							2 2
-                        ]
-                    	16-17 [
+                        }}
+                    	16-17 {{
 							2 3
-						]
+						}}
 					}
 					WIDTH: @track_width                     
                 	COLOR: @track_clr 
@@ -828,9 +828,9 @@ LAYER {
                    		OUTLINEWIDTH: 1
                     	OUTLINECOLOR: 193 181 157
                 	}
-                	PATTERN [
+                	PATTERN {{
 						2 3
-					]
+					}}
 					WIDTH: 1                    
                 	COLOR: '#FFFFFF'
 				}
@@ -1010,9 +1010,9 @@ LAYER {
 					1-15: 0
                     16-17: 1
 				}
-				PATTERN [
+				PATTERN {{
 					2 2
-				]
+				}}
             	LINECAP: BUTT
 			}
         	

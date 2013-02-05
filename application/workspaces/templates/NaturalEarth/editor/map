@@ -11,17 +11,17 @@ MAP {
     IMAGECOLOR: '#C6E2F2'
     SHAPEPATH: '../../../../data/naturalEarth'
     WEB {
-        METADATA [
+        METADATA {{
             "ows_enable_request" "*"
             "wms_srs" "EPSG:900913 EPSG:4326"
             "labelcache_map_edge_buffer" "-10"
             "wms_title" "Natural Earth World WMS"
-        ]
+        }}
         IMAGEPATH: '/tmp/ms_tmp/'
         IMAGEURL: '/ms_tmp/'
     }
     DEBUG: 5
-    PROJECTION [
+    PROJECTION {{
         "init=epsg:900913"
-    ]
+    }}
 }

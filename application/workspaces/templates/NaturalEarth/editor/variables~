@@ -1,4 +1,4 @@
-VAR {
+VARIABLES {
     connection {
         CONNECTION: "host=localhost dbname=ne user=ne password=ne port=5432"
         CONNECTIONTYPE: POSTGIS

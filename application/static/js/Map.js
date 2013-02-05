@@ -2,6 +2,7 @@ function Map(name, options){
     this.name = name;
     this.url = null;
     this.workspace = null;
+    this.type = "Scribe";
     this.template = null;
     this.templateLocation = "";
     this.locationPassword = "";
@@ -12,10 +13,11 @@ function Map(name, options){
     if(options){
         this.url = options.url ? options.url : this.url;
         this.workspace = options.workspace ? options.workspace : null;
+        this.type = options.type ? options.type : this.template;
         this.template = options.template ? options.template : this.template;
         this.templateLocation = options.templateLocation ? options.templateLocation : this.templateLocation;
         this.locationPassword = options.locationPassword ? options.locationPassword : this.locationPassword;
-	this.description = options.description ? options.description : this.description;
+	    this.description = options.description ? options.description : this.description;
         this.OLMap = options.OLMap ? options.OLMap : this.OLMap;
         this.WMSLayer = options.WMSLayer ? options.WMSLayer : this.WMSLayer;
     }
@@ -25,6 +27,7 @@ Map.prototype.create = function(workspace){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_map', {
         name: this.name,
+        type: this.type,
         template: this.template,
         templatelocation: this.templateLocation,
         locationpassword: this.locationPassword,
@@ -161,7 +164,6 @@ Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
     $("#" + this.workspace.mapDescription).append("<span class=\"underline\">URL</span>\n");
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.url + "</p>");
-    //$("#" + this.workspace.mapDescription).text(this.description);
 };
 
 Map.prototype.setGroupContent = function(name, content){
@@ -408,10 +410,6 @@ Map.prototype.closeDataBrowser = function(){
         $("#data-browser-child-" + this.name).elfinder('destroy');
         $("#data-browser-child-" + this.name).remove();
     }
-}
-
-Map.prototype.backup = function(){
-    //Utiliser la fonction de clonage développée à la FADQ
 }
 
 Map.prototype.exportSelf = function(){
