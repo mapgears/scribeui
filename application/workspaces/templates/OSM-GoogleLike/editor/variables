@@ -1,7 +1,7 @@
 VARIABLES {
     ##Layers configurations (included in almost all layers)
     connection {
-        CONNECTION: "host=192.168.6.20 dbname=osmqc user=osmqc password=osmqc port=5432"
+        CONNECTION: "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE: POSTGIS
     }
     layerconfig {

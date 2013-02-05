@@ -1,0 +1,1685 @@
+{"SCALES":[
+  {"1":"268435456"},
+  {"2":"134217728"},
+  {"3":"67108864"},
+  {"4":"33554432"},
+  {"5":"16777216"},
+  {"6":"8388608"},
+  {"7":"4194304"},
+  {"8":"2097152"},
+  {"9":"1048576"},
+  {"10":"524288"},
+  {"11":"262144"},
+  {"12":"131072"},
+  {"13":"65536"},
+  {"14":"32768"},
+  {"15":"16384"},
+  {"16":"8192"},
+  {"17":"4096"}],"VARIABLES":[
+   {"VOID":"##Layers configurations (included in almost all layers)"},
+
+   {"connection":[
+       {"CONNECTION":"\"host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432\""},
+       {"CONNECTIONTYPE":"POSTGIS"}]},{"layerconfig":[
+       {"GROUP":"'default'"},
+       {"STATUS":"ON"},
+       {"PROJECTION":[{"VOID":"'init=epsg:900913'"}]},{"PROCESSING":"'LABEL_NO_CLIP=ON'"},
+       {"PROCESSING":"'CLOSE_CONNECTION=DEFER'"}]},{"VOID":"##Label configurations"},
+
+{"labelconfig":[
+	{"TYPE":"TRUETYPE"},
+       {"PARTIALS":"FALSE"},
+       {"MINFEATURESIZE":"AUTO"}]},{"labelconfig_mainroads":[
+       {"VARIABLE":"labelconfig"},
+	{"FONT":"'sc'"},
+       {"MINDISTANCE":"300"},
+       {"REPEATDISTANCE":"10"},
+       {"OUTLINEWIDTH":"2"},
+       {"ANGLE":"FOLLOW"},
+       {"BUFFER":"3"}]},{"labelconfig_minorroads":[
+       {"VARIABLE":"labelconfig"},
+	{"FONT":"'sc'"},
+       {"MINDISTANCE":"500"},
+       {"REPEATDISTANCE":"10"},
+       {"OUTLINEWIDTH":"2"},
+       {"ANGLE":"FOLLOW"},
+       {"BUFFER":"3"}]},{"labelconfig_shields":[
+       {"VARIABLE":"labelconfig"},
+	{"PRIORITY":[
+		{"1:13":"8"},
+           {"14:17":"1"}]},{"FONT":"'scb'"},
+ 	{"REPEATDISTANCE":"20"},
+       {"MINDISTANCE":"200"},
+      {"BUFFER":"20"}]},{"labelconfig_landusage":[
+       {"VARIABLE":"labelconfig"},
+	{"FONT":"'sc'"},
+ 	{"SIZE":"8"},
+       {"OUTLINECOLOR":"255 255 255"},
+       {"OUTLINEWIDTH":"2"},
+ 	{"WRAP":"' '"},
+       {"MAXLENGTH":"6"},
+       {"ALIGN":"CENTER"}]},{"labelconfig_park_golf_nature":[
+	{"VARIABLE":"labelconfig_landusage"},
+       {"ENCODING":"'utf-8'"},
+       {"COLOR":"0 100 0"},
+ 	{"PRIORITY":"2"},
+       {"REPEATDISTANCE":"1"},
+       {"POSITION":"LC"},
+       {"BUFFER":"5"},
+       {"OFFSET":"VARIABLE:park_golf_nature_offset"}]},{"labelconfig_public_transport":[
+	{"FONT":"'scb'"},
+	{"TYPE":"TRUETYPE"},
+       {"PARTIALS":"FALSE"},
+       {"COLOR":"0 0 0"},
+       {"OUTLINECOLOR":"0 0 0"},
+       {"BUFFER":"12"},
+       {"POSITION":"AUTO"}]},{"labelconfig_places":[
+	{"VARIABLE":"labelconfig"},
+       {"ENCODING":"'utf-8'"},
+       {"WRAP":"' '"},
+       {"MAXLENGTH":"8"},
+       {"ALIGN":"CENTER"},
+       {"BUFFER":"10"},
+       {"POSITION":"AUTO"}]},{"labelconfig_waterways":[
+	{"VARIABLE":"labelconfig"},
+       {"FONT":"'sc'"},
+       {"ENCODING":"'utf-8'"},
+       {"MINDISTANCE":"200"},
+       {"REPEATDISTANCE":"400"},
+       {"SIZE":[
+		{"1:15":"8"},
+           {"16:17":"9"}]},{"COLOR":"'#6B94B0'"},
+       {"OUTLINECOLOR":"255 255 255"},
+       {"OUTLINEWIDTH":"2"},
+       {"ANGLE":"FOLLOW"},
+       {"BUFFER":"3"}]},{"VOID":"##Water"},
+
+{"waterarea_clr":"'#A5BFE0'"},
+{"waterways_clr":"'#B3C6D4'"},
+    
+   {"waterways_width":[
+	{"1:14":"0"},
+       {"15":"0.3"},
+       {"16":"0.5"},
+       {"17":"1"}]},{"VOID":"##Landusage"},
+
+{"public_transport_symbol_size":[
+	{"1:16":"13"},
+       {"17":"15"}]},{"public_transport_symbol":"'transportsquare'"},
+   {"public_transport_lbl_size":"8"},
+
+{"park_golf_nature_clr":"'#DCDCB4'"},
+{"park_golf_nature_offset":"0 -20"},
+    
+   {"transport_clr":"200 200 200"},
+   {"transport_offset":"0 -20"},
+    
+   {"VOID":"##Roads"},
+
+   {"roads_lbl_priority":[
+	{"1:13":"1"},
+       {"14:17":"9"}]},{"VOID":"##Motorway links"},
+
+{"motorway_links_clr":"255 235 140"},
+   {"motorway_links_width":[
+	{"1:13":"2"},
+       {"14:15":"2.5"},
+       {"16":"5"},
+       {"17":"6"}]},{"VOID":"##Motorways"},
+
+   {"motorway_clr":"255 195 69"},
+   {"motorway_width":[
+	{"1:5":"0.5"},
+       {"6:8":"1"},
+       {"9":"2"},
+       {"10:12":"2.5"},
+       {"13":"3"},
+       {"14:15":"5.5"},
+       {"16:17":"12"}]},{"motorway_ol_clr":"186 110 39"},
+{"motorway_ol_width":[
+       {"1:13":"1"},
+       {"14":"0.8"},
+       {"15:17":"0.5"}]},{"motorway_lbl_size":[
+	{"1:14":"7"},
+       {"15:17":"9"}]},{"motorway_lbl_clr":"'#333333'"},
+   {"motorway_lbl_priority":"9"},
+    
+   {"VOID":"##Trunk links"},
+
+   {"trunk_links_clr":[
+	{"6:6":"193 181 157"},
+       {"7:17":"255 253 139"}]},{"trunk_links_width":[
+	{"1:13":"2"},
+	{"13:16":"2.5"},
+       {"17":"5"}]},{"VOID":"##Trunks"},
+
+{"trunk_clr":[
+	{"1:6":"'#DAAF85'"},
+       {"7:17":"255 253 139"}]},{"trunk_width":[
+	{"1:5":"0.5"},
+       {"6:8":"1"},
+       {"9:11":"2.5"},
+       {"12:13":"3"},
+       {"14:15":"5.5"},
+       {"16:17":"12"}]},{"trunk_ol_clr":"193 181 157"},
+{"trunk_ol_width":[
+       {"1:8":"0"},
+       {"9":"0.2"},
+       {"10:14":"1"},
+       {"15:17":"0.5"}]},{"trunk_lbl_size":[
+	{"1:14":"8"},
+       {"15:17":"9"}]},{"trunk_lbl_clr":"'#555555'"},
+    
+   {"VOID":"##Primaries"},
+
+{"primary_clr":[
+	{"1:9":"193 181 157"},
+       {"10:17":"255 253 133"}]},{"primary_width":[
+	{"1:9":"0.5"},
+       {"10":"0.75"},
+       {"11":"1"},
+       {"12:15":"2"},
+       {"16":"8"},
+       {"17":"12"}]},{"primary_ol_clr":"193 181 157"},
+{"primary_ol_width":"0.3"},
+{"primary_lbl_size":[
+	{"1:12":"7"},
+       {"13:17":"8"}]},{"primary_lbl_clr":"'#333333'"},
+    
+   {"VOID":"##Secondaries"},
+
+{"secondary_clr":[
+	{"1:9":"193 181 157"},
+       {"10:17":"255 253 133"}]},{"secondary_width":[
+	{"1:8":"0"},
+       {"9:10":"0.5"},
+       {"11":"0.75"},
+       {"12":"1.5"},
+       {"13":"2"},
+       {"14:15":"3.5"},
+       {"16":"5.5"},
+       {"17":"11"}]},{"secondary_ol_clr":"193 181 157"},
+{"secondary_ol_width":"0.3"},
+{"secondary_lbl_size":[
+	{"1:12":"7"},
+       {"13:17":"8"}]},{"secondary_lbl_clr":"'#333333'"},
+    
+   {"VOID":"##Tertiaries"},
+
+{"tertiary_clr":[
+	{"1:13":"'#D9CFC6'"},
+       {"14:17":"'#FFFFFF'"}]},{"tertiary_width":[
+	{"1:8":"0"},
+       {"9:11":"0.5"},
+       {"12:14":"0.75"},
+       {"15":"5"},
+       {"16:17":"11"}]},{"tertiary_ol_clr":"193 181 157"},
+{"tertiary_ol_width":"0.3"},
+{"tertiary_lbl_size":[
+	{"1:15":"6"},
+       {"16:17":"7"}]},{"tertiary_lbl_clr":"'#000000'"},
+    
+   {"VOID":"##Others"},
+
+   {"other_clr":[
+	{"1:13":"'#D9CFC6'"},
+       {"14:17":"'#FFFFFF'"}]},{"other_width":[
+	{"1:8":"0"},
+       {"9:13":"0.3"},
+       {"14":"1.2"},
+       {"15":"1.8"},
+       {"16":"5"},
+       {"17":"11"}]},{"other_ol_clr":"193 181 157"},
+{"other_ol_width":"0.3"},
+{"other_lbl_size":[
+	{"1:15":"6"},
+       {"16:17":"7"}]},{"other_lbl_clr":"'#000000'"},
+    
+   {"VOID":"##Tracks"},
+
+   {"track_clr":[
+	{"1:15":"'#AAAAAA'"},
+       {"16:17":"'#FFFFFF'"}]},{"track_width":[
+	{"1:11":"0"},
+       {"12":"0.5"},
+       {"13":"0.75"},
+       {"14:17":"1"}]},{"track_ol_clr":"193 181 157"},
+{"track_ol_width":"1"},
+{"track_lbl_size":[
+	{"1:15":"6"},
+       {"16:17":"8"}]},{"track_lbl_clr":"'#333333'"},
+    
+   {"VOID":"##Pedestrians"},
+
+{"pedestrian_clr":"'#FFFFFF'"},
+   {"pedestrian_width":[
+	{"1:11":"0"},
+       {"12":"0.5"},
+       {"13":"0.75"},
+       {"14":"1"},
+       {"15":"1.5"},
+       {"16":"2"},
+       {"17":"2.5"}]},{"pedestrian_ol_clr":"193 181 157"},
+{"pedestrian_ol_width":"1"},
+{"pedestrian_lbl_size":[
+	{"1:15":"0"},
+       {"16:17":"8"}]},{"pedestrian_lbl_clr":"'#333333'"},
+    
+   {"VOID":"##Tunnels"},
+
+{"tunnel_opacity":"40"},
+    
+   {"VOID":"##Oneways"},
+
+   {"oneway_from":[
+	{"GAP":"-80"},
+       {"ANGLE":"-180"},
+       {"SYMBOL":"'oneway'"},
+       {"COLOR":"'#A9C5EB'"},
+       {"SIZE":"8"}]},{"oneway_to":[
+	{"GAP":"-80"},
+       {"ANGLE":"0"},
+       {"SYMBOL":"'oneway'"},
+       {"COLOR":"'#A9C5EB'"},
+       {"SIZE":"8"}]}],"MAP":[
+   {"CONFIG":"'ON_MISSING_DATA' 'IGNORE'"},
+   {"CONFIG":"'MS_ERRORFILE' '../debugFile.log'"},
+   {"CONFIG":"'PROJ_LIB' '../'"},
+   {"FONTSET":"'../fonts.lst'"},
+   {"IMAGETYPE":"png"},
+   {"MAXSIZE":"4000"},
+   {"SIZE":"800 800"},
+   {"UNITS":"meters"},
+   {"EXTENT":"-20000000 -20000000 20000000 20000000"},
+   {"IMAGECOLOR":"'#A5BFE0'"},
+   {"SHAPEPATH":"'../../../../data/osm/'"},
+   {"WEB":[
+       {"METADATA":[{"VOID":"\"ows_enable_request\" \"*\""},{"VOID":"            \"wms_srs\" \"EPSG:900913 EPSG:4326\""},{"VOID":"            \"labelcache_map_edge_buffer\" \"-10\""},{"VOID":"            \"wms_title\" \"JSON WMS\""}]},{"IMAGEPATH":"'/tmp/ms_tmp/'"},
+       {"IMAGEURL":"'/ms_tmp/'"}]},{"DEBUG":"5"},
+   {"PROJECTION":[{"VOID":"\"init=epsg:900913\""}]}],"LAYERS":[{"LAYER":[
+{"1:17":[
+       {"NAME":"'land'"},
+       {"TYPE":"POLYGON"},
+       {"GROUP":"'default'"},
+       {"STATUS":"ON"},
+       {"PROJECTION":[
+           {"1:3":[{"VOID":"'init=epsg:4326'"}]},{"4:17":[{"VOID":"'init=epsg:900913'"}]}
+        ]},{"PROCESSING":"'LABEL_NO_CLIP=ON'"},
+       {"PROCESSING":"'CLOSE_CONNECTION=DEFER'"},
+	{"DATA":[
+		{"1:3":"\"TM_WORLD_BORDERS-0.3.shp\""},
+           {"4:7":"\"shoreline_300\""},
+           {"8:17":"\"processed_p\""}]},{"CLASS":[
+           {"STYLE":[
+            {"COLOR":"'#F4F3F0'"},
+    		{"OUTLINECOLOR":"'#F4F3F0'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+{"2:17":[
+       {"NAME":"'landusage'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"VARIABLE":"connection"},
+	{"DATA":[
+		{"1:3":"\"geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913\""},
+           {"4:9":"\"geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913\""},
+           {"10:12":"\"geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913\""},
+		{"13:17":"\"geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913\""}]},{"CLASSITEM":"'type'"},
+       {"LABELITEM":"'name'"},
+       {"CLASS":[
+           {"EXPRESSION":"/forest|wood/"},
+           {"STYLE":[
+            {"COLOR":"'#C2D182'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"1"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'residential'"},
+           {"STYLE":[
+            {"COLOR":"'#E3DED4'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"1"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'pedestrian'"},
+           {"STYLE":[
+               {"1:17":[
+				{"OUTLINEWIDTH":"VARIABLE:pedestrian_ol_width"},
+                   {"OUTLINECOLOR":"VARIABLE:pedestrian_ol_clr"}]},{"COLOR":"VARIABLE:pedestrian_clr"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"COLOR":"0 0 0"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'industrial'"},
+           {"STYLE":[
+            {"COLOR":"'#D1D1D1'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"2"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'commercial'"},
+           {"STYLE":[
+            {"COLOR":"'#D1D1D1'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"2"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'cemetery'"},
+           {"STYLE":[
+            {"COLOR":"'#D1D1D1'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"2"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'park' AND length('[name]') = 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'park' AND length('[name]') > 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_park_golf_nature"},
+                   {"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                       {"OFFSET":"VARIABLE:park_golf_nature_offset"},
+                       {"SYMBOL":"'../symbols/forest.png'"},
+                       {"SIZE":"30"}]}
+                ]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'golf_course' AND length('[name]') = 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'golf_course' AND length('[name]') > 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_park_golf_nature"},
+                   {"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                       {"OFFSET":"VARIABLE:park_golf_nature_offset"},
+                       {"SYMBOL":"'../symbols/flag-golf2.png'"},
+                       {"SIZE":"20"}]}
+                ]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'nature_reserve' AND length('[name]') = 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"('[type]' = 'nature_reserve' AND length('[name]') > 0)"},
+           {"STYLE":[
+            {"COLOR":"VARIABLE:park_golf_nature_clr"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_park_golf_nature"},
+                   {"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                       {"OFFSET":"VARIABLE:park_golf_nature_offset"},
+                       {"SYMBOL":"'../symbols/forest.png'"},
+                       {"SIZE":"30"}]}
+                ]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'hospital'"},
+           {"STYLE":[
+            {"COLOR":"'#E6C8C3'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"1"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"/school|college|university/"},
+           {"STYLE":[
+            {"COLOR":"'#DED1AB'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"1"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"/sports_center|stadium|pitch/"},
+           {"STYLE":[
+            {"COLOR":"'#DED1AB'"}]},{"LABEL":[
+               {"13:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                {"ENCODING":"'utf-8'"},
+                {"COLOR":"0 0 0"},
+                {"PRIORITY":"1"}]}
+			]}
+        ]},{"CLASS":[
+           {"EXPRESSION":"'parking'"},
+           {"STYLE":[
+            {"COLOR":"'#AAAAAA'"}]},{"TEXT":"'P'"},
+        {"LABEL":[
+               {"13:17":[
+				{"FONT":"'sc'"},
+                   {"TYPE":"TRUETYPE"},
+                   {"SIZE":"10"},
+                   {"COLOR":"255 255 255"},
+                   {"PARTIALS":"FALSE"},
+                {"PRIORITY":"1"},
+                   {"POSITION":"CC"}]}
+			]}
+        ]}
+    ]}
+]},{"LAYER":[
+{"10:17":[
+       {"NAME":"'transport_areas'"},
+       {"TYPE":"POINT"},
+       {"VARIABLE":"layerconfig"},
+       {"VARIABLE":"connection"},
+       {"DATA":"\"geometry from osm_new_transport_points using unique osm_id using srid=900913\""},
+       {"CLASSITEM":"\"type\""},
+       {"LABELITEM":"\"name\""},
+       {"CLASS":[
+		{"EXPRESSION":"'aerodome'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:transport_clr"}]},{"LABEL":[
+               {"10:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+				{"COLOR":"0 0 0"},
+                {"PRIORITY":"10"},
+                {"POSITION":"LC"},
+                {"OFFSET":"VARIABLE:transport_offset"},
+                	{"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                    {"OFFSET":"VARIABLE:transport_offset"},
+                    {"SYMBOL":"'../symbols/airport.png'"},
+                    {"SIZE":"30"}]}
+                ]}
+			]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'station'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:transport_clr"}]},{"TEXT":"'T'"},
+        {"LABEL":[
+               {"16:17":[
+				{"VARIABLE":"labelconfig"},
+                   {"FONT":"'sc'"},
+				{"COLOR":"0 111 239"},
+                {"PRIORITY":"10"},
+                {"POSITION":"CC"},
+                {"SIZE":"8"},
+                {"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                    {"SYMBOL":"'transportsquare'"},
+                    {"SIZE":[
+						{"1:16":"13"},
+                        {"17":"15"}]},{"COLOR":"255 255 255"},
+                    {"OUTLINECOLOR":"0 111 239"}]}
+                ]}
+			]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'helipad'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:transport_clr"}]},{"TEXT":"'H'"},
+        {"LABEL":[
+               {"15:17":[
+				{"VARIABLE":"labelconfig"},
+                   {"FONT":"'sc'"},
+				{"COLOR":"0 111 239"},
+                {"PRIORITY":"10"},
+                {"POSITION":"CC"},
+                {"SIZE":"8"},
+                {"STYLE":[
+					{"GEOMTRANSFORM":"'labelpnt'"},
+                    {"SYMBOL":"'transportsquare'"},
+                    {"SIZE":[
+						{"1:16":"13"},
+                        {"17":"15"}]},{"COLOR":"200 200 200"}]}
+                ]}
+			]}
+		]},{"CLASS":[
+		{"STYLE":[
+			{"COLOR":"VARIABLE:transport_clr"}]}
+		]}
+	]}
+]},{"LAYER":[
+{"16:17":[
+       {"NAME":"'public_transport'"},
+       {"TYPE":"ANNOTATION"},
+       {"VARIABLE":"layerconfig"},
+       {"VARIABLE":"connection"},
+       {"CLASSITEM":"\"type\""},
+       {"DATA":[
+		{"1:16":"\"geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913\""},
+		{"17":"\"geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913\""}]},{"CLASS":[
+		{"EXPRESSION":"'bus_stop'"},
+           {"TEXT":"' '"},
+           {"LABEL":[
+			{"VARIABLE":"labelconfig_public_transport"},
+        	{"STYLE":[
+				{"COLOR":"255 255 255"},
+                {"OUTLINECOLOR":"0 111 239"},
+                {"WIDTH":"0.5"},
+                {"SIZE":"VARIABLE:public_transport_symbol_size"},
+                {"SYMBOL":"VARIABLE:public_transport_symbol"}]},{"STYLE":[
+				{"COLOR":"0 111 239"},
+                {"SIZE":"VARIABLE:public_transport_lbl_size"},
+                {"SYMBOL":"'bussymbol'"}]}
+			]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'subway_entrance'"},
+           {"TEXT":"' '"},
+           {"LABEL":[
+			{"VARIABLE":"labelconfig_public_transport"},
+               {"STYLE":[
+				{"COLOR":"0 111 239"},
+                   {"OUTLINECOLOR":"255 255 255"},
+                   {"WIDTH":"0.5"},
+                   {"SIZE":"VARIABLE:public_transport_symbol_size"},
+                   {"SYMBOL":"VARIABLE:public_transport_symbol"}]},{"STYLE":[
+				{"COLOR":"255 255 255"},
+                   {"SIZE":"VARIABLE:public_transport_lbl_size"},
+                   {"SYMBOL":"'metrosymbol'"}]}
+			]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'tram_stop'"},
+           {"TEXT":"' '"},
+           {"LABEL":[
+			{"VARIABLE":"labelconfig_public_transport"},
+               {"STYLE":[
+				{"COLOR":"0 111 239"},
+                   {"OUTLINECOLOR":"255 255 255"},
+                   {"WIDTH":"0.5"},
+                   {"SIZE":"VARIABLE:public_transport_symbol_size"},
+                   {"SYMBOL":"VARIABLE:public_transport_symbol"}]},{"STYLE":[
+				{"COLOR":"255 255 255"},
+                   {"SIZE":"VARIABLE:public_transport_lbl_size"},
+                   {"SYMBOL":"'tramwaysymbol'"}]}
+			]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'station'"},
+           {"TEXT":"' '"},
+           {"LABEL":[
+			{"VARIABLE":"labelconfig_public_transport"},
+               {"STYLE":[
+				{"COLOR":"255 255 255"},
+                   {"OUTLINECOLOR":"0 111 239"},
+                   {"WIDTH":"0.5"},
+                   {"SIZE":"VARIABLE:public_transport_symbol_size"},
+                   {"SYMBOL":"VARIABLE:public_transport_symbol"}]},{"STYLE":[
+				{"COLOR":"0 111 239"},
+                   {"SIZE":"VARIABLE:public_transport_lbl_size"},
+                   {"SYMBOL":"'stationsymbol'"}]}
+			]}
+		]}
+    ]}
+]},{"LAYER":[
+{"3:17":[
+       {"NAME":"'waterarea'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+		{"1:4":"\"geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913\""},
+		{"5:12":"\"geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913\""},
+		{"13:17":"\"geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913\""}]},{"LABELITEM":"'name'"},
+       {"CLASSITEM":"'type'"},
+       {"CLASS":[
+		{"EXPRESSION":"'riverbank'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:waterarea_clr"}]}
+		]},{"CLASS":[
+		{"STYLE":[
+			{"COLOR":"VARIABLE:waterarea_clr"}]},{"LABEL":[
+			{"5:17":[
+				{"VARIABLE":"labelconfig"},
+                   {"FONT":"'sc'"},
+        		{"ENCODING":"'utf-8'"},
+				{"MINDISTANCE":"200"},
+                   {"SIZE":"8"},
+                   {"COLOR":"'#6B94B0'"},
+                   {"OUTLINECOLOR":"255 255 255"},
+                   {"OUTLINEWIDTH":"2"},
+                   {"WRAP":"' '"},
+                   {"MAXLENGTH":"5"},
+                   {"ALIGN":"CENTER"}]}
+			]}
+		]}
+    ]}
+]},{"LAYER":[
+{"4:17":[
+       {"NAME":"'waterways'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+		{"1:10":"\"geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913\""},
+		{"11:17":"\"geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913\""}]},{"CLASSITEM":"'type'"},
+       {"LABELITEM":"'name'"},
+       {"CLASS":[
+		{"EXPRESSION":"'river'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:waterways_clr"},
+ 			{"WIDTH":"VARIABLE:waterways_width"}]},{"LABEL":[
+			{"VARIABLE":"labelconfig_waterways"}]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'stream'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:waterways_clr"},
+ 			{"WIDTH":"VARIABLE:waterways_width"}]},{"LABEL":[
+			{"VARIABLE":"labelconfig_waterways"}]}
+		]},{"CLASS":[
+		{"EXPRESSION":"'canal'"},
+           {"STYLE":[
+			{"COLOR":"VARIABLE:waterways_clr"},
+ 			{"WIDTH":"VARIABLE:waterways_width"}]},{"LABEL":[
+			{"VARIABLE":"labelconfig_waterways"}]}
+		]}
+    ]}
+]},{"VOID":"##Railways"},
+{"LAYER":[
+{"12:17":[
+       {"NAME":"'railways'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+	{"DATA":[
+		{"1:6":"\"geometry from (select geometry, osm_id, tunnel from osm_new_railways_gen0 where type='rail') as foo using unique osm_id using srid=900913\""},
+           {"7:12":"\"geometry from (select geometry, osm_id, tunnel from osm_new_railways_gen1 where type='rail') as foo using unique osm_id using srid=900913\""},
+           {"13:17":"\"geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913\""}]},{"CLASS":[
+           {"EXPRESSION":"(\"[tunnel]\"=0)"},
+           {"STYLE":[
+               {"WIDTH":[
+				{"1:10":"0.5"},
+                   {"11:17":"2"}]},{"COLOR":[
+				{"1:14":"'#BFBFBF'"},
+                   {"15:17":"'#9D9D9D'"}]},{"PATTERN":[{"VOID":"2 2"}]},{"LINECAP":"BUTT"}]}
+        ]},{"CLASS":[
+           {"STYLE":[
+               {"WIDTH":[
+				{"1:10":"0.5"},
+                   {"11:17":"2"}]},{"COLOR":[
+				{"1:14":"'#BFBFBF'"},
+                   {"15:17":"'#9D9D9D'"}]},{"PATTERN":[{"VOID":"2 2"}]},{"OPACITY":"VARIABLE:tunnel_opacity"},
+            {"LINECAP":"BUTT"}]}
+        ]}
+    ]}
+]},{"VOID":"##Roads"},
+{"LAYER":[
+{"4:17":[
+       {"NAME":"'roads'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+	{"DATA":[
+		{"1:7":"\"geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+           {"8":"\"geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+		{"9:10":"\"geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+		{"11:17":"\"geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""}]},{"LABELITEM":"'name'"},
+       {"CLASSITEM":"'type'"},
+       {"VOID":"##Bridges"},
+
+       {"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and \"[type]\" = \"motorway_link\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:motorway_links_width"},
+                   {"OUTLINECOLOR":"186 110 39"},
+                   {"OUTLINEWIDTH":"0.5"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:motorway_links_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and \"[type]\" = \"motorway\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:motorway_width"},
+                   {"OUTLINECOLOR":"186 110 39"},
+                   {"OUTLINEWIDTH":"0.5"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:motorway_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and \"[type]\" = \"trunk_link\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:trunk_links_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"0.4"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:trunk_links_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and \"[type]\" = \"trunk\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:trunk_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"0.4"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:trunk_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and (\"[type]\" = \"primary\" or \"[type]\" = \"primary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:primary_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"1"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:primary_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and (\"[type]\" = \"secondary\" or \"[type]\" = \"secondary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:secondary_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"1"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:secondary_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and (\"[type]\" = \"tertiary\" or \"[type]\" = \"tertiary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:tertiary_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"1"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:tertiary_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and (\"[type]\" = \"unclassified\" or \"[type]\" = \"residential\" or \"[type]\" = \"service\" or \"[type]\" = \"road\" or \"[type]\" = \"living_street\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:other_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"1"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:other_clr"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[bridge]\"=\"1\" and \"[type]\" = \"pedestrian\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:pedestrian_width"},
+                   {"OUTLINECOLOR":"136 136 136"},
+                   {"OUTLINEWIDTH":"1"},
+                   {"LINECAP":"BUTT"},
+                   {"COLOR":"VARIABLE:pedestrian_clr"}]}
+			]}
+		]},{"VOID":"##Tunnel"},
+
+    {"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and \"[type]\" = \"motorway_link\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:motorway_links_width"},
+                   {"COLOR":"VARIABLE:motorway_links_clr"},
+ 				{"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and \"[type]\" = \"motorway\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:motorway_width"},
+                   {"COLOR":"VARIABLE:motorway_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and \"[type]\" = \"trunk_link\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:trunk_links_width"},
+                   {"COLOR":"VARIABLE:trunk_links_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and \"[type]\" = \"trunk\")"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:trunk_width"},
+                   {"COLOR":"VARIABLE:trunk_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and (\"[type]\" = \"primary\" or \"[type]\" = \"primary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:primary_width"},
+                   {"COLOR":"VARIABLE:primary_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and (\"[type]\" = \"secondary\" or \"[type]\" = \"secondary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:secondary_width"},
+                   {"COLOR":"VARIABLE:secondary_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and (\"[type]\" = \"tertiary\" or \"[type]\" = \"tertiary_link\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:tertiary_width"},
+                   {"COLOR":"VARIABLE:tertiary_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"CLASS":[
+		{"15:17":[
+			{"EXPRESSION":"(\"[tunnel]\"=\"1\" and (\"[type]\" = \"unclassified\" or \"[type]\" = \"residential\" or \"[type]\" = \"service\" or \"[type]\" = \"road\" or \"[type]\" = \"living_street\"))"},
+               {"STYLE":[
+				{"WIDTH":"VARIABLE:other_width"},
+                   {"COLOR":"VARIABLE:other_clr"},
+                   {"OPACITY":"VARIABLE:tunnel_opacity"}]}
+			]}
+		]},{"VOID":"##Roads + oneways"},
+
+    {"CLASS":[
+		{"13:17":[
+			{"EXPRESSION":"\"motorway_link\""},
+               {"STYLE":[
+                   {"13:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:motorway_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:motorway_ol_clr"}]},{"WIDTH":"VARIABLE:motorway_links_width"},
+                   {"COLOR":"VARIABLE:motorway_links_clr"}]}
+			]}
+		]},{"0":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"motorway\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:motorway_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:motorway_ol_clr"}]},{"WIDTH":"VARIABLE:motorway_width"},
+                   {"COLOR":"VARIABLE:motorway_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:motorway_lbl_priority"},
+ 					{"SIZE":"VARIABLE:motorway_lbl_size"},
+                       {"COLOR":"VARIABLE:motorway_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:motorway_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"motorway\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:motorway_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:motorway_ol_clr"}]},{"WIDTH":"VARIABLE:motorway_width"},
+                   {"COLOR":"VARIABLE:motorway_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:motorway_lbl_priority"},
+ 					{"SIZE":"VARIABLE:motorway_lbl_size"},
+                       {"COLOR":"VARIABLE:motorway_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:motorway_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"5:17":[
+			{"EXPRESSION":"\"motorway\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"9:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:motorway_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:motorway_ol_clr"}]},{"WIDTH":"VARIABLE:motorway_width"},
+                {"COLOR":"VARIABLE:motorway_clr"}]},{"LABEL":[
+				{"11:17":[
+                    {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:motorway_lbl_priority"},
+ 					{"SIZE":"VARIABLE:motorway_lbl_size"},
+                    {"COLOR":"VARIABLE:motorway_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:motorway_clr"}]}	
+				]}
+        	]}
+		]},{"CLASS":[
+		{"13:17":[
+			{"EXPRESSION":"\"trunk_link\""},
+               {"STYLE":[
+                   {"13:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:trunk_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:trunk_ol_clr"}]},{"WIDTH":"VARIABLE:trunk_links_width"},
+                   {"COLOR":"VARIABLE:trunk_links_clr"}]}
+			]}
+		]},{"0":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"trunk\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:trunk_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:trunk_ol_clr"}]},{"WIDTH":"VARIABLE:trunk_width"},
+                   {"COLOR":"VARIABLE:trunk_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:trunk_lbl_size"},
+                       {"COLOR":"VARIABLE:trunk_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:trunk_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"trunk\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:trunk_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:trunk_ol_clr"}]},{"WIDTH":"VARIABLE:trunk_width"},
+                   {"COLOR":"VARIABLE:trunk_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:trunk_lbl_size"},
+                       {"COLOR":"VARIABLE:trunk_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:trunk_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"5:17":[
+			{"EXPRESSION":"\"trunk\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"9:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:trunk_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:trunk_ol_clr"}]},{"WIDTH":"VARIABLE:trunk_width"},
+                {"COLOR":"VARIABLE:trunk_clr"}]},{"LABEL":[
+				{"11:17":[
+                    {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:trunk_lbl_size"},
+                    {"COLOR":"VARIABLE:trunk_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:trunk_clr"}]}	
+				]}
+        	]}
+		]},{"0":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"primary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                   {"COLOR":"VARIABLE:primary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                       {"COLOR":"VARIABLE:primary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"primary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                   {"COLOR":"VARIABLE:primary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                       {"COLOR":"VARIABLE:primary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"5:17":[
+			{"EXPRESSION":"\"primary\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                {"COLOR":"VARIABLE:primary_clr"}]},{"LABEL":[
+				{"11:17":[
+                    {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                    {"COLOR":"VARIABLE:primary_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+        	]}
+		]},{"0":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"primary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                   {"COLOR":"VARIABLE:primary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                       {"COLOR":"VARIABLE:primary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"primary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                   {"COLOR":"VARIABLE:primary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"11:17":[
+                       {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                       {"COLOR":"VARIABLE:primary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"9:17":[
+			{"EXPRESSION":"\"primary\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:primary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_ol_clr"}]},{"WIDTH":"VARIABLE:primary_width"},
+                {"COLOR":"VARIABLE:primary_clr"}]},{"LABEL":[
+				{"11:17":[
+                    {"VARIABLE":"labelconfig_mainroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:primary_lbl_size"},
+                    {"COLOR":"VARIABLE:primary_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:primary_clr"}]}	
+				]}
+        	]}
+		]},{"16:17":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"secondary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:secondary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:secondary_ol_clr"}]},{"WIDTH":"VARIABLE:secondary_width"},
+                   {"COLOR":"VARIABLE:secondary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"13:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:secondary_lbl_size"},
+                       {"COLOR":"VARIABLE:secondary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:secondary_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"secondary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:secondary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:secondary_ol_clr"}]},{"WIDTH":"VARIABLE:secondary_width"},
+                   {"COLOR":"VARIABLE:secondary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"13:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:secondary_lbl_size"},
+                       {"COLOR":"VARIABLE:secondary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:secondary_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"10:17":[
+			{"EXPRESSION":"\"secondary\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:secondary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:secondary_ol_clr"}]},{"WIDTH":"VARIABLE:secondary_width"},
+                {"COLOR":"VARIABLE:secondary_clr"}]},{"LABEL":[
+				{"13:17":[
+                    {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:secondary_lbl_size"},
+                    {"COLOR":"VARIABLE:secondary_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:secondary_clr"}]}	
+				]}
+        	]}
+		]},{"16:17":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and \"[type]\" = \"tertiary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:tertiary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:tertiary_ol_clr"}]},{"WIDTH":"VARIABLE:tertiary_width"},
+                   {"COLOR":"VARIABLE:tertiary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"16:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:tertiary_lbl_size"},
+                       {"COLOR":"VARIABLE:tertiary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:tertiary_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and \"[type]\" = \"tertiary\")"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:tertiary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:tertiary_ol_clr"}]},{"WIDTH":"VARIABLE:tertiary_width"},
+                   {"COLOR":"VARIABLE:tertiary_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"16:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:tertiary_lbl_size"},
+                       {"COLOR":"VARIABLE:tertiary_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:tertiary_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"11:17":[
+			{"EXPRESSION":"\"tertiary\""},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:tertiary_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:tertiary_ol_clr"}]},{"WIDTH":"VARIABLE:tertiary_width"},
+                {"COLOR":"VARIABLE:tertiary_clr"}]},{"LABEL":[
+				{"16:17":[
+                    {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:tertiary_lbl_size"},
+                    {"COLOR":"VARIABLE:tertiary_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:tertiary_clr"}]}	
+				]}
+        	]}
+		]},{"16:17":[
+		{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"-1\" and (\"[type]\" = \"unclassified\" or \"[type]\" = \"residential\" or \"[type]\" = \"service\" or \"[type]\" = \"road\" or \"[type]\" = \"living_street\"))"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:other_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:other_ol_clr"}]},{"WIDTH":"VARIABLE:other_width"},
+                   {"COLOR":"VARIABLE:other_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_from"}]},{"LABEL":[
+				{"16:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:other_lbl_size"},
+                       {"COLOR":"VARIABLE:other_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:other_clr"}]}	
+				]}
+			]},{"CLASS":[
+			{"EXPRESSION":"(\"[oneway]\" = \"1\" and (\"[type]\" = \"unclassified\" or \"[type]\" = \"residential\" or \"[type]\" = \"service\" or \"[type]\" = \"road\" or \"[type]\" = \"living_street\"))"},
+               {"TEXT":"(\"[name]\")"},
+               {"STYLE":[
+                   {"1:17":[
+                    {"OUTLINEWIDTH":"VARIABLE:other_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:other_ol_clr"}]},{"WIDTH":"VARIABLE:other_width"},
+                   {"COLOR":"VARIABLE:other_clr"}]},{"STYLE":[
+				{"VARIABLE":"oneway_to"}]},{"LABEL":[
+				{"16:17":[
+                       {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:other_lbl_size"},
+                       {"COLOR":"VARIABLE:other_lbl_clr"},
+                       {"OUTLINECOLOR":"VARIABLE:other_clr"}]}	
+				]}
+			]}
+		]},{"CLASS":[
+           {"12:17":[
+			{"EXPRESSION":"(\"[type]\" = \"unclassified\" or \"[type]\" = \"residential\" or \"[type]\" = \"service\" or \"[type]\" = \"road\" or \"[type]\" = \"living_street\")"},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:other_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:other_ol_clr"}]},{"WIDTH":"VARIABLE:other_width"},
+                {"COLOR":"VARIABLE:other_clr"}]},{"LABEL":[
+				{"16:17":[
+                    {"VARIABLE":"labelconfig_minorroads"},
+                       {"PRIORITY":"VARIABLE:roads_lbl_priority"},
+ 					{"SIZE":"VARIABLE:other_lbl_size"},
+                    {"COLOR":"VARIABLE:other_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:other_clr"}]}	
+				]}
+        	]}
+		]},{"CLASS":[
+           {"13:17":[
+			{"EXPRESSION":"'track'"},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:track_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:track_ol_clr"}]},{"PATTERN":[
+					{"1:15":[{"VOID":"2 2"}]},{"16:17":[{"VOID":"2 3"}]}
+					]},{"WIDTH":"VARIABLE:track_width"},
+                {"COLOR":"VARIABLE:track_clr"}]},{"LABEL":[
+				{"16:17":[
+                    {"VARIABLE":"labelconfig_minorroads"},
+ 					{"SIZE":"VARIABLE:track_lbl_size"},
+                    {"COLOR":"VARIABLE:track_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:track_clr"}]}	
+				]}
+        	]}
+		]},{"CLASS":[
+           {"13:17":[
+			{"EXPRESSION":"'footway'"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"1"},
+                    {"OUTLINECOLOR":"193 181 157"}]},{"PATTERN":[{"VOID":"2 3"}]},{"WIDTH":"1"},
+                {"COLOR":"'#FFFFFF'"}]}
+        	]}
+		]},{"CLASS":[
+           {"13:17":[
+			{"EXPRESSION":"'pedestrian'"},
+            {"TEXT":"(\"[name]\")"},
+            {"STYLE":[
+            	{"1:17":[
+                   	{"OUTLINEWIDTH":"VARIABLE:pedestrian_ol_width"},
+                    {"OUTLINECOLOR":"VARIABLE:pedestrian_ol_clr"}]},{"WIDTH":"VARIABLE:pedestrian_width"},
+                {"COLOR":"VARIABLE:pedestrian_clr"}]},{"LABEL":[
+				{"16:17":[
+                    {"VARIABLE":"labelconfig_minorroads"},
+ 					{"SIZE":"VARIABLE:pedestrian_lbl_size"},
+                    {"COLOR":"VARIABLE:pedestrian_lbl_clr"},
+                    {"OUTLINECOLOR":"VARIABLE:pedestrian_clr"}]}	
+				]}
+        	]}
+		]}
+    ]}
+]},{"VOID":"##Shields"},
+{"LAYER":[
+{"8:17":[
+       {"NAME":"'shields'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+        {"1:7":"\"geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+		   {"8:9":"\"geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+        {"10:12":"\"geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""},
+        {"13:17":"\"geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913\""}]},{"LABELITEM":"'shield_no'"},
+       {"CLASSITEM":"'shield_class'"},
+       {"CLASS":[
+		{"8:17":[
+			{"EXPRESSION":"('[shield_class]' = 'I' AND length('[shield_no]') <= 2)"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"255 255 255"},
+                   {"STYLE":[
+					{"SYMBOL":"'../symbols/interstate-shield.png'"},
+                       {"SIZE":"18"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"8:17":[
+			{"EXPRESSION":"('[shield_class]' = 'I' AND length('[shield_no]') = 3)"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"255 255 255"},
+                   {"STYLE":[
+					{"SYMBOL":"'../symbols/interstate-shield-42px.png'"},
+                       {"SIZE":"18"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"9:17":[
+			{"EXPRESSION":"('[shield_class]' = 'US' AND length('[shield_no]') <= 2)"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"0 0 0"},
+                   {"STYLE":[
+					{"SYMBOL":"'../symbols/ushwy-shield-30px.png'"},
+                       {"SIZE":"22"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"9:17":[
+			{"EXPRESSION":"('[shield_class]' = 'US' AND length('[shield_no]') = 3)"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"0 0 0"},
+                   {"STYLE":[
+					{"SYMBOL":"'../symbols/ushwy-shield-36px.png'"},
+                       {"SIZE":"22"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"13:17":[
+			{"EXPRESSION":"('[type]' = 'motorway' or '[type]' = 'trunk' or '[shield_class]'='SR')"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"0 0 0"},
+                   {"STYLE":[
+					{"SYMBOL":"'ellipse'"},
+                       {"SIZE":"17"},
+                       {"OUTLINECOLOR":"0 0 0"},
+                       {"COLOR":"255 255 255"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"14:17":[
+			{"EXPRESSION":"/[A-Z]*/"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_shields"},
+				{"SIZE":"6"},
+                {"COLOR":"0 0 0"},
+                   {"STYLE":[
+					{"SYMBOL":"'ellipse'"},
+                       {"SIZE":"17"},
+                       {"OUTLINECOLOR":"0 0 0"},
+                       {"COLOR":"255 255 255"}]}
+				]}
+			]}
+		]},{"CLASS":[
+		{"14:17":[
+			{"EXPRESSION":"('[type]' = 'motorway' or '[type]' = 'trunk')"},
+               {"TEXT":"('[ref]')"},
+               {"LABEL":[
+				{"VARIABLE":"labelconfig_mainroads"},
+                   {"PRIORITY":"1"},
+				{"SIZE":"VARIABLE:motorway_lbl_size"},
+                {"COLOR":"VARIABLE:motorway_lbl_clr"}]}
+			]}
+		]}
+	]}
+]},{"VOID":"##Aeroways"},
+{"LAYER":[
+{"11:17":[
+       {"NAME":"'aeroways'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":"'geometry from (select geometry, osm_id, type from osm_new_aeroways) as foo using unique osm_id using srid=900913'"},
+	{"CLASSITEM":"'type'"},
+       {"CLASS":[
+		{"EXPRESSION":"'runway'"},
+           {"STYLE":[
+			{"COLOR":"180 180 180"},
+               {"WIDTH":[
+				{"1:11":"1"},
+                   {"12":"2"},
+                   {"13":"3"},
+                   {"14":"5"},
+                   {"15":"7"},
+                   {"16":"11"},
+                   {"17":"15"}]},{"LINECAP":"BUTT"},
+               {"LINEJOIN":"MITER"}]},{"STYLE":[
+               {"COLOR":"80 80 80"},
+               {"WIDTH":[
+				{"1:15":"0"},
+                   {"16:17":"1"}]},{"PATTERN":[{"VOID":"2 2"}]},{"LINECAP":"BUTT"}]}
+        	
+		]},{"CLASS":[
+		{"EXPRESSION":"'taxiway'"},
+           {"STYLE":[
+			{"COLOR":"180 180 180"},
+               {"WIDTH":[
+				{"1:10":"0"},
+                   {"11:13":"0.2"},
+                   {"14":"1"},
+                   {"15":"1.5"},
+                   {"16":"2"},
+                   {"17":"3"}]}
+			]}
+		]}
+	]}
+]},{"LAYER":[
+{"16:17":[
+       {"NAME":"'buildings'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+	{"DATA":"'geometry from (select geometry,osm_id, name as name from osm_new_buildings) as foo using unique osm_id using srid=900913'"},
+       {"LABELITEM":"'name'"},
+	{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#BBBBBB'"},
+               {"OPACITY":"50"}]},{"STYLE":[
+            {"OUTLINECOLOR":"'#333333'"},
+               {"WIDTH":"0"}]},{"LABEL":[
+			{"16:17":[
+				{"VARIABLE":"labelconfig_landusage"},
+                   {"COLOR":"'#000000'"}]}
+			]}
+        ]}
+    ]}
+]},{"LAYER":[
+{"3:17":[
+       {"NAME":"'admin_fr'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"connection"},
+       {"VARIABLE":"layerconfig"},
+      {"DATA":"'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'"},
+       {"CLASS":[
+           {"STYLE":[
+               {"COLOR":[
+                   {"1:3":"'#C2D1B2'"},
+                   {"4:17":"'#DCDCB4'"}]},{"WIDTH":[
+                   {"1:4":"0.7"},
+                   {"5:17":"0.9"}]},{"PATTERN":[{"VOID":"5.0 5.0"}]}
+            ]}
+        ]}
+    ]}
+]},{"LAYER":[
+{"3:17":[
+       {"NAME":"'border'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+      {"DATA":"'boundaries'"},
+       {"CLASS":[
+        {"1:17":[
+               {"STYLE":[
+                {"1:6":[
+                       {"COLOR":"'#CDCBC6'"},
+                       {"WIDTH":"5"},
+                       {"OPACITY":"50"}]}
+				]},{"STYLE":[
+                   {"COLOR":[
+					{"1:4":"'#CDCBC6'"},
+                       {"5:17":"'#8D8B8D'"}]},{"WIDTH":"1"}]}
+        	]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"NAME":"'places'"},
+   {"TYPE":"ANNOTATION"},
+   {"VARIABLE":"connection"},
+   {"VARIABLE":"layerconfig"},
+{"DATA":[
+	{"1:3":"\"geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913\""},
+       {"4":"\"geometry from (select * from osm_new_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913\""},
+	{"5:7":"\"geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913\""},
+	{"8":"\"geometry from (select * from osm_new_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913\""},
+	{"9:17":"\"geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913\""}]},{"LABELITEM":"'name'"},
+   {"CLASSITEM":"'type'"},
+   {"CLASS":[
+	{"0":[
+		{"EXPRESSION":"('[capital]' = '1')"},
+           {"0":[
+			{"STYLE":[
+				{"SIZE":"6"},
+                   {"SYMBOL":"'citycircle'"},
+                   {"COLOR":"255 0 0"},
+                   {"OUTLINECOLOR":"0 0 0"}]},{"STYLE":[
+				{"SIZE":"2"},
+                   {"SYMBOL":"'citycircle'"},
+                   {"COLOR":"0 0 0"}]}
+			]},{"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'sc'"},
+               {"SIZE":[
+				{"1:3":"0"},
+                   {"4:8":"8"},
+                   {"9:10":"9"},
+                   {"11:13":"10"},
+                   {"14:15":"11"},
+                   {"16:17":"12"}]},{"COLOR":"0 0 0"},
+               {"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":"2"}]}
+		]}
+	]},{"CLASS":[
+	{"1:3":[
+		{"EXPRESSION":"'continents'"},
+        {"LABEL":[
+			{"FONT":"'scb'"},
+ 			{"TYPE":"TRUETYPE"},
+               {"ENCODING":"'utf-8'"},
+               {"SIZE":"8"},
+               {"COLOR":"100 100 100"},
+               {"OUTLINECOLOR":"-1 -1 -1"},
+               {"OUTLINEWIDTH":"1"},
+               {"BUFFER":"4"},
+               {"PARTIALS":"FALSE"},
+               {"POSITION":"CC"}]}
+		]}
+	]},{"CLASS":[
+	{"3:8":[
+		{"EXPRESSION":"'country'"},
+        {"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'scb'"},
+               {"SIZE":"8"},
+               {"COLOR":"100 100 100"},
+               {"OUTLINECOLOR":"-1 -1 -1"},
+               {"OUTLINEWIDTH":"2"}]}
+		]}
+	]},{"CLASS":[
+	{"5:9":[
+		{"EXPRESSION":"'state'"},
+        {"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'sc'"},
+               {"SIZE":[
+				{"1:4":"0"},
+                   {"5:6":"9"},
+                   {"7:17":"10"}]},{"COLOR":[
+				{"1:6":"0 0 0"},
+                   {"7:17":"'#5F5F5F'"}]},{"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":"2"},
+               {"PRIORITY":"9"}]}
+		]}
+	]},{"CLASS":[
+	{"6:16":[
+		{"EXPRESSION":"'city'"},
+           {"1:9":[
+			{"STYLE":[
+				{"SIZE":[
+					{"1:8":"5"},
+                       {"9:17":"6"}]},{"SYMBOL":"'citycircle'"},
+                   {"COLOR":[
+					{"1:6":"200 200 200"},
+                       {"7:17":"255 255 255"}]},{"OUTLINECOLOR":"0 0 0"}]}
+			]},{"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'scb'"},
+               {"SIZE":[
+				{"1:3":"0"},
+                   {"4":"7"},
+                   {"5:11":"8"},
+                   {"12:13":"9"},
+                   {"14:15":"10"},
+                   {"16:17":"11"}]},{"COLOR":[
+				{"1:6":"0 0 0"},
+                   {"7:17":"46 46 46"}]},{"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":[
+				{"1:10":"1"},
+                   {"10:17":"2"}]},{"PRIORITY":"9"}]}
+		]}
+	]},{"CLASS":[
+	{"9:17":[
+		{"EXPRESSION":"'town'"},
+           {"9:17":[
+			{"STYLE":[
+				{"SIZE":[
+					{"1:8":"0"},
+                       {"9:10":"3"},
+                       {"11:17":"5"}]},{"SYMBOL":"'citycircle'"},
+                   {"COLOR":"200 200 200"},
+                   {"OUTLINECOLOR":"0 0 0"}]}
+			]},{"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'sc'"},
+               {"SIZE":[
+				{"1:8":"0"},
+                   {"9:13":"8"},
+                   {"14:15":"10"},
+                   {"16:17":"11"}]},{"COLOR":[
+				{"1:8":"'#66666'"},
+                   {"9:17":"0 0 0"}]},{"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":"1"}]}
+		]}
+	]},{"CLASS":[
+	{"11:17":[
+		{"EXPRESSION":"'villages'"},
+           {"11:17":[
+			{"STYLE":[
+				{"SIZE":[
+					{"1:10":"0"},
+                       {"11:13":"3"},
+                       {"14:17":"4"}]},{"SYMBOL":"'citycircle'"},
+                   {"COLOR":"200 200 200"},
+                   {"OUTLINECOLOR":"0 0 0"}]}
+			]},{"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'sc'"},
+               {"SIZE":[
+				{"1:10":"0"},
+                   {"11:13":"8"},
+                   {"14:15":"9"},
+                   {"16:17":"10"}]},{"COLOR":[
+				{"1:13":"'#444444'"},
+                   {"14:17":"0 0 0"}]},{"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":"1"}]}
+		]}
+	]},{"CLASS":[
+	{"11:17":[
+		{"EXPRESSION":"/suburb|hamlet|locality/"},
+           {"0":[
+			{"STYLE":[
+				{"SIZE":"4"},
+                   {"SYMBOL":"'citycircle'"},
+                   {"COLOR":"200 200 200"},
+                   {"OUTLINECOLOR":"0 0 0"}]}
+			]},{"LABEL":[
+			{"VARIABLE":"labelconfig_places"},
+               {"FONT":"'sc'"},
+               {"SIZE":[
+				{"1:10":"0"},
+                   {"11:15":"7"},
+                   {"16:17":"9"}]},{"COLOR":[
+				{"1:15":"'#444444'"},
+                   {"16:17":"0 0 0"}]},{"OUTLINECOLOR":"255 255 255"},
+               {"OUTLINEWIDTH":"1"}]}
+		]}
+	]}
+]} 
+
+]}

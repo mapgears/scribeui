@@ -294,7 +294,7 @@ def open_map():
     else:
         contentfiles['errorMsg']=[]
         try:
-            json_file = open(pathMap+"editor/mapVariables.json")
+            json_file = open(pathMap+"editor/mapTemp.json")
             data = json.load(json_file);
             json_file.close();
         except:
@@ -531,10 +531,10 @@ def save(data):
     #subprocess.call(['rm', pathMap+"editor/temp/"+session["map_name"]])
 
 #    fusionStr = ""
-#    for i in range(len(listfiles)):
-#        document = open(pathMap + listfiles[i]['url'], "w+")
-#        document.write(data[listfiles[i]['name']].encode('utf-8'))
-#        document.close()
+    for i in range(len(listfiles)):
+        document = open(pathMap + listfiles[i]['url'], "w+")
+        document.write(data[listfiles[i]['name']].encode('utf-8'))
+        document.close()
 #        if listfiles[i]['fusion'] == 'true':
 #            fusionStr = fusionStr + data[listfiles[i]['name']]+"\n\n"
 

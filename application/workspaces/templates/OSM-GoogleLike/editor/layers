@@ -1,3 +1,539 @@
+
+
+
+
+
+
+
+LAYERS {
+LAYER {
+	1-17 {
+        NAME: 'land'
+        TYPE: POLYGON
+        GROUP: 'default'
+        STATUS: ON
+        PROJECTION {
+            1-3 {{
+				'init=epsg:4326'
+            }}
+        	4-17 {{
+				'init=epsg:900913'
+			}}
+        }
+        PROCESSING: 'LABEL_NO_CLIP=ON'
+        PROCESSING: 'CLOSE_CONNECTION=DEFER'
+		DATA {
+			1-3: "TM_WORLD_BORDERS-0.3.shp"
+            4-7: "shoreline_300"
+            8-17: "processed_p"
+		}
+        CLASS {
+            STYLE {
+            	COLOR: '#F4F3F0'
+    			OUTLINECOLOR: '#F4F3F0'
+            }
+        }
+    }
+}
+
+LAYER {
+	2-17 {
+        NAME: 'landusage'
+        TYPE: POLYGON
+        @layerconfig
+        @connection
+		DATA {
+			1-3: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
+            4-9: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+            10-12: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+			13-17: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+		}
+    	CLASSITEM: 'type'
+        LABELITEM: 'name'
+        CLASS {
+            EXPRESSION: /forest|wood/
+            STYLE {
+            	COLOR: '#C2D182'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	COLOR: 0 0 0
+                	PRIORITY: 1
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'residential'
+            STYLE {
+            	COLOR: '#E3DED4'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	COLOR: 0 0 0
+                	PRIORITY: 1
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'pedestrian'
+            STYLE {
+                1-17 {
+					OUTLINEWIDTH: @pedestrian_ol_width
+                    OUTLINECOLOR: @pedestrian_ol_clr
+				}
+            	COLOR: @pedestrian_clr
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	COLOR: 0 0 0
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'industrial'
+            STYLE {
+            	COLOR: '#D1D1D1'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 2
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'commercial'
+            STYLE {
+            	COLOR: '#D1D1D1'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 2
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'cemetery'
+            STYLE {
+            	COLOR: '#D1D1D1'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 2
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'park' AND length('[name]') = 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'park' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_park_golf_nature                    
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: '../symbols/forest.png'
+                        SIZE: 30
+					}
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'golf_course' AND length('[name]') = 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'golf_course' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_park_golf_nature                    
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: '../symbols/flag-golf2.png'
+                        SIZE: 20
+					}
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'nature_reserve' AND length('[name]') = 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        }
+    	CLASS {
+            EXPRESSION: ('[type]' = 'nature_reserve' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @park_golf_nature_clr
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_park_golf_nature                    
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: '../symbols/forest.png'
+                        SIZE: 30
+					}
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'hospital'
+            STYLE {
+            	COLOR: '#E6C8C3'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 1
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: /school|college|university/
+            STYLE {
+            	COLOR: '#DED1AB'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 1
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: /sports_center|stadium|pitch/
+            STYLE {
+            	COLOR: '#DED1AB'
+            }
+        	LABEL {
+                13-17 {
+					@labelconfig_landusage
+                	ENCODING: 'utf-8'
+                	COLOR: 0 0 0
+                	PRIORITY: 1
+                }
+			}
+        }
+    	CLASS {
+            EXPRESSION: 'parking'
+            STYLE {
+            	COLOR: '#AAAAAA'
+            }
+        	TEXT: 'P'
+        	LABEL {
+                13-17 {
+					FONT: 'sc'
+                    TYPE: TRUETYPE
+                    SIZE: 10
+                    COLOR: 255 255 255
+                    PARTIALS: FALSE
+                	PRIORITY: 1
+                    POSITION: CC
+                }
+			}
+        }
+    }
+}
+
+LAYER {
+	10-17 {
+        NAME: 'transport_areas'
+        TYPE: POINT
+        @layerconfig
+        @connection
+        DATA: "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        CLASSITEM: "type"
+        LABELITEM: "name"
+        CLASS {
+			EXPRESSION: 'aerodome'
+            STYLE {
+				COLOR: @transport_clr
+			}
+        	LABEL {
+                10-17 {
+					@labelconfig_landusage
+					COLOR: 0 0 0
+                	PRIORITY: 10
+                	POSITION: LC
+                	OFFSET: @transport_offset
+                		STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                    	OFFSET: @transport_offset
+                    	SYMBOL: '../symbols/airport.png'
+                    	SIZE: 30
+					}
+                }
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'station'
+            STYLE {
+				COLOR: @transport_clr
+			}
+        	TEXT: 'T'
+        	LABEL {
+                16-17 {
+					@labelconfig
+                    FONT: 'sc'
+					COLOR: 0 111 239
+                	PRIORITY: 10
+                	POSITION: CC
+                	SIZE: 8
+                	STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                    	SYMBOL: 'transportsquare'
+                    	SIZE {
+							1-16: 13
+                        	17: 15
+						}
+                		COLOR: 255 255 255
+                    	OUTLINECOLOR: 0 111 239
+					}
+                }
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'helipad'
+            STYLE {
+				COLOR: @transport_clr
+			}
+        	TEXT: 'H'
+        	LABEL {
+                15-17 {
+					@labelconfig
+                    FONT: 'sc'
+					COLOR: 0 111 239
+                	PRIORITY: 10
+                	POSITION: CC
+                	SIZE: 8
+                	STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                    	SYMBOL: 'transportsquare'
+                    	SIZE {
+							1-16: 13
+                        	17: 15
+						}
+                		COLOR: 200 200 200
+					}
+                }
+			}
+		}
+    	CLASS {
+			STYLE {
+				COLOR: @transport_clr
+			}
+		}
+	}
+}
+
+LAYER {
+	16-17 {
+        NAME: 'public_transport'
+        TYPE: ANNOTATION
+        @layerconfig
+        @connection
+        CLASSITEM: "type"
+        DATA {
+			1-16: "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+			17: "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+		}
+    	CLASS {
+			EXPRESSION: 'bus_stop'
+            TEXT: ' '
+            LABEL {
+				@labelconfig_public_transport
+        		STYLE {
+					COLOR: 255 255 255
+                	OUTLINECOLOR: 0 111 239
+                	WIDTH: 0.5
+                	SIZE: @public_transport_symbol_size
+                	SYMBOL: @public_transport_symbol
+				}
+            	STYLE {
+					COLOR: 0 111 239
+                	SIZE: @public_transport_lbl_size
+                	SYMBOL: 'bussymbol'
+				}
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'subway_entrance'
+            TEXT: ' '
+            LABEL {
+				@labelconfig_public_transport
+                STYLE {
+					COLOR: 0 111 239
+                    OUTLINECOLOR: 255 255 255
+                    WIDTH: 0.5
+                    SIZE: @public_transport_symbol_size
+                    SYMBOL: @public_transport_symbol
+				}
+            	STYLE {
+					COLOR: 255 255 255
+                    SIZE: @public_transport_lbl_size
+                    SYMBOL: 'metrosymbol'
+				}
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'tram_stop'
+            TEXT: ' '
+            LABEL {
+				@labelconfig_public_transport
+                STYLE {
+					COLOR: 0 111 239
+                    OUTLINECOLOR: 255 255 255
+                    WIDTH: 0.5
+                    SIZE: @public_transport_symbol_size
+                    SYMBOL: @public_transport_symbol
+				}
+            	STYLE {
+					COLOR: 255 255 255
+                    SIZE: @public_transport_lbl_size
+                    SYMBOL: 'tramwaysymbol'
+				}
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'station'
+            TEXT: ' '
+            LABEL {
+				@labelconfig_public_transport
+                STYLE {
+					COLOR: 255 255 255
+                    OUTLINECOLOR: 0 111 239
+                    WIDTH: 0.5
+                    SIZE: @public_transport_symbol_size
+                    SYMBOL: @public_transport_symbol
+				}
+            	STYLE {
+					COLOR: 0 111 239
+                    SIZE: @public_transport_lbl_size
+                    SYMBOL: 'stationsymbol'
+				}
+			}
+		}
+    }
+}
+
+LAYER {
+	3-17 {
+        NAME: 'waterarea'
+        TYPE: POLYGON
+        @connection
+        @layerconfig
+        DATA {
+			1-4: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913"
+			5-12: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+			13-17: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+		}
+    	LABELITEM: 'name'
+        CLASSITEM: 'type'
+        CLASS {
+			EXPRESSION: 'riverbank'
+            STYLE {
+				COLOR: @waterarea_clr
+			}
+		}
+    	CLASS {
+			STYLE {
+				COLOR: @waterarea_clr
+			}
+        	LABEL {
+				5-17 {
+					@labelconfig
+                    FONT: 'sc'
+        			ENCODING: 'utf-8'
+					MINDISTANCE: 200
+                    SIZE: 8
+                    COLOR: '#6B94B0'
+                    OUTLINECOLOR: 255 255 255
+                    OUTLINEWIDTH: 2
+                    WRAP: ' '
+                    MAXLENGTH: 5
+                    ALIGN: CENTER
+				}
+			}
+		}
+    }
+}
+
+LAYER {
+	4-17 {
+        NAME: 'waterways'
+        TYPE: LINE
+        @connection
+        @layerconfig
+        DATA {
+			1-10: "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+			11-17: "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+		}
+    	CLASSITEM: 'type'
+        LABELITEM: 'name'
+        CLASS {
+			EXPRESSION: 'river'
+            STYLE {
+				COLOR: @waterways_clr
+ 				WIDTH: @waterways_width
+			}
+        	LABEL {
+				@labelconfig_waterways
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'stream'
+            STYLE {
+				COLOR: @waterways_clr
+ 				WIDTH: @waterways_width
+			}
+        	LABEL {
+				@labelconfig_waterways
+			}
+		}
+    	CLASS {
+			EXPRESSION: 'canal'
+            STYLE {
+				COLOR: @waterways_clr
+ 				WIDTH: @waterways_width
+			}
+        	LABEL {
+				@labelconfig_waterways
+			}
+		}
+    }
+}
+
 ##Railways
 LAYER {
 	12-17 {
@@ -21,9 +557,9 @@ LAYER {
 					1-14: '#BFBFBF'
                     15-17: '#9D9D9D'
 				}
-                PATTERN [
+                PATTERN {{
 					2 2
-				]
+				}}
             	LINECAP: BUTT
             }
         }
@@ -37,9 +573,9 @@ LAYER {
 					1-14: '#BFBFBF'
                     15-17: '#9D9D9D'
 				}
-                PATTERN [
+                PATTERN {{
 					2 2
-				]
+				}}
             	OPACITY: @tunnel_opacity
             	LINECAP: BUTT
             }
@@ -800,12 +1336,12 @@ LAYER {
                     	OUTLINECOLOR: @track_ol_clr
                 	}
                 	PATTERN {
-						1-15 [
+						1-15 {{
 							2 2
-                        ]
-                    	16-17 [
+                        }}
+                    	16-17 {{
 							2 3
-						]
+						}}
 					}
 					WIDTH: @track_width                     
                 	COLOR: @track_clr 
@@ -828,9 +1364,9 @@ LAYER {
                    		OUTLINEWIDTH: 1
                     	OUTLINECOLOR: 193 181 157
                 	}
-                	PATTERN [
+                	PATTERN {{
 						2 3
-					]
+					}}
 					WIDTH: 1                    
                 	COLOR: '#FFFFFF'
 				}
@@ -1010,9 +1546,9 @@ LAYER {
 					1-15: 0
                     16-17: 1
 				}
-				PATTERN [
+				PATTERN {{
 					2 2
-				]
+				}}
             	LINECAP: BUTT
 			}
         	
@@ -1032,4 +1568,320 @@ LAYER {
 			}
 		}
 	}
+}
+
+LAYER {
+	16-17 {
+        NAME: 'buildings'
+        TYPE: POLYGON
+        @connection
+        @layerconfig
+		DATA: 'geometry from (select geometry,osm_id, name as name from osm_new_buildings) as foo using unique osm_id using srid=900913'
+        LABELITEM: 'name'
+		CLASS {
+            STYLE {
+                COLOR: '#BBBBBB'
+                OPACITY: 50
+            }
+            STYLE {
+            	OUTLINECOLOR: '#333333'
+                WIDTH: 0
+            }
+            LABEL {
+				16-17 {
+					@labelconfig_landusage
+                    COLOR: '#000000'
+				}
+			}
+        }
+    }
+}
+
+LAYER {
+	3-17 {
+        NAME: 'admin_fr'
+        TYPE: LINE
+        @connection
+        @layerconfig
+      	DATA: 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        CLASS {
+            STYLE {
+                COLOR {
+                    1-3: '#C2D1B2'
+                    4-17: '#DCDCB4'
+                }
+                WIDTH {
+                    1-4: 0.7
+                    5-17: 0.9
+                }
+                PATTERN {{
+					5.0 5.0
+				}}
+            }
+        }
+    }
+}
+
+LAYER {
+	3-17 {
+        NAME: 'border'
+        TYPE: LINE
+        @layerconfig
+      	DATA: 'boundaries'
+        CLASS {
+        	1-17 {
+                STYLE {
+                	1-6 {
+                        COLOR: '#CDCBC6'
+                        WIDTH: 5
+                        OPACITY: 50
+                    }
+				}
+                STYLE {
+                    COLOR {
+						1-4: '#CDCBC6'
+                        5-17: '#8D8B8D'
+					}
+                    WIDTH: 1
+                }
+        	}
+        }
+    }
+}
+
+LAYER {
+    NAME: 'places'
+    TYPE: ANNOTATION
+    @connection
+    @layerconfig 
+	DATA {
+		1-3: "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        4: "geometry from (select * from osm_new_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		5-7: "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		8: "geometry from (select * from osm_new_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		9-17: "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+	} 
+	LABELITEM: 'name'
+    CLASSITEM: 'type'
+    CLASS {
+		0 {
+			EXPRESSION: ('[capital]' = '1')
+            0 {
+				STYLE {
+					SIZE: 6
+                    SYMBOL: 'citycircle'
+                    COLOR: 255 0 0
+                    OUTLINECOLOR: 0 0 0
+				}
+            	STYLE {
+					SIZE: 2
+                    SYMBOL: 'citycircle'
+                    COLOR: 0 0 0
+				}
+			}
+        	LABEL {
+				@labelconfig_places
+                FONT: 'sc'
+                SIZE {
+					1-3: 0
+                    4-8: 8
+                    9-10: 9
+                    11-13: 10
+                    14-15: 11
+                    16-17: 12
+				}
+                COLOR: 0 0 0
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH: 2               
+			}
+		}
+	}
+	CLASS {
+		1-3 {
+			EXPRESSION: 'continents'
+        	LABEL {
+				FONT: 'scb'
+ 				TYPE: TRUETYPE
+                ENCODING: 'utf-8'
+                SIZE: 8
+                COLOR: 100 100 100
+                OUTLINECOLOR: -1 -1 -1
+                OUTLINEWIDTH: 1
+                BUFFER: 4
+                PARTIALS: FALSE
+                POSITION: CC
+			}
+		}
+	}
+	CLASS {
+		3-8 {
+			EXPRESSION: 'country'
+        	LABEL {
+				@labelconfig_places
+                FONT: 'scb'
+                SIZE: 8
+                COLOR: 100 100 100
+                OUTLINECOLOR: -1 -1 -1
+                OUTLINEWIDTH: 2                
+			}
+		}
+	}
+	CLASS {
+		5-9 {
+			EXPRESSION: 'state'
+        	LABEL {
+				@labelconfig_places
+                FONT: 'sc'
+                SIZE {
+					1-4: 0
+                    5-6: 9
+                    7-17: 10
+				}
+                COLOR {
+					1-6: 0 0 0
+                    7-17: '#5F5F5F'
+				}
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH: 2
+                PRIORITY: 9
+			}
+		}
+	}
+	CLASS {
+		6-16 {
+			EXPRESSION: 'city'
+            1-9 {
+				STYLE {
+					SIZE {
+						1-8: 5
+                        9-17: 6
+					}
+                    SYMBOL: 'citycircle'
+                    COLOR {
+						1-6: 200 200 200
+                        7-17: 255 255 255
+					}
+                    OUTLINECOLOR: 0 0 0
+				}
+			}
+        	LABEL {
+				@labelconfig_places
+                FONT: 'scb'
+                SIZE {
+					1-3: 0
+                    4: 7
+                    5-11: 8
+                    12-13: 9
+                    14-15: 10
+                    16-17: 11
+				}
+                COLOR {
+					1-6: 0 0 0
+                    7-17: 46 46 46
+				}
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH {
+					1-10: 1
+                    10-17: 2
+				}
+             	PRIORITY: 9  
+			}
+		}
+	}
+	CLASS {
+		9-17 {
+			EXPRESSION: 'town'
+            9-17 {
+				STYLE {
+					SIZE {
+						1-8: 0
+                        9-10: 3
+                        11-17: 5
+					}
+                    SYMBOL: 'citycircle'
+                    COLOR: 200 200 200
+                    OUTLINECOLOR: 0 0 0
+				}
+			}
+        	LABEL {
+				@labelconfig_places
+                FONT: 'sc'
+                SIZE {
+					1-8: 0
+                    9-13: 8
+                    14-15: 10
+                    16-17: 11
+				}
+                COLOR {
+					1-8: '#66666'
+                    9-17: 0 0 0
+				}
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH: 1 
+			}
+		}
+	}
+	CLASS {
+		11-17 {
+			EXPRESSION: 'villages'
+            11-17 {
+				STYLE {
+					SIZE {
+						1-10: 0
+                        11-13: 3
+                        14-17: 4
+					}
+                    SYMBOL: 'citycircle'
+                    COLOR: 200 200 200
+                    OUTLINECOLOR: 0 0 0
+				}
+			}
+        	LABEL {
+				@labelconfig_places
+                FONT: 'sc'
+                SIZE {
+					1-10: 0
+                    11-13: 8
+                    14-15: 9
+                    16-17: 10
+				}
+                COLOR {
+					1-13: '#444444'
+                    14-17: 0 0 0
+				}
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH: 1 
+			}
+		}
+	}
+	CLASS {
+		11-17 {
+			EXPRESSION: /suburb|hamlet|locality/
+            0 {
+				STYLE {
+					SIZE: 4
+                    SYMBOL: 'citycircle'
+                    COLOR: 200 200 200
+                    OUTLINECOLOR: 0 0 0
+				}
+			}
+        	LABEL {
+				@labelconfig_places
+                FONT: 'sc'
+                SIZE {
+					1-10: 0
+                    11-15: 7
+                    16-17: 9
+				}
+                COLOR {
+					1-15: '#444444'
+                    16-17: 0 0 0
+				}
+                OUTLINECOLOR: 255 255 255
+                OUTLINEWIDTH: 1 
+			}
+		}
+	}
+} 
+
 }
