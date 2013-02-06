@@ -6,3 +6,4 @@ application/workspaces/*
 #*#
 .#*
 application/data/*
+application/db/database.db
