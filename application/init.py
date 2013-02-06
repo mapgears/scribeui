@@ -51,7 +51,6 @@ listfilesBasemaps = [{'name':'scales','url':'Makefile'},
                     ]
 
 listfilesStandard = [{'name':'scales','url':'scales'},
-                    {'name':'map','url':'map/mapfile.map'},
                     {'name':'projections','url':'epsg'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbols.map'},
@@ -239,7 +238,7 @@ def create_map():
 
     pathMap = path+"workspaces/"+session['ws_name']+"/"+name
     subprocess.call(['cp','-R', pathTemplate, pathMap])
-    if maptype == 'Scribe':
+    if maptype == 'Scribe' or maptype == 'Standard':
         subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])           
     elif maptype == 'Basemaps':
         subprocess.call(['mv', pathMap+"/osm-"+template+".map", pathMap+"/osm-"+name+".map"])
@@ -304,11 +303,14 @@ def open_map():
             document.close()
     elif wsmap['map_type'] == 'Standard':
         pathGroups = pathMap + "map/layers/"
-        contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/mapfile.map"
+        contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
         for i in range(len(listfilesStandard)):
             document = open(pathMap + listfilesStandard[i]['url'], "r")
             contentfiles[listfilesStandard[i]['name']] = document.read()
             document.close()
+        document = open(pathMap + "map/" + namemap + ".map", "r")
+        contentfiles['map'] = document.read()
+        document.close()
 
     contentfiles['groups'] = []
     groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
@@ -376,7 +378,7 @@ def open_map():
     elif wsmap['map_type'] == 'Standard':
         contentfiles['variables'] = ""
         stringSearch = ["init=", "UNITS", "EXTENT"]
-        mapfile = open(pathMap + "map/mapfile.map", "r")
+        mapfile = open(pathMap + "map/" + namemap  + ".map", "r")
         for line in mapfile:
             for string in stringSearch:
                 if string in line:
@@ -633,6 +635,9 @@ def save(data):
             document = open(pathMap + listfilesStandard[i]['url'], "w+")
             document.write(data[listfilesStandard[i]['name']].encode('utf-8'))
             document.close()
+        document = open(pathMap + "map/" + session["map_name"] + ".map", "w+")
+        document.write(data['map'].encode('utf-8'))
+        document.close()
 
     fusionStr = "LAYERS {\n"
     for i in range(len(data['groups'])):
@@ -700,7 +705,7 @@ def load_mapfile_generated():
         elif wsmap['map_type'] == 'Basemaps':
             pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/osm-"+session['map_name']+".map"
         elif wsmap['map_type'] == 'Standard':
-            pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/mapfile.map"
+            pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/"+session['map_name']+".map"
         if (os.path.isfile(pathMap)):
             document = open(pathMap, "r") 
             content = document.read()

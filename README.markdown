@@ -29,6 +29,7 @@ Configuration
 
     `sudo chown -R www-data db`  
     `sudo chown -R www-data workspaces`
+    `sudo chown -R www-data www`
     `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/`   
 
  * Change the path of the application in application/runserver.wsgi
