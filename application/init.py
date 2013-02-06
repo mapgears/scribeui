@@ -50,6 +50,13 @@ listfilesBasemaps = [{'name':'scales','url':'Makefile'},
                     {'name':'symbols','url':'symbol.map'},
                     ]
 
+listfilesStandard = [{'name':'scales','url':'scales'},
+                    {'name':'map','url':'map/mapfile.map'},
+                    {'name':'projections','url':'epsg'},
+                    {'name':'fonts','url':'fonts.lst'},
+                    {'name':'symbols','url':'symbols.map'},
+                    ]
+
 #===============================
 #        DATABASE
 #===============================
@@ -233,7 +240,7 @@ def create_map():
     pathMap = path+"workspaces/"+session['ws_name']+"/"+name
     subprocess.call(['cp','-R', pathTemplate, pathMap])
     if maptype == 'Scribe':
-        subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])                                
+        subprocess.call(['mv', pathMap+"/map/"+template+".map", pathMap+"/map/"+name+".map"])           
     elif maptype == 'Basemaps':
         subprocess.call(['mv', pathMap+"/osm-"+template+".map", pathMap+"/osm-"+name+".map"])
         #Change the map name in the Makefile           
@@ -294,6 +301,13 @@ def open_map():
         for i in range(len(listfilesBasemaps)):
             document = open(pathMap + listfilesBasemaps[i]['url'], "r")
             contentfiles[listfilesBasemaps[i]['name']] = document.read()
+            document.close()
+    elif wsmap['map_type'] == 'Standard':
+        pathGroups = pathMap + "map/layers/"
+        contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/mapfile.map"
+        for i in range(len(listfilesStandard)):
+            document = open(pathMap + listfilesStandard[i]['url'], "r")
+            contentfiles[listfilesStandard[i]['name']] = document.read()
             document.close()
 
     contentfiles['groups'] = []
@@ -356,6 +370,29 @@ def open_map():
         i = 0
         for scale in content:
             scales[i] = scale.split(':')[1]
+            i = i + 1
+        contentfiles['OLScales'] = scales
+        scalefile.close()
+    elif wsmap['map_type'] == 'Standard':
+        contentfiles['variables'] = ""
+        stringSearch = ["init=", "UNITS", "EXTENT"]
+        mapfile = open(pathMap + "map/mapfile.map", "r")
+        for line in mapfile:
+            for string in stringSearch:
+                if string in line:
+                    if re.search('EXTENT',line):
+                        contentfiles['OLExtent'] = line.split('EXTENT ')[1].split('\n')[0]
+                    if re.search('UNITS',line):
+                        contentfiles['OLUnits'] = line.split('UNITS ')[1].split('\n')[0]
+                    if re.search('"init=',line):
+                        contentfiles['OLProjection'] = line.split('init=')[1].split('"')[0]
+        mapfile.close()
+        scalefile = open(pathMap + "scales", "r")
+        content = scalefile.read().split('{')[1].split('}')[0].split(',')
+        scales = {}
+        i = 0
+        for scale in content:
+            scales[i] = scale.split(':')[1].split('\n')[0]
             i = i + 1
         contentfiles['OLScales'] = scales
         scalefile.close()
@@ -461,8 +498,9 @@ def add_layer():
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname 
         elif wsmap['map_type'] == 'Basemaps':
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+        elif wsmap['map_type'] == 'Standard':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
         file(pathGroup, 'w+')
-
     return "1"
 
 #Remove Group
@@ -480,7 +518,8 @@ def remove_group():
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname
         elif wsmap['map_type'] == 'Basemaps':
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
-
+        elif wsmap['map_type'] == 'Standard':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
         if os.path.isfile(pathGroup) :
             subprocess.call(['rm', pathGroup])
     return "1" 
@@ -569,7 +608,6 @@ def commit():
     if save(data) != "1":
         return "Error: save()"
     else:
-        #print "EXECUTE"
         return execute()
 
 #Save changements
@@ -588,6 +626,12 @@ def save(data):
         for i in range(len(listfilesBasemaps)):
             document = open(pathMap + listfilesBasemaps[i]['url'], "w+")
             document.write(data[listfilesBasemaps[i]['name']].encode('utf-8'))
+            document.close()
+    elif wsmap['map_type'] == 'Standard':
+        pathGroups = pathMap + "map/layers/"
+        for i in range(len(listfilesStandard)):
+            document = open(pathMap + listfilesStandard[i]['url'], "w+")
+            document.write(data[listfilesStandard[i]['name']].encode('utf-8'))
             document.close()
 
     fusionStr = "LAYERS {\n"
@@ -611,6 +655,10 @@ def execute():
         return "No workspace or no map open"
     pathMap = (path+"workspaces/"+session['ws_name']+"/"+session['map_name'])+"/"
     wsmap = query_db('''select map_type from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), session["map_name"]], one=True)
+
+    if wsmap['map_type'] == 'Standard':
+        result = '**Success**'
+        return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
         sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
@@ -651,6 +699,8 @@ def load_mapfile_generated():
             pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/"+session['map_name']+".map"
         elif wsmap['map_type'] == 'Basemaps':
             pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/osm-"+session['map_name']+".map"
+        elif wsmap['map_type'] == 'Standard':
+            pathMap = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/mapfile.map"
         if (os.path.isfile(pathMap)):
             document = open(pathMap, "r") 
             content = document.read()

@@ -19,7 +19,7 @@ WEB
 END
 DEBUG 5
 CONFIG "MS_ERRORFILE" "debugFile.log"
-CONFIG "PROJ_LIB" "/opt/apps/ScribeUI/application/workspaces/marc/OSM-Basemaps"
+CONFIG "PROJ_LIB" ""
 PROJECTION
    "init=epsg:900913"
 END
