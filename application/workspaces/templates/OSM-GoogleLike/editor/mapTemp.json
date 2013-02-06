@@ -292,7 +292,7 @@
    {"UNITS":"meters"},
    {"EXTENT":"-20000000 -20000000 20000000 20000000"},
    {"IMAGECOLOR":"'#A5BFE0'"},
-   {"SHAPEPATH":"'../../../../data/osm/'"},
+   {"SHAPEPATH":"'../pdata/osm/'"},
    {"WEB":[
        {"METADATA":[{"VOID":"\"ows_enable_request\" \"*\""},{"VOID":"            \"wms_srs\" \"EPSG:900913 EPSG:4326\""},{"VOID":"            \"labelcache_map_edge_buffer\" \"-10\""},{"VOID":"            \"wms_title\" \"JSON WMS\""}]},{"IMAGEPATH":"'/tmp/ms_tmp/'"},
        {"IMAGEURL":"'/ms_tmp/'"}]},{"DEBUG":"5"},

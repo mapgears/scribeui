@@ -420,7 +420,7 @@ def main():
        jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent;
        jsonContent = string2json(jsonInput);
                
-       jsonFile = open(inputDirectory + "mapVariables.json", "w+")
+       jsonFile = open(inputDirectory + "mapTemp.json", "w+")
        jsonFile.write(jsonContent)
        jsonFile.close()
 

@@ -37,15 +37,22 @@ Configuration
 
 Apache configuration
 --------------------
-In /etc/apache2/mods-enabled/wsgi.conf, use the following configuration (change the path):
+In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (change the path):
 
     #ScribeUI     
     
     WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
-    
     AddType text/html .py
-    
     <Directory /opt/apps/ScribeUI/application/templates>
       Order deny,allow
       Allow from all
     </Directory>
+
+    Alias /scribeui/download/ "/opt/apps/ScribeUI/application/www/"
+    <Directory "/opt/apps/ScribeUI/application/www/">
+      AllowOverride None
+      Options Indexes FollowSymLinks Multiviews
+      Order allow,deny
+      Allow from all
+    </Directory>
+

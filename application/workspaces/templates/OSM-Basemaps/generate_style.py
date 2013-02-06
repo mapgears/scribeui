@@ -68,9 +68,9 @@ vars = {
     #           land              #
     #=============================#
     'land_data': {
-        0:'"data/TM_WORLD_BORDERS-0.3.shp"',
-        3:'"data/shoreline_300"',
-        7:'"data/processed_p"'
+        0:'"pdata/TM_WORLD_BORDERS-0.3.shp"',
+        3:'"pdata/shoreline_300"',
+        7:'"pdata/processed_p"'
     },
     'land_epsg': {
         0:'"+init=epsg:4326"',
@@ -111,7 +111,7 @@ vars = {
     },
 	
 	#Border
-    'border_data': '"data/boundaries.shp"',
+    'border_data': '"pdata/boundaries.shp"',
     'border_epsg': {
         0: '"+init=epsg:4326"'
     },

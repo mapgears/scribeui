@@ -9,7 +9,7 @@ MAP {
     UNITS: meters
     EXTENT: -20000000 -20000000 20000000 20000000
     IMAGECOLOR: '#C6E2F2'
-    SHAPEPATH: '../../../../data/naturalEarth'
+    SHAPEPATH: '../pdata/naturalEarth/'
     WEB {
         METADATA {{
             "ows_enable_request" "*"

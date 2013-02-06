@@ -19,7 +19,7 @@ WEB
 END
 DEBUG 5
 CONFIG "MS_ERRORFILE" "debugFile.log"
-CONFIG "PROJ_LIB" "/opt/apps/ScribeUI/application/workspaces/templates/OSM-Basemaps"
+CONFIG "PROJ_LIB" "/opt/apps/ScribeUI/application/workspaces/marc/OSM-Basemaps"
 PROJECTION
    "init=epsg:900913"
 END
@@ -91,7 +91,7 @@ LAYER
     END
     MINSCALEDENOM 268435456
     MAXSCALEDENOM 99999999999
-    DATA "data/TM_WORLD_BORDERS-0.3.shp"
+    DATA "pdata/TM_WORLD_BORDERS-0.3.shp"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -287,7 +287,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -354,7 +354,7 @@ LAYER
     END
     MINSCALEDENOM 134217728
     MAXSCALEDENOM 268435456
-    DATA "data/TM_WORLD_BORDERS-0.3.shp"
+    DATA "pdata/TM_WORLD_BORDERS-0.3.shp"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -550,7 +550,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -617,7 +617,7 @@ LAYER
     END
     MINSCALEDENOM 67108864
     MAXSCALEDENOM 134217728
-    DATA "data/TM_WORLD_BORDERS-0.3.shp"
+    DATA "pdata/TM_WORLD_BORDERS-0.3.shp"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -830,7 +830,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -915,7 +915,7 @@ LAYER
     END
     MINSCALEDENOM 33554432
     MAXSCALEDENOM 67108864
-    DATA "data/shoreline_300"
+    DATA "pdata/shoreline_300"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -1144,7 +1144,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -1214,7 +1214,7 @@ LAYER
     END
     MINSCALEDENOM 16777216
     MAXSCALEDENOM 33554432
-    DATA "data/shoreline_300"
+    DATA "pdata/shoreline_300"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -1516,7 +1516,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -1605,7 +1605,7 @@ LAYER
     END
     MINSCALEDENOM 8388608
     MAXSCALEDENOM 16777216
-    DATA "data/shoreline_300"
+    DATA "pdata/shoreline_300"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -1907,7 +1907,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 1
@@ -2021,7 +2021,7 @@ LAYER
     END
     MINSCALEDENOM 4194304
     MAXSCALEDENOM 8388608
-    DATA "data/shoreline_300"
+    DATA "pdata/shoreline_300"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -2333,7 +2333,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -2452,7 +2452,7 @@ LAYER
     END
     MINSCALEDENOM 2097152
     MAXSCALEDENOM 4194304
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -2827,7 +2827,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -2946,7 +2946,7 @@ LAYER
     END
     MINSCALEDENOM 1048576
     MAXSCALEDENOM 2097152
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -3363,7 +3363,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -3464,7 +3464,7 @@ LAYER
     END
     MINSCALEDENOM 524288
     MAXSCALEDENOM 1048576
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -3908,7 +3908,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -3990,7 +3990,7 @@ LAYER
     END
     MINSCALEDENOM 262144
     MAXSCALEDENOM 524288
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -4493,7 +4493,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -4611,7 +4611,7 @@ LAYER
     END
     MINSCALEDENOM 131072
     MAXSCALEDENOM 262144
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -5181,7 +5181,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -5299,7 +5299,7 @@ LAYER
     END
     MINSCALEDENOM 65536
     MAXSCALEDENOM 131072
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -6080,7 +6080,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -6198,7 +6198,7 @@ LAYER
     END
     MINSCALEDENOM 32768
     MAXSCALEDENOM 65536
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -7024,7 +7024,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -7142,7 +7142,7 @@ LAYER
     END
     MINSCALEDENOM 16384
     MAXSCALEDENOM 32768
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -8338,7 +8338,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -8456,7 +8456,7 @@ LAYER
     END
     MINSCALEDENOM 8192
     MAXSCALEDENOM 16384
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -9864,7 +9864,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -9982,7 +9982,7 @@ LAYER
     END
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -11406,7 +11406,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -11505,7 +11505,7 @@ LAYER
     END
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -12929,7 +12929,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5
@@ -13028,7 +13028,7 @@ LAYER
     END
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "data/processed_p"
+    DATA "pdata/processed_p"
     CLASS
         STYLE
             COLOR "#F4F3F0"
@@ -14452,7 +14452,7 @@ LAYER
     PROJECTION
        "+init=epsg:4326"
     END
-    DATA "data/boundaries.shp"
+    DATA "pdata/boundaries.shp"
     CLASS
        STYLE
           WIDTH 5

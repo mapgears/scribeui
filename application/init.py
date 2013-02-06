@@ -7,6 +7,9 @@ import re #regular expression
 from werkzeug import check_password_hash, generate_password_hash, secure_filename
 import subprocess
 import json #commit
+import zipfile #download
+from os.path import join #download
+import random
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -682,9 +685,44 @@ def clear_debug():
         pathDebug = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/debugFile.log"
         if (os.path.isfile(pathDebug)):
             subprocess.call(['rm', pathDebug])
-    return "OK"
+    return "1"
 
 #===============================  
 #       Upload - download
 #===============================
+#def zipfolder(foldername, filename, includeEmptyDIr=True):
+#    empty_dirs = []
+#    zip = zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED)
+#    for root, dirs, files in os.walk(foldername):
+#        empty_dirs.extend([dir for dir in dirs if os.listdir(join(root, dir)) == []])
+#        for name in files:
+#            zip.write(join(root ,name))
+#        if includeEmptyDIr:
+#            for dir in empty_dirs:
+#                zif = zipfile.ZipInfo(join(root, dir) + "/")
+#                zip.writestr(zif, "")
+#        empty_dirs = []
+#    zip.close()
 
+@app.route('/_export_map',methods=['POST'])
+def download_map():
+    if ('ws_name' in session):
+        mapname = request.form['name']
+        dataBool = request.form['data']
+        dataPublicBool = request.form['dataPublic']
+        pathWS = path+"workspaces/"+session['ws_name']+"/"
+        
+        os.chdir(pathWS)
+        
+        randInt = random.randint(1,10000)
+        if databool == 1:
+            if dataPublicbool == 1:
+                subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname])
+            else :
+                subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/pdata/*'])
+        else:
+            subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/?data/*'])
+        
+        os.chdir(path)
+
+    return ip + '/'+__name__+'/download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
