@@ -439,7 +439,10 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
             callback.call();    
         }
 
-        var link = $("a").attr("id", "export-link").attr("href", url);
+        var link = $("<a/>", {
+            "id": "export-link",
+            "href": url
+        }).appendTo("body")
                            
         link.click(function(e) {
             e.preventDefault();  //stop the browser from following
