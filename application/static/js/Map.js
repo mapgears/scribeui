@@ -438,11 +438,12 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
         if(callback != null){
             callback.call();    
         }
-        var link = $("a");
+
+        var link = $("a").attr("id", "export-link").attr("href", url);
                            
         link.click(function(e) {
             e.preventDefault();  //stop the browser from following
-            window.location.href = url;
+            //window.location.href = url;
         }).click();
     }); 
 }
