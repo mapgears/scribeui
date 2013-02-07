@@ -204,6 +204,7 @@ function deleteMap(){
 function exportMap(){
      var name = $("#map-table .map-selected").html();
      if (name){
+         $("#preparingExport").css("visibility","hidden");
          $("#exportmap-form").dialog({
             autoOpen: false,
 	        resizable: false,
