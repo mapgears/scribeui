@@ -4,11 +4,11 @@ LAYER {
     @connection
     @layerconfig 
 	DATA {
-		1-3: "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
-        4: "geometry from (select * from osm_new_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
-		5-7: "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
-		8: "geometry from (select * from osm_new_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
-		9-17: "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		1-3: "geometry from (select * from osm_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        4: "geometry from (select * from osm_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		5-7: "geometry from (select * from osm_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		8: "geometry from (select * from osm_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+		9-17: "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
 	} 
 	LABELITEM: 'name'
     CLASSITEM: 'type'

@@ -4,7 +4,7 @@ LAYER {
         TYPE: POLYGON
         @connection
         @layerconfig
-		DATA: 'geometry from (select geometry,osm_id, name as name from osm_new_buildings) as foo using unique osm_id using srid=900913'
+		DATA: 'geometry from (select geometry,osm_id, name as name from osm_buildings) as foo using unique osm_id using srid=900913'
         LABELITEM: 'name'
 		CLASS {
             STYLE {

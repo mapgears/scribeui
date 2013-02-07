@@ -175,7 +175,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -230,7 +230,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -351,7 +351,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -406,7 +406,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -523,7 +523,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen0) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -556,7 +556,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#C2D1B2'
@@ -606,7 +606,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','continent') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -680,7 +680,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -797,7 +797,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen0) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -826,7 +826,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -912,7 +912,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -935,7 +935,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -985,7 +985,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','continent','state') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -1044,7 +1044,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -1161,7 +1161,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -1205,7 +1205,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -1291,7 +1291,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -1340,7 +1340,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -1390,7 +1390,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -1469,7 +1469,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -1586,7 +1586,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -1630,7 +1630,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -1716,7 +1716,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -1765,7 +1765,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -1815,7 +1815,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -1920,7 +1920,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -2037,7 +2037,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -2081,7 +2081,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -2167,7 +2167,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -2216,7 +2216,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -2261,7 +2261,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country','state','city') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -2366,7 +2366,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -2483,7 +2483,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -2527,7 +2527,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -2613,7 +2613,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -2661,7 +2661,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -2718,7 +2718,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -2763,7 +2763,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where type in ('country', 'state','city','town','village') and name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -2868,7 +2868,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -2985,7 +2985,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -3029,7 +3029,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -3115,7 +3115,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -3177,7 +3177,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -3272,7 +3272,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -3317,7 +3317,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -3428,7 +3428,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -3545,7 +3545,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -3610,7 +3610,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -3654,7 +3654,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -3740,7 +3740,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -3812,7 +3812,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -3907,7 +3907,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -3952,7 +3952,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -4038,7 +4038,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -4155,7 +4155,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -4220,7 +4220,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -4264,7 +4264,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -4350,7 +4350,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -4492,7 +4492,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -4628,7 +4628,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -4673,7 +4673,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -4802,7 +4802,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -4919,7 +4919,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -4984,7 +4984,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -5028,7 +5028,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -5113,7 +5113,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways_gen1 where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways_gen1 where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -5152,7 +5152,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -5304,7 +5304,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -5440,7 +5440,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -5485,7 +5485,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -5614,7 +5614,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -5946,7 +5946,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -6011,7 +6011,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -6055,7 +6055,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -6140,7 +6140,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -6179,7 +6179,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -6400,7 +6400,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -6557,7 +6557,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -6602,7 +6602,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -6731,7 +6731,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -7063,7 +7063,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -7128,7 +7128,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -7172,7 +7172,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -7257,7 +7257,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -7296,7 +7296,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -7516,7 +7516,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -7712,7 +7712,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -7757,7 +7757,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -7886,7 +7886,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -8218,7 +8218,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -8299,7 +8299,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -8343,7 +8343,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -8428,7 +8428,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -8467,7 +8467,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -8841,7 +8841,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -9037,7 +9037,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -9082,7 +9082,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -9211,7 +9211,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -9543,7 +9543,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -9642,7 +9642,7 @@ END
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
         CLASSITEM "type"
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION 'bus_stop'
             TEXT ' '
@@ -9758,7 +9758,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -9802,7 +9802,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -9887,7 +9887,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -9926,7 +9926,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -10550,7 +10550,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -10746,7 +10746,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name from osm_new_buildings) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name from osm_buildings) as foo using unique osm_id using srid=900913'
         LABELITEM 'name'
         CLASS
             STYLE
@@ -10786,7 +10786,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -10831,7 +10831,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -10960,7 +10960,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -11292,7 +11292,7 @@ END
         PROCESSING 'CLOSE_CONNECTION=DEFER'
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
-        DATA "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM "type"
         LABELITEM "name"
         CLASS
@@ -11391,7 +11391,7 @@ END
         CONNECTION "host=pg1.mapgears.com dbname=osmna user=osmna password=osmna port=5432"
         CONNECTIONTYPE POSTGIS
         CLASSITEM "type"
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION 'bus_stop'
             TEXT ' '
@@ -11507,7 +11507,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS
@@ -11551,7 +11551,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
         CLASSITEM 'type'
         LABELITEM 'name'
         CLASS
@@ -11636,7 +11636,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
         CLASS
             EXPRESSION ("[tunnel]"=0)
             STYLE
@@ -11675,7 +11675,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         #Bridges
@@ -12299,7 +12299,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0:9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
         LABELITEM 'shield_no'
         CLASSITEM 'shield_class'
         CLASS
@@ -12495,7 +12495,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name from osm_new_buildings) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name from osm_buildings) as foo using unique osm_id using srid=900913'
         LABELITEM 'name'
         CLASS
             STYLE
@@ -12535,7 +12535,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+        DATA 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS
             STYLE
                 COLOR '#DCDCB4'
@@ -12580,7 +12580,7 @@ END
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
-        DATA "geometry from (select * from osm_new_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
+        DATA "geometry from (select * from osm_places where name is not NULL order by z_order, population asc nulls first) as foo using unique osm_id using srid=900913"
         LABELITEM 'name'
         CLASSITEM 'type'
         CLASS

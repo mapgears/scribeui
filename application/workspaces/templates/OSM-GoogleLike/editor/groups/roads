@@ -6,9 +6,9 @@ LAYER {
         @connection
         @layerconfig
 		DATA {
-			1-6: "geometry from (select geometry, osm_id, tunnel from osm_new_railways_gen0 where type='rail') as foo using unique osm_id using srid=900913"
-            7-12: "geometry from (select geometry, osm_id, tunnel from osm_new_railways_gen1 where type='rail') as foo using unique osm_id using srid=900913"
-            13-17: "geometry from (select geometry, osm_id, tunnel from osm_new_railways where type='rail') as foo using unique osm_id using srid=900913"
+			1-6: "geometry from (select geometry, osm_id, tunnel from osm_railways_gen0 where type='rail') as foo using unique osm_id using srid=900913"
+            7-12: "geometry from (select geometry, osm_id, tunnel from osm_railways_gen1 where type='rail') as foo using unique osm_id using srid=900913"
+            13-17: "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
 		}
 		CLASS {
             EXPRESSION: ("[tunnel]"=0)
@@ -55,10 +55,10 @@ LAYER {
         @connection
         @layerconfig
 		DATA {
-			1-7: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
-            8: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
-			9-10: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
-			11-17: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+			1-7: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+            8: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+			9-10: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+			11-17: "geometry from (select oneway, osm_id,geometry,name as name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
 		}
     	LABELITEM: 'name'
         CLASSITEM: 'type'
@@ -869,10 +869,10 @@ LAYER {
         @connection
         @layerconfig
         DATA {
-        	1-7: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913" 
-		    8-9: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
-        	10-12: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
-        	13-17: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_new_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        	1-7: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913" 
+		    8-9: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen0 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        	10-12: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen1 where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
+        	13-17: "geometry from (select osm_id,geometry,name,ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=900913"
 		}
     	LABELITEM: 'shield_no'
         CLASSITEM: 'shield_class'

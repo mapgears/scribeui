@@ -5,9 +5,9 @@ LAYER {
         @connection
         @layerconfig
         DATA {
-			1-4: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen0) as foo using unique osm_id using srid=900913"
-			5-12: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas_gen1) as foo using unique osm_id using srid=900913"
-			13-17: "geometry from (select geometry,osm_id ,name,type from osm_new_waterareas) as foo using unique osm_id using srid=900913"
+			1-4: "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen0) as foo using unique osm_id using srid=900913"
+			5-12: "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=900913"
+			13-17: "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=900913"
 		}
     	LABELITEM: 'name'
         CLASSITEM: 'type'
@@ -47,8 +47,8 @@ LAYER {
         @connection
         @layerconfig
         DATA {
-			1-10: "geometry from (select geometry, osm_id, type, name from osm_new_waterways where type='river') as foo using unique osm_id using srid=900913"
-			11-17: "geometry from (select geometry, osm_id, type, name from osm_new_waterways) as foo using unique osm_id using srid=900913"
+			1-10: "geometry from (select geometry, osm_id, type, name from osm_waterways where type='river') as foo using unique osm_id using srid=900913"
+			11-17: "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=900913"
 		}
     	CLASSITEM: 'type'
         LABELITEM: 'name'

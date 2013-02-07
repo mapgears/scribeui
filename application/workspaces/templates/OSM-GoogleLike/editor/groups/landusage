@@ -5,10 +5,10 @@ LAYER {
         @layerconfig
         @connection
 		DATA {
-			1-3: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
-            4-9: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
-            10-12: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
-			13-17: "geometry from (select geometry ,osm_id, type, name from osm_new_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+			1-3: "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','residential') order by area desc) as foo using unique osm_id using srid=900913"
+            4-9: "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen0 where type in ('forest','industrial','commercial','residential','park', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+            10-12: "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen1 where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
+			13-17: "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest','pedestrian','cemetery','industrial','commercial','brownfield','residential','school','college','university','military','park','golf_course','hospital','parking','stadium','sports_center','pitch', 'nature_reserve') order by area desc) as foo using unique osm_id using srid=900913"
 		}
     	CLASSITEM: 'type'
         LABELITEM: 'name'
@@ -234,7 +234,7 @@ LAYER {
         TYPE: POINT
         @layerconfig
         @connection
-        DATA: "geometry from osm_new_transport_points using unique osm_id using srid=900913"
+        DATA: "geometry from osm_transport_points using unique osm_id using srid=900913"
         CLASSITEM: "type"
         LABELITEM: "name"
         CLASS {
@@ -327,8 +327,8 @@ LAYER {
         @connection
         CLASSITEM: "type"
         DATA {
-			1-16: "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
-			17: "geometry from (select geometry, osm_id, type, name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+			1-16: "geometry from (select geometry, osm_id, type, name from osm_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+			17: "geometry from (select geometry, osm_id, type, name from osm_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
 		}
     	CLASS {
 			EXPRESSION: 'bus_stop'

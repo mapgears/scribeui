@@ -4,7 +4,7 @@ LAYER {
         TYPE: LINE
         @connection
         @layerconfig
-      	DATA: 'geometry from (select geometry,osm_id, name as name,admin_level from osm_new_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
+      	DATA: 'geometry from (select geometry,osm_id, name as name,admin_level from osm_admin where admin_level = 4) as foo using unique osm_id using srid=900913'
         CLASS {
             STYLE {
                 COLOR {

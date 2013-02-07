@@ -7,9 +7,11 @@ import re #regular expression
 from werkzeug import check_password_hash, generate_password_hash, secure_filename
 import subprocess
 import json #commit
-import zipfile #download
-from os.path import join #download
-import random
+#import zipfile #download
+#from os.path import join #download
+import random # download
+import datetime #download
+
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -106,6 +108,14 @@ def teardown_request(exception):
 #Homepage of the application
 @app.route('/')
 def index():
+    dir_to_search = path+"www/"
+    for dirpath, dirnames, filenames in os.walk(dir_to_search):
+        for file in filenames:
+            if (re.search(".zip$",file) is not None): #file = "index.html":
+                curpath = os.path.join(dirpath, file)
+                file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
+                if datetime.datetime.now() - file_modified > datetime.timedelta(hours=1):
+                    os.remove(curpath)
     return render_template('index.html')
 
 #===============================
