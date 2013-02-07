@@ -412,7 +412,7 @@ Map.prototype.closeDataBrowser = function(){
     }
 }
 
-Map.prototype.exportSelf = function(publicData, privateData, callback=null){
+Map.prototype.exportSelf = function(publicData, privateData, callback){
     $("#preparingExport").css("visibility","visible");
 
     var self = this;
