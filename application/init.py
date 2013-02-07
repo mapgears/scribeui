@@ -286,6 +286,7 @@ def open_map():
 
     contentfiles = {}
     contentfiles['name'] = namemap
+    contentfiles['type'] = wsmap['map_type']
     
     if wsmap['map_type'] == 'Scribe':
         pathGroups = pathMap + "editor/groups/"
@@ -763,21 +764,24 @@ def clear_debug():
 def download_map():
     if ('ws_name' in session):
         mapname = request.form['name']
-        dataBool = request.form['data']
-        dataPublicBool = request.form['dataPublic']
+        dataPrivateBool = request.form['privateData']
+        dataPublicBool = request.form['publicData']
         pathWS = path+"workspaces/"+session['ws_name']+"/"
         
         os.chdir(pathWS)
         
-        randInt = random.randint(1,10000)
-        if databool == 1:
-            if dataPublicbool == 1:
+        randInt = str(random.randint(1,10000))
+        if dataPrivateBool == 1:
+            if dataPublicBool == 1:
                 subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname])
             else :
                 subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/pdata/*'])
         else:
-            subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/?data/*'])
+            if dataPublicBool == 1:
+                subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/data/*'])
+            else:
+                subprocess.call(['zip','-r','../../www/'+session['ws_name']+'_'+mapname+randInt, mapname, '-x', '*/?data/*'])
         
         os.chdir(path)
 
-    return ip + '/'+__name__+'/download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
+    return ip + '/scribeui/download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
