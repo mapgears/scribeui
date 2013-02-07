@@ -412,8 +412,25 @@ Map.prototype.closeDataBrowser = function(){
     }
 }
 
-Map.prototype.exportSelf = function(){
+Map.prototype.exportSelf = function(publicData, privateData, callback=null){
+    $("#preparingExport").css("visibility","visible");
 
+    var self = this;
+    publicData = publicData == true ? 1 : 0;
+    privateData = privateData == true ? 1 : 0;
+
+    $.post($SCRIPT_ROOT + '/_export_map', {
+        name: this.name,
+        publicData: publicData,
+        privateData: privateData
+    }, function(status) {
+        if(status == "1") {
+            $("#preparingExport").css("visibility","hidden");
+            if(callback != null){
+                callback.call();    
+            }
+        }
+    }); 
 }
 
 Map.prototype.getResultingMapfile = function(){

@@ -216,7 +216,7 @@
                     <input type="text" name="newmap-name" id="newmap-name" class="text ui-widget-content ui-corner-all" /><br>
                     <label for="newmap-type">Type</label><br>
                     <select id="newmap-type" class="newmap-template" class="shadow_select"></select><br>
-                    <span id="newmap-ws" class="hidden">
+                    <span id="newmap-ws" class="invisible">
                         <label>Workspace</label><br>
 	                    <select id="newmap-workspace-select" class="shadow_select"></select><br>
 	                    <label>Password</label><br>
@@ -228,6 +228,16 @@
 	                <textarea id="newmap-description" class="newmap-description"></textarea>
 	            </fieldset>
             </form>
+        </div>
+
+        <div id="exportmap-form" title="Export map">
+            <form>
+	            <fieldset>
+                    <input type="checkbox" name="exportComponents" value="publicData" checked="true">Public data<br>
+                    <input type="checkbox" name="exportComponents" value="privateData" checked="true">Private data<br>
+	            </fieldset>
+            </form><br>
+            <div id="preparingExport" class="hidden">Preparing data...</div>
         </div>
 
         <div id="creategroup-form" title="Create new group">

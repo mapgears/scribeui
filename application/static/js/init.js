@@ -104,6 +104,10 @@ jQuery(function() {
 	    openMap();
     });
 
+    $('#btn_export_map').bind('click', function(){
+	    exportMap();
+    });
+
     $('#btn_delete_map').bind('click', function(){
 	    deleteMap();
     });

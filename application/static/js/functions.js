@@ -201,6 +201,43 @@ function deleteMap(){
     }
 }
 
+function exportMap(){
+     var name = $("#map-table .map-selected").html();
+     if (name){
+         $("#exportmap-form").dialog({
+            autoOpen: false,
+	        resizable: false,
+            //height: 240,
+            width: 300,
+            modal: true,
+            buttons: {
+                "Export": function() {
+                    var checkBoxes = $("input[name='exportComponents']");
+                    var components = {};
+
+                    $.each(checkBoxes, function() {
+                        if ($(this).attr('checked')){
+                            components[this.value] = 1;    
+                        } else {
+                            components[this.value] = 0;
+                        }
+                    });
+            
+                    var mapToExport = new Map(name);
+
+                    var self = this;
+                    mapToExport.exportSelf(components["publicData"], components["privateData"], function(){$(self).dialog("close");})
+                    
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {}
+        }).dialog("open");
+    }        
+}
+
 function createNewGroup(){
     $("#creategroup-form").dialog({
         autoOpen: false,

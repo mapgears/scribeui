@@ -594,8 +594,12 @@ html, body {
     height: 180px;
 }
 
-.hidden {
+.invisible{
     display: none;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 li {
