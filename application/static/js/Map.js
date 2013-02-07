@@ -442,7 +442,7 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
                            
         link.click(function(e) {
             e.preventDefault();  //stop the browser from following
-            window.location.href = 'uploads/file.doc';
+            window.location.href = url;
         }).click();
     }); 
 }

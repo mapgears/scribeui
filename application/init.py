@@ -794,4 +794,4 @@ def download_map():
         
         os.chdir(path)
 
-    return ip + '/scribeui/download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
+    return 'download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
