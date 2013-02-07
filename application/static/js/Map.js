@@ -133,11 +133,21 @@ Map.prototype.displayComponents = function(){
     fontEditor.setValue(this.fonts);
     projectionEditor.setValue(this.projections);
 
+    if (this.type == "Basemaps"){
+        alert('ici');
+        $("a[href='#scale-tab']").html("Config");
+    } else{
+        $("a[href='#scale-tab']").html("Scales");
+    }
+
     this.displayGroups();
 };
 
 Map.prototype.displayGroups = function(){
     $(".group-button").button("enable");
+    if (this.type == "Basemaps" || this.type == "Standard"){
+        $("#btn_change_group_order").button("disable");
+    }
 
     var groupSelect = $("#" + this.workspace.groupSelect);
     for(var i = 0; i < this.groups.length; i++){
@@ -423,13 +433,17 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
         name: this.name,
         publicData: publicData,
         privateData: privateData
-    }, function(status) {
-        if(status == "1") {
-            $("#preparingExport").css("visibility","hidden");
-            if(callback != null){
-                callback.call();    
-            }
+    }, function(url) {
+        $("#preparingExport").css("visibility","hidden");
+        if(callback != null){
+            callback.call();    
         }
+        var link = $("a");
+                           
+        link.click(function(e) {
+            e.preventDefault();  //stop the browser from following
+            window.location.href = 'uploads/file.doc';
+        }).click();
     }); 
 }
 
