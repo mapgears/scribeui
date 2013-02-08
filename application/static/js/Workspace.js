@@ -214,14 +214,6 @@ Workspace.prototype.destroy = function(callback){
     });   
 }
 
-Workspace.prototype.destroyMap = function(){
-    
-}
-
-Workspace.prototype.removeMap = function(){
-    
-}
-
 Workspace.prototype.clearMaps = function(){
     $("#" + this.mapTable).find("tr").remove();
     $("#" + this.mapDescription).html("");

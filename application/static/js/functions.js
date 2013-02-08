@@ -89,13 +89,26 @@ function openWorkspace(options){
     _workspace.open();
 }
 
+
+function getTemplatesOfType(type){
+    $.post($SCRIPT_ROOT + '/_export_map', {
+        type: type
+    }, function(url) {
+        if(templates){
+            for(temp in templates){
+                $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
+            }
+        }
+    });
+}
+
 function openNewMapWindow(){
-    displayTemplates("templates");
-    displayTemplates("");
+    displayTemplates("templates", $("#newmap-type").val());
+    //displayTemplates("", $("#newmap-type").val());
 
     $("#createmap-form").dialog({
         autoOpen: false,
-	resizable: false,
+	    resizable: false,
         width: 420,
         modal: true,
         buttons: {
@@ -120,8 +133,9 @@ function openNewMapWindow(){
                 $(this).dialog("close");
             },
             "+": function(){
-                $("#newmap-ws").removeClass("hidden");
-                displayTemplates("templates");
+                $("#newmap-ws").removeClass("invisible");
+                displayTemplates("templates", $("#newmap-type").val());
+
                 $("#newmap-workspace-select").empty();
                 $("#newmap-workspace-select").append($("<option></option>").attr("value", " ").text(" "));
                 displayWorkspaces("newmap-workspace-select");
@@ -129,8 +143,8 @@ function openNewMapWindow(){
                 $("#newmap-workspace-select").bind('blur', function(){
                     var password = $("#newmap-workspace-password").val();
                     var workspaceSelect = $("#newmap-workspace-select").val()
-                    displayTemplates("templates");
-                    displayTemplates(workspaceSelect);  
+                    displayTemplates("templates", $("#newmap-type").val());
+                    displayTemplates(workspaceSelect, $("#newmap-type").val());  
                 });
                 
             },
@@ -145,10 +159,11 @@ function openNewMapWindow(){
     }).dialog("open");
 }
 
-function displayTemplates(ws_name){
+function displayTemplates(ws_name, type){
     $("#newmap-template").empty();
     $.post($SCRIPT_ROOT + '/_get_templates', {
-        ws_name: ws_name
+        ws_name: ws_name,
+        type: type
     }, function(templates) {
         if(templates){
             for(temp in templates){

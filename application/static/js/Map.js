@@ -50,8 +50,8 @@ Map.prototype.open = function(){
         name: this.name
     }, function(data) {
         if(typeof(data) == "object") {
-	    $.each(data, function(key, element){
-		self[key] = element;
+	        $.each(data, function(key, element){
+		    self[key] = element;
 	    });
 
             if(self.workspace.openedMap){
@@ -134,7 +134,6 @@ Map.prototype.displayComponents = function(){
     projectionEditor.setValue(this.projections);
 
     if (this.type == "Basemaps"){
-        alert('ici');
         $("a[href='#scale-tab']").html("Config");
     } else{
         $("a[href='#scale-tab']").html("Scales");

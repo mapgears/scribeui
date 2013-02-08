@@ -606,6 +606,14 @@ li {
     list-style: disc outside none; 
 }
 
+fieldset select {
+    width: 205px;
+}
+
+fieldset input {
+    width: 205px;
+}
+
 /*=== Text, select, button ===*/
 /*
 label {

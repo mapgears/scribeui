@@ -112,6 +112,10 @@ jQuery(function() {
 	    deleteMap();
     });
 
+    $("#newmap-type").bind('blur', function(){
+         displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
+    });
+
     $('#btn_commit').bind('click', function(){
 	    _workspace.openedMap.commit();
     });
