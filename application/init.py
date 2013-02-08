@@ -460,18 +460,19 @@ def delete_map():
 #Return the list of templates
 @app.route('/_get_templates', methods=['POST'])
 def get_templates():
+    templateType = request.form['type']
     try:
         ws_name = request.form['ws_name']
         if ws_name == 'templates':
            ws_id = '0';
-        elif ws_name == '':
+        elif ws_name == '' or ws_name == 'null':
             ws_id = get_ws_id(session['ws_name'])
         else:
             ws_id = get_ws_id(ws_name)
     except:
         ws_id = get_ws_id(session['ws_name'])
         
-    wsmap = query_db('''select map_name from maps where ws_id = ?''', [ws_id], one=False) #and where type = ...
+    wsmap = query_db('''select map_name from maps where ws_id = ? and map_type = ?''', [ws_id, templateType], one=False)
     templates = {}
     for i in range(len(wsmap)): 
         templates[i] = wsmap[i]['map_name']

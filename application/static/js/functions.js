@@ -104,23 +104,23 @@ function getTemplatesOfType(type){
 
 function openNewMapWindow(){
     displayTemplates("templates", $("#newmap-type").val());
-    //displayTemplates("", $("#newmap-type").val());
+    displayTemplates("", $("#newmap-type").val());
 
     $("#createmap-form").dialog({
         autoOpen: false,
-	    resizable: false,
+	resizable: false,
         width: 420,
         modal: true,
         buttons: {
             "Create": function() {
                 var name = $("#newmap-name").val();
                 var type = $("#newmap-type option:selected").val();
-		        var template = $("#newmap-template option:selected").val();
+		var template = $("#newmap-template option:selected").val();
                 var templateLocation = $("#newmap-workspace-select").val();
                 var locationPassword = $("#newmap-workspace-password").val();
                 var description = $("#newmap-description").val();
 
-		        var map = new Map(name, {
+		var map = new Map(name, {
                     "type": type,
                     "description": description,
                     "workspace": _workspace,
@@ -129,7 +129,7 @@ function openNewMapWindow(){
                     "locationPassword": locationPassword ? locationPassword : ""
                 });
 
-		        map.create();
+		map.create();
                 $(this).dialog("close");
             },
             "+": function(){
@@ -149,12 +149,14 @@ function openNewMapWindow(){
                 
             },
             Cancel: function() {
-                $("#newmap-ws").addClass("hidden");
+		$("#newmap-workspace-select").empty();
+                $("#newmap-ws").addClass("invisible");
                 $(this).dialog("close");
             }
         },
         close: function() {
-            $("#newmap-ws").addClass("hidden");
+	    $("#newmap-workspace-select").empty();
+            $("#newmap-ws").addClass("invisible");
         }
     }).dialog("open");
 }

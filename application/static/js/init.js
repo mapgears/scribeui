@@ -113,7 +113,8 @@ jQuery(function() {
     });
 
     $("#newmap-type").bind('blur', function(){
-         displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
+	    displayTemplates('templates', $("#newmap-type").val());
+	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
     });
 
     $('#btn_commit').bind('click', function(){
