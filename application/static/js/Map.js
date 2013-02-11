@@ -477,6 +477,11 @@ Map.prototype.registerScaleLevel = function(){
 }
 
 Map.prototype.displayScaleLevel = function(){
-    var zoom = this.OLMap.zoom + 1;
+    if(this.type != "Basemaps"){
+        var zoom = this.OLMap.zoom + 1;
+    } else{
+        var zoom = this.OLMap.zoom;
+    }
+
     $("#" + this.workspace.scaleLevelDiv).html("Scale level: " + zoom);
 }
