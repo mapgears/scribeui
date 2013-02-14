@@ -12,7 +12,6 @@ import json #commit
 import random # download
 import datetime #download
 
-
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
 os.chdir(path)
@@ -281,7 +280,11 @@ def get_maps():
     for i in range(len(wsmap)):
         maps = {}
         maps["name"] = wsmap[i]['map_name']
-        maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/map/" + wsmap[i]['map_name'] +".map"
+        maps["type"] = wsmap[i]['map_type']
+        if maps["type"] == "Basemaps":
+            maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/osm-" + wsmap[i]['map_name'] +".map"
+        else:
+            maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/map/" + wsmap[i]['map_name'] +".map"
         maps["description"] = wsmap[i]['map_desc']
         listmaps["maps"].append(maps)
 
@@ -388,17 +391,23 @@ def open_map():
         scalefile.close()
     elif wsmap['map_type'] == 'Standard':
         contentfiles['variables'] = ""
-        stringSearch = ["init=", "UNITS", "EXTENT"]
+        stringSearch = ["init=", "UNITS", "EXTENT", "LAYER"]
         mapfile = open(pathMap + "map/" + namemap  + ".map", "r")
+        contentfiles['OLUnits'] = ''
+        stop = 0
         for line in mapfile:
-            for string in stringSearch:
-                if string in line:
-                    if re.search('EXTENT',line):
-                        contentfiles['OLExtent'] = line.split('EXTENT ')[1].split('\n')[0]
-                    if re.search('UNITS',line):
-                        contentfiles['OLUnits'] = line.split('UNITS ')[1].split('\n')[0]
-                    if re.search('"init=',line):
-                        contentfiles['OLProjection'] = line.split('init=')[1].split('"')[0]
+            if stop == 0:
+                for string in stringSearch:
+                    if string in line:
+                        if re.search('^[\s]{0,}EXTENT',line):
+                            contentfiles['OLExtent'] = line.split('EXTENT ')[1].split('\n')[0]
+                        if re.search('^[\s]{0,}UNITS',line) and contentfiles['OLUnits'] == '':
+                            contentfiles['OLUnits'] = line.split('UNITS ')[1].split('\n')[0]
+                        if re.search('^[\s]{0,}"init=',line):
+                            contentfiles['OLProjection'] = line.split('init=')[1].split('"')[0]
+                        if re.search('^[\s]{0,}LAYER',line):
+                            stop = 1
+                            break
         mapfile.close()
         scalefile = open(pathMap + "scales", "r")
         content = scalefile.read().split('{')[1].split('}')[0].split(',')
