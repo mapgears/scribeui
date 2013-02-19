@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
 # -*- coding: iso-8859-1 -*-
 
 import json
@@ -119,9 +119,13 @@ def parseScale(scale, data, files, minScale, maxScale, indentation):
             if item == "VARIABLE":
                 key = item
                 value = VAR[d[item]]
-            elif d[item][:9] == "VARIABLE:":
-                key = item
-                value = parseVariable(d[item][9:])
+            elif len(item) > 1:
+                if d[item][:9] == "VARIABLE:":
+                    key = item
+                    value = parseVariable(d[item][9:])
+                else:
+                    key = item
+                    value = d[key]   
             else:
                 key = item
                 value = d[key]
@@ -265,7 +269,6 @@ def jsonToMap(content, outputDirectory, mapName, clean):
     mapFile = openMapFile(outputDirectory, mapName)
     parseList("MAP", MAP, {"1": None}, mapFile, "")
     mapFile["1"].seek(-4, 2)
-    write("#---- SYMBOLS ----#", {"1": None}, mapFile, "")
     
     for value in range(1, len(SCALES) + 1):
         if clean == True:
@@ -357,14 +360,18 @@ def list2dict(ls):
 
 def main():
     global INDENTATION
-    inputDirectory = "./"
-    outputDirectory = "./result/"
-    mapName = "result"
-    clean = False
     INDENTATION = 4
 
+    inputDirectory = "./"
+    outputDirectory = "./result/"
+    mapName = "result" 
+    configFile = "config"
+    clean = False
+    UI = False
+    error = ""
+
     try:                                
-        opts, args = getopt.getopt(sys.argv[1:], "i:o:n:ct:", ["input", "output", "name", "clean", "tabulation"])
+        opts, args = getopt.getopt(sys.argv[1:], "i:o:n:cf:t:", ["input", "output", "name", "clean", "file","tabulation", "UI"])
     except getopt.GetoptError as err:
         print str(err)                      
         sys.exit(2) 
@@ -378,55 +385,89 @@ def main():
             mapName = arg
         elif opt in ("-c", "--clean"):
             clean = True
+        elif opt in ("-f", "--file"):
+            configFile = arg
         elif opt in ("-t", "--tabulation"):
             INDENTATION = int(arg)
+        elif opt in ("--UI"):
+            UI = True
             
     if os.path.isfile(inputDirectory + "scales"):
         inputScalesFile = codecs.open(inputDirectory + "scales", encoding='utf-8')
         inputScalesContent = inputScalesFile.read()
         inputScalesFile.close()
     else:
-        print "File 'scales' not found."
+        error += "File 'scales' not found.\n"
 
     if os.path.isfile(inputDirectory + "variables"):
         inputVariablesFile = codecs.open(inputDirectory + "variables", encoding='utf-8')
         inputVariablesContent = inputVariablesFile.read()
         inputVariablesFile.close()
     else:
-        print "File 'variables' not found."
+        error += "File 'variables' not found.\n"
 
     if os.path.isfile(inputDirectory + "map"):
         inputMapFile = codecs.open(inputDirectory + "map", encoding='utf-8')
         inputMapContent = inputMapFile.read()
         inputMapFile.close()
     else:
-        print "File 'map' not found."
+        error += "File 'map' not found.\n"
    
     if os.path.isfile(inputDirectory + "map"):
         inputMapFile = codecs.open(inputDirectory + "map", encoding='utf-8')
         inputMapContent = inputMapFile.read()
         inputMapFile.close()
     else:
-        print "File 'map' not found."
+        error += "File 'map' not found\n."
 
-    if os.path.isfile(inputDirectory + "layers"):
-        inputLayersFile = codecs.open(inputDirectory + "layers", encoding='utf8')
-        inputLayersContent = inputLayersFile.read()
-        inputLayersFile.close()
+    if UI == False:
+        if configFile[:1] == "/":
+            configFilePath = configFile
+        else:
+            configFilePath = inputDirectory + configFile
+
+        if os.path.isfile(configFilePath):
+            inputConfigFile = codecs.open(configFilePath, encoding='utf8')
+            inputConfigContent = inputConfigFile.read()
+            inputConfigFile.close()
+
+            jsonConfig = json.loads(string2json(inputConfigContent))
+            inputLayersContent = "LAYERS {\n";
+            groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
+        
+            for i in range(0, len(jsonConfig["ORDER"])):
+                for j in jsonConfig["ORDER"][i]:
+                    if (os.path.isfile(jsonConfig["ORDER"][i][j])):
+                        if (int(j) > 0 and int(j) <= len(jsonConfig["ORDER"])):
+                            groupFiles[int(j)] = jsonConfig["ORDER"][i][j];
+                        else:
+                            error += "Index " + j + " out of bounds in config file.\n" 
+                    else:
+                        error += "File '" +  jsonConfig["ORDER"][i][j] + "' not found.\n"
+
+            for i in range(0, len(groupFiles)):
+                if (os.path.isfile(groupFiles[i])):
+                    inputLayerFile = codecs.open(groupFiles[i], encoding='utf8')
+                    inputLayersContent += inputLayerFile.read() + "\n"
+                    inputLayerFile.close()
+
+            inputLayersContent += "\n}"
+        else:
+            error += "Config file not found.\n"
     else:
-        print "File 'layers' not found."
+        if (os.path.isfile(inputDirectory + 'layers')):
+            inputLayerFile = codecs.open(inputDirectory + 'layers', encoding='utf8')
+            inputLayersContent = inputLayerFile.read()
+            inputLayerFile.close()
+        else:
+            error += "Layers file not found.\n"
 
-    if ("inputScalesContent" in locals() and "inputVariablesContent" in locals() and "inputMapContent" in locals() and "inputLayersContent" in locals()):
-       jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent;
-       jsonContent = string2json(jsonInput);
-               
-       jsonFile = open(inputDirectory + "mapTemp.json", "w+")
-       jsonFile.write(jsonContent)
-       jsonFile.close()
-
-       jsonToMap(jsonContent, outputDirectory, mapName, clean)
-       
+    if (error == ""):
+        jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent;
+        jsonContent = string2json(jsonInput);
+        jsonToMap(jsonContent, outputDirectory, mapName, clean)
     else:
+        print error
         sys.exit(2)
 
 if __name__ == "__main__":

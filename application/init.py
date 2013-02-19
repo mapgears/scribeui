@@ -687,7 +687,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ --UI', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
