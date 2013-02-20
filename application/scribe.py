@@ -468,7 +468,7 @@ def main():
         jsonContent = string2json(jsonInput)
         if UI == True:
             jsonFile = open(inputDirectory + "mapTemp.json", "w+")
-            jsonFile.write(jsonContent)
+            jsonFile.write(jsonContent.encode('utf-8'))
             jsonFile.close()
 
         jsonToMap(jsonContent, outputDirectory, mapName, clean, UI)
