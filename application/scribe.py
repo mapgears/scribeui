@@ -151,9 +151,9 @@ def parseVariable(value):
 
 def scaleToScaleList(scale, minScale, maxScale):
     scales = {}
-    if re.match(r"[0-9]{1,2}:{1}[0-9]{1,2}", scale):
-        s1 = int(re.search('(?<!:)\w+', scale).group(0))
-        s2 = int(re.search('(?<=:)\w+', scale).group(0))
+    if re.match(r"[0-9]{1,2}\-{1}[0-9]{1,2}", scale):
+        s1 = int(re.search('(?<!\-)\w+', scale).group(0))
+        s2 = int(re.search('(?<=\-)\w+', scale).group(0))
         for i in range(s1, s2 + 1):
             if (i >= minScale) and (i <= maxScale):
                 scales[str(i)] = SCALES[str(i)]
@@ -165,7 +165,7 @@ def scaleToScaleList(scale, minScale, maxScale):
     return scales
 
 def isScale(string):
-    if re.match(r"[0-9]+(:[0-9]+)*", string):
+    if re.match(r"[0-9]+(\-[0-9]+)*", string):
         return True
     else:
         return False
@@ -251,7 +251,7 @@ def closeFiles(files):
     for value in files:
         files[value].close()
 
-def jsonToMap(content, outputDirectory, mapName, clean):
+def jsonToMap(content, outputDirectory, mapName, clean, UI):
     global MAP, LAYERS, VAR, SCALES
     data = json.loads(content);
 
@@ -269,6 +269,9 @@ def jsonToMap(content, outputDirectory, mapName, clean):
     mapFile = openMapFile(outputDirectory, mapName)
     parseList("MAP", MAP, {"1": None}, mapFile, "")
     mapFile["1"].seek(-4, 2)
+
+    if UI == True:
+        write("#---- SYMBOLS ----#", {"1": None}, mapFile, "")
     
     for value in range(1, len(SCALES) + 1):
         if clean == True:
@@ -344,8 +347,6 @@ def string2json(string):
     t = re.sub(r"\}\n*\s*\]\},\{\"MAP\"", "}],\"MAP\"", t)
     t = re.sub(r"\}\n*\s*\]\},\{\"VARIABLES\"", "}],\"VARIABLES\"", t)
     t = re.sub(r"^\s*\n*{\"", "", t)
-    #Replace the - between scales values with :
-    t = re.sub(r"(?<=[0-9])-(?=[0-9])", ":", t)
     #Add {" before scale levels tag
     t = re.sub(r"\s(?=([0-9]|[0-9]{2})+\":)", "{\"", t)
     #Add {" at the beginning of the string and return a valid JSON string
@@ -463,9 +464,14 @@ def main():
             error += "Layers file not found.\n"
 
     if (error == ""):
-        jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent;
-        jsonContent = string2json(jsonInput);
-        jsonToMap(jsonContent, outputDirectory, mapName, clean)
+        jsonInput = inputScalesContent + "\n" + inputVariablesContent + "\n" + inputMapContent + "\n" + inputLayersContent
+        jsonContent = string2json(jsonInput)
+        if UI == True:
+            jsonFile = open(inputDirectory + "mapTemp.json", "w+")
+            jsonFile.write(jsonContent)
+            jsonFile.close()
+
+        jsonToMap(jsonContent, outputDirectory, mapName, clean, UI)
     else:
         print error
         sys.exit(2)
