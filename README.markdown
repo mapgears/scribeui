@@ -28,13 +28,15 @@ Configuration
  * The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:
 
     `sudo chown -R www-data db`  
-    `sudo chown -R www-data workspaces`
-    `sudo chown -R www-data www`
-    `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/`   
+    `sudo chown -R www-data workspaces` \n
+    `sudo chown -R www-data www` \n
+    `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/` \n  
 
  * Change the path of the application in application/runserver.wsgi
 
  * Change ip variable in config.py
+
+ * In application/data folder, download this data: 
 
 Apache configuration
 --------------------
