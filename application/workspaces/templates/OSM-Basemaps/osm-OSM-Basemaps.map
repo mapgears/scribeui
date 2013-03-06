@@ -7553,7 +7553,7 @@ LAYER
     NAME "public_transport14"
     MINSCALEDENOM 16384
     MAXSCALEDENOM 32768
-    DATA "geometry from (select geometry, osm_id, type, name as name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+    DATA "geometry from (select geometry, osm_id, type, name as name from osm_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
     CLASSITEM 'type'
     CLASS
       EXPRESSION "bus_stop"
@@ -8880,7 +8880,7 @@ LAYER
     NAME "public_transport15"
     MINSCALEDENOM 8192
     MAXSCALEDENOM 16384
-    DATA "geometry from (select geometry, osm_id, type, name as name from osm_new_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+    DATA "geometry from (select geometry, osm_id, type, name as name from osm_transport_points where type in ('station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
     CLASSITEM 'type'
     CLASS
       EXPRESSION "bus_stop"
@@ -10422,7 +10422,7 @@ LAYER
     NAME "public_transport16"
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "geometry from (select geometry, osm_id, type, name as name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+    DATA "geometry from (select geometry, osm_id, type, name as name from osm_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
     CLASSITEM 'type'
     CLASS
       EXPRESSION "bus_stop"
@@ -11945,7 +11945,7 @@ LAYER
     NAME "public_transport16"
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "geometry from (select geometry, osm_id, type, name as name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+    DATA "geometry from (select geometry, osm_id, type, name as name from osm_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
     CLASSITEM 'type'
     CLASS
       EXPRESSION "bus_stop"
@@ -13468,7 +13468,7 @@ LAYER
     NAME "public_transport16"
     MINSCALEDENOM 0
     MAXSCALEDENOM 8192
-    DATA "geometry from (select geometry, osm_id, type, name as name from osm_new_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
+    DATA "geometry from (select geometry, osm_id, type, name as name from osm_transport_points where type in ('bus_stop', 'station', 'subway_entrance', 'terminal', 'tram_stop')) as foo using unique osm_id using srid=900913"
     CLASSITEM 'type'
     CLASS
       EXPRESSION "bus_stop"

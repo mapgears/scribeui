@@ -361,8 +361,8 @@ vars = {
     
     #Public transport
     'public_transport_data': {
-         0: '"geometry from (select geometry, osm_id, type, OSM_NAME_COLUMN as name from osm_new_transport_points where type in (\'station\', \'subway_entrance\', \'terminal\', \'tram_stop\')) as foo using unique osm_id using srid=OSM_SRID"',
-         16: '"geometry from (select geometry, osm_id, type, OSM_NAME_COLUMN as name from osm_new_transport_points where type in (\'bus_stop\', \'station\', \'subway_entrance\', \'terminal\', \'tram_stop\')) as foo using unique osm_id using srid=OSM_SRID"'
+         0: '"geometry from (select geometry, osm_id, type, OSM_NAME_COLUMN as name from OSM_PREFIX_transport_points where type in (\'station\', \'subway_entrance\', \'terminal\', \'tram_stop\')) as foo using unique osm_id using srid=OSM_SRID"',
+         16: '"geometry from (select geometry, osm_id, type, OSM_NAME_COLUMN as name from OSM_PREFIX_transport_points where type in (\'bus_stop\', \'station\', \'subway_entrance\', \'terminal\', \'tram_stop\')) as foo using unique osm_id using srid=OSM_SRID"'
     },
     
     'label_public_transport' : {0:0, 14:1},
