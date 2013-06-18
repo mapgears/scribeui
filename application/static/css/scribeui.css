@@ -9,7 +9,10 @@ html, body {
     overflow-x: hidden;
     overflow-y: hidden;
 
-    background-color: #222222;
+    background-color: #efefef;
+}
+body{
+	font-size: 62.5%;
 }
 
 .main {
@@ -29,13 +32,12 @@ html, body {
 
     min-height: 40px;
 
-    
+    background-color:#fff;
 }
 
 .title {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #999999;
-    font-size: 20px;
+    color: #212121;
     line-height: 1;
  
     padding-top: 10px;    
@@ -60,10 +62,10 @@ html, body {
     width: 100%;
     border-top: 2px solid rgba(82, 168, 236, 0.8);
     padding-top: 10px;
+    background-color:#fff;
 }
 
 .tools button {
-    font-size: 14px !important;    
 }
 
 .tools-left {
@@ -205,31 +207,22 @@ html, body {
 
 .tab-container {
     overflow-x: auto;
-    height: 44px;
     border-bottom: 1px solid #AAAAAA !important;
     border-right: 1px solid #AAAAAA !important;
 }
 
 .tab-container-small {
     overflow-x: auto;
-    height: 28px;
     border-bottom: 1px solid #AAAAAA !important;
 }
 
 .ui-tabs {
     padding: 0.0em !important;
-    /*font-size: medium !important;*/
 }
 
 .tab-small{
-    height: 20px !important;
-    font-size: medium !important;
 }
 
-.tab-large{
-    height: 36px !important;
-    font-size: medium !important;
-}
 
 .tabheader {
     /*border-bottom: 1px solid #AAAAAA !important;
@@ -242,7 +235,6 @@ html, body {
     padding-top: 5px !important;
     padding-left: 5px !important;
 
-    font-size: 10 !important;
 }
 
 .tabheader-small {
@@ -257,7 +249,6 @@ html, body {
     line-height: 0.4 !important;
 
     background-image: none !important;
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444 !important;
 }
 
 .tabs-left{
@@ -417,11 +408,6 @@ html, body {
     width: 100%;
 }
 
-.map-td { 
-    border: 2px outset #444444;
-    border-radius: 6px;
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_35_222222_1x100.png") repeat-x scroll 50% 50% #222222
-}
 
 .map-description-container {
     position: absolute;
@@ -454,7 +440,6 @@ html, body {
 }
 
 .map-selected {
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-hard_20_0972a5_1x100.png") repeat-x scroll 50% 50% #0972A5;
     border: 2px inset #26B3F7;
 }
 
@@ -528,7 +513,6 @@ html, body {
     position: absolute;
     border-bottom: 1px solid #AAAAAA !important;
     border-top: 1px solid #AAAAAA !important;
-    background: url("jquery/css/dark-hive/images/ui-bg_highlight-soft_44_444444_1x100.png") repeat-x scroll 50% 50% #444444;
     height: 31px;
     width: 100%;
     z-index: 15;
@@ -538,7 +522,6 @@ html, body {
     border-radius: 0 0 0 0 !important;
     margin: 0 0 0 0 !important;
     border-width: 0px !important;
-    font-size: 14px !important;
 }
 
 .group-select{
@@ -563,8 +546,6 @@ html, body {
 .workspace-button {
     width: 150px;
     float: right;
-    font-size: 14px !important;
-    background-color: #222222 !important;
 }
 
 .top-button {
@@ -643,7 +624,6 @@ label {
 }
 
 button, input, select, textarea {
-    font-size: 100%;
     vertical-align: middle;
 }
 
