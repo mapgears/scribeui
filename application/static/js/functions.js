@@ -13,9 +13,9 @@ function displayWorkspaces(select){
 function openNewWorkspaceWindow(options){
     $("#createws-form").dialog({
         autoOpen: false,
-	resizable: false,
-        height: 260,
-        width: 300,
+		resizable: false,
+		width: options.popupWidth,
+		height:options.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
@@ -49,6 +49,10 @@ function deleteWorkspace(options){
         div.dialog({
             title: "Confirm",
             resizable: false,
+			
+			width: options.popupWidth,
+			height:options.popupHeight,
+
             buttons: [{
                  text: "Yes",
                  click: function () {
@@ -78,7 +82,6 @@ function deleteWorkspace(options){
 function openWorkspace(options){
     var name = $("#" + options.workspaceSelect).val();
     var password = $("#" + options.workspacePassword).val();
-    
     options["password"] = password;
 
     if(_workspace){
@@ -89,6 +92,32 @@ function openWorkspace(options){
     _workspace.open();
 }
 
+function openWorkspacePopup(options){
+    displayWorkspaces(options.workspaceSelect);
+	var dClass = 'no-close';
+    if(_workspace){
+			dClass = ''; // If there is a workspace opened, we allow closing the window
+	}
+	$('#'+options.workspaceManage).dialog({
+		modal:true,
+		width: options.popupWidth,
+		height:options.popupHeight,
+		resizable: false,
+		dialogClass: dClass, 
+		buttons:{
+			"New Workspace": function(e){ 
+				openNewWorkspaceWindow(options)
+			},
+			"Open Workspace": function(e){
+	    			openWorkspace(options);
+                		$(this).dialog("close");
+			},
+			"Delete Workspace": function(e){
+	    		deleteWorkspace(options);
+			}
+		}
+	})
+}
 
 function getTemplatesOfType(type){
     $.post($SCRIPT_ROOT + '/_export_map', {
@@ -109,7 +138,8 @@ function openNewMapWindow(){
     $("#createmap-form").dialog({
         autoOpen: false,
 	resizable: false,
-        width: 420,
+		width: _workspace.popupWidth,
+		height:_workspace.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
@@ -176,7 +206,7 @@ function displayTemplates(ws_name, type){
 }
 
 function openMap(){
-    var name = $("#map-table .map-selected").html();
+    var name = $("#"+ _workspace.mapList +" .ui-selected").text();
     var map = _workspace.getMapByName(name);
     if(map){
         map.open();
@@ -192,6 +222,8 @@ function deleteMap(){
         div.dialog({
             title: "Confirm",
             resizable: false,
+			width: _workspace.popupWidth,
+			height:_workspace.popupHeight,
             buttons: [{
                  text: "Yes",
                  click: function () {
@@ -225,8 +257,8 @@ function exportMap(){
          $("#exportmap-form").dialog({
             autoOpen: false,
 	        resizable: false,
-            //height: 240,
-            width: 300,
+			width: options.popupWidth,
+			height:options.popupHeight,
             modal: true,
             buttons: {
                 "Export": function() {
@@ -260,8 +292,8 @@ function createNewGroup(){
     $("#creategroup-form").dialog({
         autoOpen: false,
 	resizable: false,
-        height: 180,
-        width: 300,
+		width: _workspace.popupWidth,
+		height:_workspace.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
@@ -279,26 +311,39 @@ function createNewGroup(){
 }
 
 function deleteGroup(){
-    var name = $("#" + _workspace.groupSelect).val();
-    _workspace.openedMap.removeGroup(name);
+	$(".to-be-deleted").each(function(i){
+    	var name = $(this).text();
+    	_workspace.openedMap.removeGroup(name);
+	});
 }
 
 function openGroupOrderWindow(){
     _workspace.openedMap.displayGroupsIndex();
+
     $("#grouporder-form").dialog({
         autoOpen: false,
-	resizable: false,
-        height: 300,
-        width: 300,
+		resizable: false,
+		width: _workspace.popupWidth,
+		height:_workspace.popupHeight,
         modal: true,
-        buttons: {
-            "Apply": function() {
-                _workspace.openedMap.updateGroupOrder();
-                $(this).dialog("close");
-            },
-            "+": function(){
-                var group = $("#" + _workspace.groupTable + " td.map-selected");
-                var bumped = $("#" + _workspace.groupTable + " td.map-selected").parents().prev().find("td");
+        buttons: [
+		{
+            text: "Delete",
+			showText: false,
+			icons: { primary: 'ui-icon-trash'},
+			click: function(){
+					var group = $("#" + _workspace.groupOl + " .ui-selected");
+					group.addClass('to-be-deleted');
+			}
+		},
+
+	    {
+            text: "+",
+			showText: false,
+			icons: { primary: 'ui-icon-carat-1-s'},
+	    	click: function(){
+                var group = $("#" + _workspace.groupOl + " .ui-selected");
+                var bumped = $("#" + _workspace.groupOl + " .ui-selected").next();
                 
                 var groupName = group.text();
                 var bumpedName = bumped.text();
@@ -309,32 +354,47 @@ function openGroupOrderWindow(){
                     bumped.text(groupName);
                     group.text(bumpedName);
 
-                    group.removeClass("map-selected");
-	            bumped.addClass("map-selected");
+                    group.removeClass("ui-selected");
+	            bumped.addClass("ui-selected");
                 }
-            },
-            "-": function(){
-                var group = $("#" + _workspace.groupTable + " td.map-selected");
-                var bumped = $("#" + _workspace.groupTable + " td.map-selected").parents().next().find("td");
+            }
+		},
+		{
+            text: "-",
+			showText: false,
+			icons: { primary: 'ui-icon-carat-1-n'},
+			click: function(){
+				var group = $("#" + _workspace.groupOl + " .ui-selected");
+                var bumped = $("#" + _workspace.groupOl + " .ui-selected").prev();
                 
                 var groupName = group.text();
                 var bumpedName = bumped.text();
 
                 if(groupName && bumpedName){
-                    _workspace.openedMap.lowerGroupIndex(groupName);
+                    _workspace.openedMap.raiseGroupIndex(groupName);
 
                     bumped.text(groupName);
                     group.text(bumpedName);
 
-                    group.removeClass("map-selected");
-	            bumped.addClass("map-selected");
-                }
-                
-            },
-            Cancel: function() {
+                    group.removeClass("ui-selected");
+	           		bumped.addClass("ui-selected");
+				}                
+			}
+		},
+		{
+            text: "Apply",
+	    	click:  function() {
+                _workspace.openedMap.updateGroupOrder();
+				deleteGroup();
                 $(this).dialog("close");
             }
-        },
+		},
+		{
+            text: "Cancel",
+			click: function() {
+                $(this).dialog("close");
+            }
+        }],
         close: function() {}
     }).dialog("open");
 }
@@ -363,8 +423,8 @@ function addPOI(){
             $("#addpoi-form").dialog({
                 autoOpen: false,
 	        resizable: false,
-                height: 180,
-                width: 300,
+				width: _workspace.popupWidth,
+				height:_workspace.popupHeight,
                 modal: true,
                 buttons: {
                     "Add": function() {

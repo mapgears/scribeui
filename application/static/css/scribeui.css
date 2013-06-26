@@ -14,12 +14,13 @@ html, body {
 body{
 	font-size: 62.5%;
 }
-
+a{
+	outline: 0;
+}
 .main {
-    height: 90%;
+    height: 100%;
     width: 100%;
 }
-
 /*=== Header ===*/
 .navbar {
     position: relative;
@@ -28,11 +29,11 @@ body{
     margin-top: 0px;
 
     width: 100%;
-    height: 2%;
 
-    min-height: 40px;
+    min-height: 30px;
 
     background-color:#fff;
+	z-index:1000;
 }
 
 .title {
@@ -58,11 +59,13 @@ body{
 
 /*=== Bottom ===*/
 .tools {
-    height: 8%;
-    width: 100%;
+    height: 30px;
+	width:100%;
     border-top: 2px solid rgba(82, 168, 236, 0.8);
-    padding-top: 10px;
     background-color:#fff;
+	position:absolute;
+	bottom:0;
+	z-index:1000;
 }
 
 .tools button {
@@ -71,13 +74,13 @@ body{
 .tools-left {
     position: relative;
     float: left;
-    width: 42%;
+    width: 100px;
 }
 
 .tools-right {
     position: relative;
     float: right;
-    width: 58%;
+    width: 300px;
 }
 
 .poi-container {
@@ -127,55 +130,6 @@ body{
     height: auto !important;
 }
 
-/*=== Codemirror ===*/
-.CodeMirror {
-    position: relative;
-    height: 100%;
-
-    background-color: (0,0,0,0.7);
-    opacity: 1;
-
-    color: white;
-}
-
-.CodeMirror-gutter {
-    background-color: transparent !important;
-    border-right: 1px solid #AAAAAA;
-}
-
-.CodeMirror-gutter-text {
-    color: white;
-}
-
-.CodeMirror-scroll {
-    height: 100% !important;
-    width: 100% !important;
-}
-
-.CodeMirror pre.CodeMirror-cursor {
-    border-left: 1px solid white !important;
-}
-
-.cm-s-default span.cm-variable {
-    color: #009966 !important;
-}
-
-.cm-s-default span.cm-operator {
-    color: #FFFFFF !important;
-}
-
-.cm-s-default span.cm-meta {
-    color: yellow !important;
-}
-
-.cm-s-default span.cm-string {
-    color: #CC6633 !important;
-}
-
-.cm-s-default span.cm-number {
-    color: #6699FF !important;
-}
-
 /* === Tabs ===*/
 .main-left {
     float: left;
@@ -192,7 +146,9 @@ body{
 
     position: relative;
 }
-
+#tab1{
+	position:relative;
+}
 .tabpanel-small {
     width: 100%;
     height: 100%;
@@ -207,8 +163,6 @@ body{
 
 .tab-container {
     overflow-x: auto;
-    border-bottom: 1px solid #AAAAAA !important;
-    border-right: 1px solid #AAAAAA !important;
 }
 
 .tab-container-small {
@@ -265,13 +219,7 @@ body{
     padding: 0em !important;
     overflow-y: auto;
     
-    position: absolute;
-    top: 45px;
-    bottom: 0;
-    right: 0;
-    left: 0;
     border-radius: 0px !important;
-    border-right: 1px solid #AAAAAA !important;
 }
 
 .tabcontent-small {
@@ -282,10 +230,6 @@ body{
 
     /*border: 3px solid white;*/
     
-    position: absolute;
-    bottom: 0;
-    top: 29px;
-    border-radius: 0px !important;
 }
 
 /*=== Manager ===*/
@@ -318,12 +262,7 @@ body{
 }
 
 .manager-maps {
-    position: absolute;
-    right: 0;
-    left: 0;
-    bottom: 55%;
-    top: 0;
-    overflow-y: auto; 
+     overflow-y: auto; 
 }
 
 .manager-jobs{
@@ -337,58 +276,50 @@ body{
 
 .content {
     overflow-y: auto;
-    position: absolute;
-    right: 25px;
-    left: 25px;
-    bottom: 0;
-    top: 40px;
+	padding-right:20px;
+	padding-left:20px;
 }
 
 .maps-content {
-    position: absolute;
-    right: 30%;
-    left: 0;
-    bottom: 0;
-    top: 0;
+	float:left;
+	padding:0;
+	margin:0;
+	margin-right:255px;
+	min-width:100px;
+	min-height:100px;
 }
-
+.maps-buttons .map-title{
+	text-align:center;
+	font-weight:bold;
+}
 .maps-buttons {
-    position: absolute;
-    right: 0;
-    left: 70%;
-    bottom: 0;
-    top: 0;
+	float:left;
+	margin:0;
+	padding:0;
+	margin-left:-255px;
+	width:255px;
+}
+.maps-buttons button{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+#map-preview-img-large{
+	max-width:200px;
+	margin:auto;
+	display:block;
 }
 
-.jobs-content {
-    position: absolute;
-    right: 30%;
-    left: 25px;
-    bottom: 0;
-    top: 60%;
-    margin-top: 25px;
-}
-
-.jobs-buttons {
-    position: absolute;
-    right: 25px;
-    left: 70%;
-    bottom: 0;
-    top: 60%;
-    margin-top: 25px;
-}
-
-.separator{
-    position: absolute;
-    left: 25px;
-    right: 25px;
+.separator{ 
     border-bottom: 1px solid #AAAAAA;
+	display:block;
+	margin:20px;
     height: 20px;
-    padding-top: 10px;
+	font-size:1.1em;
 }
 
 .buttons-container {
     display: inline-block;
+	width:100%;
 }
 
 .underline{
@@ -407,63 +338,43 @@ body{
 .map-table {
     width: 100%;
 }
-
-
-.map-description-container {
-    position: absolute;
-    left: 41%;
-    right: 0;
-    top: 2px;
-    bottom: 0;
-
-    border-radius: 6px;
-
-    background-color: rgba(0,0,0,0);
-    opacity: 1;
-}
-
-.map-description {
-    width:100%;
-    height: 60px;
-
-    border: none !important;
-    
-    box-sizing: border-box;         
-    -moz-box-sizing: border-box;   
-    -webkit-box-sizing: border-box;
-
-    background-color: rgba(0,0,0,0);
-    opacity: 1;
-    color: white;
-
-    resize: none;
-}
-
-.map-selected {
-    border: 2px inset #26B3F7;
+#btn_new_map{
+	display:block;
+	width:100%;
 }
 
 /*== Editor ===*/
-.tabheader-editor-container {
-    overflow-y: hidden;
-    position: relative;
-    height: 30%;
-}
-
-.tabfooter-editor-container {
-    overflow-y: hidden;
-    position: relative;
-    height: 70%;
-}
-
-.editor-container {
+.main-editor {
     overflow-y: auto;
-    position: absolute;
-    top: 33px;
-    bottom: 0;
     width: 100%;
-    border-radius: 0px !important;
+	position:absolute;	
+	top:0px;
+	right:0;
+	left:0;
+	bottom:0;
 }
+#secondary-editor{
+	overflow-y:auto;
+	border-bottom:solid 1px #dddddd;
+	padding-bottom:7px;
+}
+#editors-container{
+	overflow:hidden;
+	position:relative;
+	height:100%-30px;
+}
+.ui-resizable-s{
+	bottom:0px;
+	background-color:#fff;
+}
+/*=== Codemirror ===*/
+.CodeMirror {
+	font-size:1.3em;
+}
+#editors-container .CodeMirror-scroll{
+	overflow:hidden;
+}
+
 
 /*=== Data ===*/
 .datacontent {
@@ -497,15 +408,20 @@ body{
 /*== Map ===*/
 .main-right {
     float: left;
+	position:relative;
+	top:-30px;
     width: 58%;
     height: 100%;
 }
 
 /*=== Map ===*/
 .map {
-    float: left;
     width: 100%;
-    height: 100%;
+	position:absolute;
+	top:30px;
+	bottom:30px;
+	right:0;
+	left:0;
 }
 
 /*=== Others ===*/
@@ -532,6 +448,8 @@ body{
 .group-table{
     width: 240px;
 }
+
+
 
 .workspace-select{
     margin: 10px;
@@ -584,7 +502,7 @@ body{
 }
 
 li {
-    list-style: disc outside none; 
+    list-style: none; 
 }
 
 fieldset select {
@@ -700,4 +618,57 @@ button.fg-button {
 .fg-buttonset-single .fg-button, 
 .fg-buttonset-multi .fg-button { margin-right: -0.3px;}
 */
+#group-ol .ui-selecting { 
+	color:#007BD1;
+}
+#group-ol .ui-selected { 
+	background-color:#fff;
+	color:#007BD1;
+}
+#group-ol { 
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0;
+}
+#group-ol li { 
+	margin: 3px; 
+	padding: 4px; 
+	cursor:pointer;
+}
 
+.ui-front{
+	z-index:1050;
+}
+.ui-dialog{
+	z-index:1100;
+}
+.no-close .ui-dialog-titlebar-close {display: none }
+
+#map-list{
+	min-width:100px;
+	min-height:100px;
+
+}
+
+#map-list .map-preview{
+	display:block;
+	float:left;
+	width:64px;
+	margin:5px;
+	text-align:center;
+    border: 1px solid #FFFFFF;
+	cursor:pointer;
+}
+#map-list .map-preview .map-preview-img{
+	width: 64px;
+	height: 64px;
+}
+#map-list .map-preview.ui-selected{
+	background-color: #F6F6F6;
+    border: 1px solid #DDDDDD;
+    color: #444444;
+}
+#group-ol .to-be-deleted{
+	color:#AFAFAF;
+	text-decoration:line-through;
+}

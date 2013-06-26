@@ -1,4 +1,4 @@
-function Map(name, options){
+ function Map(name, options){
     this.name = name;
     this.url = null;
     this.workspace = null;
@@ -64,6 +64,11 @@ Map.prototype.open = function(){
             self.getResultingMapfile();
 
             $("#info").text(self.workspace.name + " / " + self.name);
+			if(_workspace.openedMap.type == "Scribe"){
+				$("#"+self.workspace.groupSelect).before($('<button>Variables</button>').click(function(e){
+					variableEditor.refresh();
+				}));
+			}
         }else {
 	    alert(data);
 	}
@@ -119,6 +124,7 @@ Map.prototype.removeGroup = function(name){
                 
                 var groupSelect = $("#" + self.workspace.groupSelect);
                 groupSelect.find("option[value='" + group.name + "']").remove();
+                $('#'+self.workspace.groupOl).find("li.ui-selected").remove();
                 groupSelect.trigger("change");
             }
         });       
@@ -169,10 +175,11 @@ Map.prototype.displayGroups = function(){
 
 Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).empty();
-    $("#" + this.workspace.mapDescription).append("<span class=\"underline\">Description</span>\n");
+    $("#" + this.workspace.mapDescription).append('<img id="map-preview-img-large" src="static/images/map-preview-placeholder.png"/>');
+    $("#" + this.workspace.mapDescription).append("<p class=\"map-title\">" + this.name + "</p>");
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
-    $("#" + this.workspace.mapDescription).append("<span class=\"underline\">URL</span>\n");
-    $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.url + "</p>");
+    $("#" + this.workspace.mapActions).show();
+	 
 };
 
 Map.prototype.setGroupContent = function(name, content){
@@ -331,17 +338,17 @@ Map.prototype.clearComponents = function(){
 };
 
 Map.prototype.displayGroupsIndex = function(){
-    $("#" + this.workspace.groupTable).find("tr").remove();
+    $("#" + this.workspace.groupOl).find("li").remove();
 
     var data = ""
     for(var i = 0; i < this.groups.length; i++){
-	data += "<tr><td class=\"map-td\">" + this.groups[i].name + "</td></tr>";
+	data += "<li class=\"ui-state-default\">" + this.groups[i].name + "</li>";
     }
-    $("#" + this.workspace.groupTable + " > tbody:last").append(data);
-
+    $("#" + this.workspace.groupOl).append(data);
+    $("#" + this.workspace.groupOl).selectable();
     var self = this;
-    $("#" + this.workspace.groupTable + " td").click(function(e){
-	$("#" + self.workspace.groupTable + " td").removeClass("map-selected");
+    $("#" + this.workspace.groupOl + " li").click(function(e){
+	$("#" + self.workspace.groupOl + " li").removeClass("map-selected");
 	$(this).addClass("map-selected");
 
 	e.stopPropagation();

@@ -2,24 +2,28 @@ jQuery(function() {
     _workspace = null;
     workspaceConfig = {
         "workspaceSelect": "workspace-select",
+        "workspaceManage": "workspace-manage",
         "workspacePassword": "workspace-password",
         "mapDiv": "map",
-        "mapTable": "map-table",
+        "mapActions": "map-actions",
+        "mapList": "map-list",
         "mapDescription": "map-description",
         "poiSelect": "poi-select",
         "groupSelect": "group-select",
-        "groupTable": "group-table",
+        "groupOl": "group-ol",
         "dataDiv": "data-tab",
         "logTextarea": "txt-logs",
         "resultTextarea": "txt-result",
         "debugTextarea": "txt-debug",
-        "scaleLevelDiv": "scale-level"
+        "scaleLevelDiv": "scale-level",
+	"popupHeight":400,
+	"popupWidth":400
     }
 
     mapTypes = ["Scribe", "Basemaps", "Standard"];
 
-    displayWorkspaces(workspaceConfig.workspaceSelect);
-   
+    openWorkspacePopup(workspaceConfig); 
+	
     /*--------------------------------
       Init code editors
     --------------------------------*/
@@ -47,9 +51,10 @@ jQuery(function() {
     /*--------------------------------
       Tabs and buttons
     --------------------------------*/
-    $("#tab1").tabs();
-    $("#tab2").tabs();
-
+    $("#tab1").tabs({heightStyle: "fill"});
+	$('.main').on('resize', function () {
+        $('#tab1').tabs('refresh');
+    });
     $("button").button({
 	text: true
     });
@@ -84,31 +89,19 @@ jQuery(function() {
 	    variableEditor.refresh();
     });
 
-    $('#btn_new_ws').bind('click', function(){
-	    openNewWorkspaceWindow(workspaceConfig);
-    });
-
-    $('#btn_open_ws').bind('click', function(){
-	    openWorkspace(workspaceConfig);
-    });
-
-    $('#btn_delete_ws').bind('click', function(){
-	    deleteWorkspace(workspaceConfig);
-    });
-
-    $('#btn_new_map').bind('click', function(){
+    $('#btn_new_map').button().click(function(){
 	    openNewMapWindow();
     });
 
-    $('#btn_open_map').bind('click', function(){
+    $('#btn_open_map').button().click(function(){
 	    openMap();
     });
 
-    $('#btn_export_map').bind('click', function(){
+    $('#btn_export_map').button().click(function(){
 	    exportMap();
     });
 
-    $('#btn_delete_map').bind('click', function(){
+    $('#btn_delete_map').button().click(function(){
 	    deleteMap();
     });
 
@@ -117,27 +110,32 @@ jQuery(function() {
 	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
     });
 
-    $('#btn_commit').bind('click', function(){
+    $('#btn_commit').button().click( function(){
 	    _workspace.openedMap.commit();
     });
 
-    $('#btn_new_group').bind('click', function(){
-	    createNewGroup();
+    $('#btn_new_group').button({
+		text: false,
+		icons: { primary: 'ui-icon-plus' }
+	}).click(function(e){
+	   	createNewGroup();
     });
 
-    $('#btn_delete_group').bind('click', function(){
-	    deleteGroup();
-    });
-
-    $('#btn_change_group_order').bind('click', function(){
+    $('#btn_change_group_order').button({
+		text:false,
+		icons: { primary: 'ui-icon-wrench' }	
+	}).click(function(){
 	    openGroupOrderWindow();
     });
 
-    $('#btn-zoom-poi').bind('click', function(){
+    $('#btn-zoom-poi').button().click( function(){
 	    zoomToPOI();
     });
 
-    $('#btn-add-poi').bind('click', function(){
+    $('#btn-add-poi').button({
+		text: false,
+		icons: { primary: 'ui-icon-plus' }
+	}).click( function(){
         addPOI();
     });
 
@@ -149,31 +147,49 @@ jQuery(function() {
 	    fontEditor.refresh();
 	    projectionEditor.refresh();
     });
-
-    $("a[href = '#map-tab']").bind('click', function(){
-        mapEditor.refresh();
-    });
-
-    $("a[href = '#variable-tab']").bind('click', function(){
-        variableEditor.refresh();
-    });
-
-    $("a[href = '#scale-tab']").bind('click', function(){
-        scaleEditor.refresh();
-    });
-
-    $("a[href = '#symbol-tab']").bind('click', function(){
-        symbolEditor.refresh();
-    });
-
-    $("a[href = '#font-tab']").bind('click', function(){
-        fontEditor.refresh();
-    });
-
-    $("a[href = '#projection-tab']").bind('click', function(){
-        projectionEditor.refresh();
-    });
-
+	$("#secondary-editor").resizable({
+		handles: 's',
+		resize: function(e){
+			var remainingSpace = $(this).parent().height() - $(this).outerHeight();
+      		var divTwo = $('.main-editor');
+      		var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
+      		divTwo.css('height', divTwoHeight + 'px');	
+		}
+	});
+	$('#secondary-editor').hide();
+	$('#group-edition-select').change(function(e){
+		$('#secondary-editor > .tabcontent-small').hide();
+		$('#secondary-editor').hide();
+		switch(this.value){
+			case 'map': 
+				$('#secondary-editor').show();
+				$('#map-tab').show();
+       			mapEditor.refresh();
+				break;
+			case 'scales': 
+				$('#secondary-editor').show();
+				$('#scale-tab').show();
+       			scaleEditor.refresh();
+				break;
+			case 'symbols': 
+				$('#secondary-editor').show();
+				$('#symbol-tab').show();
+       			symbolEditor.refresh();
+				break;
+			case 'fonts': 
+				$('#secondary-editor').show();
+				$('#font-tab').show();
+       			fontEditor.refresh();
+				break;
+			case 'projections': 
+				$('#secondary-editor').show();
+				$('#projection-tab').show();
+       			projectionEditor.refresh();
+				break;
+			case 'x':
+				return;
+		}
+	});
     $("a[href = '#data-tab']").bind('click', function(){
         displayDataBrowser();
     });

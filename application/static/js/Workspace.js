@@ -5,18 +5,22 @@ function Workspace(name, options){
     if(options){
 	this.password = options.password ? options.password : this.password;
         this.workspaceSelect = options.workspaceSelect ? options.workspaceSelect : null;
+        this.mapList = options.mapList ? options.mapList : null;
         this.workspacePassword = options.workspacePassword ? options.workspacePassword : null;
         this.mapDiv = options.mapDiv ? options.mapDiv : null;
         this.mapTable = options.mapTable ? options.mapTable : null;
+        this.mapActions = options.mapActions ? options.mapActions : null;
         this.mapDescription = options.mapDescription ? options.mapDescription : null;
         this.groupSelect = options.groupSelect ? options.groupSelect : null;
-        this.groupTable = options.groupTable ? options.groupTable : null;
+        this.groupOl = options.groupOl ? options.groupOl : null;
         this.poiSelect = options.poiSelect ? options.poiSelect : null;
         this.dataDiv = options.dataDiv ? options.dataDiv : null;
         this.logTextarea = options.logTextarea ? options.logTextarea : null;
         this.resultTextarea = options.resultTextarea ? options.resultTextarea : null;
         this.debugTextarea = options.debugTextarea ? options.debugTextarea : null;
         this.scaleLevelDiv = options.scaleLevelDiv ? options.scaleLevelDiv : null;
+        this.popupWidth = options.popupWidth ? options.popupWidth : null;
+        this.popupHeight = options.popupHeight ? options.popupHeight : null;
     }
 
     this.maps = []
@@ -158,20 +162,17 @@ Workspace.prototype.displayMaps = function(){
 
     var data = ""
     for(var i = 0; i < this.maps.length; i++){
-	data += "<tr><td class=\"map-td\">" + this.maps[i].name + "</td></tr>";
+	data += '<li class="map-preview"><img src="static/images/map-preview-placeholder.png" class="map-preview-img" alt=""/><span class="map-preview-name">'+this.maps[i].name+'</span></li>';
     }
-    $("#" + this.mapTable + " > tbody:last").append(data);
-
+    $("#" + this.mapList).empty();
+    $("#" + this.mapList).append(data);
+    $("#" + this.mapList).selectable({
+		selected: function(e){
+				var map = self.getMapByName($(this).find(".ui-selected").text());
+				map.displayDescription();
+		}
+	});
     var self = this;
-    $("#" + this.mapTable + " td").click(function(e){
-	$("#" + self.mapTable + " td").removeClass("map-selected");
-	$(this).addClass("map-selected");
-
-	var map = self.getMapByName($(this).text());
-	map.displayDescription();
-
-	e.stopPropagation();
-    });
 };
 
 Workspace.prototype.displayPointsOfInterest = function(){
