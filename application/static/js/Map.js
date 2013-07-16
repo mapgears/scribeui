@@ -162,7 +162,8 @@ Map.prototype.displayGroups = function(){
     groupSelect.focus(function(e) {
         self.setGroupContent(this.value, groupEditor.getValue());
     }).change(function(e){
-	var group = self.getGroupByName(this.value);
+		var group = self.getGroupByName(this.value);
+		resizeEditors();
         if(group){
             groupEditor.setValue(group.content);
         } else{

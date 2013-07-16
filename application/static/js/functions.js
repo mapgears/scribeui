@@ -475,3 +475,13 @@ function displayDebug(){
 function onMapMoveEnd(){
     setTimeout(function(){displayDebug()},500);
 }
+
+/* Resize and height functions for the layout */
+
+function resizeEditors(){
+			var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
+      		var divTwo = $('.main-editor');
+      		var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
+      		divTwo.css('height', divTwoHeight + 'px');	
+			console.log('test');
+}

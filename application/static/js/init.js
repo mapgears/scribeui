@@ -47,16 +47,17 @@ jQuery(function() {
     symbolEditor = CodeMirror.fromTextArea(document.getElementById("symbol-editor"), options);
     fontEditor = CodeMirror.fromTextArea(document.getElementById("font-editor"), options);
     projectionEditor = CodeMirror.fromTextArea(document.getElementById("projection-editor"), options);
-
+	
     /*--------------------------------
       Tabs and buttons
     --------------------------------*/
     $("#tab1").tabs({heightStyle: "fill"});
 	$('.main').on('resize', function () {
-        $('#tab1').tabs('refresh');
+        //$('#tab1').tabs('refresh');
     });
+	$('#editors-container').height($('#editor-tab').height() - 57);
     $("button").button({
-	text: true
+		text: true
     });
 
     $(".map-button").button('disable');
@@ -147,47 +148,49 @@ jQuery(function() {
 	    fontEditor.refresh();
 	    projectionEditor.refresh();
     });
-	$("#secondary-editor").resizable({
+	$(".secondary-wrap").resizable({
 		handles: 's',
-		resize: function(e){
-			var remainingSpace = $(this).parent().height() - $(this).outerHeight();
-      		var divTwo = $('.main-editor');
-      		var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
-      		divTwo.css('height', divTwoHeight + 'px');	
-		}
+		resize: resizeEditors
 	});
-	$('#secondary-editor').hide();
+	$('#secondary-wrap').hide();
 	$('#group-edition-select').change(function(e){
 		$('#secondary-editor > .tabcontent-small').hide();
-		$('#secondary-editor').hide();
+		$('.secondary-wrap').hide();
 		switch(this.value){
 			case 'map': 
-				$('#secondary-editor').show();
+				$('.secondary-wrap').show();
 				$('#map-tab').show();
        			mapEditor.refresh();
+				resizeEditors();
 				break;
 			case 'scales': 
-				$('#secondary-editor').show();
+				$('.secondary-wrap').show();
 				$('#scale-tab').show();
        			scaleEditor.refresh();
+				resizeEditors();
 				break;
 			case 'symbols': 
-				$('#secondary-editor').show();
+				$('.secondary-wrap').show();
 				$('#symbol-tab').show();
        			symbolEditor.refresh();
+				resizeEditors();
 				break;
 			case 'fonts': 
-				$('#secondary-editor').show();
+				$('.secondary-wrap').show();
 				$('#font-tab').show();
        			fontEditor.refresh();
+				resizeEditors();
 				break;
 			case 'projections': 
-				$('#secondary-editor').show();
+				$('.secondary-wrap').show();
 				$('#projection-tab').show();
        			projectionEditor.refresh();
+				resizeEditors();
 				break;
 			case 'x':
-				return;
+				$('.secondary-wrap').hide();
+				resizeEditors();
+				break;
 		}
 	});
     $("a[href = '#data-tab']").bind('click', function(){
@@ -199,32 +202,4 @@ jQuery(function() {
         typeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
     }
 
-    $(".tabheader-editor-container").resizable({ 
-        alsoResize: ".tabfooter-editor-container",
-        handles: "n, s",
-        start: function(event, ui){
-            lower = $(".tabfooter-editor-container");
-            lowerHeight = lower.height();
-
-            lowerEditor = $(".editor-container");
-            lowerEditorHeight = lowerEditor.height();
-
-            lastHeight = ui.originalSize.height;   
-        },
-        resize: function(event, ui){           
-            lower.height(lowerHeight - (ui.size.height - lastHeight));
-            lowerEditor.height(lowerEditorHeight - (ui.size.height - lastHeight));
-            lastHeight = ui.size.height;    
-        },
-        stop: function(event, ui){
-            lower.height(lowerHeight - (ui.size.height - ui.originalSize.height));
-            lowerEditor.height(lowerEditorHeight - (ui.size.height - ui.originalSize.height));
-
-            lower.css("width", "100%");           
-            $(".tabheader-editor-container").css("width", "100%");
-
-            mapEditor.refresh();
-            groupEditor.refresh();        
-        } 
-    });
 });

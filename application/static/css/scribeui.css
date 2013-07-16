@@ -344,35 +344,40 @@ a{
 }
 
 /*== Editor ===*/
+#editor-toolbar{
+}
 .main-editor {
     overflow-y: auto;
     width: 100%;
-	position:absolute;	
-	top:0px;
-	right:0;
-	left:0;
-	bottom:0;
+    height:100%;
 }
 #secondary-editor{
 	overflow-y:auto;
 	border-bottom:solid 1px #dddddd;
+	height:100%;
+}
+.secondary-wrap{
+	overflow-y:hidden;
 	padding-bottom:7px;
 }
 #editors-container{
+	height:100%;
 	overflow:hidden;
 	position:relative;
-	height:100%-30px;
 }
 .ui-resizable-s{
 	bottom:0px;
+	top:auto;
 	background-color:#fff;
 }
 /*=== Codemirror ===*/
 .CodeMirror {
 	font-size:1.3em;
+	height:100%;
 }
 #editors-container .CodeMirror-scroll{
 	overflow:hidden;
+	height:auto;
 }
 
 
