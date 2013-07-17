@@ -153,46 +153,7 @@ jQuery(function() {
 		resize: resizeEditors
 	});
 	$('#secondary-wrap').hide();
-	$('#group-edition-select').change(function(e){
-		$('#secondary-editor > .tabcontent-small').hide();
-		$('.secondary-wrap').hide();
-		switch(this.value){
-			case 'map': 
-				$('.secondary-wrap').show();
-				$('#map-tab').show();
-       			mapEditor.refresh();
-				resizeEditors();
-				break;
-			case 'scales': 
-				$('.secondary-wrap').show();
-				$('#scale-tab').show();
-       			scaleEditor.refresh();
-				resizeEditors();
-				break;
-			case 'symbols': 
-				$('.secondary-wrap').show();
-				$('#symbol-tab').show();
-       			symbolEditor.refresh();
-				resizeEditors();
-				break;
-			case 'fonts': 
-				$('.secondary-wrap').show();
-				$('#font-tab').show();
-       			fontEditor.refresh();
-				resizeEditors();
-				break;
-			case 'projections': 
-				$('.secondary-wrap').show();
-				$('#projection-tab').show();
-       			projectionEditor.refresh();
-				resizeEditors();
-				break;
-			case 'x':
-				$('.secondary-wrap').hide();
-				resizeEditors();
-				break;
-		}
-	});
+	
     $("a[href = '#data-tab']").bind('click', function(){
         displayDataBrowser();
     });

@@ -476,12 +476,54 @@ function onMapMoveEnd(){
     setTimeout(function(){displayDebug()},500);
 }
 
-/* Resize and height functions for the layout */
+/* layout functions */
 
 function resizeEditors(){
-			var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
-      		var divTwo = $('.main-editor');
-      		var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
-      		divTwo.css('height', divTwoHeight + 'px');	
-			console.log('test');
+	var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
+   	var divTwo = $('.main-editor');
+   	var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
+   	divTwo.css('height', divTwoHeight + 'px');	
+	console.log('test');
+}
+function openSecondaryPanel(value, editor){
+	$('#secondary-editor > .tabcontent-small').hide();
+	$('.secondary-wrap').hide();
+	if(value != 'x'){
+		$('.secondary-wrap').show();
+		$('#'+value.substr(0, value.length-1)+'-tab').show();
+       	editor.refresh();
+	}else $('.secondary-wrap').hide();
+
+	resizeEditors();
+}
+
+function onMapOpened(){
+	$('#group-edition-select').change(function(e){
+		var editor = null;
+		switch(this.value){
+			case 'map': 
+				editor = mapEditor;
+				break;
+			case 'scales': 
+				editor = scaleEditor;
+				break;
+			case 'symbols': 
+				editor = symbolEditor;
+				break;
+			case 'fonts': 
+				editor = fontEditor;
+				break;
+			case 'projections': 
+				editor = projectionEditor;
+				break;
+		}
+		openSecondaryPanel(this.value, editor);
+	});
+
+	if(_workspace.openedMap.type == "Scribe"){
+		$('#group-edition-select').before(
+			$('<button id="variables-button">Variables</button>').click(function(e){
+				openSecondaryPanel('variables',variableEditor);
+		}));
+	}
 }

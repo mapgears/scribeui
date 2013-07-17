@@ -64,11 +64,8 @@ Map.prototype.open = function(){
             self.getResultingMapfile();
 
             $("#info").text(self.workspace.name + " / " + self.name);
-			if(_workspace.openedMap.type == "Scribe"){
-				$("#"+self.workspace.groupSelect).before($('<button>Variables</button>').click(function(e){
-					variableEditor.refresh();
-				}));
-			}
+			
+			onMapOpened();
         }else {
 	    alert(data);
 	}
