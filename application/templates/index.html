@@ -98,6 +98,7 @@
 						<button id="btn_change_group_order" class="group-button">Group Settings</button>
 
 						<div style="float:right">
+							<button id="btn-open-logs" class="group-button">Open Logs</button>
 							<select id="group-edition-select">
 								<option value="x"></option>
 								<option value="map">Map</option>
@@ -139,16 +140,7 @@
                 </div>
                 <div id="data-tab" class="datacontent">
                 </div>
-	            <div id="mapfile-tab" class="tabcontent">
-                    <textarea id="txt-result" class="logs" readonly="readonly"></textarea>
-                </div>
-                <div id="log-tab" class="tabcontent">
-                    <textarea id="txt-logs" class="logs" readonly="readonly"></textarea>
-                </div>
-	            <div id="debug-tab" class="tabcontent">
-                    <textarea id="txt-debug" class="logs" readonly="readonly"></textarea>
-                </div>
-                <div id="help-tab" class="tabcontent">
+	                            <div id="help-tab" class="tabcontent">
                     <textarea id="txt-help" class="logs" readonly="readonly"></textarea>
                 </div>
             </div>
@@ -156,6 +148,27 @@
             <div class="main-right">
                 <div id="map" class="map">
 	            </div>
+				<div id="logs">
+					<div id="log-tabs">
+						<ul class="tabheader">
+							<li class="tab-large"><a href="#log-tab">Logs</a></li>
+							<li class="tab-large"><a href="#debug-tab">Debug</a></li>
+							<li class="tab-large"><a href="#mapfile-tab">Result</a></li>
+							<button id="logs-close-button">Close</button>
+						</ul>
+
+						<div id="log-tab" class="tabcontent">
+							<textarea id="txt-logs" class="logs" readonly="readonly"></textarea>
+						</div>
+						<div id="debug-tab" class="tabcontent">
+							<textarea id="txt-debug" class="logs" readonly="readonly"></textarea>
+						</div>
+						<div id="mapfile-tab" class="tabcontent">
+							<textarea id="txt-result" class="logs" readonly="readonly"></textarea>
+						</div>
+
+					</div>
+				</div>
 				<div class="tools">
 					<div class="tools-right">
 						<div class="poi-container">

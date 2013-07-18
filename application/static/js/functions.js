@@ -520,10 +520,12 @@ function onMapOpened(){
 		openSecondaryPanel(this.value, editor);
 	});
 
-	if(_workspace.openedMap.type == "Scribe"){
+	if(_workspace.openedMap.type == "Scribe" && $('#variables-button').length == 0){
 		$('#group-edition-select').before(
 			$('<button id="variables-button">Variables</button>').click(function(e){
 				openSecondaryPanel('variables',variableEditor);
 		}));
+	}else{
+		$('#variables-button').remove();
 	}
 }

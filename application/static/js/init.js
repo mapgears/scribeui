@@ -52,6 +52,25 @@ jQuery(function() {
       Tabs and buttons
     --------------------------------*/
     $("#tab1").tabs({heightStyle: "fill"});
+	$("#logs").resizable({
+		handles: 'n',
+		alsoResize: '#logs .tabcontent'
+	});
+
+    $("#log-tabs").tabs({heightStyle: "fill"});
+	$('#log-tabs .tabheader').append(
+		$('#logs-close-button').button({ 
+			text: false,
+			title: 'Close',
+			icons: {
+				primary: "ui-icon-close"
+			}
+		}).click(function(e){
+			$('#logs').hide();
+		})
+	);
+	$('#logs').hide();
+	
 	$('.main').on('resize', function () {
         //$('#tab1').tabs('refresh');
     });
@@ -63,7 +82,7 @@ jQuery(function() {
     $(".map-button").button('disable');
     $(".group-button").button('disable');
 
-    $("a[href = '#manager-tab'], a[href = '#log-tab'], a[href = '#debug-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
+    $("a[href = '#manager-tab'], a[href = '#help-tab']").bind('click', function(){
         $("div[class='CodeMirror']").hide();
     }); 
 
@@ -128,7 +147,12 @@ jQuery(function() {
 	}).click(function(){
 	    openGroupOrderWindow();
     });
-
+	$('#btn-open-logs').button({
+		text:false,
+		icons: { primary: 'ui-icon-flag' }	
+	}).click(function(){
+	    $('#logs').toggle();
+    });
     $('#btn-zoom-poi').button().click( function(){
 	    zoomToPOI();
     });
