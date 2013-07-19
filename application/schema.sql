@@ -33,7 +33,7 @@ create table pois (
 );
 
 
-INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", "Scribe","Template OSM-GoogleLike","0");
+-- INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", "Scribe","Template OSM-GoogleLike","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("1","*NaturalEarth", "Scribe", "Template Natural Earth","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("2","*OSM-Basemaps", "Basemaps", "Template Basemaps","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("3","*Standard", "Standard", "Template Standard","0");

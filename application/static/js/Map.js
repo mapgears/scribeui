@@ -313,8 +313,9 @@ Map.prototype.destroy = function(callback){
         name: this.name
     }, function(status) {
         if(status == "1") {
-            $("#" + self.workspace.mapTable + " td.map-selected").remove();
+            $("#" + self.workspace.mapList + " .ui-selected").remove();
             $("#" + self.workspace.mapDescription).html("");
+	    $("#" + self.workspace.mapActions).hide();
             var index = self.workspace.getMapIndexByName(name);
             self.workspace.maps.splice(index - 1, 1);
 

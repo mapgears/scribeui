@@ -217,7 +217,7 @@ function deleteMap(){
     var msg = 'Are you sure you want to delete this map?';
     var div = $("<div>" + msg + "</div>");
     
-    var name = $("#map-table .map-selected").html();
+    var name = $("#map-list .ui-selected").text();
     if(name != null){
         div.dialog({
             title: "Confirm",
