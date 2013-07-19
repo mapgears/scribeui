@@ -193,7 +193,7 @@ jQuery(function() {
 	//Shortcut for commit
 	$("body").keypress(function(e){
 		if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
-			alert("Ctrl-S pressed");
+			_workspace.openedMap.commit();
 			e.preventDefault();
 			return false;
 	});
