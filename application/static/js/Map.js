@@ -63,7 +63,7 @@ Map.prototype.open = function(){
             self.displayComponents();
             self.display();
             self.getResultingMapfile();
-
+			self.saved = true;
             $("#info").text(self.workspace.name + " / " + self.name);
 			
 			onMapOpened();

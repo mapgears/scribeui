@@ -479,7 +479,9 @@ function onMapMoveEnd(){
 /* layout functions */
 
 function resizeEditors(){
-	var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
+	if( $('.secondary-wrap').is(':visible'))
+		var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
+	else var remainingSpace = $('#editors-container').height();
    	var divTwo = $('.main-editor');
    	var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
    	divTwo.css('height', divTwoHeight + 'px');	
@@ -492,7 +494,9 @@ function openSecondaryPanel(value, editor){
 		$('.secondary-wrap').show();
 		$('#'+value.substr(0, value.length-1)+'-tab').show();
        	editor.refresh();
-	}else $('.secondary-wrap').hide();
+	}else{
+		 $('.secondary-wrap').hide();
+	}
 
 	resizeEditors();
 }
@@ -500,9 +504,11 @@ function openSecondaryPanel(value, editor){
 function onMapOpened(){
 	$('#group-edition-select').change(function(e){
 		var editor = null;
+		var val = this.value;
 		switch(this.value){
 			case 'map': 
 				editor = mapEditor;
+				val = 'maps';
 				break;
 			case 'scales': 
 				editor = scaleEditor;
@@ -516,8 +522,9 @@ function onMapOpened(){
 			case 'projections': 
 				editor = projectionEditor;
 				break;
+				
 		}
-		openSecondaryPanel(this.value, editor);
+		openSecondaryPanel(val, editor);
 	});
 
 	if(_workspace.openedMap.type == "Scribe" && $('#variables-button').length == 0){

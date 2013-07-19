@@ -291,7 +291,7 @@ a{
 	font-weight:bold;
 }
 .maps-buttons {
-	float:left;
+	float:right;
 	margin:0;
 	padding:0;
 	margin-left:-255px;
