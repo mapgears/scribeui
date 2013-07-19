@@ -9,6 +9,7 @@
     this.description = "";
     this.OLMap = null;
     this.WMSLayer = null;
+	this.saved = true;
 
     if(options){
         this.url = options.url ? options.url : this.url;
@@ -225,6 +226,7 @@ Map.prototype.commit = function(){
                 self.WMSLayer.redraw(true);
             }
             self.getResultingMapfile();
+			self.saved = true;
         }
     })
 }

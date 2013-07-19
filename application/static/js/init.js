@@ -37,7 +37,10 @@ jQuery(function() {
         indentUnit: 4,
         autofocus: true,
         tabMode: "spaces",
-        matchBrackets: true
+        matchBrackets: true,
+		onChange: function(e){
+			_workspace.openedMap.saved = false;
+		}
     }
 
     groupEditor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
@@ -186,5 +189,18 @@ jQuery(function() {
     for(var i = 0; i < mapTypes.length; i++){
         typeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
     }
+	
+	//Shortcut for commit
+	$("body").keypress(function(e){
+		if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
+			alert("Ctrl-S pressed");
+			e.preventDefault();
+			return false;
+	});
+	//Warn the user if leaving before saving
+	window.onbeforeunload = function(e){
+		if(_workspace.openedMap.saved == false)
+			return 'All unsaved changes will be lost, do you want to continue ?';	
+	}
 
 });
