@@ -39,7 +39,7 @@ Configuration
 
  * Change ip variable in config.py
 
- * In application/data folder, download this data: 
+ * Run the makefile to download the data
 
 Apache configuration
 --------------------
@@ -54,7 +54,7 @@ In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (ch
       Allow from all
     </Directory>
 
-    Alias /scribeui/download/ "/opt/apps/ScribeUI/application/www/"
+    Alias /ScribeUI/download/ "/opt/apps/ScribeUI/application/www/"
     <Directory "/opt/apps/ScribeUI/application/www/">
       AllowOverride None
       Options Indexes FollowSymLinks Multiviews
