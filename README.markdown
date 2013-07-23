@@ -23,8 +23,8 @@ Configuration
     execute in a python shell (sudo python):
 
 
-    from init import init_db
-    init_db()
+        from init import init_db
+        init_db()
 
  *  Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
@@ -32,8 +32,8 @@ Configuration
     current user or www-data if the application is on a server:
 
 
-    sudo chown -R www-data application/db application/workspaces \
-    application/www /usr/lib/cgi-bin/elfinder-python/
+        sudo chown -R www-data application/db application/workspaces \
+        application/www /usr/lib/cgi-bin/elfinder-python/
 
  *  Make a copy of the application/runserver.dist.wsgi file as
     application/runserver.wsgi and edit it. Change the path accordingly.
