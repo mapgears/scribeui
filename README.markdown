@@ -5,45 +5,62 @@ ScribeUI is an application to create mapfiles with many scale levels.
 
 Requirements
 ------------
- * Apache
- * Python
-    * Tested with 2.7.3 only
- * Mod WSGI
-    * sudo apt-get install libapache2-mod-wsgi
- * Flask
-    * sudo pip install Flask
- * Mapserver
-    * must be version 6.0 or higher
- * Sqlite3
+*   Apache
+*   Python (tested with 2.7.3 only)
+*   Mod WSGI
+*   Flask
+*   MapServer (version 6.0 or higher)
+*   Sqlite3
+
+You can install them using aptitude and pip:
+
+    sudo apt-get install apache2 libapache2-mod-wsgi Flask cgi-mapserver sqlite3
+    sudo pip install Flask
 
 Configuration
 -------------
- * To reset the sqlite3 database, in the application directory, execute in a python shell (sudo python):
+ *  To reset the sqlite3 database, open a python shell as admin from the
+    the application directory:
 
-    `from init import init_db`  
-    `init_db()`
+        cd application
+        sudo python
 
- * Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
+    in the python shell:
 
- * The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:
+        from init import init_db
+        init_db()
 
-    `sudo chown -R www-data db`  
+ *  Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
-    `sudo chown -R www-data workspaces`   
+        sudo cp -ap elfinder-python /usr/lib/cgi-bin/
 
-    `sudo chown -R www-data www`   
+ *  The owner of the the db folder and the workspace folder must be the
+    current user or www-data if the application is on a server:
 
-    `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/` 
+        sudo chown -R www-data application/db application/workspaces \
+        application/www /usr/lib/cgi-bin/elfinder-python/
 
- * Change the path in application/runserver.dist.wsgi, and then rename application/runserver.dist.wsgi to application/runserver.wsgi
+ *  Make a copy of the application/runserver.dist.wsgi file as
+    application/runserver.wsgi and edit it. Change the path accordingly.
 
- * Change the ip variable in config.dist.py, and then rename config.dist.py to config.py
+        cp application/runserver.dist.wsgi application/runserver.wsgi
+        vim application/runserver.wsgi
 
- * Run the makefile to download the data
+ *  Make a copy of the config.dist.py file as config.py and edit it. Change the
+    ip variable accordingly.
+
+        cp config.dist.py config.py
+        vim config.py
+
+ *  Run the makefile to download the data
+
+        make
+
 
 Apache configuration
 --------------------
-In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (change the path):
+In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
+(change the path):
 
     #ScribeUI     
     
