@@ -296,10 +296,18 @@ a{
 	padding:0;
 	margin-left:-255px;
 	width:255px;
+	overflow:hidden;
 }
 .maps-buttons button{
 	margin-top:10px;
 	margin-bottom:10px;
+}
+#map-actions button{
+	max-width:80px;
+}
+#map-actions button .ui-button-text{
+	padding-left:8px;
+	padding-right:8px;
 }
 #map-preview-img-large{
 	max-width:200px;
