@@ -7,4 +7,4 @@ import sys
 
 sys.path.insert(0,'<scribeui_path>/application/runserver.py')
 
-WSGIScriptAlias /ScribeUI <scribe_path>/application/runserver.py
+WSGIScriptAlias /ScribeUI <scribeui_path>/application/runserver.py
