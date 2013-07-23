@@ -19,8 +19,13 @@ You can install them using aptitude and pip:
 
 Configuration
 -------------
- *  To reset the sqlite3 database, in the application directory,
-    execute in a python shell (sudo python):
+ *  To reset the sqlite3 database, open a python shell as admin from the
+    the application directory:
+
+        cd application
+        sudo python
+
+    in the python shell:
 
         from init import init_db
         init_db()
@@ -36,10 +41,18 @@ Configuration
  *  Make a copy of the application/runserver.dist.wsgi file as
     application/runserver.wsgi and edit it. Change the path accordingly.
 
+        cp application/runserver.dist.wsgi application/runserver.wsgi
+        vim application/runserver.wsgi
+
  *  Make a copy of the config.dist.py file as config.py and edit it. Change the
     ip variable accordingly.
 
+        cp config.dist.py config.py
+        vim config.py
+
  *  Run the makefile to download the data
+
+        make
 
 
 Apache configuration
