@@ -9,29 +9,29 @@ Requirements
 *   Python
     *   Tested with 2.7.3 only
 *   Mod WSGI
-    sudo apt-get install libapache2-mod-wsgi
+    `sudo apt-get install libapache2-mod-wsgi`
 *   Flask
-    sudo pip install Flask
+    `sudo pip install Flask`
 *   Mapserver
     * must be version 6.0 or higher
  * Sqlite3
-    sudo apt-get install sqlite3
+    `sudo apt-get install sqlite3`
 
 Configuration
 -------------
 *   To reset the sqlite3 database, in the application directory,
     execute in a python shell (sudo python):
 
-    from init import init_db 
-    init_db()
+    `from init import init_db`
+    `init_db()`
 
 *   Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
 *   The owner of the the db folder and the workspace folder must be the
     current user or www-data if the application is on a server:
 
-    sudo chown -R www-data application/db application/workspaces \
-    application/www /usr/lib/cgi-bin/elfinder-python/
+    `sudo chown -R www-data application/db application/workspaces \`
+    `application/www /usr/lib/cgi-bin/elfinder-python/`
 
 *   Make a copy of the application/runserver.dist.wsgi file as
     application/runserver.wsgi and edit it. Change the path accordingly.
