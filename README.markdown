@@ -5,45 +5,48 @@ ScribeUI is an application to create mapfiles with many scale levels.
 
 Requirements
 ------------
- * Apache
- * Python
-    * Tested with 2.7.3 only
- * Mod WSGI
-    * sudo apt-get install libapache2-mod-wsgi
- * Flask
-    * sudo pip install Flask
- * Mapserver
+*   Apache
+*   Python
+    *   Tested with 2.7.3 only
+*   Mod WSGI
+    sudo apt-get install libapache2-mod-wsgi
+*   Flask
+    sudo pip install Flask
+*   Mapserver
     * must be version 6.0 or higher
  * Sqlite3
+    sudo apt-get install sqlite3
 
 Configuration
 -------------
- * To reset the sqlite3 database, in the application directory, execute in a python shell (sudo python):
+*   To reset the sqlite3 database, in the application directory,
+    execute in a python shell (sudo python):
 
-    `from init import init_db`  
-    `init_db()`
+    from init import init_db 
+    init_db()
 
- * Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
+*   Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
- * The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:
+*   The owner of the the db folder and the workspace folder must be the
+    current user or www-data if the application is on a server:
 
-    `sudo chown -R www-data db`  
+    sudo chown -R www-data application/db application/workspaces \
+    application/www /usr/lib/cgi-bin/elfinder-python/
 
-    `sudo chown -R www-data workspaces`   
+*   Make a copy of the application/runserver.dist.wsgi file as
+    application/runserver.wsgi and edit it. Change the path accordingly.
 
-    `sudo chown -R www-data www`   
+*   Make a copy of the config.dist.py file as config.py and edit it. Change the
+    ip variable accordingly.
 
-    `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/` 
+*   Run the makefile to download the data
 
- * Change the path in application/runserver.dist.wsgi, and then rename application/runserver.dist.wsgi to application/runserver.wsgi
-
- * Change the ip variable in config.dist.py, and then rename config.dist.py to config.py
-
- * Run the makefile to download the data
+ 
 
 Apache configuration
 --------------------
-In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (change the path):
+In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
+(change the path):
 
     #ScribeUI     
     
