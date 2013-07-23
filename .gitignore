@@ -1,10 +1,11 @@
 *.db
 *~
 *.pyc
-config.*
+config.py
 application/workspaces/*
 *#*#
 *.#*
 application/data/*
 application/db/*
 application/www/*
+application/runserver.wsgi

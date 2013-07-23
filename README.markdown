@@ -18,7 +18,7 @@ Requirements
 
 Configuration
 -------------
- * To reset the sqlite3 database, in the TileSwarm/application directory, execute in a python shell (sudo python):
+ * To reset the sqlite3 database, in the application directory, execute in a python shell (sudo python):
 
     `from init import init_db`  
     `init_db()`
@@ -35,9 +35,9 @@ Configuration
 
     `sudo chown www-data /usr/lib/cgi-bin/elfinder-python/` 
 
- * Change the path of the application in application/runserver.wsgi
+ * Change the path in application/runserver.dist.wsgi, and then rename application/runserver.dist.wsgi to application/runserver.wsgi
 
- * Change ip variable in config.py
+ * Change the ip variable in config.dist.py, and then rename config.dist.py to config.py
 
  * Run the makefile to download the data
 

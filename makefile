@@ -1,6 +1,7 @@
 default: download_naturalearth_template_data
 
 download_naturalearth_template_data:
+	mkdir ./application/data
 	wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip
 	unzip -o 110m_cultural.zip -d ./application/data/110m_cultural/
 	wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/110m_physical.zip
