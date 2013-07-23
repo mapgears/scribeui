@@ -2,9 +2,9 @@ from runserver.py import app as application
 
 import sys
 
-#Replace <path> with the path to application/runserver.py
-#Example /opt/ScribeUI/application/runserver.py
+#Replace <scribeui_path> with the path to the root of your scribeui installation
+#Example: /opt/ScribeUI/application/runserver.py
 
-sys.path.insert(0,'<path>')
+sys.path.insert(0,'<scribeui_path>/application/runserver.py')
 
-WSGIScriptAlias /ScribeUI <path>
+WSGIScriptAlias /ScribeUI <scribe_path>/application/runserver.py
