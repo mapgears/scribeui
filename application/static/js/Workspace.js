@@ -157,8 +157,7 @@ Workspace.prototype.addPointOfInterest = function(name){
 
 Workspace.prototype.displayMaps = function(){
     this.clearMaps();
-    $(".map-button").button("enable");
-    $("#btn_cache_map").button("disable");
+    $("#map-actions button").button("enable");
 
     var data = ""
     for(var i = 0; i < this.maps.length; i++){

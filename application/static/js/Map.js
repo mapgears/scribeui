@@ -143,11 +143,12 @@ Map.prototype.displayComponents = function(){
         $("a[href='#scale-tab']").html("Scales");
     }
 
+    $(".group-button").button("enable");
+	console.log('enabled');
     this.displayGroups();
 };
 
 Map.prototype.displayGroups = function(){
-    $(".group-button").button("enable");
     if (this.type == "Basemaps" || this.type == "Standard"){
         $("#btn_change_group_order").button("disable");
     }
