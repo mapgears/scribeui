@@ -2,7 +2,13 @@ default: download_naturalearth_template_data
 
 download_naturalearth_template_data:
 	mkdir ./application/data
-	mkdir ./application/naturalEarth
+	mkdir ./application/data/naturalEarth
+	mkdir ./application/data/naturalEarth/110m_physical/
+	mkdir ./application/data/naturalEarth/110m_cultural
+	mkdir ./application/data/naturalEarth/10m_physical
+	mkdir ./application/data/naturalEarth/10m_cultural
+	mkdir ./application/data/naturalEarth/50m_physical
+	mkdir ./application/data/naturalEarth/50m_cultural
 	wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip
 	unzip -o 110m_cultural.zip -d ./application/data/naturalEarth/110m_cultural/
 	wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/110m_physical.zip
