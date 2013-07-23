@@ -9,13 +9,15 @@ Requirements
 *   Python
     *   Tested with 2.7.3 only
 *   Mod WSGI
-    `sudo apt-get install libapache2-mod-wsgi`
+        `sudo apt-get install libapache2-mod-wsgi`
 *   Flask
     `sudo pip install Flask`
 *   Mapserver
     * must be version 6.0 or higher
  * Sqlite3
     `sudo apt-get install sqlite3`
+
+
 
 Configuration
 -------------
