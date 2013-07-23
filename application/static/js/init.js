@@ -20,7 +20,7 @@ jQuery(function() {
 	"popupWidth":400
     }
 
-    mapTypes = ["Scribe", "Basemaps", "Standard"];
+    mapTypes = ["Scribe",  "Standard"];
 
     openWorkspacePopup(workspaceConfig); 
 	
