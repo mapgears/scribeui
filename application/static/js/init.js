@@ -180,7 +180,7 @@ jQuery(function() {
 		handles: 's',
 		resize: resizeEditors
 	});
-	$('#secondary-wrap').hide();
+	$('.secondary-wrap').hide();
 	
     $("a[href = '#data-tab']").bind('click', function(){
         displayDataBrowser();

@@ -343,6 +343,8 @@ a{
 
 /*== Editor ===*/
 #editor-toolbar{
+	background-color:#FCFCFC;
+	border-bottom:solid 1px #f7f7f7;
 }
 .main-editor {
     overflow-y: auto;
@@ -444,21 +446,21 @@ a{
 }
 
 .group-button{
-    border-radius: 0 0 0 0 !important;
-    margin: 0 0 0 0 !important;
-    border-width: 0px !important;
 }
 
 .group-select{
     margin-left: 5px;
     width: 200px;
 }
-
+#group-edition-select{
+	float:right;
+}
 .group-table{
     width: 240px;
 }
-
-
+#variables-button{
+	float:right;
+}
 
 .workspace-select{
     margin: 10px;
@@ -683,11 +685,11 @@ button.fg-button {
 }
 
 .log-button-container{
-	width:26px;
-	height:24px;
+	width:24px;
+	height:26px;
 	overflow:hidden;
 	position:relative;
-	float:left;
+	float:right;
 }
 #log-notification{
 	position:absolute;

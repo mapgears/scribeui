@@ -529,8 +529,8 @@ function onMapOpened(){
 	$('#txt-logs').val('');
 	$('#txt-debug').val('');
 	if(_workspace.openedMap.type == "Scribe" && $('#variables-button').length == 0){
-		$('#group-edition-select').before(
-			$('<button id="variables-button">Variables</button>').click(function(e){
+		$('#group-edition-select').after(
+			$('<button id="variables-button" class="group-button">Variables</button>').button().click(function(e){
 				openSecondaryPanel('variables',variableEditor);
 		}));
 	}else{
