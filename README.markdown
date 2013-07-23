@@ -32,6 +32,8 @@ Configuration
 
  *  Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
+        sudo cp -ap elfinder-python /usr/lib/cgi-bin/
+
  *  The owner of the the db folder and the workspace folder must be the
     current user or www-data if the application is on a server:
 
