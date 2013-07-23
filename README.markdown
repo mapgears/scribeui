@@ -14,7 +14,7 @@ Requirements
 
 You can install them using aptitude and pip:
 
-    sudo apt-get install apache2 libapache2-mod-wsgi Flask cgi-mapserver sqlite3
+    sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
     sudo pip install Flask
 
 Configuration
