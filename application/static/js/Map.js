@@ -219,7 +219,7 @@ Map.prototype.commit = function(){
         contentType:"application/json; charset=utf-8",
         dataType:"json",
         success: function(log) {
-            $("#" + self.workspace.logTextarea).val(log["result"]);
+            scribeLog(log["result"]);
             if(!self.WMSLayer){
                 self.open();
             } else{

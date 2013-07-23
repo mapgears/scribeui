@@ -251,14 +251,14 @@ function deleteMap(){
 }
 
 function exportMap(){
-     var name = $("#map-table .map-selected").html();
+     var name = $("#map-list .ui-selected").text();
      if (name){
          $("#preparingExport").css("visibility","hidden");
          $("#exportmap-form").dialog({
             autoOpen: false,
 	        resizable: false,
-			width: options.popupWidth,
-			height:options.popupHeight,
+			width: 300,
+			height: 200,
             modal: true,
             buttons: {
                 "Export": function() {
@@ -535,4 +535,13 @@ function onMapOpened(){
 	}else{
 		$('#variables-button').remove();
 	}
+}
+function scribeLog(msg){
+	if(msg.indexOf("**ERRORS**") != -1){
+		if(!$('#logs').is(':visible'))
+			$('#log-notification').show('pulsate', 1000);				
+	}else{
+		$('#log-notification').hide();				
+	}
+	$("#" + self.workspace.logTextarea).val(msg);
 }

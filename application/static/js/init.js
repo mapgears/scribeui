@@ -155,6 +155,7 @@ jQuery(function() {
 		icons: { primary: 'ui-icon-flag' }	
 	}).click(function(){
 	    $('#logs').toggle();
+		$('#log-notification').hide();				
     });
     $('#btn-zoom-poi').button().click( function(){
 	    zoomToPOI();

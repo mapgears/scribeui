@@ -79,7 +79,7 @@
                             <div id="map-description" class="map-description-container"></div>
 							<div id="map-actions" style="display:none">
 									<button id="btn_open_map">Open Map</button>
-									<!--<button id="btn_export_map">Export Map</button>-->
+									<button id="btn_export_map">Export Map</button>
 									<button id="btn_delete_map">Delete Map</button>
 							</div>
     		         	</div>
@@ -94,7 +94,10 @@
 						<button id="btn_change_group_order" class="group-button">Group Settings</button>
 
 						<div style="float:right">
-							<button id="btn-open-logs" class="group-button">Open Logs</button>
+							<div class="log-button-container">
+								<span id="log-notification" class="ui-state-error"><span class="ui-icon ui-icon-alert"></span></span>
+								<button id="btn-open-logs" class="group-button">Open Logs</button>
+							</div>
 							<select id="group-edition-select">
 								<option value="x"></option>
 								<option value="map">Map</option>
