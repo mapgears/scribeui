@@ -12,12 +12,9 @@ Requirements
 *   MapServer (version 6.0 or higher)
 *   Sqlite3
 
-Installation using aptitude:
+You can install them using aptitude and pip:
 
     sudo apt-get install apache2 libapache2-mod-wsgi Flask cgi-mapserver sqlite3
-
-Installation of Flask using pip:
-
     sudo pip install Flask
 
 Configuration
