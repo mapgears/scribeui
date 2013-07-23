@@ -19,27 +19,27 @@ You can install them using aptitude and pip:
 
 Configuration
 -------------
- * To reset the sqlite3 database, in the application directory,
-   execute in a python shell (sudo python):
+* To reset the sqlite3 database, in the application directory,
+  execute in a python shell (sudo python):
 
     from init import init_db
     init_db()
 
- * Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
+* Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
 
- * The owner of the the db folder and the workspace folder must be the
+* The owner of the the db folder and the workspace folder must be the
    current user or www-data if the application is on a server:
 
     sudo chown -R www-data application/db application/workspaces \
     application/www /usr/lib/cgi-bin/elfinder-python/
 
- * Make a copy of the application/runserver.dist.wsgi file as
-   application/runserver.wsgi and edit it. Change the path accordingly.
+* Make a copy of the application/runserver.dist.wsgi file as
+  application/runserver.wsgi and edit it. Change the path accordingly.
 
- * Make a copy of the config.dist.py file as config.py and edit it. Change the
-   ip variable accordingly.
+* Make a copy of the config.dist.py file as config.py and edit it. Change the
+  ip variable accordingly.
 
- * Run the makefile to download the data
+* Run the makefile to download the data
 
 
 Apache configuration
