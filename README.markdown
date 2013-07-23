@@ -6,18 +6,19 @@ ScribeUI is an application to create mapfiles with many scale levels.
 Requirements
 ------------
 *   Apache
-*   Python
-    *   Tested with 2.7.3 only
+*   Python (tested with 2.7.3 only)
 *   Mod WSGI
-        `sudo apt-get install libapache2-mod-wsgi`
 *   Flask
-    `sudo pip install Flask`
-*   Mapserver
-    * must be version 6.0 or higher
- * Sqlite3
-    `sudo apt-get install sqlite3`
+*   MapServer (version 6.0 or higher)
+*   Sqlite3
 
+Installation using aptitude:
 
+    sudo apt-get install apache2 libapache2-mod-wsgi Flask cgi-mapserver sqlite3
+
+Installation of Flask using pip:
+
+    sudo pip install Flask
 
 Configuration
 -------------
