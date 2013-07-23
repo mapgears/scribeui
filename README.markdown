@@ -22,7 +22,6 @@ Configuration
  *  To reset the sqlite3 database, in the application directory,
     execute in a python shell (sudo python):
 
-
         from init import init_db
         init_db()
 
@@ -30,7 +29,6 @@ Configuration
 
  *  The owner of the the db folder and the workspace folder must be the
     current user or www-data if the application is on a server:
-
 
         sudo chown -R www-data application/db application/workspaces \
         application/www /usr/lib/cgi-bin/elfinder-python/
