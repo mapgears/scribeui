@@ -3,6 +3,8 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
+To get the latest release, clone this repo and then checkout v0.1
+
 Requirements
 ------------
 *   Apache
