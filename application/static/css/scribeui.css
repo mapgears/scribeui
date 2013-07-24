@@ -43,6 +43,10 @@ a{
  
     padding-top: 10px;    
 }
+.faded{
+	color:#a9a9a9;
+	font-size:0.9em;
+}
 
 .title-left {
     position: relative;
