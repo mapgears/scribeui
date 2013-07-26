@@ -3,7 +3,7 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout v0.1
+To get the latest release, clone this repo and then checkout v0.1.1
 
 Requirements
 ------------
@@ -21,6 +21,19 @@ You can install them using aptitude and pip:
 
 Configuration
 -------------
+ *  Make a copy of the application/runserver.dist.wsgi file as
+    application/runserver.wsgi and edit it. Change the path accordingly.
+
+        cp application/runserver.dist.wsgi application/runserver.wsgi
+        vim application/runserver.wsgi
+
+ *  Make a copy of the config.dist.py file as config.py and edit it. Change the
+    ip variable accordingly.
+
+        cp config.dist.py config.py
+        vim config.py
+
+
  *  To reset the sqlite3 database, open a python shell as admin from the
     the application directory:
 
@@ -41,18 +54,6 @@ Configuration
 
         sudo chown -R www-data application/db application/workspaces \
         application/www /usr/lib/cgi-bin/elfinder-python/
-
- *  Make a copy of the application/runserver.dist.wsgi file as
-    application/runserver.wsgi and edit it. Change the path accordingly.
-
-        cp application/runserver.dist.wsgi application/runserver.wsgi
-        vim application/runserver.wsgi
-
- *  Make a copy of the config.dist.py file as config.py and edit it. Change the
-    ip variable accordingly.
-
-        cp config.dist.py config.py
-        vim config.py
 
  *  Run the makefile to download the data
 
