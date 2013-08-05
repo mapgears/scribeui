@@ -332,7 +332,10 @@ def open_map():
     for j in range(len(groups)):
         unGroup = {}
         unGroup["name"] = groups[j]['group_name']
-        document = open(pathGroups + unGroup["name"], "r")
+    	if wsmap['map_type'] == 'Scribe':
+        	document = open(pathGroups + unGroup["name"]+'.layer', "r")
+        else:
+        	document = open(pathGroups + unGroup["name"], "r")
         unGroup["content"] = document.read()
         document.close()
         contentfiles["groups"].append(unGroup)
@@ -687,7 +690,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ --UI', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
