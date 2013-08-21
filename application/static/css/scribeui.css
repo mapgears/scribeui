@@ -314,7 +314,11 @@ a{
 	padding-right:8px;
 }
 #map-preview-img-large{
-	max-width:200px;
+	height:200px;
+	width:200px;
+    background-image:url('images/map-preview-placeholder.png');
+	background-size:200px 200px;
+
 	margin:auto;
 	display:block;
 }
@@ -683,6 +687,8 @@ button.fg-button {
 	cursor:pointer;
 }
 #map-list .map-preview .map-preview-img{
+    background-image:url('images/map-preview-placeholder.png');
+	background-size:64px 64px;
 	width: 64px;
 	height: 64px;
 }

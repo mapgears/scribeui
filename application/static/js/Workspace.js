@@ -161,7 +161,7 @@ Workspace.prototype.displayMaps = function(){
 
     var data = ""
     for(var i = 0; i < this.maps.length; i++){
-	data += '<li class="map-preview"><img src="static/images/map-preview-placeholder.png" class="map-preview-img" alt=""/><span class="map-preview-name">'+this.maps[i].name+'</span></li>';
+	data += '<li class="map-preview"><div class="map-preview-img"></div><span class="map-preview-name">'+this.maps[i].name+'</span></li>';
     }
     $("#" + this.mapList).empty();
     $("#" + this.mapList).append(data);
