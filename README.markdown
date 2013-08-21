@@ -3,7 +3,7 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout v0.1.1
+To get the latest release, clone this repo and then checkout v0.1.2
 
 Requirements
 ------------
@@ -82,3 +82,5 @@ In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
       Allow from all
     </Directory>
 
+Note: if there are segfaults in the apache error logs after adding this config,
+it is fixed by restarting apache.
