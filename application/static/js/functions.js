@@ -485,7 +485,6 @@ function resizeEditors(){
    	var divTwo = $('.main-editor');
    	var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
    	divTwo.css('height', divTwoHeight + 'px');	
-	console.log('test');
 }
 function openSecondaryPanel(value, editor){
 	$('#secondary-editor > .tabcontent-small').hide();

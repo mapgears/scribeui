@@ -7,10 +7,12 @@ import re #regular expression
 from werkzeug import check_password_hash, generate_password_hash, secure_filename
 import subprocess
 import json #commit
+import codecs #Opening group files
 #import zipfile #download
 #from os.path import join #download
 import random # download
 import datetime #download
+import pprint #For debugging purposes
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -293,6 +295,7 @@ def get_maps():
 #Open map    
 @app.route('/_open_map',methods=['POST'])
 def open_map():
+    error = '';
     namemap = request.form['name']
     wsmap = query_db('''select * from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), namemap], one=True)
     pathMap = path + "workspaces/" + session['ws_name'] + "/" + namemap + "/"
@@ -302,7 +305,7 @@ def open_map():
     contentfiles['type'] = wsmap['map_type']
     
     if wsmap['map_type'] == 'Scribe':
-        pathGroups = pathMap + "editor/groups/"
+        pathGroups = pathMap + "editor/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
         for i in range(len(listfiles)):
             document = open(pathMap + listfiles[i]['url'], "r")
@@ -327,18 +330,29 @@ def open_map():
         document.close()
 
     contentfiles['groups'] = []
-    groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
-    groups = sorted(groups)
-    for j in range(len(groups)):
-        unGroup = {}
-        unGroup["name"] = groups[j]['group_name']
-    	if wsmap['map_type'] == 'Scribe':
-        	document = open(pathGroups + unGroup["name"]+'.layer', "r")
-        else:
-        	document = open(pathGroups + unGroup["name"], "r")
-        unGroup["content"] = document.read()
-        document.close()
-        contentfiles["groups"].append(unGroup)
+    if wsmap['map_type'] == 'Scribe':
+        # Read groups from config file instead of the BD
+        groupFiles = getGroupFiles(pathMap, pathGroups)
+
+	for i in range(0, len(groupFiles)):
+            if (os.path.isfile(groupFiles[i])):
+                unGroup = {}
+                unGroup["name"] = getGroupNameFromFile(groupFiles[i])
+                document = open(groupFiles[i], "r")
+                unGroup["content"] = document.read()
+                document.close()
+                contentfiles["groups"].append(unGroup)
+    else:
+        groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
+        groups = sorted(groups)
+        for j in range(len(groups)):
+            unGroup = {}
+            unGroup["name"] = groups[j]['group_name']
+            document = open(pathGroups + unGroup["name"], "r")
+            unGroup["content"] = document.read()
+            document.close()
+            contentfiles["groups"].append(unGroup)
+
 
     #Parameters map
     contentfiles['errorMsg']=[]
@@ -498,35 +512,57 @@ def get_templates():
 def add_layer():
     if 'ws_name' in session and 'map_name' in session:
         groupname = request.form['name'] 
+        pathMap = path + "workspaces/" + session['ws_name'] + "/" + session['map_name'] + "/"
 
         expression = r"^[A-Za-z0-9][A-Za-z0-9_.]{1,99}$"
         if (re.search(expression, groupname) is None):
             return "Invalid name"
                          
         mapid = get_map_id(session['map_name'],session['ws_name'])
-        
-        groups = query_db("select group_name, group_index from groups where map_id = ?", [mapid], one=False)
-        if groups:
-            groups = sorted(groups)
-            maxindex = groups[-1]['group_index']
-        else:
-            maxindex = 0  
-
-        for i in range(len(groups)):
-            if groupname == groups[i]['group_name']:
-                return "Existing"
-                                                    
-        g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
-        g.db.commit()
-        
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
-        if wsmap['map_type'] == 'Scribe':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname 
-        elif wsmap['map_type'] == 'Basemaps':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
-        elif wsmap['map_type'] == 'Standard':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
-        file(pathGroup, 'w+')
+
+    	if wsmap['map_type'] == 'Scribe':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer" 
+            groupsFiles = getGroupFiles(pathMap, pathGroup)
+	    for g in groupsFiles:
+                name = getGroupNameFromFile(g)
+                if groupname == name:
+                    return "Existing"
+
+            inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+            inputConfigContent = inputConfigFile.read()
+            inputConfigFile.close()
+
+            jsonConfig = json.loads(string2json(inputConfigContent))
+            jsonConfig['ORDER'].append({str(len(jsonConfig['ORDER'])+1):'groups/'+groupname+'.layer'})
+            with open(pathMap+'config', 'w+') as f:
+                f.write("ORDER {\n")
+                for i in range(len(jsonConfig['ORDER'])):
+                    key, value = jsonConfig['ORDER'][i].popitem()
+                    pprint.pprint(str(key)+' - '+value)
+                    f.write(" "+key+": "+value+" \n")
+                f.write("}")
+            file(pathGroup+groupname+'.layer', 'w+')
+	else:
+            groups = query_db("select group_name, group_index from groups where map_id = ?", [mapid], one=False)
+            if groups:
+                groups = sorted(groups)
+                maxindex = groups[-1]['group_index']
+            else:
+                maxindex = 0  
+
+            for i in range(len(groups)):
+                if groupname == groups[i]['group_name']:
+                    return "Existing"
+                                                    
+            g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
+            g.db.commit()
+        
+            if wsmap['map_type'] == 'Basemaps':
+                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+            elif wsmap['map_type'] == 'Standard':
+                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
+            file(pathGroup, 'w+')
     return "1"
 
 #Remove Group
@@ -541,7 +577,7 @@ def remove_group():
 
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
         if wsmap['map_type'] == 'Scribe':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname+".layer"
         elif wsmap['map_type'] == 'Basemaps':
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
         elif wsmap['map_type'] == 'Standard':
@@ -665,7 +701,7 @@ def save(data):
 
     fusionStr = "LAYERS {\n"
     for i in range(len(data['groups'])):
-        document = open(pathGroups + data['groups'][i]['name'], "w+")
+        document = open(pathGroups + data['groups'][i]['name']+".layer", "w+")
         document.write(data['groups'][i]['content'].encode('utf-8'))
         document.close()
         fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
@@ -690,7 +726,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -698,12 +734,12 @@ def execute():
 
     logMsg = sub.stdout.read()
     errorMsg = sub.stderr.read()
-    
     if (errorMsg == ""):
         if wsmap['map_type'] == 'Scribe':
             symbolsFile = open(pathMap+"symbols.map", "r")
             symbols = symbolsFile.read()
             symbolsFile.close()
+            print('tesg'+symbols)
             source = open(pathMap+"/map/"+session['map_name']+".map", "r")
             contentS = source.read()
             source.close()
@@ -808,3 +844,90 @@ def download_map():
         os.chdir(path)
 
     return 'download/'+session['ws_name']+'_'+mapname+randInt+'.zip'
+
+def getGroupFiles(pathMap, pathGroups):
+    inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+    inputConfigContent = inputConfigFile.read()
+    inputConfigFile.close()
+    pprint.pprint(string2json(inputConfigContent))
+    jsonConfig = json.loads(string2json(inputConfigContent))
+    pprint.pprint(jsonConfig)
+    groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
+    for i in range(0, len(jsonConfig["ORDER"])):
+        for j in jsonConfig["ORDER"][i]:
+            groupFiles[int(j)] = pathGroups + jsonConfig["ORDER"][i][j]
+    return groupFiles
+
+def getGroupNameFromFile(filePath):
+    return os.path.splitext(os.path.basename(filePath))[0]
+
+def string2json(string):
+    #Remove the comments preceded by //
+    t = re.sub(r"//.*", "", string)
+    #Remove the comments between /* and */
+    t = re.sub(r"/\*.*?\t*?\*/", "", t, flags=re.DOTALL)
+    #Find and replace the comments preceded by ##
+    comments = re.findall(r"\#\#.*", t, flags=0)
+    t = re.sub(r"\#\#.*", "VOID:FLAGCOMMENT\n", t, flags=0)
+    #Remove tabs
+    t = re.sub(r"\t", " ", t) 
+    #Replace @ with VARIABLE:
+    t = re.sub(r"@", "VARIABLE:", t)
+    #Find and replace the text between {{ and }} (useful for blocks like PROJECTION, METADATA, PATTERN etc.)
+    texts = re.findall(r"(?<=\{\{).*?\t*?(?=\}\})", t, flags=re.DOTALL)
+    t = re.sub(r"\{\{.*?\t*?\}\}", "{\nVOID:FLAGTEXT\n}", t, flags=re.DOTALL)
+    #t = re.sub(r"(?<=\{{).*?\t*?(?=\}})", "\n{VOID:FLAGTEXT}\n", t, flags=re.DOTALL)
+    #Find and replace values for the parameters (preceded by :)
+    values = re.findall(r"(?<=:).+", t)
+    t = re.sub(r"(?<=:).+", "FLAGVALUE", t)
+    #Find and the parameters (followed by :)
+    params = re.findall(r"\n*\s*[\w0-9\-]+\s*(?=[:\{])", t)
+    t = re.sub(r"[\w0-9\-]+\s*(?=[:\{])", "FLAGPARAM", t)
+    #Replace  { and } with [ and ]
+    t = re.sub(r"\{", "[", t)
+    t = re.sub(r"\}", "]", t)
+    #Replace [ with :[
+    t = re.sub(r"(?<!\()\s*\[", ":[", t)
+    #Replace : with ":
+    t = re.sub(r":\s*", "\":", t)
+    #Replace : with :"
+    t = re.sub(r"\s*:(?=\w)", ":\"", t)
+    #Replace spaces followed by an alphanumeric chracter with {"
+    t = re.sub(r"\s(?=\w)", "{\"", t)
+    #Replace line break with \""},\n
+    t = re.sub(r"\"[\s\n]+", "\\\"\"},\n", t)
+    #Replace spaces preceded by alphabetic characters or _ with "},\n
+    t = re.sub(r"(?<=[a-zA-Z_])\s", "\"},\n", t)    
+    #Replace , followed by a ine break and ] with ]
+    t = re.sub(r",\s+\n*\]", "]", t)    
+    #Replace ] not preceded by and alphanumeric chracter with ]}
+    t = re.sub(r"(?<!\w)\]", "]}", t) 
+    #Substitute the FLAGVALUE with the corresponding values
+    for i in range (0, len(values)):
+        value = re.sub(r"\"", re.escape("\\") + "\"", values[i].strip())
+        t = re.sub(r"FLAGVALUE", value, t, 1)
+    #Substitute the FLAGPARAM with the corresponding values    
+    for i in range (0, len(params)):
+        param = re.sub(r"\"", re.escape("\\") + "\"", params[i].strip())
+        t = re.sub(r"FLAGPARAM", param, t, 1)
+    #Substitute the FLAGTEXT with "}{"VOID:":" and the corresponding texts
+    for i in range (0, len(texts)):
+        text = re.sub(r"\"", re.escape("\\") + "\"", texts[i].strip())
+        text = re.sub(r"\n", "\"}{\"VOID\":\"", text)
+        t = re.sub(r"FLAGTEXT", text, t, 1)
+    #Substitute the FLAGCOMMENT with the corresponding comment blocks. Each line of the comment block is preceded with ##  
+    for i in range (0, len(comments)):
+        comment = re.sub(r"\"", re.escape("\\") + "\"", comments[i].strip())
+        t = re.sub(r"FLAGCOMMENT",  comment, t, 1)
+    #Make the JSON valid with some {},[]. SCALES has to be the first element in the file to be converted into a JSON.
+    t = re.sub(r"\}\s*\n*\{", "},{", t)
+    t = re.sub(r"\}\n*\s*\]\},\{\"LAYERS\"", "}],\"LAYERS\"", t)
+    t = re.sub(r"\}\n*\s*\]\},\{\"MAP\"", "}],\"MAP\"", t)
+    t = re.sub(r"\}\n*\s*\]\},\{\"VARIABLES\"", "}],\"VARIABLES\"", t)
+    t = re.sub(r"^\s*\n*{\"", "", t)
+    #Add {" before scale levels tag
+    t = re.sub(r"\s(?=([0-9]|[0-9]{2})+\":)", "{\"", t)
+    #Add {" at the beginning of the string and return a valid JSON string
+    return ("{\"" + t)
+
+

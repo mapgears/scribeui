@@ -317,7 +317,7 @@ def string2json(string):
     comments = re.findall(r"\#\#.*", t, flags=0)
     t = re.sub(r"\#\#.*", "VOID:FLAGCOMMENT\n", t, flags=0)
     #Remove tabs
-    t = re.sub(r"\t", "", t) 
+    t = re.sub(r"\t", " ", t) 
     #Replace @ with VARIABLE:
     t = re.sub(r"@", "VARIABLE:", t)
     #Find and replace the text between {{ and }} (useful for blocks like PROJECTION, METADATA, PATTERN etc.)
@@ -513,7 +513,7 @@ def validateSyntax(content, name, variables=None):
 
 
 def matchingBrackets(string):
-    iparens = iter('(){}[]<>')
+    iparens = iter('{}')
     parens = dict(zip(iparens, iparens))
     closing = parens.values()
     line = 1

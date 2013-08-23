@@ -427,6 +427,9 @@ a{
 #logs-close-button{
 	float:right;
 }
+#txt-logs, #txt-debug{
+	font-family:monospace;
+}
 
 /*== Map ===*/
 .main-right {
