@@ -539,7 +539,6 @@ def add_layer():
                 f.write("ORDER {\n")
                 for i in range(len(jsonConfig['ORDER'])):
                     key, value = jsonConfig['ORDER'][i].popitem()
-                    pprint.pprint(str(key)+' - '+value)
                     f.write(" "+key+": "+value+" \n")
                 f.write("}")
             file(pathGroup+groupname+'.layer', 'w+')
@@ -584,7 +583,6 @@ def remove_group():
             inputConfigFile.close()
 
             jsonConfig = json.loads(string2json(inputConfigContent))
-            pprint.pprint(jsonConfig)
             with open(pathMap+'config', 'w+') as f:
                 f.write("ORDER {\n")
                 found = False
@@ -596,7 +594,6 @@ def remove_group():
                     if found:
                         key = int(key)-1
                     
-                    pprint.pprint(str(key)+' - '+value)
                     f.write(" "+str(key)+": "+value+" \n")
                 f.write("}")
             pathGroup = pathGroup+groupname+'.layer'
@@ -616,12 +613,28 @@ def remove_group():
 @app.route('/_change_groups_index', methods=['POST'])
 def change_groups_index():
     if 'ws_name' in session and 'map_name' in session:
+        pathMap = path+"workspaces/"+session['ws_name']+"/"+session["map_name"]+"/"
         groups = request.json
         mapid = get_map_id(session['map_name'],session['ws_name'])
 
-        for i in range(len(groups)):
-            g.db.execute('''UPDATE groups SET group_index = ? WHERE group_name = ? AND map_id = ?''', [i,groups[i],mapid])
-            g.db.commit()
+        wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
+        if wsmap['map_type'] == 'Scribe':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"
+            
+            inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+            inputConfigContent = inputConfigFile.read()
+            inputConfigFile.close()
+
+            jsonConfig = json.loads(string2json(inputConfigContent))
+            with open(pathMap+'config', 'w+') as f:
+                f.write("ORDER {\n")
+                for i in range(len(groups)):
+                    f.write(" "+str(i)+": groups/"+groups[i]+".layer \n")
+                f.write("}")
+        else:
+            for i in range(len(groups)):
+                g.db.execute('''UPDATE groups SET group_index = ? WHERE group_name = ? AND map_id = ?''', [i,groups[i],mapid])
+                g.db.commit()
 
     return "1" 
 
@@ -875,9 +888,7 @@ def getGroupFiles(pathMap, pathGroups):
     inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
     inputConfigContent = inputConfigFile.read()
     inputConfigFile.close()
-    pprint.pprint(string2json(inputConfigContent))
     jsonConfig = json.loads(string2json(inputConfigContent))
-    pprint.pprint(jsonConfig)
     groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
     for i in range(0, len(jsonConfig["ORDER"])):
         for j in jsonConfig["ORDER"][i]:
