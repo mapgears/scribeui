@@ -569,19 +569,45 @@ def add_layer():
 @app.route('/_remove_group', methods=['POST'])
 def remove_group():
     if 'ws_name' in session and 'map_name' in session:
+        pathMap = path+"workspaces/"+session['ws_name']+"/"+session["map_name"]+"/"
         groupname = request.form['name']
 
         mapid = get_map_id(session['map_name'],session['ws_name'])
-        g.db.execute("DELETE from groups where map_id = ? and group_name = ?", [mapid, groupname])
-        g.db.commit()
-
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
+
         if wsmap['map_type'] == 'Scribe':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"+groupname+".layer"
-        elif wsmap['map_type'] == 'Basemaps':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
-        elif wsmap['map_type'] == 'Standard':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer" 
+            groupsFiles = getGroupFiles(pathMap, pathGroup)
+
+            inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+            inputConfigContent = inputConfigFile.read()
+            inputConfigFile.close()
+
+            jsonConfig = json.loads(string2json(inputConfigContent))
+            pprint.pprint(jsonConfig)
+            with open(pathMap+'config', 'w+') as f:
+                f.write("ORDER {\n")
+                found = False
+                for i in range(len(jsonConfig['ORDER'])):
+                    key, value = jsonConfig['ORDER'][i].popitem()
+                    if groupname in value:
+                        found = True
+                        continue
+                    if found:
+                        key = int(key)-1
+                    
+                    pprint.pprint(str(key)+' - '+value)
+                    f.write(" "+str(key)+": "+value+" \n")
+                f.write("}")
+            pathGroup = pathGroup+groupname+'.layer'
+        else:
+            g.db.execute("DELETE from groups where map_id = ? and group_name = ?", [mapid, groupname])
+            g.db.commit()
+
+            if wsmap['map_type'] == 'Basemaps':
+                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+            elif wsmap['map_type'] == 'Standard':
+                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
         if os.path.isfile(pathGroup) :
             subprocess.call(['rm', pathGroup])
     return "1" 
