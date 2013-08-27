@@ -629,7 +629,7 @@ def change_groups_index():
             with open(pathMap+'config', 'w+') as f:
                 f.write("ORDER {\n")
                 for i in range(len(groups)):
-                    f.write(" "+str(i)+": groups/"+groups[i]+".layer \n")
+                    f.write(" "+str(i+1)+": groups/"+groups[i]+".layer \n")
                 f.write("}")
         else:
             for i in range(len(groups)):
@@ -778,7 +778,6 @@ def execute():
             symbolsFile = open(pathMap+"symbols.map", "r")
             symbols = symbolsFile.read()
             symbolsFile.close()
-            print('tesg'+symbols)
             source = open(pathMap+"/map/"+session['map_name']+".map", "r")
             contentS = source.read()
             source.close()
