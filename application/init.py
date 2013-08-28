@@ -775,18 +775,7 @@ def execute():
     errorMsg = sub.stderr.read()
     if (errorMsg == ""):
         if wsmap['map_type'] == 'Scribe':
-            symbolsFile = open(pathMap+"symbols.map", "r")
-            symbols = symbolsFile.read()
-            symbolsFile.close()
-            source = open(pathMap+"/map/"+session['map_name']+".map", "r")
-            contentS = source.read()
-            source.close()
-            contentD = contentS.replace("#---- SYMBOLS ----#","#---- SYMBOLS ----#\n" + symbols)
-            destination = open(pathMap+"/map/"+session['map_name']+".map", "w")
-            destination.write(contentD)#.encode('utf-8'))
-            destination.close()
-
-        result = "**Success**\n\n**LOG**\n----------\n" + logMsg
+            result = "**Success**\n\n**LOG**\n----------\n" + logMsg
     else:
         result = "**ERRORS**\n----------\n" + errorMsg + "\n**LOG**\n----------\n" + logMsg
 

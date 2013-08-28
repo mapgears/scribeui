@@ -24,4 +24,5 @@ MAP {
     PROJECTION {{
         "init=epsg:900913"
     }}
+    INCLUDE: '../symbols.map'
 }
