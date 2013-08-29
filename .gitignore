@@ -3,6 +3,7 @@
 *.pyc
 config.py
 application/workspaces/*
+!application/workspaces/templates/
 *#*#
 *.#*
 application/data/*

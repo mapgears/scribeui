@@ -1,0 +1,61 @@
+LAYER {
+    6-16 {
+        NAME: 'roads'
+        TYPE: LINE
+        @layerconfig
+        DATA: '10m_cultural/ne_10m_roads'
+        CLASSITEM: 'type'
+ 	    LABELITEM: 'name'
+        CLASS {
+            6-16 {
+                EXPRESSION: 'Major Highway'
+                STYLE {
+                    COLOR: '#919191'
+                }
+            	LABEL {
+                    8-16 {
+                        COLOR: 255 255 255
+                	    OUTLINECOLOR: '#919191'
+                    	OUTLINEWIDTH: 2
+                	    FONT: 'scb'
+                	    TYPE: truetype
+                	    SIZE: 7
+                        REPEATDISTANCE: 100
+                        MINDISTANCE: 300
+                	    POSITION: AUTO
+                	    PARTIALS: FALSE
+                    }	
+            	}
+            }
+        }
+    	CLASS {
+            7-16 {
+                EXPRESSION: 'Secondary Highway'
+                STYLE {
+                    COLOR: '#DDA0DD'
+                }
+            	LABEL {
+                    8-16 {
+                	    COLOR: 255 255 255
+                	    OUTLINECOLOR: '#DDA0DD'
+                        OUTLINEWIDTH: 2
+                	    FONT: 'scb'
+                	    TYPE: truetype
+                	    SIZE: 7
+                        REPEATDISTANCE: 100
+                        MINDISTANCE: 300
+                	    POSITION: AUTO
+                	    PARTIALS: FALSE
+                    }	
+            	}
+            }
+        }
+    	CLASS {
+            7-16 {
+                STYLE {
+                    COLOR: '#DDA0DD'
+                }
+            }
+        }
+    }
+}
