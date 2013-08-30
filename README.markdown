@@ -3,7 +3,10 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout v0.1.2
+To get the latest release, clone this repo and then checkout tags/v0.2
+
+*If you are updating from a previous version, please follow the migration
+instructions at the end of this document before checking out.*
 
 Requirements
 ------------
@@ -84,3 +87,32 @@ In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
 
 Note: if there are segfaults in the apache error logs after adding this config,
 it is fixed by restarting apache.
+
+Version Update and Workspace Migration
+---------------------------------------
+
+If you are updating your version of ScribeUI from an earlier version to 0.2,
+please follow these instructions:
+
+* Change the owner of the database and workspace folders back to yourself:
+
+        sudo chown -R yourusername application/db application/workspaces 
+
+* Checkout the latest release of ScribeUI
+
+        git checkout tags/v0.2
+
+* Run the update script:
+
+        python application/update.py 
+
+* Change the owner of the database and workspace back to www-data:
+
+        sudo chown -R www-data application/db application/workspaces 
+
+* (optionnal) Restart apache:
+
+        sudo /etc/init.d/apache2 restart
+
+If you choose not to restart apache, the new version of ScribeUI might take
+a while to go live because of mod\_wsgi.
