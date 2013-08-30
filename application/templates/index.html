@@ -3,35 +3,35 @@
 	<head>
 
         <meta charset="utf-8">
-        <title>ScribeUI v0.1</title>
+        <title>ScribeUI v0.1.2</title>
         
-        <link rel="stylesheet" href="static/css/reset.css">
-        <link rel="stylesheet" href="static/css/jquery/css/scribeui/scribeui.css">
-        <link rel="stylesheet" href="static/css/jquery/elfinder/css/elfinder.min.css">
-        <link rel="stylesheet" href="static/css/CodeMirror-2.25/lib/codemirror.css">
-        <link rel="stylesheet" href="static/css/CodeMirror-2.25/lib/util/dialog.css">
-        <link rel="stylesheet" href="static/css/CodeMirror-2.25/lib/util/simple-hint.css">
-        <link rel="stylesheet" href="static/css/scribeui.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/css/scribeui/scribeui.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/elfinder/css/elfinder.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/codemirror.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/dialog.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/simple-hint.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/scribeui.css') }}">
      
-        <script src="static/lib/proj4js/lib/proj4js.js"></script>
-        <script src="static/lib/OpenLayers-2.12/OpenLayers.js"></script>
-        <script src="static/lib/jquery/js/jquery-1.7.2.min.js"></script> 
-        <script src="static/lib/jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
-        <script src="static/lib/jquery/js/jquery.form.js"></script>
-        <script src="static/lib/jquery/elfinder/js/elfinder.min.js"></script>
-        <script src="static/lib/jquery/elfinder/js/proxy/elFinderSupportVer1.js" type="text/javascript" charset="utf-8"></script>
-        <script src="static/lib/CodeMirror-2.25/lib/codemirror.js"></script>
-        <script src="static/lib/CodeMirror-2.25/lib/util/search.js"></script>
-        <script src="static/lib/CodeMirror-2.25/lib/util/searchcursor.js"></script>
-        <script src="static/lib/CodeMirror-2.25/lib/util/dialog.js"></script>
+        <script src="{{ url_for('static', filename='lib/proj4js/lib/proj4js.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/OpenLayers-2.12/OpenLayers.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/jquery/js/jquery-1.7.2.min.js') }}"></script> 
+        <script src="{{ url_for('static', filename='lib/jquery/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/jquery/js/jquery.form.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/jquery/elfinder/js/elfinder.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/jquery/elfinder/js/proxy/elFinderSupportVer1.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/codemirror.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/util/search.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/util/searchcursor.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/util/dialog.js') }}"></script>
 
-        <script src="static/lib/CodeMirror-2.25/mode/python/python.js"></script>
+        <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/mode/python/python.js') }}"></script>
 
-        <script src="static/js/init.js"></script>
-        <script src="static/js/functions.js"></script>
-        <script src="static/js/Workspace.js"></script>
-        <script src="static/js/Map.js"></script>
-        <script src="static/js/POI.js"></script>
+        <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/functions.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/Workspace.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/Map.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/POI.js') }}"></script>
 
         <script type=text/javascript>
           $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -43,7 +43,7 @@
 
 <!-- Header-->   
         <div class="navbar">	
-            <div id="title" class="title title-left">ScribeUI <span class="faded">v0.1</span></div>
+            <div id="title" class="title title-left">ScribeUI <span class="faded">v0.1.1</span></div>
             <div id="info" class="title title-right"></div>
         </div>
 

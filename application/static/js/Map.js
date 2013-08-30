@@ -175,7 +175,7 @@ Map.prototype.displayGroups = function(){
 
 Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).empty();
-    $("#" + this.workspace.mapDescription).append('<img id="map-preview-img-large" src="static/images/map-preview-placeholder.png"/>');
+    $("#" + this.workspace.mapDescription).append('<div id="map-preview-img-large"></div>');
     $("#" + this.workspace.mapDescription).append("<p class=\"map-title\">" + this.name + "</p>");
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
     $("#" + this.workspace.mapActions).show();
