@@ -116,7 +116,7 @@ please follow these instructions:
 
 * The first time you edit a map, add the following line to the map element:
 
-        INCLUDE '../symbols.map' 
+        INCLUDE: '../symbols.map' 
 
 If you choose not to restart apache, the new version of ScribeUI might take
 a while to go live because of mod\_wsgi.
