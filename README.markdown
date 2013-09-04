@@ -3,7 +3,7 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout tags/v0.2
+To get the latest release, clone this repo and then checkout tags/v0.2.1
 
 *If you are updating from a previous version, please follow the migration
 instructions at the end of this document before checking out.*
@@ -100,7 +100,7 @@ please follow these instructions:
 
 * Checkout the latest release of ScribeUI
 
-        git checkout tags/v0.2
+        git checkout tags/v0.2.1
 
 * Run the update script:
 
@@ -113,6 +113,10 @@ please follow these instructions:
 * (optionnal) Restart apache:
 
         sudo /etc/init.d/apache2 restart
+
+* The first time you edit a map, add the following line to the map element:
+
+        INCLUDE '../symbols.map' 
 
 If you choose not to restart apache, the new version of ScribeUI might take
 a while to go live because of mod\_wsgi.
