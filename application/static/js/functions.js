@@ -1,3 +1,5 @@
+jQuery.fn.exists = function(){return this.length>0;}
+
 function displayWorkspaces(select){
     $.post($SCRIPT_ROOT + '/_get_ws', {
     }, function(workspaces) {
@@ -545,3 +547,39 @@ function scribeLog(msg){
 	}
 	$("#" + self.workspace.logTextarea).val(msg);
 }
+
+/* 
+name: string, Name of the tab
+destinationid: id of the tab group, ex main-tabs or log-tabs
+options: (optional) object
+	onclick: function called when tab link is clicked
+	position: string, where to add tab, possible values: before, after
+
+Returns: The div element to be used as tab content
+*/
+function addTab(name, destinationid, options={}){
+	var onclick = options.onclick || null;
+	var position = options.position || 'after';
+	if($('#'+destinationid).exists()){
+		var link = $('<a href="#'+name+'-tab">'+name+'</a>');
+		if(onclick) link.bind('click', onclick);
+
+		var li = $('<li class="tab-large"></li>');
+		li.append(link);
+                
+		if(position == 'after')
+			$('#'+destinationid+' .tabheader').append(li)
+		if(position == 'before')
+			$('#'+destinationid+' .tabheader').prepend(li)
+                var div = $('<div id="'+name+'-tab"></div>');
+		$('#'+destinationid).append(div);
+		$('#'+destinationid).tabs('refresh');
+		return div;
+	}else return null;
+}
+
+function addButton(name, destinationid, options={}){
+	
+}
+
+

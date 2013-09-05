@@ -54,7 +54,7 @@ jQuery(function() {
     /*--------------------------------
       Tabs and buttons
     --------------------------------*/
-    $("#tab1").tabs({heightStyle: "fill"});
+    $("#main-tabs").tabs({heightStyle: "fill"});
 	$("#logs").resizable({
 		handles: 'n',
 		alsoResize: '#logs .tabcontent'
@@ -75,7 +75,7 @@ jQuery(function() {
 	$('#logs').hide();
 	
 	$('.main').on('resize', function () {
-        //$('#tab1').tabs('refresh');
+        //$('#main-tabs').tabs('refresh');
     });
 	$('#editors-container').height($('#editor-tab').height() - 57);
     $("button").button({

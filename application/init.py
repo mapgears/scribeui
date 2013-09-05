@@ -593,8 +593,7 @@ def remove_group():
                         continue
                     if found:
                         key = int(key)-1
-                    
-                    f.write(" "+str(key)+": "+value+" \n")
+                    f.write("    "+str(key)+": "+value+" \n")
                 f.write("}")
             pathGroup = pathGroup+groupname+'.layer'
         else:
