@@ -444,7 +444,6 @@ a{
     height: 100%;
 }
 
-/*=== Map ===*/
 .map {
     width: 100%;
 	position:absolute;
@@ -452,6 +451,27 @@ a{
 	bottom:30px;
 	right:0;
 	left:0;
+}
+#map .olControlNoSelect{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color:#444;
+	text-shadow: 1px 1px rgba(255,255,255,0.4);
+}
+#map div.olControlMousePosition{
+	bottom:2em;
+}
+#map .olControlScale{
+	bottom:1em;
+}
+#map .olCurrentZoomLevelControl{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-shadow: 1px 1px rgba(255,255,255,0.4);
+	color:#444;
+	position:absolute;
+	bottom: 3em;
+	right:3px;
+	display:block;
+	font-size:smaller;
 }
 
 /*=== Others ===*/

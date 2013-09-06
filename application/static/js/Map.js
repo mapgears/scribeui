@@ -264,7 +264,29 @@ Map.prototype.display = function(){
         };
 
         var OLMap = new OpenLayers.Map(this.workspace.mapDiv, mapOptions);
-        OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition()]);
+	//Openlayers control to display the current zoom level
+	var currentZoomControl = new OpenLayers.Control();
+	OpenLayers.Util.extend(currentZoomControl, {
+		draw: function(){
+			OpenLayers.Control.prototype.draw.apply(this, arguments);
+        		if (!this.element) {
+		            this.element = document.createElement("div");
+			    this.div.setAttribute("class","olControlNoSelect");
+			    this.div.setAttribute("class","olCurrentZoomLevelControl");
+		            this.div.appendChild(this.element);
+		        }
+		        this.map.events.register( 'zoomend', this, this.updateZoomLevel);
+		        this.updateZoomLevel();
+		        return this.div;
+		 },
+		updateZoomLevel: function(){
+			var zoomlevel = this.map.getZoom();
+ 			zoomlevel++;
+			this.element.innerHTML = "Zoom level : "+zoomlevel;
+		}
+
+	});
+        OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
 
         var WMSLayer = new OpenLayers.Layer.WMS(
             this.name,
