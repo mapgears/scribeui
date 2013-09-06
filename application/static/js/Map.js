@@ -339,8 +339,8 @@ Map.prototype.destroy = function(callback){
             $("#" + self.workspace.mapList + " .ui-selected").remove();
             $("#" + self.workspace.mapDescription).html("");
 	    $("#" + self.workspace.mapActions).hide();
-            var index = self.workspace.getMapIndexByName(name);
-            self.workspace.maps.splice(index - 1, 1);
+            var index = self.workspace.getMapIndexByName(self.name);
+            self.workspace.maps.splice(index, 1);
 
             if(callback){
                 callback.call(self);
