@@ -21,8 +21,11 @@ jQuery(function() {
     }
 
     mapTypes = ["Scribe",  "Standard"];
-
+	
+	plugins = [];
+	
     openWorkspacePopup(workspaceConfig); 
+
 	
     /*--------------------------------
       Init code editors

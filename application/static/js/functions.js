@@ -550,36 +550,73 @@ function scribeLog(msg){
 
 /* 
 name: string, Name of the tab
-destinationid: id of the tab group, ex main-tabs or log-tabs
+destinationSelector: jquery selector of the tab group, ex #main-tabs or #log-tabs
 options: (optional) object
 	onclick: function called when tab link is clicked
-	position: string, where to add tab, possible values: before, after
+	position: string, where to add tab, possible values: last, first
 
 Returns: The div element to be used as tab content
 */
-function addTab(name, destinationid, options={}){
+function addTab(name, destinationSelector, options={}){
 	var onclick = options.onclick || null;
-	var position = options.position || 'after';
-	if($('#'+destinationid).exists()){
+	var position = options.position || 'last';
+	if($(destinationSelector).exists()){
 		var link = $('<a href="#'+name+'-tab">'+name+'</a>');
 		if(onclick) link.bind('click', onclick);
 
 		var li = $('<li class="tab-large"></li>');
 		li.append(link);
                 
-		if(position == 'after')
-			$('#'+destinationid+' .tabheader').append(li)
-		if(position == 'before')
-			$('#'+destinationid+' .tabheader').prepend(li)
+		if(position == 'last')
+			$(destinationSelector+' .tabheader').append(li)
+		if(position == 'first')
+			$(destinationSelector+' .tabheader').prepend(li)
                 var div = $('<div id="'+name+'-tab"></div>');
-		$('#'+destinationid).append(div);
-		$('#'+destinationid).tabs('refresh');
+		$(destinationSelector).append(div);
+		$(destinationSelector).tabs('refresh');
 		return div;
 	}else return null;
 }
+/*
+component: a jquery object
+destinationSelector: jquery selector of the destination
+options: (optional) object
+	position: string, where to add tab, possible values: last, first
 
-function addButton(name, destinationid, options={}){
-	
+Returns: The component
+*/
+
+function addComponent(component, destinationSelector, options={}){
+	var position = options.position || 'last';
+	if($(destinationSelector).exists()){
+		if(position == 'last')
+			$(destinationSelector).append(component)
+		if(position == 'first')
+			$(destinationSelector).prepend(component)
+ 		return component;
+
+	}else return null;
 }
+/* 
+name: string, Name of the button
+destinationSelector: jquery selector of the toolbar, ex editor-toolbar, tools-left or tools-right 
+options: (optional) object
+	onclick: function called when button is clicked
+	position: string, where to add tab, possible values: last, first
+	buttonid: string, id to give to the button
+
+Returns: The button element
+*/
+function addButton(name, destinationSelector, options={}){
+	var onclick = options.onclick || null;
+	var position = options.position || 'last';
+	var buttonid = options.buttonid || name;
+	if($(destinationSelector).exists()){
+		button = $('<button id="'+buttonid+'">'+name+'</button>').button();
+		button.click(onclick);
+		return addComponent(button, destinationSelector, options)
+	}else return null;
+}
+
 
 
