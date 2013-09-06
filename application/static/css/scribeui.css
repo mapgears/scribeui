@@ -125,6 +125,9 @@ a{
     border-radius: 0px !important;
 }
 
+.elfinder-workzone{
+	font-size:1.2em;
+}
 .file-manager {
     position: absolute !important;
     left: 0 !important;
@@ -659,9 +662,7 @@ button.fg-button {
     border-top-left-radius: 0px;
 }
 
-.ui-widget {
-    font-size: 1.1em;
-}
+
 
 .fg-buttonset { float:left; }
 .fg-buttonset .fg-button { float: left; }
