@@ -557,7 +557,8 @@ options: (optional) object
 
 Returns: The div element to be used as tab content
 */
-function addTab(name, destinationSelector, options={}){
+function addTab(name, destinationSelector, options){
+        options = (options) ? options : {};
 	var onclick = options.onclick || null;
 	var position = options.position || 'last';
 	if($(destinationSelector).exists()){
@@ -586,7 +587,8 @@ options: (optional) object
 Returns: The component
 */
 
-function addComponent(component, destinationSelector, options={}){
+function addComponent(component, destinationSelector, options){
+        options = (options) ? options : {};
 	var position = options.position || 'last';
 	if($(destinationSelector).exists()){
 		if(position == 'last')
@@ -607,7 +609,8 @@ options: (optional) object
 
 Returns: The button element
 */
-function addButton(name, destinationSelector, options={}){
+function addButton(name, destinationSelector, options){
+    options = (options) ? options : {};
 	var onclick = options.onclick || null;
 	var position = options.position || 'last';
 	var buttonid = options.buttonid || name;
