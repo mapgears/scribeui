@@ -169,7 +169,6 @@
 							<button id="btn-zoom-poi" >Go!</button>
 							<button id="btn-add-poi">+</button>
 						</div>
-						<div id="scale-level" class="scale-level"></div>
 					</div>
 					<div class="tools-left">
 						<button id="btn_commit" class="button-commit">Save</button>
@@ -181,7 +180,7 @@
 
 <!-- Forms and windows -->
     
-        <div id="createws-form" title="Create new workspace">
+        <div id="createws-form" title="Create new workspace" style="display:none">
             <form>
 	            <fieldset>
                     <label for="newws-name">Name</label><br>
@@ -192,7 +191,7 @@
             </form>
         </div>
 
-        <div id="createmap-form" title="Create new map">
+        <div id="createmap-form" title="Create new map" style="display:none">
             <form>
 	            <fieldset>
                     <label for="newmap-name">Name</label><br>
@@ -213,7 +212,7 @@
             </form>
         </div>
 
-        <div id="exportmap-form" title="Export map">
+        <div id="exportmap-form" title="Export map" style="display:none">
             <form>
 	            <fieldset>
                     <input type="checkbox" name="exportComponents" value="publicData" checked="true">Public data<br>
@@ -223,7 +222,7 @@
             <div id="preparingExport" class="hidden">Preparing data...</div>
         </div>
 
-        <div id="creategroup-form" title="Create new group">
+        <div id="creategroup-form" title="Create new group" style="display:none">
             <form>
 	            <fieldset>
                     <label for="newgroup-name">Name</label><br>
@@ -232,7 +231,7 @@
             </form>
         </div>
 
-        <div id="grouporder-form" title="Change group order">
+        <div id="grouporder-form" title="Change group order" style="display:none">
             <form>
 	            <fieldset>
                     <ol id="group-ol" class="group-ol">
@@ -241,7 +240,7 @@
             </form>
         </div>
 
-        <div id="addpoi-form" title="Add point of interest">
+        <div id="addpoi-form" title="Add point of interest" style="display:none">
             <form>
 	            <fieldset>
                     <label for="newpoi-name">Name</label><br>
@@ -250,7 +249,7 @@
             </form>
         </div>
 
-        <div id="cachemap" title="Cache" style="display:none">
+        <div id="cachemap" title="Cache" style="display:none" style="display:none">
             <label>Map<br/></label>
             <select id="selectmap" class="shadow_select dialog-select"></select>
             <label>Extent<br/></label>

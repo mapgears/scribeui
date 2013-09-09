@@ -442,7 +442,7 @@ a{
 .main-right {
     float: left;
 	position:relative;
-	top:-30px;
+	top:0px;
     width: 58%;
     height: 100%;
 }
@@ -450,7 +450,7 @@ a{
 .map {
     width: 100%;
 	position:absolute;
-	top:30px;
+	top:0px;
 	bottom:30px;
 	right:0;
 	left:0;

@@ -15,7 +15,6 @@ jQuery(function() {
         "logTextarea": "txt-logs",
         "resultTextarea": "txt-result",
         "debugTextarea": "txt-debug",
-        "scaleLevelDiv": "scale-level",
 	"popupHeight":400,
 	"popupWidth":400
     }
@@ -43,7 +42,15 @@ jQuery(function() {
         matchBrackets: true,
 		onChange: function(e){
 			_workspace.openedMap.saved = false;
+		},
+		extraKeys: {
+			"Enter": function(e){
+				e.replaceSelection("\n", "end", "+input");
+				e.indentLine(e.getCursor().line )
+				resizeEditors();
+			}
 		}
+	
     }
 
     groupEditor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
@@ -57,6 +64,8 @@ jQuery(function() {
     /*--------------------------------
       Tabs and buttons
     --------------------------------*/
+
+    $('.main').height( $('body').height()-$('.navbar').height())
     $("#main-tabs").tabs({heightStyle: "fill"});
 	$("#logs").resizable({
 		handles: 'n',
@@ -80,7 +89,8 @@ jQuery(function() {
 	$('.main').on('resize', function () {
         //$('#main-tabs').tabs('refresh');
     });
-	$('#editors-container').height($('#editor-tab').height() - 57);
+
+	$('#editors-container').height($('#editor-tab').height() - 27);
     $("button").button({
 		text: true
     });

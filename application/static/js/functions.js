@@ -105,7 +105,8 @@ function openWorkspacePopup(options){
 		width: options.popupWidth,
 		height:options.popupHeight,
 		resizable: false,
-		dialogClass: dClass, 
+		dialogClass: dClass,
+		modal:true,
 		buttons:{
 			"New Workspace": function(e){ 
 				openNewWorkspaceWindow(options)

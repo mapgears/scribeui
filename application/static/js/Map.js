@@ -305,9 +305,6 @@ Map.prototype.display = function(){
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
-
-        this.registerScaleLevel();
-        this.displayScaleLevel();
     }
 }
 
@@ -498,21 +495,4 @@ Map.prototype.getDebug = function(){
     });	
 }
 
-Map.prototype.registerScaleLevel = function(){
-    var self = this;
-    this.OLMap.events.on({
-	"zoomend": function(){
-            self.displayScaleLevel();
-        }
-    });
-}
 
-Map.prototype.displayScaleLevel = function(){
-    if(this.type != "Basemaps"){
-        var zoom = this.OLMap.zoom + 1;
-    } else{
-        var zoom = this.OLMap.zoom;
-    }
-
-    $("#" + this.workspace.scaleLevelDiv).html("Scale level: " + zoom);
-}
