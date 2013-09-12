@@ -13,6 +13,7 @@ import codecs #Opening group files
 import random # download
 import datetime #download
 import pprint #For debugging purposes
+import imp #For plugins
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -58,6 +59,23 @@ listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbols.map'},
                     ]
+plugins = {}
+#===============================
+#	Plugin load code
+#===============================
+def load_plugins():
+    path = "plugins/"
+    for filename in os.listdir(path):
+        pprint.pprint(filename)
+        if os.path.isdir(path+filename):
+            f, pluginName, descr = imp.find_module(filename, [path])
+            pprint.pprint(pluginName)
+            plugins[pluginName] =  imp.load_module(filename, f, pluginName, descr)
+            app.register_blueprint(getattr(plugins[pluginName], 'plugin'))
+        
+    return "1"
+
+load_plugins()
 
 #===============================
 #        DATABASE

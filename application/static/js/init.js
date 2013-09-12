@@ -42,15 +42,7 @@ jQuery(function() {
         matchBrackets: true,
 		onChange: function(e){
 			_workspace.openedMap.saved = false;
-		},
-		extraKeys: {
-			"Enter": function(e){
-				e.replaceSelection("\n", "end", "+input");
-				e.indentLine(e.getCursor().line )
-				resizeEditors();
-			}
 		}
-	
     }
 
     groupEditor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
