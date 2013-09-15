@@ -208,5 +208,5 @@ jQuery(function() {
 		if(_workspace.openedMap.saved == false)
 			return 'All unsaved changes will be lost, do you want to continue ?';	
 	}
-
 });
+

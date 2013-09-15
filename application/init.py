@@ -60,21 +60,19 @@ listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'symbols','url':'symbols.map'},
                     ]
 plugins = {}
+plugins_js = {}
+plugins_css = {}
 #===============================
 #	Plugin load code
 #===============================
 def load_plugins():
     path = "plugins/"
     for filename in os.listdir(path):
-        pprint.pprint(filename)
         if os.path.isdir(path+filename):
             f, pluginName, descr = imp.find_module(filename, [path])
-            pprint.pprint(pluginName)
             plugins[pluginName] =  imp.load_module(filename, f, pluginName, descr)
-            app.register_blueprint(getattr(plugins[pluginName], 'plugin'))
-        
+            app.register_blueprint(getattr(plugins[pluginName], 'plugin'), url_prefix='/'+pluginName)
     return "1"
-
 load_plugins()
 
 #===============================
@@ -135,7 +133,14 @@ def index():
                 file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
                 if datetime.datetime.now() - file_modified > datetime.timedelta(hours=1):
                     os.remove(curpath)
-    return render_template('index.html')
+    for name in plugins:
+        js = plugins[name].getJsFiles()
+        if js:
+            plugins_js[name] = js
+        css = plugins[name].getCssFiles()
+        if css:
+            plugins_css[name] = css
+    return render_template('index.html', plugins_js=plugins_js, plugins_css=plugins_css)
 
 #===============================
 #          Workspace   
@@ -376,32 +381,44 @@ def open_map():
     contentfiles['errorMsg']=[]
     if wsmap['map_type'] == 'Scribe':
         try:
-            json_file = open(pathMap+"editor/mapTemp.json")
-            data = json.load(json_file);
-            json_file.close();
+            mapfile = open(pathMap+"editor/map")
+            mapdata = mapfile.readlines()
+            scalefile = open(pathMap+"editor/scales")
+            scaledata = json.loads(string2json(scalefile.read()))
+            contentfiles['OLExtent'] = "NULL"
+            contentfiles['OLUnits'] = "NULL"
+            contentfiles['OLScales'] = "NULL"
+            contentfiles['OLProjection'] = "NULL"
+            projectionFound = False
+            for l in mapdata:
+                line = l.strip()
+                if projectionFound:
+                    if line.find('init='):
+                        contentfiles['OLProjection'] = line[6:-1].strip()
+                    else:
+                        contentfiles['OLProjection'] = line[1:-1].strip()
+                    projectionFound = False
+                index = line.find('EXTENT:')
+                if index != -1:
+                    contentfiles['OLExtent'] = line[index+7:].strip()
+                index = line.find('UNITS:')
+                if index != -1:
+                    contentfiles['OLUnits'] = line[index+6:].strip()
+                index = line.find('PROJECTION')
+                if index != -1:
+                    projectionFound = True
+            mapfile.close();
+            mapfile.close();
+            scalefile.close();
         except:
             contentfiles['errorMsg'].append("The header is bad")
         try:
-            contentfiles['OLScales']=list2dict(data['SCALES'])
+            contentfiles['OLScales']=list2dict(scaledata['SCALES'])
         except:
             contentfiles['OLScales'] = "NULL"
             contentfiles['errorMsg'].append("SCALES not found")
-        try:
-            contentfiles['OLExtent']=list2dict(data['MAP'])['EXTENT']
-        except:
-            contentfiles['OLExtent'] = "NULL"
-            contentfiles['errorMsg'].append("EXTENT not found")    
-        try:
-            contentfiles['OLUnits']=list2dict(data['MAP'])['UNITS'] 
-        except:
-            contentfiles['OLUnits'] = "NULL"
-            contentfiles['errorMsg'].append("UNITS not found")
-        try:
-            contentfiles['OLProjection']=list2dict(list2dict(data['MAP'])['PROJECTION'])['VOID'].split('=',1)[1][0:-1]
-        except:
-            contentfiles['OLProjection'] = "NULL"  
-            contentfiles['errorMsg'].append("PROJECTION not found")    
-    
+ 
+
     elif wsmap['map_type'] == 'Basemaps':
         stringSearch = ["OSM_EXTENT", "OSM_UNITS", "OSM_SRID"]
         makefile = open(pathMap + "Makefile", "r")

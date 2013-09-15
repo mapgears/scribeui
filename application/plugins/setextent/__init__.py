@@ -1,1 +1,1 @@
-from setextent import plugin
+from setextent import plugin, getJsFiles, getCssFiles

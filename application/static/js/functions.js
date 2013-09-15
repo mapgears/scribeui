@@ -538,6 +538,16 @@ function onMapOpened(){
 	}else{
 		$('#variables-button').remove();
 	}
+    for(i in plugins){
+		if(plugins[i].onMapOpened)
+			plugins[i].onMapOpened();
+	}
+}
+function onWorkspaceOpened(){
+    for(plugin in plugins){
+		if(plugin.onWorkspaceOpened)
+			plugin.onWorkspaceOpened();
+	}
 }
 function scribeLog(msg){
 	if(msg.indexOf("**ERRORS**") != -1){
@@ -622,5 +632,8 @@ function addButton(name, destinationSelector, options){
 	}else return null;
 }
 
-
+function addPlugin(plugin){
+	plugins.push(plugin);
+	plugin.init();
+}
 

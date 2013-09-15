@@ -33,6 +33,7 @@ Workspace.prototype.open = function(){
     this.getMaps(this.displayMaps);
     this.getPointsOfInterest(this.displayPointsOfInterest);
     $("#info").text(this.name);
+	onWorkspaceOpened();
 };
  
 Workspace.prototype.create = function(){

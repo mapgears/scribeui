@@ -13,6 +13,9 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/simple-hint.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/scribeui.css') }}">
      
+        {% for css in plugins_css %}
+        <link rel="stylesheet" href="{{ plugins_css[css] }}"/>
+        {% endfor %}
         <script src="{{ url_for('static', filename='lib/proj4js/lib/proj4js.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/OpenLayers-2.12/OpenLayers.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/jquery/js/jquery-1.7.2.min.js') }}"></script> 
@@ -32,7 +35,9 @@
         <script src="{{ url_for('static', filename='js/Workspace.js') }}"></script>
         <script src="{{ url_for('static', filename='js/Map.js') }}"></script>
         <script src="{{ url_for('static', filename='js/POI.js') }}"></script>
-
+        {% for js in plugins_js %}
+        <script src="{{ plugins_js[js] }}"></script>
+        {% endfor %}
         <script type=text/javascript>
           $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         </script>
