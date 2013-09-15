@@ -3,7 +3,7 @@ jQuery(function() { $(document).ready(function(){
 	function setExtent(){
 		this.name = "Map Extent Plug-in";
 	}
-
+	//This will be called immediatly after the addPlugin function
 	setExtent.prototype.init = function(){
 		addButton("Set Map Extent", "#editor-toolbar",{
 			onclick: this.open,	
@@ -91,9 +91,11 @@ jQuery(function() { $(document).ready(function(){
 		openSecondaryPanel("maps", mapEditor);
 				
 	}
+        //This will be called by functions.js once the map is opened.
+        //There exists also a onWorkspaceOpened function
 	setExtent.prototype.onMapOpened = function(){
 		$('#setMapExtent').button('enable');
 	}
-
+	//Call this to add your plugin to the application. 
 	addPlugin(new setExtent())
 })})
