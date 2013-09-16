@@ -14,6 +14,7 @@ import random # download
 import datetime #download
 import pprint #For debugging purposes
 import imp #For plugins
+import traceback #output exceptions to apache's log. Mostly helpful for plugin development.
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -60,18 +61,23 @@ listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'symbols','url':'symbols.map'},
                     ]
 plugins = {}
-plugins_js = {}
-plugins_css = {}
-#===============================
+plugins_js = []
+plugins_css = []
+
 #	Plugin load code
 #===============================
 def load_plugins():
     path = "plugins/"
     for filename in os.listdir(path):
-        if os.path.isdir(path+filename):
-            f, pluginName, descr = imp.find_module(filename, [path])
-            plugins[pluginName] =  imp.load_module(filename, f, pluginName, descr)
-            app.register_blueprint(getattr(plugins[pluginName], 'plugin'), url_prefix='/'+pluginName)
+        if os.path.isdir(path+filename) and os.path.isfile(path+filename+'/__init__.py'):
+            try:
+                f, pluginName, descr = imp.find_module(filename, [path])
+                plugins[pluginName] =  imp.load_module(filename, f, pluginName, descr)
+                app.register_blueprint(getattr(plugins[pluginName], 'plugin'), url_prefix='/'+pluginName)
+            except ImportError:
+                pprint.pprint('There was an error with the '+filename+' plugin:')
+                traceback.print_exc(file=sys.stdout)
+                
     return "1"
 load_plugins()
 
@@ -134,12 +140,27 @@ def index():
                 if datetime.datetime.now() - file_modified > datetime.timedelta(hours=1):
                     os.remove(curpath)
     for name in plugins:
-        js = plugins[name].getJsFiles()
-        if js:
-            plugins_js[name] = js
-        css = plugins[name].getCssFiles()
-        if css:
-            plugins_css[name] = css
+        try:
+            js_files = plugins[name].getJsFiles()
+            if isinstance(js_files, str):
+                plugins_js.append(js_files)
+            else:
+                for js in js_files:
+                    plugins_js.append(js)
+        except AttributeError:
+            #If the plugins doesn't have js files to include, ignore it. 
+            pass
+        try:
+            css_files = plugins[name].getCssFiles()
+            if isinstance(css_files, str):
+                plugins_css.append(css_files)
+            else:
+                for css in css_files:
+                    plugins_css.append(css)
+        except AttributeError:
+            pass
+    pprint.pprint(plugins_js)
+    pprint.pprint(plugins_css)
     return render_template('index.html', plugins_js=plugins_js, plugins_css=plugins_css)
 
 #===============================
