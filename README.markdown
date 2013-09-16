@@ -3,7 +3,7 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout tags/v0.3
+To get the latest release, clone this repo and then checkout tags/v0.4
 
 *If you are updating from a previous version, please follow the migration
 instructions at the end of this document before checking out.*
@@ -100,7 +100,7 @@ please follow these instructions:
 
 * Checkout the latest release of ScribeUI
 
-        git checkout tags/v0.3
+        git checkout tags/v0.4
 
 * Run the update script:
 
