@@ -61,8 +61,6 @@ listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'symbols','url':'symbols.map'},
                     ]
 plugins = {}
-plugins_js = []
-plugins_css = []
 
 #	Plugin load code
 #===============================
@@ -131,10 +129,12 @@ def teardown_request(exception):
 #Homepage of the application
 @app.route('/')
 def index():
+    plugins_js = []
+    plugins_css = []
     dir_to_search = path+"www/"
     for dirpath, dirnames, filenames in os.walk(dir_to_search):
         for file in filenames:
-            if (re.search(".zip$",file) is not None): #file = "index.html":
+            if (re.search(".zip$",file) is not None): 
                 curpath = os.path.join(dirpath, file)
                 file_modified = datetime.datetime.fromtimestamp(os.path.getmtime(curpath))
                 if datetime.datetime.now() - file_modified > datetime.timedelta(hours=1):
@@ -159,8 +159,6 @@ def index():
                     plugins_css.append(css)
         except AttributeError:
             pass
-    pprint.pprint(plugins_js)
-    pprint.pprint(plugins_css)
     return render_template('index.html', plugins_js=plugins_js, plugins_css=plugins_css)
 
 #===============================
