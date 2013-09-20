@@ -4,7 +4,7 @@ from jinja2 import TemplateNotFound
 plugin = Blueprint('setextent', __name__, static_folder='static')
 
 #Anything specified in the app's routes will appear as pluginname/your-route
-#In this case, the path will be setextent/test
+#In this case, the path will be plugins/setextent/test
 @plugin.route('/test')
 def test():
     return "TEST"
