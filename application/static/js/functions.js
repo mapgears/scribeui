@@ -60,6 +60,7 @@ function deleteWorkspace(options){
                  click: function () {
                     var name = $("#" + options.workspaceSelect).val();
                     var password = $("#" + options.workspacePassword).val();
+                    options.password = password;
 
                     if(_workspace && _workspace.name == name){
                         _workspace.destroy(_workspace.close);
@@ -67,7 +68,6 @@ function deleteWorkspace(options){
                         var workspace = new Workspace(name, options);
                         workspace.destroy();
                     }
-
                     div.dialog("close");
                  }
             },

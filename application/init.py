@@ -219,28 +219,29 @@ def open_ws():
 @app.route('/_delete_ws', methods=['POST'])
 def delete_ws():
     wsToDelete = request.form['name']
-    
+    error = "1"
     ws = query_db('''select * from workspaces where ws_name = ?''', [wsToDelete], one=True)  
     if ws is None:
-        return 'Invalid workspace'
+        error = 'Invalid workspace'
     elif not check_password_hash(ws['password'], request.form['password']):
-        return 'Invalid password'
+        error = 'Invalid password '+request.form['password']
         
-    wsmap = query_db('''select * from maps where ws_id = ?''', [ws['ws_id']], one=False)
-    for i in range(len(wsmap)): 
-        g.db.execute('''DELETE FROM groups WHERE map_id=?''', [wsmap[i]['map_id']])
-        connectorFile = "/usr/lib/cgi-bin/elfinder-python/connector-"+wsToDelete+"-"+wsmap[i]['map_name']+".py"
-        subprocess.call(['rm','-f',connectorFile])
-    g.db.execute('''DELETE FROM maps WHERE ws_id=?''', [ws['ws_id']])
-    g.db.execute('''DELETE FROM pois WHERE ws_id=?''', [ws['ws_id']])
-    g.db.execute('''DELETE FROM workspaces WHERE ws_id=?''', [ws['ws_id']])
-    g.db.commit()
+    else:
+        wsmap = query_db('''select * from maps where ws_id = ?''', [ws['ws_id']], one=False)
+        for i in range(len(wsmap)): 
+            g.db.execute('''DELETE FROM groups WHERE map_id=?''', [wsmap[i]['map_id']])
+            connectorFile = "/usr/lib/cgi-bin/elfinder-python/connector-"+wsToDelete+"-"+wsmap[i]['map_name']+".py"
+            subprocess.call(['rm','-f',connectorFile])
+        g.db.execute('''DELETE FROM maps WHERE ws_id=?''', [ws['ws_id']])
+        g.db.execute('''DELETE FROM pois WHERE ws_id=?''', [ws['ws_id']])
+        g.db.execute('''DELETE FROM workspaces WHERE ws_id=?''', [ws['ws_id']])
+        g.db.commit()
  
-    subprocess.call(['rm','-r', path+"workspaces/"+ws['ws_name']])
+        subprocess.call(['rm','-r', path+"workspaces/"+ws['ws_name']])
 
-    session.pop('ws_name', None)
-    session.pop('map_name', None)
-    return "1" 
+        session.pop('ws_name', None)
+        session.pop('map_name', None)
+    return error
 
 #===============================
 #          Maps 

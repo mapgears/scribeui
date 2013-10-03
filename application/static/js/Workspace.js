@@ -206,6 +206,7 @@ Workspace.prototype.destroy = function(callback){
     }, function(status) {
         if(status == "1") {
             $("#" + self.workspaceSelect + " option[value=" + self.name + "]").remove();
+			$('#'+self.workspacePassword).val('');
             if(callback){
                 callback.call(self);
             }
