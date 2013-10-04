@@ -744,3 +744,12 @@ button.fg-button {
 	display:none;
 }
 
+.ui-state-error p{
+	padding-top:0.3em;
+	padding-bottom:0.3em;
+}
+.ui-state-error{
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+}
+

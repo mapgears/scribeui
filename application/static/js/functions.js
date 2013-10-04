@@ -91,7 +91,10 @@ function openWorkspace(options){
     }
 
     _workspace = new Workspace(name, options);
-    _workspace.open();
+    if(_workspace.open())
+		return true;
+	else return false;
+   
 }
 
 function openWorkspacePopup(options){
@@ -112,8 +115,7 @@ function openWorkspacePopup(options){
 				openNewWorkspaceWindow(options)
 			},
 			"Open Workspace": function(e){
-	    			openWorkspace(options);
-                		$(this).dialog("close");
+	    			openWorkspace(options)
 			},
 			"Delete Workspace": function(e){
 	    		deleteWorkspace(options);
@@ -122,6 +124,9 @@ function openWorkspacePopup(options){
 	})
 }
 
+function closeWorkspacePopup(options){
+	$('#'+options.workspaceManage).dialog('close');
+}
 function getTemplatesOfType(type){
     $.post($SCRIPT_ROOT + '/_export_map', {
         type: type

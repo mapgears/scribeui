@@ -5,6 +5,7 @@ function Workspace(name, options){
     if(options){
 	this.password = options.password ? options.password : this.password;
         this.workspaceSelect = options.workspaceSelect ? options.workspaceSelect : null;
+        this.workspaceManage = options.workspaceManage ? options.workspaceManage : null;
         this.mapList = options.mapList ? options.mapList : null;
         this.workspacePassword = options.workspacePassword ? options.workspacePassword : null;
         this.mapDiv = options.mapDiv ? options.mapDiv : null;
@@ -32,7 +33,7 @@ function Workspace(name, options){
 Workspace.prototype.open = function(){
     this.getMaps(this.displayMaps);
     this.getPointsOfInterest(this.displayPointsOfInterest);
-    $("#info").text(this.name);
+	$("#info").text(this.name);
 	onWorkspaceOpened();
 };
  
@@ -58,25 +59,28 @@ Workspace.prototype.getMaps = function(callback){
         password: this.password
     }, function(data) {
         if(typeof(data) == "object") {
-	    var maps = [];
-	    $.each(data.maps, function(key, map){
-		maps.push(new Map(map.name, {
-		    "description": map.description,
-		    "url": map.url,
-		    "workspace": self
-		}));
-	    });
+		    var maps = [];
+		    $.each(data.maps, function(key, map){
+				maps.push(new Map(map.name, {
+				    "description": map.description,
+				    "url": map.url,
+				    "workspace": self
+				}));
+		    });
 
             for(var i = 0; i < maps.length; i++){
-	        self.maps.push(maps[i]);
+		        self.maps.push(maps[i]);
             }
 
-	    if(callback){
-		callback.call(self)
-	    }
+		    if(callback){
+				callback.call(self)
+		    }
+			closeWorkspacePopup({"workspaceManage": self.workspaceManage});
+			$('#'+self.workspaceManage+' .workspace-errors').hide();
         }else {
-	    alert(data);
-	}
+			$('#'+self.workspaceManage+' .workspace-errors').show();
+			$('#'+self.workspaceManage+' .workspace-errors .error').html(data);
+		}
     });
 };
 

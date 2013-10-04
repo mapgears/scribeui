@@ -61,14 +61,6 @@
                         <li class="tab-large"><a href="#data-tab">Browse</a></li>
 	            </ul>
 	            <div id="manager-tab" class="tabcontent">
-	                <div id="workspace-manage" >
-                	    <div class="content">
-	    	            	<label>Name</label><br>
-		                	<select id="workspace-select" class="workspace-select shadow_select"></select><br>
-		                	<label>Password</label><br>
-		            	    <input id="workspace-password" class="workspace-input" type="password"/>
-	                    </div>
-                    </div>
 	                <div class="manager-maps">
 	                	<span class="separator">Maps</span>
                         <div class="content">
@@ -184,14 +176,31 @@
 
 
 <!-- Forms and windows -->
-    
+    	<div id="workspace-manage" >
+                	    <div class="content">
+							<div class="workspace-errors ui-state-error ui-corner-all" style="display:none; padding: .7em">
+								<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+								<p>
+									<strong>Error: </strong><span class="error"></span>
+								</p>
+							</div>
+	    	            	<label>Name</label><br>
+		                	<select id="workspace-select" class="workspace-select shadow_select"></select><br>
+		                	<label>Password</label><br>
+		            	    <input id="workspace-password" class="workspace-input" type="password"/>
+	                    </div>
+                    </div>
+
         <div id="createws-form" title="Create new workspace" style="display:none">
             <form>
 	            <fieldset>
-                    <label for="newws-name">Name</label><br>
-                    <input type="text" name="newws-name" id="newws-name" class="text ui-widget-content ui-corner-all" />
-                    <label for="newws-password">Password</label>
-                    <input type="password" name="newws-password" id="newws-password" value="" class="text ui-widget-content ui-corner-all" />
+					<p>
+                    	<label for="newws-name">Name</label><br/>
+                    	<input type="text" name="newws-name" id="newws-name" class="text ui-widget-content ui-corner-all" />
+					</p><p>
+                    	<label for="newws-password">Password</label><br/>
+                    	<input type="password" name="newws-password" id="newws-password" value="" class="text ui-widget-content ui-corner-all" />
+					<p>
 	            </fieldset>
             </form>
         </div>
