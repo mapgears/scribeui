@@ -224,7 +224,7 @@ def delete_ws():
     if ws is None:
         error = 'Invalid workspace'
     elif not check_password_hash(ws['password'], request.form['password']):
-        error = 'Invalid password '+request.form['password']
+        error = 'Invalid password '
         
     else:
         wsmap = query_db('''select * from maps where ws_id = ?''', [ws['ws_id']], one=False)
