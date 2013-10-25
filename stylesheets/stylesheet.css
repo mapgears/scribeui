@@ -194,6 +194,9 @@ nav#top-nav a.active{
 	font-weight:bold;
 	text-align:right;
 }
+.half-block li{
+	list-style:disc inside;
+}
 aside#sidebar {
   width: 200px;
   padding-left: 20px;
