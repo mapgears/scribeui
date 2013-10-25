@@ -12,3 +12,7 @@ ScribeUI is a project started by [Mapgears](http://mapgears.com), first as an in
 You can report bugs on the [issue list](https://github.com/mapgears/scribeui/issues?state=open) on github.
 
 Questions and discussion should be posted on the [mapserver-users mailing list](http://www.mapserver.org/community/lists.html).
+
+## License
+
+ScribeUI is release under a MIT-style license. [Read it here](license.html).
