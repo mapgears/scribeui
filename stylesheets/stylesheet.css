@@ -27,6 +27,9 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html, body{
+	height:100%;
+}
 body {
 	line-height: 1;
 }
@@ -89,19 +92,66 @@ header h2 {
   letter-spacing: 0;
 }
 
+nav#top-nav{
+	padding:10px;
+}
+nav#top-nav a{
+	display:inline-block;
+	margin-right:7px;
+ 	margin-top:2px;
+	color:#666;
+}
+nav#top-nav a:hover,
+nav#top-nav a.active:hover{
+	color:#2268b2;
+}
+nav#top-nav a.active{
+   color: #555;
+}
+
+#download{
+	border-top: solid 1px #fff;
+	border-bottom: solid 1px #e2e2e2;
+	background-color:#efefef;
+	height:110px;
+}
+
+#download p{
+	margin-top:15px;
+	margin-bottom:15px;
+	float:left;
+	width: 490px;
+}
+
+#download a.button {
+  width: 138px;
+  padding-left: 64px;
+  display: block;
+  background: transparent url(../images/download-button.png) 0 0 no-repeat;
+  margin: 15px;
+  margin-left:0;
+  font-size: 21px;
+  float:left;
+}
+
+
 .inner {
   position: relative;
   width: 940px;
   margin: 0 auto;
 }
-
+#wrap{
+	min-height:100%;
+}
 #content-wrapper {
   border-top: solid 1px #fff;
   padding-top: 30px;
+	overflow:auto;
+	padding-bottom:61px;
 }
 
 #main-content {
-  width: 690px;
+  width: 940px;
   float: left;
 }
 
@@ -109,6 +159,41 @@ header h2 {
   max-width: 100%;
 }
 
+.half-block{
+	width:410px;
+	margin:28px;
+	margin-left:0px;
+	float:left;
+	color:#fff;
+	padding:15px;
+	border-radius:15px;
+	border:solid 1px #DBDCDE;
+	
+	background-color:#3185DA;
+	background-image: linear-gradient(bottom, rgb(44,116,199) 0%, rgb(48,132,222) 50%);
+	background-image: -o-linear-gradient(bottom, rgb(44,116,199) 0%, rgb(48,132,222) 50%);
+	background-image: -moz-linear-gradient(bottom, rgb(44,116,199) 0%, rgb(48,132,222) 50%);
+	background-image: -webkit-linear-gradient(bottom, rgb(44,116,199) 0%, rgb(48,132,222) 50%);
+	background-image: -ms-linear-gradient(bottom, rgb(44,116,199) 0%, rgb(48,132,222) 50%);
+
+	background-image: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, rgb(44,116,199)),
+		color-stop(0.5, rgb(48,132,222))
+	);
+}
+.half-block h2{
+	font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
+	font-size:1.9em;
+	color:#fff;
+}
+.half-block a{
+	color:#fff;
+	font-weight:bold;
+	text-align:right;
+}
 aside#sidebar {
   width: 200px;
   padding-left: 20px;
@@ -122,10 +207,6 @@ aside#sidebar {
 aside#sidebar p.repo-owner,
 aside#sidebar p.repo-owner a {
   font-weight: bold;
-}
-
-#downloads {
-  margin-bottom: 40px;
 }
 
 a.button {
@@ -147,14 +228,6 @@ header a.button {
   right: 0;
   top: 0;
   background: transparent url(../images/github-button.png) 0 0 no-repeat;
-}
-aside a.button {
-  width: 138px;
-  padding-left: 64px;
-  display: block;
-  background: transparent url(../images/download-button.png) 0 0 no-repeat;
-  margin-bottom: 20px;
-  font-size: 21px;
 }
 
 code, pre {
@@ -341,12 +414,16 @@ dl dd {
 }
 
 footer {
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
-  margin-top: 40px;
+  margin-top: -61px;
   padding-top: 20px;
-  padding-bottom: 30px;
+  border-top:solid 1px #e2e2e2;
+  height:40px;
+	margin-bottom:0px;
   font-size: 13px;
   color: #aaa;
+	background-color:#efefef;
+	clear:both;
+	position:relative;
 }
 
 footer a {
@@ -356,7 +433,7 @@ footer a:hover {
   color: #444;
 }
 
-/* MISC */
+/* MISC 
 .clearfix:after {
   clear: both;
   content: '.';
@@ -368,7 +445,7 @@ footer a:hover {
 .clearfix {display: inline-block;}
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
-
+*/
 /* #Media Queries
 ================================================== */
 

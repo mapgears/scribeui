@@ -1,0 +1,9 @@
+{% include meta.html %}
+{% include header.html %}
+{% include download.html %}
+<div id="content-wrapper">
+  <div class="inner clearfix">
+    {{ content }}
+  </div>
+</div>
+{% include footer.html %}
