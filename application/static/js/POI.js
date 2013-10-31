@@ -9,7 +9,6 @@ POI.prototype.zoomTo = function(){
     var projection = this.workspace.openedMap.OLMap.getProjection();
     var lonLat = new OpenLayers.LonLat(this.lon, this.lat);
     var transformed = lonLat.transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection(projection.toUpperCase()));
-    //this.workspace.openedMap.OLMap.setCenter(transformed, this.scale);
     this.workspace.openedMap.OLMap.setCenter(transformed, this.findScaleLevel(this.scale));
 }
 
@@ -22,9 +21,13 @@ POI.prototype.findScaleLevel = function(denom){
             var level = i; 
         }
     }
-    return level;
+    //Scribe maps scales start at 1 instead of 0
+    if(typeof(this.workspace.openedMap.OLMap.scales[0]) == 'undefined')
+         return level-1;
+     else
+         return level;
 }
 
 POI.prototype.findScaleDenom = function(level){
-    return his.workspace.openedMap.OLScales[level];
+    return this.workspace.openedMap.OLScales[level];
 }
