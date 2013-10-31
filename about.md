@@ -15,4 +15,4 @@ Questions and discussion should be posted on the [mapserver-users mailing list](
 
 ## License
 
-ScribeUI is release under a MIT-style license. [Read it here](license.html).
+ScribeUI is released under a MIT-style license. [Read it here](license.html).
