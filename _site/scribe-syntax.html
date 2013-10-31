@@ -24,6 +24,7 @@
 	<nav id="top-nav" class="inner">
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
+		<a href="documentation.html">Docs</a> 
 		<a href="about.html">About</a> 
 	</nav>
   <header>
@@ -37,103 +38,101 @@
 <div id="content-wrapper">
   <div class="inner clearfix">
     <section id="main-content">
-      <h1 id='getting_started_with_scribe_syntax'>Getting started with Scribe syntax</h1>
+      <h1>Getting started with Scribe syntax</h1>
 
 <p>Creating a nice looking map that delivers efficiently its message is not an easy task. Quite often we are dealing with large datasets that shouldn’t be displayed at all scale levels or that should be displayed, but, with a style that changes with the scale level. Every single detail is important when defining the style of a map. The process is generally an iterative one and requires a lot of modifications to be made at each scale levels.</p>
 
 <p>With MapServer, MINSCALEDENOM and MAXSCALEDENOM tags in the LAYER and CLASS objects are responsible for the scale management. That means that as soon as an element of the style changes for a given LAYER or CLASS at a given scale level, a new LAYER or CLASS needs to be created. That way, we end up rewriting a lot of text to modify only a single parameter. The task becomes more tedious if a given parameter (the color of a road for example) is defined within 16 different LAYERs or so.</p>
 
-<p>That’s where Scribe comes to the rescue. It is a converter tool written in python that we developed to facilitate the creation of ‘mapfiles’ by allowing for the use of variables as well as shortcuts for managing scale levels. This approach is similar to that of <a href='https://github.com/mapserver/basemaps/'>Basemaps</a> but simpler to use and generally less verbose.</p>
+<p>That’s where Scribe comes to the rescue. It is a converter tool written in python that we developed to facilitate the creation of ‘mapfiles’ by allowing for the use of variables as well as shortcuts for managing scale levels. This approach is similar to that of <a href="https://github.com/mapserver/basemaps/">Basemaps</a> but simpler to use and generally less verbose.</p>
 
-<h2 id='scale_management'>Scale Management</h2>
-
-<pre><code>LAYER {
+<h2>Scale Management</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">LAYER {
     1-16 {
-	NAME: &#39;land&#39;
-	TYPE: POLYGON
-	@layerconfig
-	DATA {
-	    1-4: &#39;110m_physical/ne_110m_land&#39;
-	    5-10: &#39;50m_physical/ne_50m_land&#39;
-	    11-16: &#39;10m_physical/ne_10m_land&#39;
-	}
-	CLASS {
-	    STYLE {
-		COLOR {
-		    1-6: &#39;#EEECDF&#39;
-		    7-16: &#39;#AAA89B&#39;
-		}
-		OUTLINECOLOR: 200 200 200
-		OUTLINEWIDTH: @land_ol_width
-	    }
-	}
+    NAME: &#39;land&#39;
+    TYPE: POLYGON
+    @layerconfig
+    DATA {
+        1-4: &#39;110m_physical/ne_110m_land&#39;
+        5-10: &#39;50m_physical/ne_50m_land&#39;
+        11-16: &#39;10m_physical/ne_10m_land&#39;
     }
-}</code></pre>
-
+    CLASS {
+        STYLE {
+        COLOR {
+            1-6: &#39;#EEECDF&#39;
+            7-16: &#39;#AAA89B&#39;
+        }
+        OUTLINECOLOR: 200 200 200
+        OUTLINEWIDTH: @land_ol_width
+        }
+    }
+    }
+}
+</code></pre></div>
 <p>In the above example, a LAYER named ‘land’ is created. With the ‘1-16’ tag, this LAYER will be displayed from scale level 1 to 16. Scribe converts automatically those levels in terms of MINSCALEDENOM and MAXSCALEDENOM. Furthermore, from level 1 to 4, the data (DATA) has a resolution of 110m. From 5 to 10, it has a resolution of 50m and from 11 to 16 it has a resolution of 10m. The color (COLOR) changes according to the scale level too. Using this syntax makes it very easy to modify a given parameter for one or more scale levels without having to rewrite or copy and paste a load of text and having to make changes to a bunch of places.</p>
 
-<h2 id='defining_and_using_variables'>Defining and using variables</h2>
+<h2>Defining and using variables</h2>
 
-<p>Not only Scribe facilitates scale management, it also allows for defining and using variables. In the previous example, the variables ‘layerconfig’ and ‘land_ol_width’ are called with a ‘@’. Those variables are defined in the following way:</p>
-
-<pre><code>VARIABLES {
+<p>Not only Scribe facilitates scale management, it also allows for defining and using variables. In the previous example, the variables ‘layerconfig’ and ‘land<em>ol</em>width’ are called with a ‘@’. Those variables are defined in the following way:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">VARIABLES {
     layerconfig {
-	GROUP: &#39;default&#39;
-	STATUS: ON
-	PROJECTION {\{
-	    &#39;init=epsg:4326&#39;
-	}\}
-	PROCESSING: &#39;LABEL_NO_CLIP=ON&#39;
-	PROCESSING: &#39;CLOSE_CONNECTION=DEFER&#39;
+    GROUP: &#39;default&#39;
+    STATUS: ON
+    PROJECTION {\{
+        &#39;init=epsg:4326&#39;
+    }\}
+    PROCESSING: &#39;LABEL_NO_CLIP=ON&#39;
+    PROCESSING: &#39;CLOSE_CONNECTION=DEFER&#39;
     }
     land_ol_width: 1
-}</code></pre>
-
-<p>The variable ‘layerconfig’ contains some parameters that are used in the definition of most LAYERs. That means for each LAYER, writing ‘@layerconfig’ outputs all the parameters contained in the variable and spares the writing of a few lines of text. The next variable ‘land_ol_width’ contains a single value.</p>
+}
+</code></pre></div>
+<p>The variable ‘layerconfig’ contains some parameters that are used in the definition of most LAYERs. That means for each LAYER, writing ‘@layerconfig’ outputs all the parameters contained in the variable and spares the writing of a few lines of text. The next variable ‘land<em>ol</em>width’ contains a single value.</p>
 
 <p>Note that in the definition of the ‘layerconfig’ variable, the PROJECTION tag is followed with two ‘{‘. This syntax is necessary for tags like PROJECTION, METADATA AND PATTERN which contain no parameter, only plain text.</p>
 
-<h2 id='comment_blocks'>Comment Blocks</h2>
-
-<pre><code>LAYER {
+<h2>Comment Blocks</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">LAYER {
     1-16 {
-	NAME: &#39;land&#39;
-	TYPE: POLYGON
-	@layerconfig
-	DATA {
-	    1-4: &#39;110m_physical/ne_110m_land&#39;
-	    5-10: &#39;50m_physical/ne_50m_land&#39;
-	    11-16: &#39;10m_physical/ne_10m_land&#39;
-	}
-	CLASS {
-	    STYLE {
-		COLOR {
-		    1-6: &#39;#EEECDF&#39;
-		    7-16: &#39;#AAA89B&#39;
-		}
-		##Comments preceded with ## appear
-		##in the resulting mapfile.
-		##Comment blocks between /* */
-		## do not appear in the resulting mapfile.
-		/* 
-		OUTLINECOLOR: 200 200 200
-		OUTLINEWIDTH: @land_ol_width
-		*/              
-	    }
-	}
+    NAME: &#39;land&#39;
+    TYPE: POLYGON
+    @layerconfig
+    DATA {
+        1-4: &#39;110m_physical/ne_110m_land&#39;
+        5-10: &#39;50m_physical/ne_50m_land&#39;
+        11-16: &#39;10m_physical/ne_10m_land&#39;
     }
-}</code></pre>
+    CLASS {
+        STYLE {
+        COLOR {
+            1-6: &#39;#EEECDF&#39;
+            7-16: &#39;#AAA89B&#39;
+        }
+        ##Comments preceded with ## appear
+        ##in the resulting mapfile.
+        ##Comment blocks between /* */
+        ## do not appear in the resulting mapfile.
+        /* 
+        OUTLINECOLOR: 200 200 200
+        OUTLINEWIDTH: @land_ol_width
+        */              
+        }
+    }
+    }
+}
+</code></pre></div>
+<h2>Using Scribe</h2>
 
-<h2 id='using_scribe'>Using Scribe</h2>
+<p>Scribe is fully supported by ScribeUI, but it can also be used as an independant component. To learn more about that, <a href="https://github.com/solutionsmapgears/Scribe">visit the Scribe github repository</a>.</p>
 
-<p>Scribe is fully supported by ScribeUI, but it can also be used as an independant component. To learn more about that, <a href='https://github.com/solutionsmapgears/Scribe'>visit the Scribe github repository</a>.</p>
     </section>
   </div>
 </div>
 </div>
 <footer>
   <div class="inner clearfix">
-    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a></p>
+    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a> | ScribeUI.org is hosted on <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
   </div>
 </footer>
 </body>

@@ -24,6 +24,7 @@
 	<nav id="top-nav" class="inner">
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
+		<a href="documentation.html">Docs</a> 
 		<a href="about.html">About</a> 
 	</nav>
   <header>
@@ -37,87 +38,67 @@
 <div id="content-wrapper">
   <div class="inner clearfix">
     <section id="main-content">
-      <h1 id='getting_started_with_scribeui'>Getting Started with ScribeUI</h1>
+      <h1>Getting Started with ScribeUI</h1>
 
-<p>First, <a href='https://github.com/mapgears/scribeui'>download the latest release of ScribeUI on github</a>.</p>
+<p>First, <a href="https://github.com/mapgears/scribeui">download the latest release of ScribeUI on github</a>.</p>
 
-<h2 id='installing'>Installing</h2>
+<h2>Installing</h2>
 
-<h2 id='requirements'>Requirements</h2>
+<h2>Requirements</h2>
 
 <ul>
-<li>Apache</li>
-
-<li>Python (tested with 2.7.3 only)</li>
-
-<li>Mod WSGI</li>
-
-<li>Flask</li>
-
-<li>MapServer (version 6.0 or higher)</li>
-
-<li>Sqlite3</li>
+<li>  Apache</li>
+<li>  Python (tested with 2.7.3 only)</li>
+<li>  Mod WSGI</li>
+<li>  Flask</li>
+<li>  MapServer (version 6.0 or higher)</li>
+<li>  Sqlite3</li>
 </ul>
 
 <p>You can install them using aptitude and pip:</p>
-
-<pre><code>sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
-sudo pip install Flask</code></pre>
-
-<h2 id='configuration'>Configuration</h2>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
+sudo pip install Flask
+</code></pre></div>
+<h2>Configuration</h2>
 
 <ul>
-<li>
-<p>Make a copy of the application/runserver.dist.wsgi file as application/runserver.wsgi and edit it. Change the path accordingly.</p>
-
-<pre><code>cp application/runserver.dist.wsgi application/runserver.wsgi
-vim application/runserver.wsgi</code></pre>
-</li>
-
-<li>
-<p>Make a copy of the config.dist.py file as config.py and edit it. Change the ip variable accordingly.</p>
-
-<pre><code>cp config.dist.py config.py
-vim config.py</code></pre>
-</li>
-
-<li>
-<p>To reset the sqlite3 database, open a python shell as admin from the the application directory:</p>
-
-<pre><code>cd application
-sudo python</code></pre>
-
+<li><p>Make a copy of the application/runserver.dist.wsgi file as
+application/runserver.wsgi and edit it. Change the path accordingly.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cp application/runserver.dist.wsgi application/runserver.wsgi
+vim application/runserver.wsgi
+</code></pre></div></li>
+<li><p>Make a copy of the config.dist.py file as config.py and edit it. Change the
+ip variable accordingly.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cp config.dist.py config.py
+vim config.py
+</code></pre></div></li>
+<li><p>To reset the sqlite3 database, open a python shell as admin from the
+the application directory:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cd application
+sudo python
+</code></pre></div>
 <p>in the python shell:</p>
-
-<pre><code>from init import init_db
-init_db()</code></pre>
-</li>
-
-<li>
-<p>Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)</p>
-
-<pre><code>sudo cp -ap elfinder-python /usr/lib/cgi-bin/</code></pre>
-</li>
-
-<li>
-<p>The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:</p>
-
-<pre><code>sudo chown -R www-data application/db application/workspaces \
-application/www /usr/lib/cgi-bin/elfinder-python/</code></pre>
-</li>
-
-<li>
-<p>Run the makefile to download the data</p>
-
-<pre><code>make</code></pre>
-</li>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">from init import init_db
+init_db()
+</code></pre></div></li>
+<li><p>Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo cp -ap elfinder-python /usr/lib/cgi-bin/
+</code></pre></div></li>
+<li><p>The owner of the the db folder and the workspace folder must be the
+current user or www-data if the application is on a server:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data application/db application/workspaces \
+application/www /usr/lib/cgi-bin/elfinder-python/
+</code></pre></div></li>
+<li><p>Run the makefile to download the data</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">make
+</code></pre></div></li>
 </ul>
 
-<h2 id='apache_configuration'>Apache configuration</h2>
+<h2>Apache configuration</h2>
 
-<p>In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (change the path):</p>
-
-<pre><code>#ScribeUI     
+<p>In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
+(change the path):</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">#ScribeUI     
 
 WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
 AddType text/html .py
@@ -132,201 +113,18 @@ Alias /ScribeUI/download/ &quot;/opt/apps/ScribeUI/application/www/&quot;
   Options Indexes FollowSymLinks Multiviews
   Order allow,deny
   Allow from all
-&lt;/Directory&gt;</code></pre>
-
-<p>Note: if there are segfaults in the apache error logs after adding this config, it is fixed by restarting apache.</p>
-
-<h2 id='version_update_and_workspace_migration'>Version Update and Workspace Migration</h2>
-
-<p>If you are updating your version of ScribeUI from an earlier version to 0.2, please follow these instructions:</p>
-
-<ul>
-<li>
-<p>Change the owner of the database and workspace folders back to yourself:</p>
-
-<pre><code>  sudo chown -R yourusername application/db application/workspaces </code></pre>
-</li>
-
-<li>
-<p>Checkout the latest release of ScribeUI</p>
-
-<pre><code>  git checkout tags/v0.4</code></pre>
-</li>
-
-<li>
-<p>Run the update script:</p>
-
-<pre><code>  python application/update.py </code></pre>
-</li>
-
-<li>
-<p>Change the owner of the database and workspace back to www-data:</p>
-
-<pre><code>  sudo chown -R www-data application/db application/workspaces </code></pre>
-</li>
-
-<li>
-<p>(optionnal) Restart apache:</p>
-
-<pre><code>  sudo /etc/init.d/apache2 restart</code></pre>
-</li>
-
-<li>
-<p>The first time you edit a map, add the following line to the map element:</p>
-
-<pre><code>  INCLUDE: &#39;../symbols.map&#39; </code></pre>
-</li>
-</ul>
-
-<p>If you choose not to restart apache, the new version of ScribeUI might take a while to go live because of mod_wsgi.ScribeUI is an application to create mapfiles with many scale levels.</p>
-
-<p>To get the latest release, clone this repo and then checkout tags/v0.4</p>
-
-<p><em>If you are updating from a previous version, please follow the migration instructions at the end of this document before checking out.</em></p>
-
-<h2 id='requirements'>Requirements</h2>
-
-<ul>
-<li>Apache</li>
-
-<li>Python (tested with 2.7.3 only)</li>
-
-<li>Mod WSGI</li>
-
-<li>Flask</li>
-
-<li>MapServer (version 6.0 or higher)</li>
-
-<li>Sqlite3</li>
-</ul>
-
-<p>You can install them using aptitude and pip:</p>
-
-<pre><code>sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
-sudo pip install Flask</code></pre>
-
-<h2 id='configuration'>Configuration</h2>
-
-<ul>
-<li>
-<p>Make a copy of the application/runserver.dist.wsgi file as application/runserver.wsgi and edit it. Change the path accordingly.</p>
-
-<pre><code>cp application/runserver.dist.wsgi application/runserver.wsgi
-vim application/runserver.wsgi</code></pre>
-</li>
-
-<li>
-<p>Make a copy of the config.dist.py file as config.py and edit it. Change the ip variable accordingly.</p>
-
-<pre><code>cp config.dist.py config.py
-vim config.py</code></pre>
-</li>
-
-<li>
-<p>To reset the sqlite3 database, open a python shell as admin from the the application directory:</p>
-
-<pre><code>cd application
-sudo python</code></pre>
-
-<p>in the python shell:</p>
-
-<pre><code>from init import init_db
-init_db()</code></pre>
-</li>
-
-<li>
-<p>Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)</p>
-
-<pre><code>sudo cp -ap elfinder-python /usr/lib/cgi-bin/</code></pre>
-</li>
-
-<li>
-<p>The owner of the the db folder and the workspace folder must be the current user or www-data if the application is on a server:</p>
-
-<pre><code>sudo chown -R www-data application/db application/workspaces \
-application/www /usr/lib/cgi-bin/elfinder-python/</code></pre>
-</li>
-
-<li>
-<p>Run the makefile to download the data</p>
-
-<pre><code>make</code></pre>
-</li>
-</ul>
-
-<h2 id='apache_configuration'>Apache configuration</h2>
-
-<p>In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration (change the path):</p>
-
-<pre><code>#ScribeUI     
-
-WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
-AddType text/html .py
-&lt;Directory /opt/apps/ScribeUI/application/templates&gt;
-  Order deny,allow
-  Allow from all
 &lt;/Directory&gt;
+</code></pre></div>
+<p>Note: if there are segfaults in the apache error logs after adding this config,
+it is fixed by restarting apache.</p>
 
-Alias /ScribeUI/download/ &quot;/opt/apps/ScribeUI/application/www/&quot;
-&lt;Directory &quot;/opt/apps/ScribeUI/application/www/&quot;&gt;
-  AllowOverride None
-  Options Indexes FollowSymLinks Multiviews
-  Order allow,deny
-  Allow from all
-&lt;/Directory&gt;</code></pre>
-
-<p>Note: if there are segfaults in the apache error logs after adding this config, it is fixed by restarting apache.</p>
-
-<h2 id='version_update_and_workspace_migration'>Version Update and Workspace Migration</h2>
-
-<p>If you are updating your version of ScribeUI from an earlier version to 0.2, please follow these instructions:</p>
-
-<ul>
-<li>
-<p>Change the owner of the database and workspace folders back to yourself:</p>
-
-<pre><code>  sudo chown -R yourusername application/db application/workspaces </code></pre>
-</li>
-
-<li>
-<p>Checkout the latest release of ScribeUI</p>
-
-<pre><code>  git checkout tags/v0.4</code></pre>
-</li>
-
-<li>
-<p>Run the update script:</p>
-
-<pre><code>  python application/update.py </code></pre>
-</li>
-
-<li>
-<p>Change the owner of the database and workspace back to www-data:</p>
-
-<pre><code>  sudo chown -R www-data application/db application/workspaces </code></pre>
-</li>
-
-<li>
-<p>(optionnal) Restart apache:</p>
-
-<pre><code>  sudo /etc/init.d/apache2 restart</code></pre>
-</li>
-
-<li>
-<p>The first time you edit a map, add the following line to the map element:</p>
-
-<pre><code>  INCLUDE: &#39;../symbols.map&#39; </code></pre>
-</li>
-</ul>
-
-<p>If you choose not to restart apache, the new version of ScribeUI might take a while to go live because of mod_wsgi.</p>
     </section>
   </div>
 </div>
 </div>
 <footer>
   <div class="inner clearfix">
-    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a></p>
+    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a> | ScribeUI.org is hosted on <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
   </div>
 </footer>
 </body>

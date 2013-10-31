@@ -235,7 +235,6 @@ header a.button {
 
 code, pre {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  color: #222;
   margin-bottom: 30px;
   font-size: 13px;
 }
@@ -254,7 +253,6 @@ pre {
   border: solid 1px #f2f2f2;
 }
 pre code {
-  color: #2879d0;
   background-color: #fff;
   border: none;
   padding: 0;
@@ -469,7 +467,7 @@ footer a:hover {
     font-size: 30px;
   }
   #main-content {
-    width: 490px;
+    width: 740px;
   }
   #main-content h1:before,
   #main-content h2:before,

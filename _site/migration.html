@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>ScribeUI - Getting started with ScribeUI</title>
+  </head>
+  <body>
+
+
+
+<body>
+  <div id="wrap">
+	<nav id="top-nav" class="inner">
+		<a href="index.html" class="active">Home</a> 
+		<a href="getting-started.html">Getting Started</a> 
+		<a href="documentation.html">Docs</a> 
+		<a href="about.html">About</a> 
+	</nav>
+  <header>
+    <div class="inner">
+      <h1>ScribeUI</h1>
+      <h2>MapServer Mapfile Development Made Easy</h2>
+      <a href="https://github.com/mapgears/scribeui" class="button"><small>View project on</small>GitHub</a>
+    </div>
+  </header>
+
+<div id="content-wrapper">
+  <div class="inner clearfix">
+    <section id="main-content">
+      <h1>Version Update and Workspace Migration</h1>
+
+<p>These instructions are for users who have ScribeUI <strong>v0.1</strong> installed. If 
+you have a later version and wish to update ScribeUI, just pull the latest
+version from github and you&#39;re all good! </p>
+
+<p>In version 0.2 of ScribeUI, workspace management was edited, which is why
+you need to migrate your workspace and maps if you made them in ScribeUI o.1. 
+Just follow these steps:</p>
+
+<ul>
+<li><p>Change the owner of the database and workspace folders back to yourself:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R yourusername application/db application/workspaces 
+</code></pre></div></li>
+<li><p>Checkout the latest release of ScribeUI</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout tags/v0.4
+</code></pre></div></li>
+<li><p>Run the update script:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">python application/update.py 
+</code></pre></div></li>
+<li><p>Change the owner of the database and workspace back to www-data:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data application/db application/workspaces 
+</code></pre></div></li>
+<li><p>(optionnal) Restart apache:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo /etc/init.d/apache2 restart
+</code></pre></div></li>
+<li><p>The first time you edit a map, add the following line to the map element:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">INCLUDE: &#39;../symbols.map&#39; 
+</code></pre></div></li>
+</ul>
+
+<p>NOTE: If you choose not to restart apache, the new version of ScribeUI might take
+a while to go live because of mod_wsgi.</p>
+
+    </section>
+  </div>
+</div>
+</div>
+<footer>
+  <div class="inner clearfix">
+    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a> | ScribeUI.org is hosted on <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
+

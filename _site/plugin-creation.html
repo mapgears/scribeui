@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>ScribeUI - Plugin Creation Tutorial</title>
+  </head>
+  <body>
+
+
+
+<body>
+  <div id="wrap">
+	<nav id="top-nav" class="inner">
+		<a href="index.html" class="active">Home</a> 
+		<a href="getting-started.html">Getting Started</a> 
+		<a href="documentation.html">Docs</a> 
+		<a href="about.html">About</a> 
+	</nav>
+  <header>
+    <div class="inner">
+      <h1>ScribeUI</h1>
+      <h2>MapServer Mapfile Development Made Easy</h2>
+      <a href="https://github.com/mapgears/scribeui" class="button"><small>View project on</small>GitHub</a>
+    </div>
+  </header>
+
+<div id="content-wrapper">
+  <div class="inner clearfix">
+    <section id="main-content">
+      <h1>Plugin Creation</h1>
+
+<p>Creating plugins in ScribeUI is easy, this page should help understand how to create a new functionnality. </p>
+
+<p><em>Plugin creation requires ScribeUI v0.4 or higher.</em></p>
+
+<h2>Getting started</h2>
+
+<p>Let&#39;s create a small Hello World plugins with a few basic functionalities. </p>
+
+<p>All plugins should have their own individual folder in the application/plugins directory. For our plugin, let&#39;s create a directory named HelloWorld. Inside that folder, you must create a file named _<em>init</em>_.py</p>
+
+<p>This file will be imported as a module in the ScribeUI application. All the python files you wish to be available in your plugin should be imported in the _<em>init</em>_.py </p>
+
+<p>In our case, next to the _<em>init</em><em>.py file, we will create helloworld.py in which all of our code will go. In your \</em><em>init</em>_.py, add the following line:</p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">helloworld</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div>
+
+<p>ScribeUI plugins are in fact <a href="http://flask.pocoo.org/docs/blueprints/">Flask Blueprints</a> loaded dynamically when the application is loaded. As such, helloworld.py need to at least import the following modules: </p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span>
+</code></pre></div>
+
+<p>Then, for ScribeUI to recognize your plugin, you need the following variable, named plugin:</p>
+
+<div class="highlight"><pre><code class="python"><span class="n">plugin</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s">&#39;HelloWorld&#39;</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">static_folder</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">,</span> <span class="n">template_folder</span><span class="o">=</span><span class="s">&#39;templates&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The static_folder parameter defines the path relative where all your resources will be located. In that example, all images, javascript or css files are located in the application/plugins/myPlugin/static folder. In the same spirit, all the templates will be located in the application/plugins/myPlugin/templates directory.</p>
+
+<p><em>The different values the Blueprint function can accept are more detailed in the <a href="http://flask.pocoo.org/docs/blueprints/">Flask documentation.</a></em></p>
+
+<p>At this point, application/plugins/HelloWorld directory should look like this: </p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">HelloWorld/
+    __init__.py
+    helloworld.py
+    static/
+    templates/
+</code></pre></div>
+<p>And at that point, ScribeUI loads your module without any problems. But it doesn&#39;t do anything yet. </p>
+
+<h2>Adding some new Javascript and CSS to ScribeUI</h2>
+
+<p>First, we will create a simple javascript file that opens a jquery-ui dialog saying &quot;Hello, World!&quot;</p>
+
+<p>In your static folder, create a js directory, in which you will add a helloworld.js file with the following code:</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">helloDialog</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;hello-world&quot;&gt;Hello, World!&lt;/div&gt;&#39;</span><span class="p">);</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">helloDialog</span><span class="p">);</span>
+    <span class="nx">helloDialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">({</span>                                              
+        <span class="nx">modal</span><span class="o">:</span><span class="kc">false</span>
+    <span class="p">}).</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>                                                
+<span class="p">})});</span>
+</code></pre></div>
+
+<p>This code should be pretty straightforward if you are familiar with JQueryUI.</p>
+
+<p>Next, this javascript file should be included in the scribeui main page. To do that, add the following function to your helloworld.py page:</p>
+
+<div class="highlight"><pre><code class="python"> <span class="k">def</span> <span class="nf">getJsFiles</span><span class="p">():</span>                       
+    <span class="k">return</span> <span class="n">url_for</span><span class="p">(</span><span class="s">&#39;HelloWorld.static&#39;</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;js/helloworld.js&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>If you ever need to get several js files added, do it by returning an array, like this: [url<em>for(...),url</em>for(...)]</p>
+
+<p>When you edit a python file, the changes probably won&#39;t be picked up by mod_wsgi immediately. To see your changes, you should restart apache.</p>
+
+<p>Now, if you refresh ScribeUI, you should see a dialog popping with your hello world message. </p>
+
+<p>If you wish to add some CSS, you do it in a similar way to the javascript, but the function to add to your python file is the following: </p>
+
+<div class="highlight"><pre><code class="python"> <span class="k">def</span> <span class="nf">getCssFiles</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">url_for</span><span class="p">(</span><span class="s">&#39;HelloWorld.static&#39;</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;myCssFile.css&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Server-side functions</h2>
+
+<p>If you need to execute something server-side, the best way to go is to create a flask page with routing, and calling it with ajax. Flask has some nice advanced functionalities in that regards, for example its jinja2 templating system can be really useful. </p>
+
+<p>We are going to edit our hello world plugin by formatting a bit of json with templates and getting it with javascript.</p>
+
+<p>First, let&#39;s create a small json file, named helloworlds.json:</p>
+
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+    <span class="nt">&quot;helloworld&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;English&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Helloworld&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;French&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Bonjour monde&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;Spanish&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Hola mundo&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+ 
+</code></pre></div>
+
+<p>Now in the templates directory, create this basic template, called helloworld.html:</p>
+
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;table&gt;&lt;tr&gt;&lt;th&gt;</span>Language<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Message<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>                     
+{% for d in data %}                                                    
+    <span class="nt">&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;</span>
+{% endfor %}                     
+<span class="nt">&lt;/table&gt;</span>                                               
+</code></pre></div>
+
+<p>And finally, your python file will look like this:</p>
+
+<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">current_app</span>
+<span class="kn">import</span> <span class="nn">simplejson</span>
+
+<span class="n">plugin</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s">&#39;HelloWorld&#39;</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">static_folder</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">,</span> <span class="n">template_folder</span><span class="o">=</span><span class="s">&#39;templates&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getJsFiles</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">url_for</span><span class="p">(</span><span class="s">&#39;HelloWorld.static&#39;</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;js/helloworld.js&#39;</span><span class="p">)</span>
+
+<span class="nd">@plugin.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">printHelloWorld</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">simplejson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="s">&#39;helloworlds.json&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s">&#39;helloworld.html&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;helloworld&#39;</span><span class="p">])</span>
+</code></pre></div>
+
+<p>The @plugin.route function indicate the path that the appliation will use to access the function.  The render_template function defines which template to render, along with defining the data variable, which is then available to the template.</p>
+
+<p>You should be able to access this page from your browser after restarting apache, the path should look like this:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">http://localhost/ScribeUI/plugins/HelloWorld/
+</code></pre></div>
+<p>And the table should appear. All plugins routes are prefixed with plugins/pluginname.</p>
+
+<p>Now, let&#39;s edit our javascript script to show the template in our popup:</p>
+
+<div class="highlight"><pre><code class="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span><span class="nx">url</span><span class="o">:</span><span class="s2">&quot;plugins/HelloWorld/&quot;</span><span class="p">,</span><span class="nx">success</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">){</span>
+                <span class="kd">var</span> <span class="nx">helloDialog</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;hello-world&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">result</span><span class="o">+</span><span class="s1">&#39;&lt;/div&gt;&#39;</span><span class="p">);</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">helloDialog</span><span class="p">);</span>
+                <span class="nx">helloDialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">({</span>
+                        <span class="nx">modal</span><span class="o">:</span><span class="kc">false</span>
+                <span class="p">}).</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
+        <span class="p">}});</span>
+<span class="p">})});</span>
+</code></pre></div>
+
+<p>And now you should see your popup appear when you launch ScribeUI! </p>
+
+    </section>
+  </div>
+</div>
+</div>
+<footer>
+  <div class="inner clearfix">
+    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a> | ScribeUI.org is hosted on <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
+
