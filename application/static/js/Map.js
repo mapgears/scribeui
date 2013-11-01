@@ -165,8 +165,10 @@ Map.prototype.displayGroups = function(){
 		resizeEditors();
         if(group){
             groupEditor.setValue(group.content);
+			groupEditor.clearHistory();
         } else{
             groupEditor.setValue("");
+			groupEditor.clearHistory();
         }
         
 	e.stopPropagation();

@@ -538,6 +538,15 @@ function onMapOpened(){
 	});
 	$('#txt-logs').val('');
 	$('#txt-debug').val('');
+
+	//Needed to prevent being able to ctrl-z to previous' map content
+	groupEditor.clearHistory();
+	mapEditor.clearHistory();
+	variableEditor.clearHistory();
+	scaleEditor.clearHistory();
+	fontEditor.clearHistory();
+	projectionEditor.clearHistory();
+
     for(i in plugins){
 		if(plugins[i].onMapOpened)
 			plugins[i].onMapOpened();
