@@ -2,11 +2,15 @@ jQuery(function() { $(document).ready(function(){
 
 	function setExtent(){
 		this.name = "Map Extent Plug-in";
+		this.boxControl = null;
+		this.boxLayer = null;
+		this.dialogDiv = null;
+		this.extentLineNumer = null;
 	}
 	//This will be called immediatly after the addPlugin function
 	setExtent.prototype.init = function(){
 		addButton("Set Map Extent", "#editor-toolbar",{
-			onclick: this.open,	
+			onclick: $.proxy(this.open,this),	
 			buttonid: 'setMapExtent'
 		});
 		$('#setMapExtent').button('disable');
@@ -14,23 +18,26 @@ jQuery(function() { $(document).ready(function(){
 
 	setExtent.prototype.open = function(){
 		//Find the extent in the mapEditor
-		line = -1;
+		var extentStr = "EXTENT ";
+		if(_workspace.openedMap.type == "Scribe")
+			extentStr = "EXTENT:";
 		for(var i=0; i<mapEditor.lineCount(); i++){
-			if(mapEditor.getLine(i).indexOf("EXTENT:") !== -1){
+			if(mapEditor.getLine(i).indexOf(extentStr) !== -1){
 				//Hightlight line in codemirror
 				 mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-				line = i;
+				this.extentLineNumer = i;
 				break;
 			}
 		}
-		if(line === -1) return "Couldn't find map extent.";
+		if(this.extentLineNumer === -1) return "Couldn't find map extent.";
+		var extProxyLineNumber = this.extentLineNumer;
 		
 		//We need a vector layer to draw the box
-		var boxLayer = new OpenLayers.Layer.Vector("Box layer");
+		boxLayer = new OpenLayers.Layer.Vector("Box layer");
 		_workspace.openedMap.OLMap.addLayer(boxLayer); 
 
 		//Add drawing control to map
-		var boxControl = new OpenLayers.Control.DrawFeature(boxLayer,
+		boxControl = new OpenLayers.Control.DrawFeature(boxLayer,
 			OpenLayers.Handler.RegularPolygon, {
 				handlerOptions: {
 					sides: 4,
@@ -48,7 +55,7 @@ jQuery(function() { $(document).ready(function(){
 		boxControl.activate();
 
 		//Create the dialog
-		var dialogDiv = $('<div id="setextent-dialog"><p>Draw a rectangle on the map to choose the map extent.</p></div>')
+		dialogDiv = $('<div id="setextent-dialog"><p>Draw a rectangle on the map to choose the map extent.</p></div>')
 		dialogDiv.hide();
 		$('.main').append(dialogDiv);
 		dialogDiv.dialog({
@@ -57,29 +64,20 @@ jQuery(function() { $(document).ready(function(){
 			height: "130",
 			width: "180",
    		    modal: false,
+			beforeClose: $.proxy(this.closeDialog, this),
    		    buttons: {
 				"SetExtent": function(){
 					//Get extent string
 					var ext = boxLayer.features[0].geometry.bounds.toString();
 					ext = ext.replace(/,/g,' ');
-					var lineContent = mapEditor.getLine(line);
-					var newLineContent = lineContent.substr(0, lineContent.indexOf("EXTENT:")+7);
+					var lineContent = mapEditor.getLine(extProxyLineNumber);
+					var newLineContent = lineContent.substr(0, lineContent.indexOf(extentStr)+extentStr.length);
 					newLineContent += ext;
-					mapEditor.setLine(line, newLineContent);
+					mapEditor.setLine(extProxyLineNumber, newLineContent);
 					
-				 	mapEditor.setLineClass(i, 'background', '');
-					_workspace.openedMap.OLMap.removeControl(boxControl);
-					boxControl.destroy();
-					_workspace.openedMap.OLMap.removeLayer(boxLayer);
-					boxLayer.destroy();
 					$(this).dialog("close");
 				},
 				"Cancel": function(){
-				 	mapEditor.setLineClass(i, 'background', '');
-					_workspace.openedMap.OLMap.removeControl(boxControl);
-					boxControl.destroy();
-					_workspace.openedMap.OLMap.removeLayer(boxLayer);
-					boxLayer.destroy();
 					$(this).dialog("close");
 				}
 			}
@@ -96,6 +94,14 @@ jQuery(function() { $(document).ready(function(){
 	setExtent.prototype.onMapOpened = function(){
 		$('#setMapExtent').button('enable');
 	}
+	setExtent.prototype.closeDialog = function(e, ui){
+		mapEditor.setLineClass(this.extentLineNumer, 'background', '');
+		_workspace.openedMap.OLMap.removeControl(boxControl);
+		boxControl.destroy();
+		_workspace.openedMap.OLMap.removeLayer(boxLayer);
+		boxLayer.destroy();
+	}
+
 	//Call this to add your plugin to the application. 
 	addPlugin(new setExtent())
 })})
