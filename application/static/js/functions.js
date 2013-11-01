@@ -529,20 +529,15 @@ function onMapOpened(){
 			case 'projections': 
 				editor = projectionEditor;
 				break;
+			case 'variables':
+				editor = variableEditor;
+				break;
 				
 		}
 		openSecondaryPanel(val, editor);
 	});
 	$('#txt-logs').val('');
 	$('#txt-debug').val('');
-	if(_workspace.openedMap.type == "Scribe" && $('#variables-button').length == 0){
-		$('#group-edition-select').after(
-			$('<button id="variables-button" class="group-button">Variables</button>').button().click(function(e){
-				openSecondaryPanel('variables',variableEditor);
-		}));
-	}else{
-		$('#variables-button').remove();
-	}
     for(i in plugins){
 		if(plugins[i].onMapOpened)
 			plugins[i].onMapOpened();
