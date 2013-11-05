@@ -487,6 +487,7 @@ function onMapMoveEnd(){
 /* layout functions */
 
 function resizeEditors(){
+	//$('#editor-tab').css("overflow","hidden");
 	if( $('.secondary-wrap').is(':visible'))
 		var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
 	else var remainingSpace = $('#editors-container').height();
