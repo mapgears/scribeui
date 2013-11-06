@@ -233,7 +233,10 @@ a{
     width: 100%;
 
 }
+#data-tab{
+	font-size:1.1em;
 
+}
 /*=== Manager ===*/
 .tabheader-ws-container {
     overflow-y: auto;
