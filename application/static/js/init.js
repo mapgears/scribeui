@@ -80,7 +80,6 @@ jQuery(function() {
 	
 	$('#editors-container').height($('#editor-tab').height() - 27);
 	$(window).on('resize', function () {
-		console.log($('body').height());
     	$('.main').height( $('body').height()-$('.navbar').height())
         $('#main-tabs').tabs('refresh');
 		$('#editors-container').height($('#editor-tab').height() - 27);

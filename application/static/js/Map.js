@@ -144,7 +144,6 @@ Map.prototype.displayComponents = function(){
     }
 
     $(".group-button").button("enable");
-	console.log('enabled');
     this.displayGroups();
 };
 

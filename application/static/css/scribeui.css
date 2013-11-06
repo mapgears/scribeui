@@ -186,8 +186,6 @@ a{
 
 
 .tabheader {
-    /*border-bottom: 1px solid #AAAAAA !important;
-    border-right: 1px solid #AAAAAA !important;*/
     border-radius: 0 !important;
     border-left-width: 0px !important;
     border-top-width: 0px !important;
@@ -199,7 +197,6 @@ a{
 }
 
 .tabheader-small {
-   /* border-bottom: 1px solid #AAAAAA !important;*/
     border-radius: 0 !important;
     border-left-width: 0px !important;
     border-right-width: 0px !important;
@@ -566,46 +563,6 @@ fieldset input {
     width: 205px;
 }
 
-/*=== Text, select, button ===*/
-/*
-label {
-    color: white;
-    font: normal 15px !important;
-}
-
-.ui-button .ui-button-text
-{
- line-height: 0.8;
-}
-
-.ui-dialog .ui-dialog-titlebar {
-    padding: 0.2em 1em !important;
-}
-
-.ui-dialog .ui-dialog-buttonpane {
-    padding: 0px !important;
-}
-
-.dialog-select {
-    width: 270px;
-}
-
-.dialog-input {
-    width: 264px;
-}
-
-button, input, select, textarea {
-    vertical-align: middle;
-}
-
-button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner {
-    border: none;
-}
-
-.layer:hover {
-    cursor: crosshair;
-}
-*/
 /*=== Other ===*/
 div.olControlZoom a {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5) !important;
@@ -636,39 +593,6 @@ div.olControlZoom a {
     left: 20px;
     margin-right:16px;
 }
-/*
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
-    padding-bottom: 0px !important;
-}
-
-button.fg-button { 
-    width:auto; 
-    overflow:visible;
-    margin-top: 10px;
-}
-
-.button-tools {
-    position: relative;
-    left: 1%;
-}
-
-.left-button {
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-
-.right-button {
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-}
-
-
-
-.fg-buttonset { float:left; }
-.fg-buttonset .fg-button { float: left; }
-.fg-buttonset-single .fg-button, 
-.fg-buttonset-multi .fg-button { margin-right: -0.3px;}
-*/
 #group-ol .ui-selecting { 
 	color:#007BD1;
 }
