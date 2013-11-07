@@ -364,6 +364,7 @@ a{
 #editor-toolbar{
 	background-color:#FCFCFC;
 	border-bottom:solid 1px #f7f7f7;
+	height:26px;
 }
 .main-editor {
     overflow-y: auto;
@@ -388,6 +389,10 @@ a{
 	bottom:0px;
 	top:auto;
 	background-color:#fff;
+}
+.ui-button{
+	margin-top:0;
+	margin-bottom:0;
 }
 /*=== Codemirror ===*/
 .CodeMirror {
@@ -434,8 +439,10 @@ a{
 #logs-close-button{
 	float:right;
 }
-#txt-logs, #txt-debug{
+#txt-logs, #txt-debug, #txt-result{
 	font-family:monospace;
+	padding:0;
+	display:block;
 }
 
 /*== Map ===*/
@@ -485,9 +492,6 @@ a{
     height: 31px;
     width: 100%;
     z-index: 15;
-}
-
-.group-button{
 }
 
 .group-select{
