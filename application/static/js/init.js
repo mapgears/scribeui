@@ -76,8 +76,11 @@ jQuery(function() {
 			$('#logs').hide();
 		})
 	);
-	$('#logs').hide();
+    // Fix for ticket #40 https://github.com/mapgears/scribeui/issues/40
+    $('#logs').css('top', $('#logs').position().top);
 	
+	$('#logs').hide();
+
 	$('#editors-container').height($('#editor-tab').height() - 27);
 	$(window).on('resize', function () {
     	$('.main').height( $('body').height()-$('.navbar').height())
