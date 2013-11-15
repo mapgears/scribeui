@@ -12,9 +12,9 @@ Requirements
 ------------
 *   Apache
 *   Python (tested with 2.7.3 only)
-*   Mod WSGI
-*   Flask
-*   MapServer (version 6.0 or higher)
+*   Mod WSGI 3.4
+*   Flask 0.10.1
+*   MapServer (version 6.2 or higher)
 *   Sqlite3
 
 You can install them using aptitude and pip:
