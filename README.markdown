@@ -8,6 +8,20 @@ To get the latest release, clone this repo and then checkout tags/v0.5
 *If you are updating from a previous version, please follow the migration
 instructions at the end of this document before checking out.*
 
+Automated install using Makefile
+------------
+You can use the Makefile to automatically setup ScribeUI for you, simply run:
+
+        sudo make download_deps
+        make
+        sudo make install
+
+This will download and installl the required dependencies, setup the differents
+configurations files and install them in the proper directories.
+
+Manual installation
+------------
+
 Requirements
 ------------
 *   Apache
