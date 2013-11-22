@@ -604,7 +604,8 @@ def add_layer():
                 maxindex = groups[-1]['group_index']
             else:
                 maxindex = 0  
-
+            if not ".map" in groupname:
+                groupname = groupname+".map"
             for i in range(len(groups)):
                 if groupname == groups[i]['group_name']:
                     return "Existing"

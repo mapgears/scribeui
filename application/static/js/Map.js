@@ -104,7 +104,9 @@ Map.prototype.createGroup = function(name){
                 
                 var groupSelect = $("#" + self.workspace.groupSelect);
                 groupSelect.append($("<option></option>").attr("value", group.name).text(group.name));
-            }           
+            }else{
+		alert(status);
+		}           
         });       
     }
 };
