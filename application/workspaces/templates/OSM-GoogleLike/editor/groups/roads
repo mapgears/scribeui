@@ -11,7 +11,7 @@ LAYER {
             13-17: "geometry from (select geometry, osm_id, tunnel from osm_railways where type='rail') as foo using unique osm_id using srid=900913"
 		}
 		CLASS {
-            EXPRESSION: ("[tunnel]"=0)
+            EXPRESSION: ("[tunnel]"=="0")
             STYLE {
                 WIDTH {
 					1-10: 0.5
