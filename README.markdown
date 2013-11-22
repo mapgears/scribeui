@@ -3,13 +3,16 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest release, clone this repo and then checkout tags/v0.5
+To get the latest **release**, clone this repo and then checkout tags/v0.5
 
 *If you are updating from a previous version, please follow the migration
 instructions at the end of this document before checking out.*
 
-Automated install using Makefile
+Automated install using Makefile 
 ------------
+**Note** Checkout master to have this option available, as it is not yet 
+available in any release.
+
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
         sudo make download_deps
@@ -17,7 +20,17 @@ You can use the Makefile to automatically setup ScribeUI for you, simply run:
         sudo make install
 
 This will download and installl the required dependencies, setup the differents
-configurations files and install them in the proper directories.
+configurations files and install them in the proper directories. 
+
+Downloading template data is optional, but recommended for a better 
+experience: 
+
+         sudo make load-demo-data 
+
+This will download some natural earth data and will help you get started with
+ScribeUI by making templates readily working so you don't start with an empty
+mapfile. (The template code is still available if you don't download the data,
+but the result will be pink tiles). 
 
 Manual installation
 ------------
