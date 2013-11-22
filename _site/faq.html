@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>ScribeUI - FAQ</title>
+  </head>
+  <body>
+
+
+
+<body>
+  <div id="wrap">
+	<nav id="top-nav" class="inner">
+		<a href="index.html" class="active">Home</a> 
+		<a href="getting-started.html">Getting Started</a> 
+		<a href="documentation.html">Docs</a> 
+		<a href="faq.html">FAQ</a> 
+		<a href="about.html">About</a> 
+	</nav>
+  <header>
+    <div class="inner">
+      <h1>ScribeUI</h1>
+      <h2>MapServer Mapfile Development Made Easy</h2>
+      <a href="https://github.com/mapgears/scribeui" class="button"><small>View project on</small>GitHub</a>
+    </div>
+  </header>
+
+<div id="content-wrapper">
+  <div class="inner clearfix">
+    <section id="main-content">
+      <h1>FAQ</h1>
+
+<h3>General Questions</h3>
+
+<p><a href="#scribe">What is scribe? How do I use it?</a></p>
+
+<p><a href="#difference">What is the difference between scribe and scribeui?</a></p>
+
+<h3>Installation</h3>
+
+<p><a href="#wsgi">I have mod_wsgi 3.3 instead of 3.4, will it still work?</a></p>
+
+<p><a href="#wsgi-how">How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?</a></p>
+
+<p><a href="#pip">Can I install flask with aptitude or easy install instead of pip?</a></p>
+
+<p><a href="#windows">I am on windows, can I install ScribeUI?</a></p>
+
+<h3>Troubleshooting</h3>
+
+<p><a href="#segfaults">I have segfaults in my Apache error log</a></p>
+
+<p><a href="#wsgi-css">Sometimes, it looks like a CSS file is not loading</a></p>
+
+<p><a href="#wsgi-css">Sometimes, there is no code displayed in the editor, or the browse tab is broken</a></p>
+
+<p><a href="#contact">My problem is not listed here, what should I do?</a></p>
+
+<h2>General Questions</h2>
+
+<h3><a name="scribe"></a> What is scribe? How do I use it?</h3>
+
+<p>Scribe is an alternative mapfile syntax, learn how to use it in our guide: <a href="scribe-syntax.html">Getting started with Scribe syntax</a> </p>
+
+<h3><a name="difference"></a> What is the difference between scribe and scribeui?</h3>
+
+<p>ScribeUI is a web-based application that help you edit standard mapfiles and scribe maps through a friendly UI featuring an instant preview of the map, points of interest and other functionalities. Scribe is an alternate syntax for mapserver mapfiles that adds new features to make your life easier, while still generating a valid regular mapfile. <a href="scribe-syntax.html">Learn more</a> </p>
+
+<h2>Installation</h2>
+
+<h3><a name="wsgi"></a> I have mod_wsgi 3.3 instead of 3.4, will it still work?</h3>
+
+<p><em>For the most part</em>, yes. However, there is a bug in mod<em>wsgi 3.3 which causes some css files to load incorrectly (more info the <a href="https://github.com/mapgears/scribeui/issues/48">issue</a>). It is an unpredictable bug, which can happen often as it can never happen. It is not recommended to use mod</em>wsgi 3.3 or earlier for this reason, especially on a production setup. </p>
+
+<h3><a name="wsgi-how"></a> How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?</h3>
+
+<p>As there is no package ready yet, you will have to compile a version of mod<em>wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod</em>wsgi you may have. Make sure you have the python-dev, build-essential and apache-prefork-dev installed, then <a href="https://code.google.com/p/mod_wsgi/wiki/DownloadTheSoftware?tm=2">download the source</a> and compiling it is a matter of a few commands: </p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">./configure
+make
+sudo make install
+</code></pre></div>
+<p>And you must edit scribeui&#39;s apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod_wsgi version, for example:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">  LoadModule wsgi_module     /usr/lib/apache2/modules/mod_wsgi.so
+</code></pre></div>
+<h3><a name="pip"></a> Can I install flask with aptitude or easy install instead of pip?</h3>
+
+<p>Flask 0.10.1 is the recommended version, and it is the version currently offered by pip, that is why we recommend this method. </p>
+
+<h3><a name="windows"></a> I am on windows, can I install ScribeUI?</h3>
+
+<p>It&#39;s possible, all the required softwares are available for windows. Installation instructions are being worked on! </p>
+
+<h2>Troubleshooting</h2>
+
+<h3><a name="segfaults"></a> I have segfaults in my Apache error log](#segfaults)</h3>
+
+<p>Restarting apache should fix the problem. If it doesn&#39;t, make sure your version of mod_wsgi is compiled with the same version of python ScribeUI is running with. </p>
+
+<h3><a name="wsgi-css"></a> Sometimes, it looks like a CSS file is not loading, or sometimes, there is no code displayed in the editor, or the browse tab is broken</h3>
+
+<p>You are probably running mod_wsgi 3.3. <a href="#wsgi">Why you should install mod_wsgi 3.4</a></p>
+
+<h3><a name="contact"></a> My problem is not listed here, what should I do?</h3>
+
+<p>Feel free to post your question on the <a href="http://www.mapserver.org/community/lists.html">mapserver-user mailing list</a> or open a issue on the project&#39;s <a href="https://github.com/mapgears/scribeui">github</a>!</p>
+
+    </section>
+  </div>
+</div>
+</div>
+<footer>
+  <div class="inner clearfix">
+    <p>Copyright <a href="http://mapgears.com/">Mapgears</a> 2013 | ScribeUI is released under a <a href="license.html">MIT-style license</a> | ScribeUI.org is hosted on <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+  </div>
+</footer>
+</body>
+</html>
+

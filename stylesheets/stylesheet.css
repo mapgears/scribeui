@@ -66,6 +66,12 @@ a:hover {
   color: #2268b2;
 }
 
+strong{
+	font-weight:bold;
+}
+em{
+	font-style: italic;
+}
 header {
   padding-top: 40px;
   padding-bottom: 40px;
