@@ -777,6 +777,18 @@ def save(data):
             document = open(pathMap + listfiles[i]['url'], "w+")
             document.write(data[listfiles[i]['name']].encode('utf-8'))
             document.close()
+        fusionStr = "LAYERS {\n"
+        for i in range(len(data['groups'])):
+            document = open(pathGroups + data['groups'][i]['name']+".layer", "w+")
+            document.write(data['groups'][i]['content'].encode('utf-8'))
+            document.close()
+            fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
+        fusionStr = fusionStr + "}"
+    
+        fusionFile = open(pathMap + "editor/layers","w+" )
+        fusionFile.write(fusionStr.encode('utf-8'))
+        fusionFile.close()
+
     elif wsmap['map_type'] == 'Basemaps':
         pathGroups = pathMap
         for i in range(len(listfilesBasemaps)):
@@ -792,20 +804,12 @@ def save(data):
         document = open(pathMap + "map/" + session["map_name"] + ".map", "w+")
         document.write(data['map'].encode('utf-8'))
         document.close()
+    if wsmap['map_type'] != 'Scribe':
+        for i in range(len(data['groups'])):
+            document = open(pathGroups + data['groups'][i]['name'], "w+")
+            document.write(data['groups'][i]['content'].encode('utf-8'))
+            document.close()
 
-    fusionStr = "LAYERS {\n"
-    for i in range(len(data['groups'])):
-        document = open(pathGroups + data['groups'][i]['name']+".layer", "w+")
-        document.write(data['groups'][i]['content'].encode('utf-8'))
-        document.close()
-        fusionStr = "\n"+fusionStr + data['groups'][i]['content']+"\n"
-    fusionStr = fusionStr + "}"
-    
-    if wsmap['map_type'] == 'Scribe':
-        fusionFile = open(pathMap + "editor/layers","w+" )
-        fusionFile.write(fusionStr.encode('utf-8'))
-        fusionFile.close()
-    
     return "1"
 
 #Execute python decoder
