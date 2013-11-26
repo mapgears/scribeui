@@ -579,8 +579,8 @@ def add_layer():
     	if wsmap['map_type'] == 'Scribe':
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer" 
             groupsFiles = getGroupFiles(pathMap, pathGroup)
-	    for g in groupsFiles:
-                name = getGroupNameFromFile(g)
+	    for gr in groupsFiles:
+                name = getGroupNameFromFile(gr)
                 if groupname == name:
                     return "Existing"
 
