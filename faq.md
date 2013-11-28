@@ -13,9 +13,9 @@ layout: default
 
 ### Installation
 
-[I have mod_wsgi 3.3 instead of 3.4, will it still work?](#wsgi)
+[I have mod\_wsgi 3.3 instead of 3.4, will it still work?](#wsgi)
 
-[How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?](#wsgi-how)
+[How do I install mod\_wsgi 3.4 on ubuntu precise or earlier ?](#wsgi-how)
 
 [Can I install flask with aptitude or easy install instead of pip?](#pip)
 
@@ -43,21 +43,21 @@ ScribeUI is a web-based application that help you edit standard mapfiles and scr
 
 ## Installation 
 
-### <a name="wsgi"></a> I have mod_wsgi 3.3 instead of 3.4, will it still work?
+### <a name="wsgi"></a> I have mod\_wsgi 3.3 instead of 3.4, will it still work?
 
-*For the most part*, yes. However, there is a bug in mod_wsgi 3.3 which causes some css files to load incorrectly (more info the [issue](https://github.com/mapgears/scribeui/issues/48)). It is an unpredictable bug, which can happen often as it can never happen. It is not recommended to use mod_wsgi 3.3 or earlier for this reason, especially on a production setup. 
+*For the most part*, yes. However, there is a bug in mod\_wsgi 3.3 which causes some css files to load incorrectly (more info the [issue](https://github.com/mapgears/scribeui/issues/48)). It is an unpredictable bug, which can happen often as it can never happen. It is not recommended to use mod\_wsgi 3.3 or earlier for this reason, especially on a production setup. 
 
-### <a name="wsgi-how"></a> How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?
+### <a name="wsgi-how"></a> How do I install mod\_wsgi 3.4 on ubuntu precise or earlier ?
 
-As there is no package ready yet, you will have to compile a version of mod_wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod_wsgi you may have. Make sure you have the python-dev, build-essential and apache-prefork-dev installed, then [download the source](https://code.google.com/p/mod_wsgi/wiki/DownloadTheSoftware?tm=2) and compiling it is a matter of a few commands: 
+As there is no package ready yet, you will have to compile a version of mod\_wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod\_wsgi you may have. Make sure you have the python-dev, build-essential and apache2-prefork-dev installed, then [download the source](https://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2) and compiling it is a matter of a few commands: 
 
     ./configure
     make
     sudo make install
 
-And you must edit scribeui's apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod_wsgi version, for example:
+And you must edit scribeui's apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod\_wsgi version, for example:
 
-      LoadModule wsgi_module     /usr/lib/apache2/modules/mod_wsgi.so
+      LoadModule wsgi_module     /usr/lib/apache2/modules/mod\_wsgi.so
 
 ### <a name="pip"></a> Can I install flask with aptitude or easy install instead of pip?
 
@@ -69,13 +69,13 @@ It's possible, all the required softwares are available for windows. Installatio
 
 ## Troubleshooting
 
-### <a name="segfaults"></a> I have segfaults in my Apache error log](#segfaults)
+### <a name="segfaults"></a> I have segfaults in my Apache error log
 
-Restarting apache should fix the problem. If it doesn't, make sure your version of mod_wsgi is compiled with the same version of python ScribeUI is running with. 
+Restarting apache should fix the problem. If it doesn't, make sure your version of mod\_wsgi is compiled with the same version of python ScribeUI is running with. 
 
 ### <a name="wsgi-css"></a> Sometimes, it looks like a CSS file is not loading, or sometimes, there is no code displayed in the editor, or the browse tab is broken
 
-You are probably running mod_wsgi 3.3. [Why you should install mod_wsgi 3.4](#wsgi)
+You are probably running mod\_wsgi 3.3. [Why you should install mod\_wsgi 3.4](#wsgi)
 
 ### <a name="contact"></a> My problem is not listed here, what should I do?
 

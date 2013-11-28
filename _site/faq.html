@@ -81,17 +81,17 @@
 
 <h3><a name="wsgi"></a> I have mod_wsgi 3.3 instead of 3.4, will it still work?</h3>
 
-<p><em>For the most part</em>, yes. However, there is a bug in mod<em>wsgi 3.3 which causes some css files to load incorrectly (more info the <a href="https://github.com/mapgears/scribeui/issues/48">issue</a>). It is an unpredictable bug, which can happen often as it can never happen. It is not recommended to use mod</em>wsgi 3.3 or earlier for this reason, especially on a production setup. </p>
+<p><em>For the most part</em>, yes. However, there is a bug in mod_wsgi 3.3 which causes some css files to load incorrectly (more info the <a href="https://github.com/mapgears/scribeui/issues/48">issue</a>). It is an unpredictable bug, which can happen often as it can never happen. It is not recommended to use mod_wsgi 3.3 or earlier for this reason, especially on a production setup. </p>
 
 <h3><a name="wsgi-how"></a> How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?</h3>
 
-<p>As there is no package ready yet, you will have to compile a version of mod<em>wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod</em>wsgi you may have. Make sure you have the python-dev, build-essential and apache-prefork-dev installed, then <a href="https://code.google.com/p/mod_wsgi/wiki/DownloadTheSoftware?tm=2">download the source</a> and compiling it is a matter of a few commands: </p>
+<p>As there is no package ready yet, you will have to compile a version of mod_wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod_wsgi you may have. Make sure you have the python-dev, build-essential and apache2-prefork-dev installed, then <a href="https://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2">download the source</a> and compiling it is a matter of a few commands: </p>
 <div class="highlight"><pre><code class="text language-text" data-lang="text">./configure
 make
 sudo make install
 </code></pre></div>
 <p>And you must edit scribeui&#39;s apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod_wsgi version, for example:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">  LoadModule wsgi_module     /usr/lib/apache2/modules/mod_wsgi.so
+<div class="highlight"><pre><code class="text language-text" data-lang="text">  LoadModule wsgi_module     /usr/lib/apache2/modules/mod\_wsgi.so
 </code></pre></div>
 <h3><a name="pip"></a> Can I install flask with aptitude or easy install instead of pip?</h3>
 
@@ -103,7 +103,7 @@ sudo make install
 
 <h2>Troubleshooting</h2>
 
-<h3><a name="segfaults"></a> I have segfaults in my Apache error log](#segfaults)</h3>
+<h3><a name="segfaults"></a> I have segfaults in my Apache error log</h3>
 
 <p>Restarting apache should fix the problem. If it doesn&#39;t, make sure your version of mod_wsgi is compiled with the same version of python ScribeUI is running with. </p>
 
