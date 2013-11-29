@@ -100,10 +100,18 @@ Map.prototype.createGroup = function(name){
         }, function(status) {
             if(status == 1){
                 var group = {"name": name, "content": ""}
+				if(self.type == "Standard")
+                	if(group.name.indexOf(".map") == -1)
+						group.name = group.name+".map";
+				
                 self.groups.push(group);
                 
                 var groupSelect = $("#" + self.workspace.groupSelect);
                 groupSelect.append($("<option></option>").attr("value", group.name).text(group.name));
+				
+				//Include the new group in the map
+				if(self.type == "Standard")
+					addIncludeToMap(group.name)
             }else{
 		alert(status);
 		}           

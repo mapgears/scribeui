@@ -569,6 +569,28 @@ function scribeLog(msg){
 	$("#" + self.workspace.logTextarea).val(msg);
 }
 
+function addIncludeToMap(filename){
+	//Find the includes in the mapeditor
+	lastinc = -1;
+	openSecondaryPanel("maps", mapEditor);
+	for(var i=0; i<mapEditor.lineCount(); i++){
+		if(mapEditor.getLine(i).indexOf("INCLUDE") !== -1){
+			lastinc = i;
+		}else if(lastinc > -1){
+			//We add the new file at the end of the include list
+			var line = mapEditor.getLine((i-1));
+			//TODO detect indentation 
+			mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
+			mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+			setTimeout(function(){
+				mapEditor.setLineClass(i, 'background', '');
+			}, 3000);
+			break;
+		}
+	}
+	_workspace.openedMap.commit();
+}
+
 /* 
 name: string, Name of the tab
 destinationSelector: jquery selector of the tab group, ex #main-tabs or #log-tabs
