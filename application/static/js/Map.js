@@ -134,6 +134,10 @@ Map.prototype.removeGroup = function(name){
                 groupSelect.find("option[value='" + group.name + "']").remove();
                 $('#'+self.workspace.groupOl).find("li.ui-selected").remove();
                 groupSelect.trigger("change");
+
+                //Remove include statement in the map element
+				if(self.type == "Standard")
+					removeIncludeFromMap(group.name)
             }
         });       
     }

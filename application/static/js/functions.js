@@ -585,6 +585,24 @@ function scribeLog(msg){
 	$("#" + self.workspace.logTextarea).val(msg);
 }
 
+function removeIncludeFromMap(filename){
+	for(var i=0; i<mapEditor.lineCount(); i++){
+		if(mapEditor.getLine(i).indexOf("layers/"+filename+"'") !== -1){
+			var line = mapEditor.getLine(i);
+			mapEditor.removeLine(i);
+			//Highlight for a short time:
+			mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+			mapEditor.setLineClass(i-1, 'background', 'setextent-highlighted-line');
+			setTimeout(function(){
+				mapEditor.setLineClass(i, 'background', '');
+				mapEditor.setLineClass(i-1, 'background', '');
+			}, 3000);
+			break;
+		}
+	}
+	_workspace.openedMap.commit();
+
+}
 function addIncludeToMap(filename){
 	//Find the includes in the mapeditor
 	lastinc = -1;
@@ -597,6 +615,7 @@ function addIncludeToMap(filename){
 			var line = mapEditor.getLine((i-1));
 			//TODO detect indentation 
 			mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
+			//Highlight for a short time:
 			mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
 			setTimeout(function(){
 				mapEditor.setLineClass(i, 'background', '');
