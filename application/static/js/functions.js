@@ -318,13 +318,21 @@ function createNewGroup(){
     }).dialog("open");
 }
 
-function deleteGroup(){
-	$(".to-be-deleted").each(function(i){
-    	var name = $(this).text();
-    	_workspace.openedMap.removeGroup(name);
-	});
+function deleteGroup(options){
+    options = (options) ? options : {};
+    if(options.hasOwnProperty("mapType")){
+        if(options.mapType == "Scribe"){
+            $(".to-be-deleted").each(function(i){
+                var name = $(this).text();
+                _workspace.openedMap.removeGroup(name);
+            });
+        }else if(options.mapType == "Standard"){
+            var name = $("#group-select option:selected").text();
+            var r = confirm("Are you sure you want to remove the group "+name+"?");
+            _workspace.openedMap.removeGroup(name);
+        }
+    }
 }
-
 function openGroupOrderWindow(){
     _workspace.openedMap.displayGroupsIndex();
 
@@ -393,7 +401,7 @@ function openGroupOrderWindow(){
             text: "Apply",
 	    	click:  function() {
                 _workspace.openedMap.updateGroupOrder();
-				deleteGroup();
+				deleteGroup({mapType:_workspace.openedMap.type});
                 $(this).dialog("close");
             }
 		},
@@ -548,6 +556,14 @@ function onMapOpened(){
 	fontEditor.clearHistory();
 	projectionEditor.clearHistory();
 
+	if(_workspace.openedMap.type == "Scribe"){
+		$("#btn_delete_group").hide();
+		$("#btn_change_group_order").show();
+	}else if(_workspace.openedMap.type == "Standard"){
+		$("#btn_delete_group").show();
+		$("#btn_change_group_order").hide();
+	}
+
     for(i in plugins){
 		if(plugins[i].onMapOpened)
 			plugins[i].onMapOpened();
@@ -601,7 +617,7 @@ options: (optional) object
 Returns: The div element to be used as tab content
 */
 function addTab(name, destinationSelector, options){
-        options = (options) ? options : {};
+    options = (options) ? options : {};
 	var onclick = options.onclick || null;
 	var position = options.position || 'last';
 	if($(destinationSelector).exists()){

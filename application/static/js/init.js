@@ -154,6 +154,12 @@ jQuery(function() {
 	}).click(function(e){
 	   	createNewGroup();
     });
+    $('#btn_delete_group').button({
+		text: false,
+		icons: { primary: 'ui-icon-minus' }
+	}).click(function(e){
+	   	deleteGroup({mapType: _workspace.openedMap.type});
+    });
 
     $('#btn_change_group_order').button({
 		text:false,
