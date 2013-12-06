@@ -22,7 +22,7 @@ function openNewWorkspaceWindow(options){
         buttons: {
             "Create": function() {
                 var name = $("#newws-name").val();
-		var password = $("#newws-password").val();
+		        var password = $("#newws-password").val();
                 options["password"] = password;
                 
                 if(_workspace){
@@ -38,7 +38,10 @@ function openNewWorkspaceWindow(options){
                 $(this).dialog("close");
             }
         },
-        close: function() {}
+        close: function(e) {
+            var inputs = $(this).find('input');
+            $(inputs).val('');
+        }
     }).dialog("open");
 }
 
@@ -223,7 +226,7 @@ function openMap(){
 
 function deleteMap(){
     var msg = 'Are you sure you want to delete this map?';
-    var div = $("<div>" + msg + "</div>");
+    var div = $("<div class=\"scribe-dialog\">" + msg + "</div>");
     
     var name = $("#map-list .ui-selected").text();
     if(name != null){

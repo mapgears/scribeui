@@ -81,11 +81,11 @@ jQuery(function() {
 	
 	$('#logs').hide();
 
-	$('#editors-container').height($('#editor-tab').height() - 27);
+	$('#editors-container').height($('#editor-tab').height() - 40);
 	$(window).on('resize', function () {
     	$('.main').height( $('body').height()-$('.navbar').height())
         $('#main-tabs').tabs('refresh');
-		$('#editors-container').height($('#editor-tab').height() - 27);
+		$('#editors-container').height($('#editor-tab').height() - 40);
 		resizeEditors();
     });
 

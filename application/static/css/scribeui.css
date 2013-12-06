@@ -10,6 +10,10 @@ html, body {
     overflow-y: hidden;
 
     background-color: #efefef;
+
+    font-size: 14px !important;
+    font-family: Helvetica,Arial,sans-serif !important;
+
 }
 body{
 	font-size: 62.5%;
@@ -17,6 +21,36 @@ body{
 a{
 	outline: 0;
 }
+select {
+   width: 200px;
+   height: 30px;
+   padding: 5px 0px 0px 4px;
+   font-size: 14px !important;
+}
+input {
+    height: 26px;
+    width: 200px;
+    border-radius: 4px;
+}
+label {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+}
+textarea {
+    padding: 5px;
+    width: 200px;
+}
+input, select, textarea {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+button {
+    font-size: 10px !important;
+    border-radius: 4px !important;
+}
+
 .main {
     height: 100%;
     width: 100%;
@@ -34,6 +68,8 @@ a{
 
     background-color:#fff;
 	z-index:1000;
+
+    font-size: 16px !important;
 }
 
 .title {
@@ -41,7 +77,7 @@ a{
     color: #212121;
     line-height: 1;
  
-    padding-top: 10px;    
+    padding-top: 8px;    
 }
 .faded{
 	color:#a9a9a9;
@@ -63,7 +99,7 @@ a{
 
 /*=== Bottom ===*/
 .tools {
-    height: 30px;
+    height: 37px;
 	width:100%;
     border-top: 2px solid rgba(82, 168, 236, 0.8);
     background-color:#fff;
@@ -72,19 +108,19 @@ a{
 	z-index:1000;
 }
 
-.tools button {
-}
-
 .tools-left {
     position: relative;
     float: left;
-    width: 100px;
+    margin-top:5px;
+    height: 30px;
 }
 
 .tools-right {
     position: relative;
     float: right;
-    width: 300px;
+    height: 30px;
+    margin-right: 30px;
+    margin-top: 2px;
 }
 
 .poi-container {
@@ -360,7 +396,8 @@ a{
 #editor-toolbar{
 	background-color:#FCFCFC;
 	border-bottom:solid 1px #f7f7f7;
-	height:26px;
+	height:35px;
+    padding: 4px 4px 0px 4px;
 }
 .main-editor {
     overflow-y: auto;
@@ -374,26 +411,33 @@ a{
 }
 .secondary-wrap{
 	overflow-y:hidden;
-	padding-bottom:7px;
+	padding-bottom:2px;
 }
 #editors-container{
 	height:100%;
 	overflow:hidden;
 	position:relative;
+    margin: 0px auto !important;
 }
 .ui-resizable-s{
 	bottom:0px;
 	top:auto;
-	background-color:#fff;
+	/*background-color:#fff;*/
+    background-color: #AAAAAA;
+    height: 2px;
 }
 .ui-button{
 	margin-top:0;
 	margin-bottom:0;
 }
+.ui-icon {
+    margin-top: -9px !important;
+}
 /*=== Codemirror ===*/
 .CodeMirror {
-	font-size:1.3em;
+	font-size: 14px !important;
 	height:100%;
+    font-family: monospace !important;
 }
 #editors-container .CodeMirror-scroll{
 	overflow:hidden;
@@ -441,6 +485,10 @@ a{
 	display:block;
 }
 
+#logs textarea{
+    height: 100%;
+}
+
 /*== Map ===*/
 .main-right {
     float: left;
@@ -477,7 +525,8 @@ a{
 	bottom: 3em;
 	right:3px;
 	display:block;
-	font-size:smaller;
+	/*font-size:smaller;*/
+    font-size: 14px;
 }
 
 /*=== Others ===*/
@@ -503,7 +552,7 @@ a{
 #variables-button{
 	float:right;
 }
-
+/*
 .workspace-select{
     margin: 10px;
     width: 205px;
@@ -513,7 +562,7 @@ a{
     margin: 10px;
     width: 200px;
 }
-
+*/
 .workspace-button {
     width: 150px;
     float: right;
@@ -542,8 +591,7 @@ a{
 }
 
 .newmap-description{
-    width: 350px;
-    height: 180px;
+    height: 160px;
 }
 
 .invisible{
@@ -619,8 +667,37 @@ div.olControlZoom a {
 }
 .ui-dialog{
 	z-index:1100;
+    width:auto !important;
+}
+.ui-dialog-title {
+    padding: 2px;
 }
 .no-close .ui-dialog-titlebar-close {display: none }
+
+.scribe-dialog {
+    width: auto !important;    
+    height: auto !important;
+    min-width: 200px;
+}
+
+.control-group {
+    display: table;
+    margin-bottom: 20px;
+    height: 30px;
+    margin-top:10px;    
+}
+
+.control-group label {
+    float: left;
+    padding-top: 5px;
+    text-align: right;
+    width: 120px;
+    display:block;
+}
+
+.control-group .control {
+    margin-left: 140px;
+}
 
 #map-list{
 	min-width:100px;
@@ -654,10 +731,7 @@ div.olControlZoom a {
 }
 
 .log-button-container{
-	width:24px;
-	height:26px;
-	overflow:hidden;
-	position:relative;
+    padding: 4px 4px;
 	float:right;
 }
 #log-notification{
@@ -679,4 +753,3 @@ div.olControlZoom a {
 	margin-top:0.5em;
 	margin-bottom:0.5em;
 }
-
