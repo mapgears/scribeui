@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "commit all files by -m $1"
+echo "this commit don't add new files... use git add [file] before!"
+sudo git add -u
+sudo git commit -m "$1"
+sudo git push -u origin master

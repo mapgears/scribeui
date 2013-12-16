@@ -1,0 +1,21 @@
+    LAYER
+        MAXSCALEDENOM 262144
+        MINSCALEDENOM 131072
+        NAME 'land12'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END

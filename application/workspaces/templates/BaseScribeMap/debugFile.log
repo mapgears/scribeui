@@ -1,0 +1,925 @@
+[Sun Dec 15 20:16:48 2013].966269 CGI Request 1 on process 2941
+[Sun Dec 15 20:16:48 2013].968781 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:16:48 2013].968828 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:16:48 2013].968885 msShapefileOpen(): Unable to access file. (/opt/scribeui/application/workspaces/simon/BaseScribeMap/map/../data/naturalEarth/110m_physical/ne_110m_ocean)
+[Sun Dec 15 20:16:48 2013].968900 msShapefileOpen(): Unable to access file. (/opt/scribeui/application/workspaces/simon/BaseScribeMap/map/110m_physical/ne_110m_ocean)
+[Sun Dec 15 20:16:48 2013].968907 msDrawMap(): Image handling error. Failed to draw layer named 'ocean1'.
+[Sun Dec 15 20:16:48 2013].969569 mapserv request processing time (msLoadMap not incl.): 0.003s
+[Sun Dec 15 20:16:48 2013].969579 msFreeMap(): freeing map at 0x985a828.
+[Sun Dec 15 20:17:25 2013].413092 CGI Request 1 on process 2997
+[Sun Dec 15 20:17:25 2013].415633 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:17:25 2013].415690 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:17:25 2013].415738 msShapefileOpen(): Unable to access file. (/opt/scribeui/application/workspaces/simon/BaseScribeMap/map/../data/naturalEarth/110m_physical/ne_110m_ocean)
+[Sun Dec 15 20:17:25 2013].415750 msShapefileOpen(): Unable to access file. (/opt/scribeui/application/workspaces/simon/BaseScribeMap/map/110m_physical/ne_110m_ocean)
+[Sun Dec 15 20:17:25 2013].415756 msDrawMap(): Image handling error. Failed to draw layer named 'ocean1'.
+[Sun Dec 15 20:17:25 2013].416152 mapserv request processing time (msLoadMap not incl.): 0.003s
+[Sun Dec 15 20:17:25 2013].416161 msFreeMap(): freeing map at 0x842f828.
+[Sun Dec 15 20:18:35 2013].394812 CGI Request 1 on process 3039
+[Sun Dec 15 20:18:35 2013].397300 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:18:35 2013].397372 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:18:35 2013].424539 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424566 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424572 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424579 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424585 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424593 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424598 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424604 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424610 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424618 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424623 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424630 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424637 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424642 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424649 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424654 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424660 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424666 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424672 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424678 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424684 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424690 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424698 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424704 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424711 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424716 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424722 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424728 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424734 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424739 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424746 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424751 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424759 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424764 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424792 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424799 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424806 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424811 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424818 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424825 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424831 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424837 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424843 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424849 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424854 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424861 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424866 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424873 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424878 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424885 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424890 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424896 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424902 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424908 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424913 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424920 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424925 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424932 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424937 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424945 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424950 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424956 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424962 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424968 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].424975 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].426617 msDrawMap(): Layer 0 (ocean1), 0.029s
+[Sun Dec 15 20:18:35 2013].452833 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].452863 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:18:35 2013].456068 msDrawMap(): Layer 1 (land1), 0.029s
+[Sun Dec 15 20:18:35 2013].522362 msDrawMap(): Layer 2 (coastline1), 0.066s
+[Sun Dec 15 20:18:35 2013].575684 msDrawMap(): Layer 3 (country_boundaries1), 0.053s
+[Sun Dec 15 20:18:35 2013].575898 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:18:35 2013].575923 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:18:35 2013].575936 msDrawMap() total time: 0.181s
+[Sun Dec 15 20:18:35 2013].623196 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 20:18:35 2013].623537 mapserv request processing time (msLoadMap not incl.): 0.229s
+[Sun Dec 15 20:18:35 2013].623548 msFreeMap(): freeing map at 0x954e828.
+[Sun Dec 15 20:19:12 2013].704063 CGI Request 1 on process 3065
+[Sun Dec 15 20:19:12 2013].708872 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:19:12 2013].708926 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:19:12 2013].712236 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712270 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712286 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712301 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712315 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712330 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712342 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712356 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712370 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712382 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712394 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712405 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712418 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712428 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712440 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712450 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712462 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712472 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712483 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712493 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712505 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712515 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712527 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712537 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712553 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712562 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712572 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712579 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712586 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712591 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712598 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712603 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712610 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712616 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712652 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712660 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712665 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712672 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712677 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712684 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712689 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712696 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712701 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712708 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712713 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712720 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712725 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712733 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712738 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712746 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712751 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712758 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712763 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712770 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712776 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712783 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712788 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712795 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712800 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712807 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712814 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712819 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712826 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712831 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].712838 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].715695 msDrawMap(): Layer 0 (ocean1), 0.007s
+[Sun Dec 15 20:19:12 2013].716569 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].716584 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:12 2013].719987 msDrawMap(): Layer 1 (land1), 0.004s
+[Sun Dec 15 20:19:12 2013].726124 msDrawMap(): Layer 2 (coastline1), 0.006s
+[Sun Dec 15 20:19:12 2013].729637 msDrawMap(): Layer 3 (country_boundaries1), 0.003s
+[Sun Dec 15 20:19:12 2013].729736 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:19:12 2013].729745 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:19:12 2013].729752 msDrawMap() total time: 0.025s
+[Sun Dec 15 20:19:12 2013].780101 msSaveImage(stdout) total time: 0.050s
+[Sun Dec 15 20:19:12 2013].780538 mapserv request processing time (msLoadMap not incl.): 0.076s
+[Sun Dec 15 20:19:12 2013].780549 msFreeMap(): freeing map at 0x80cf9b8.
+[Sun Dec 15 20:19:18 2013].12659 CGI Request 1 on process 3069
+[Sun Dec 15 20:19:18 2013].15534 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:19:18 2013].15580 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:19:18 2013].18107 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18123 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18129 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18137 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18142 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18148 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18154 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18160 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18168 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18173 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18179 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18185 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18191 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18196 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18202 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18207 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18214 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18219 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18225 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18230 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18237 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18242 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18249 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18255 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18261 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18266 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18273 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18278 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18284 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18289 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18459 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18470 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18478 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18483 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18515 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18523 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18528 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18535 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18540 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18546 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18560 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18567 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18572 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18579 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18584 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18600 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18606 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18613 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18619 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18626 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18631 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18638 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18644 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18651 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18657 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18664 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18669 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18678 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18684 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18691 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18699 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18704 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18711 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18717 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].18724 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].20468 msDrawMap(): Layer 0 (ocean1), 0.005s
+[Sun Dec 15 20:19:18 2013].21146 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].21146 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:18 2013].23935 msDrawMap(): Layer 1 (land1), 0.003s
+[Sun Dec 15 20:19:18 2013].30338 msDrawMap(): Layer 2 (coastline1), 0.006s
+[Sun Dec 15 20:19:18 2013].33428 msDrawMap(): Layer 3 (country_boundaries1), 0.003s
+[Sun Dec 15 20:19:18 2013].33489 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:19:18 2013].33514 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:19:18 2013].33521 msDrawMap() total time: 0.020s
+[Sun Dec 15 20:19:18 2013].87773 msSaveImage(stdout) total time: 0.054s
+[Sun Dec 15 20:19:18 2013].88179 mapserv request processing time (msLoadMap not incl.): 0.076s
+[Sun Dec 15 20:19:18 2013].88191 msFreeMap(): freeing map at 0x98409d0.
+[Sun Dec 15 20:19:35 2013].113298 CGI Request 1 on process 3074
+[Sun Dec 15 20:19:35 2013].115460 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:19:35 2013].115505 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:19:35 2013].118055 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118073 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118079 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118086 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118091 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118099 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118105 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118111 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118118 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118123 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118130 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118135 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118142 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118148 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118154 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118159 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118166 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118171 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118178 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118183 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118190 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118195 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118205 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118210 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118217 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118222 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118229 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118234 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118241 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118246 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118253 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118258 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118266 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118271 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118303 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118311 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118317 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118324 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118329 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118335 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118341 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118347 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118352 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118359 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118364 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118371 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118376 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118382 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118388 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118394 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118399 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118406 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118411 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118417 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118423 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118429 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118434 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118441 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118446 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118454 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118461 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118466 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118473 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118478 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].118485 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].120223 msDrawMap(): Layer 0 (ocean1), 0.005s
+[Sun Dec 15 20:19:35 2013].121005 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].121019 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:35 2013].123866 msDrawMap(): Layer 1 (land1), 0.004s
+[Sun Dec 15 20:19:35 2013].130840 msDrawMap(): Layer 2 (coastline1), 0.007s
+[Sun Dec 15 20:19:35 2013].134457 msDrawMap(): Layer 3 (country_boundaries1), 0.004s
+[Sun Dec 15 20:19:35 2013].134543 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:19:35 2013].134552 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:19:35 2013].134558 msDrawMap() total time: 0.021s
+[Sun Dec 15 20:19:35 2013].187594 msSaveImage(stdout) total time: 0.053s
+[Sun Dec 15 20:19:35 2013].188008 mapserv request processing time (msLoadMap not incl.): 0.075s
+[Sun Dec 15 20:19:35 2013].188019 msFreeMap(): freeing map at 0x8b049b0.
+[Sun Dec 15 20:19:50 2013].713201 CGI Request 1 on process 3077
+[Sun Dec 15 20:19:50 2013].715816 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:19:50 2013].715867 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:19:50 2013].718919 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718941 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718947 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718954 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718960 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718970 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718975 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718983 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718988 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].718995 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719001 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719008 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719016 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719021 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719029 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719034 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719041 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719047 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719054 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719060 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719067 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719073 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719081 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719087 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719095 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719100 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719107 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719113 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719121 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719127 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719134 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719139 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719148 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719154 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719194 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719201 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719209 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719215 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719222 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719229 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719235 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719242 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719248 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719255 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719261 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719268 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719274 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719281 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719287 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719294 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719300 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719307 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719313 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719320 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719326 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719334 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719340 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719357 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719364 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719373 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719379 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719395 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719401 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719408 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].719416 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].721274 msDrawMap(): Layer 0 (ocean1), 0.005s
+[Sun Dec 15 20:19:50 2013].722342 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].722357 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:50 2013].725534 msDrawMap(): Layer 1 (land1), 0.004s
+[Sun Dec 15 20:19:50 2013].731559 msDrawMap(): Layer 2 (coastline1), 0.006s
+[Sun Dec 15 20:19:50 2013].734218 msDrawMap(): Layer 3 (country_boundaries1), 0.003s
+[Sun Dec 15 20:19:50 2013].734307 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:19:50 2013].734315 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:19:50 2013].734321 msDrawMap() total time: 0.021s
+[Sun Dec 15 20:19:50 2013].784017 msSaveImage(stdout) total time: 0.050s
+[Sun Dec 15 20:19:50 2013].784451 mapserv request processing time (msLoadMap not incl.): 0.071s
+[Sun Dec 15 20:19:50 2013].784463 msFreeMap(): freeing map at 0x85a4828.
+[Sun Dec 15 20:19:56 2013].911343 CGI Request 1 on process 3081
+[Sun Dec 15 20:19:56 2013].913722 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:19:56 2013].913766 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:19:56 2013].916323 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916340 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916346 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916353 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916358 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916366 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916372 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916378 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916385 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916391 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916397 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916403 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916409 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916414 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916421 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916426 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916433 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916438 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916444 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916450 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916456 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916462 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916470 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916475 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916482 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916487 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916494 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916499 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916506 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916511 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916517 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916523 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916532 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916537 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916570 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916578 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916584 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916591 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916596 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916603 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916608 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916614 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916619 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916626 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916631 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916638 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916643 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916650 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916655 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916661 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916667 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916673 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916678 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916685 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916690 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916697 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916702 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916709 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916714 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916722 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916729 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916734 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916741 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916746 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].916752 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].919053 msDrawMap(): Layer 0 (ocean1), 0.005s
+[Sun Dec 15 20:19:56 2013].919822 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].919835 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:19:56 2013].922902 msDrawMap(): Layer 1 (land1), 0.004s
+[Sun Dec 15 20:19:56 2013].928500 msDrawMap(): Layer 2 (coastline1), 0.006s
+[Sun Dec 15 20:19:56 2013].932473 msDrawMap(): Layer 3 (country_boundaries1), 0.004s
+[Sun Dec 15 20:19:56 2013].932684 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:19:56 2013].932693 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:19:56 2013].932699 msDrawMap() total time: 0.021s
+[Sun Dec 15 20:19:56 2013].982393 msSaveImage(stdout) total time: 0.050s
+[Sun Dec 15 20:19:56 2013].982795 mapserv request processing time (msLoadMap not incl.): 0.071s
+[Sun Dec 15 20:19:56 2013].982806 msFreeMap(): freeing map at 0x98b49b0.
+[Sun Dec 15 20:23:21 2013].292575 CGI Request 1 on process 3199
+[Sun Dec 15 20:23:21 2013].295614 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:23:21 2013].295650 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:23:21 2013].296590 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:21 2013].296607 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:21 2013].299220 msDrawMap(): Layer 0 (land1), 0.004s
+[Sun Dec 15 20:23:21 2013].299240 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:23:21 2013].299247 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:23:21 2013].299252 msDrawMap() total time: 0.007s
+[Sun Dec 15 20:23:21 2013].342301 msSaveImage(stdout) total time: 0.043s
+[Sun Dec 15 20:23:21 2013].342852 mapserv request processing time (msLoadMap not incl.): 0.050s
+[Sun Dec 15 20:23:21 2013].342867 msFreeMap(): freeing map at 0x92c89b0.
+[Sun Dec 15 20:23:51 2013].886063 CGI Request 1 on process 3205
+[Sun Dec 15 20:23:51 2013].888095 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:23:51 2013].888124 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:23:51 2013].889148 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:51 2013].889164 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:51 2013].895566 msDrawMap(): Layer 0 (land1), 0.007s
+[Sun Dec 15 20:23:51 2013].895592 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:23:51 2013].895600 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:23:51 2013].895606 msDrawMap() total time: 0.009s
+[Sun Dec 15 20:23:51 2013].940198 msSaveImage(stdout) total time: 0.045s
+[Sun Dec 15 20:23:51 2013].940595 mapserv request processing time (msLoadMap not incl.): 0.055s
+[Sun Dec 15 20:23:51 2013].940605 msFreeMap(): freeing map at 0x948b9b0.
+[Sun Dec 15 20:23:53 2013].758623 CGI Request 1 on process 3206
+[Sun Dec 15 20:23:53 2013].760841 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:23:53 2013].760870 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:23:53 2013].761793 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:53 2013].761813 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:23:53 2013].771110 msDrawMap(): Layer 1 (land2), 0.010s
+[Sun Dec 15 20:23:53 2013].771133 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:23:53 2013].771140 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:23:53 2013].771146 msDrawMap() total time: 0.012s
+[Sun Dec 15 20:23:53 2013].822850 msSaveImage(stdout) total time: 0.052s
+[Sun Dec 15 20:23:53 2013].823547 mapserv request processing time (msLoadMap not incl.): 0.065s
+[Sun Dec 15 20:23:53 2013].823567 msFreeMap(): freeing map at 0x848e9b0.
+[Sun Dec 15 20:54:12 2013].496541 CGI Request 1 on process 3679
+[Sun Dec 15 20:54:12 2013].501097 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:54:12 2013].501132 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:54:12 2013].502314 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:54:12 2013].502330 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:54:12 2013].511697 msDrawMap(): Layer 1 (land2), 0.011s
+[Sun Dec 15 20:54:12 2013].511737 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:54:12 2013].511745 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:54:12 2013].511751 msDrawMap() total time: 0.015s
+[Sun Dec 15 20:54:12 2013].566318 msSaveImage(stdout) total time: 0.054s
+[Sun Dec 15 20:54:12 2013].566857 mapserv request processing time (msLoadMap not incl.): 0.070s
+[Sun Dec 15 20:54:12 2013].566879 msFreeMap(): freeing map at 0x82dd9b8.
+[Sun Dec 15 20:54:52 2013].609287 CGI Request 1 on process 3690
+[Sun Dec 15 20:54:52 2013].612926 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:54:52 2013].612962 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:54:52 2013].614087 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:54:52 2013].614103 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:54:52 2013].623940 msDrawMap(): Layer 1 (land2), 0.011s
+[Sun Dec 15 20:54:52 2013].624056 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:54:52 2013].624070 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:54:52 2013].624082 msDrawMap() total time: 0.015s
+[Sun Dec 15 20:54:52 2013].675962 msSaveImage(stdout) total time: 0.052s
+[Sun Dec 15 20:54:52 2013].676377 mapserv request processing time (msLoadMap not incl.): 0.067s
+[Sun Dec 15 20:54:52 2013].676388 msFreeMap(): freeing map at 0x96ac9b8.
+[Sun Dec 15 20:55:41 2013].363855 loadColor(): Symbol definition error. Invalid hex color (#fffff):(line 11)
+[Sun Dec 15 20:55:45 2013].785360 CGI Request 1 on process 3701
+[Sun Dec 15 20:55:45 2013].788387 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:55:45 2013].788452 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:55:45 2013].789257 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:55:45 2013].789275 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:55:45 2013].798599 msDrawMap(): Layer 1 (land2), 0.010s
+[Sun Dec 15 20:55:45 2013].798639 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:55:45 2013].798646 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:55:45 2013].798652 msDrawMap() total time: 0.013s
+[Sun Dec 15 20:55:45 2013].850198 msSaveImage(stdout) total time: 0.051s
+[Sun Dec 15 20:55:45 2013].850607 mapserv request processing time (msLoadMap not incl.): 0.065s
+[Sun Dec 15 20:55:45 2013].850618 msFreeMap(): freeing map at 0x90a99b0.
+[Sun Dec 15 20:57:58 2013].867269 CGI Request 1 on process 3719
+[Sun Dec 15 20:57:58 2013].869393 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:57:58 2013].869423 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:57:58 2013].870305 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:57:58 2013].870305 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:57:58 2013].879503 msDrawMap(): Layer 1 (land2), 0.010s
+[Sun Dec 15 20:57:58 2013].879542 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:57:58 2013].879550 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:57:58 2013].879555 msDrawMap() total time: 0.012s
+[Sun Dec 15 20:57:58 2013].933348 msSaveImage(stdout) total time: 0.054s
+[Sun Dec 15 20:57:58 2013].933764 mapserv request processing time (msLoadMap not incl.): 0.066s
+[Sun Dec 15 20:57:58 2013].933775 msFreeMap(): freeing map at 0x8d679b8.
+[Sun Dec 15 20:58:15 2013].275109 CGI Request 1 on process 3723
+[Sun Dec 15 20:58:15 2013].277193 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:58:15 2013].277225 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:58:15 2013].278602 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:15 2013].278618 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:15 2013].286990 msDrawMap(): Layer 1 (land2), 0.010s
+[Sun Dec 15 20:58:15 2013].287015 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:58:15 2013].287022 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:58:15 2013].287027 msDrawMap() total time: 0.012s
+[Sun Dec 15 20:58:15 2013].340730 msSaveImage(stdout) total time: 0.054s
+[Sun Dec 15 20:58:15 2013].341128 mapserv request processing time (msLoadMap not incl.): 0.066s
+[Sun Dec 15 20:58:15 2013].341128 msFreeMap(): freeing map at 0x95279b0.
+[Sun Dec 15 20:58:21 2013].461053 CGI Request 1 on process 3725
+[Sun Dec 15 20:58:21 2013].463443 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:58:21 2013].463480 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:58:21 2013].464572 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:21 2013].464590 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:21 2013].470848 msDrawMap(): Layer 0 (land1), 0.007s
+[Sun Dec 15 20:58:21 2013].470881 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:58:21 2013].470888 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:58:21 2013].470894 msDrawMap() total time: 0.010s
+[Sun Dec 15 20:58:21 2013].515903 msSaveImage(stdout) total time: 0.045s
+[Sun Dec 15 20:58:21 2013].516309 mapserv request processing time (msLoadMap not incl.): 0.055s
+[Sun Dec 15 20:58:21 2013].516321 msFreeMap(): freeing map at 0x9ee99b0.
+[Sun Dec 15 20:58:22 2013].471717 CGI Request 1 on process 3726
+[Sun Dec 15 20:58:22 2013].473989 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:58:22 2013].474020 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:58:22 2013].474618 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:22 2013].474637 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:22 2013].484010 msDrawMap(): Layer 1 (land2), 0.010s
+[Sun Dec 15 20:58:22 2013].484160 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:58:22 2013].484177 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:58:22 2013].484191 msDrawMap() total time: 0.012s
+[Sun Dec 15 20:58:22 2013].534298 msSaveImage(stdout) total time: 0.050s
+[Sun Dec 15 20:58:22 2013].535424 mapserv request processing time (msLoadMap not incl.): 0.064s
+[Sun Dec 15 20:58:22 2013].535453 msFreeMap(): freeing map at 0x95779b0.
+[Sun Dec 15 20:58:22 2013].603263 CGI Request 1 on process 3727
+[Sun Dec 15 20:58:22 2013].605394 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:58:22 2013].605424 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:58:22 2013].606252 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:22 2013].606267 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:22 2013].615925 msDrawMap(): Layer 2 (land3), 0.010s
+[Sun Dec 15 20:58:22 2013].616103 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:58:22 2013].616122 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:58:22 2013].616138 msDrawMap() total time: 0.013s
+[Sun Dec 15 20:58:22 2013].672150 msSaveImage(stdout) total time: 0.056s
+[Sun Dec 15 20:58:22 2013].672585 mapserv request processing time (msLoadMap not incl.): 0.069s
+[Sun Dec 15 20:58:22 2013].672596 msFreeMap(): freeing map at 0x93f29b0.
+[Sun Dec 15 20:58:35 2013].445729 CGI Request 1 on process 3731
+[Sun Dec 15 20:58:35 2013].447624 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 20:58:35 2013].447664 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 20:58:35 2013].448393 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:35 2013].448408 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 20:58:35 2013].458386 msDrawMap(): Layer 2 (land3), 0.011s
+[Sun Dec 15 20:58:35 2013].458426 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 20:58:35 2013].458433 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 20:58:35 2013].458438 msDrawMap() total time: 0.013s
+[Sun Dec 15 20:58:35 2013].514141 msSaveImage(stdout) total time: 0.056s
+[Sun Dec 15 20:58:35 2013].514592 mapserv request processing time (msLoadMap not incl.): 0.069s
+[Sun Dec 15 20:58:35 2013].514603 msFreeMap(): freeing map at 0x8c659b0.
+[Sun Dec 15 21:00:41 2013].635913 CGI Request 1 on process 3747
+[Sun Dec 15 21:00:41 2013].638062 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:00:41 2013].638094 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:00:41 2013].638796 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:00:41 2013].638810 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:00:41 2013].648471 msDrawMap(): Layer 2 (land3), 0.010s
+[Sun Dec 15 21:00:41 2013].648499 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:00:41 2013].648506 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:00:41 2013].648512 msDrawMap() total time: 0.012s
+[Sun Dec 15 21:00:41 2013].705934 msSaveImage(stdout) total time: 0.057s
+[Sun Dec 15 21:00:41 2013].706393 mapserv request processing time (msLoadMap not incl.): 0.070s
+[Sun Dec 15 21:00:41 2013].706404 msFreeMap(): freeing map at 0x82759c0.
+[Sun Dec 15 21:01:03 2013].821247 CGI Request 1 on process 3752
+[Sun Dec 15 21:01:03 2013].823355 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:01:03 2013].823386 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:01:03 2013].824117 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:01:03 2013].824132 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:01:03 2013].840210 msDrawMap(): Layer 2 (land3), 0.017s
+[Sun Dec 15 21:01:03 2013].840244 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:01:03 2013].840251 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:01:03 2013].840257 msDrawMap() total time: 0.019s
+[Sun Dec 15 21:01:03 2013].896220 msSaveImage(stdout) total time: 0.056s
+[Sun Dec 15 21:01:03 2013].896666 mapserv request processing time (msLoadMap not incl.): 0.075s
+[Sun Dec 15 21:01:03 2013].896677 msFreeMap(): freeing map at 0x86c29b0.
+[Sun Dec 15 21:01:12 2013].596360 CGI Request 1 on process 3756
+[Sun Dec 15 21:01:12 2013].598750 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:01:12 2013].598798 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:01:12 2013].599551 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:01:12 2013].599571 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Sun Dec 15 21:01:12 2013].619686 msDrawMap(): Layer 2 (land3), 0.021s
+[Sun Dec 15 21:01:12 2013].619730 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:01:12 2013].619737 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:01:12 2013].619743 msDrawMap() total time: 0.023s
+[Sun Dec 15 21:01:12 2013].681660 msSaveImage(stdout) total time: 0.062s
+[Sun Dec 15 21:01:12 2013].682130 mapserv request processing time (msLoadMap not incl.): 0.086s
+[Sun Dec 15 21:01:12 2013].682145 msFreeMap(): freeing map at 0x962d9b0.
+[Sun Dec 15 21:01:18 2013].229411 CGI Request 1 on process 3757
+[Sun Dec 15 21:01:18 2013].231618 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:01:18 2013].231649 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:01:18 2013].246673 msDrawMap(): Layer 3 (land4), 0.015s
+[Sun Dec 15 21:01:18 2013].246705 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:01:18 2013].246713 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:01:18 2013].246718 msDrawMap() total time: 0.017s
+[Sun Dec 15 21:01:18 2013].301013 msSaveImage(stdout) total time: 0.054s
+[Sun Dec 15 21:01:18 2013].301439 mapserv request processing time (msLoadMap not incl.): 0.072s
+[Sun Dec 15 21:01:18 2013].301449 msFreeMap(): freeing map at 0x9a4d9b0.
+[Sun Dec 15 21:01:19 2013].172326 CGI Request 1 on process 3759
+[Sun Dec 15 21:01:19 2013].174343 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:01:19 2013].174382 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:01:19 2013].190616 msDrawMap(): Layer 4 (land5), 0.016s
+[Sun Dec 15 21:01:19 2013].190654 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:01:19 2013].190661 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:01:19 2013].190667 msDrawMap() total time: 0.018s
+[Sun Dec 15 21:01:19 2013].238547 msSaveImage(stdout) total time: 0.048s
+[Sun Dec 15 21:01:19 2013].238976 mapserv request processing time (msLoadMap not incl.): 0.067s
+[Sun Dec 15 21:01:19 2013].238987 msFreeMap(): freeing map at 0x893d9a8.
+[Sun Dec 15 21:01:19 2013].912409 CGI Request 1 on process 3760
+[Sun Dec 15 21:01:19 2013].914450 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:01:19 2013].914479 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:01:19 2013].937476 msDrawMap(): Layer 5 (land6), 0.023s
+[Sun Dec 15 21:01:19 2013].937549 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:01:19 2013].937562 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:01:19 2013].937573 msDrawMap() total time: 0.025s
+[Sun Dec 15 21:01:19 2013].982285 msSaveImage(stdout) total time: 0.045s
+[Sun Dec 15 21:01:19 2013].982681 mapserv request processing time (msLoadMap not incl.): 0.070s
+[Sun Dec 15 21:01:19 2013].982691 msFreeMap(): freeing map at 0x95e79a8.
+[Sun Dec 15 21:07:42 2013].882368 CGI Request 1 on process 3803
+[Sun Dec 15 21:07:42 2013].884707 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:07:42 2013].884741 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:07:42 2013].899766 msDrawMap(): Layer 5 (land6), 0.015s
+[Sun Dec 15 21:07:42 2013].899804 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:07:42 2013].899811 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:07:42 2013].899817 msDrawMap() total time: 0.017s
+[Sun Dec 15 21:07:42 2013].945540 msSaveImage(stdout) total time: 0.046s
+[Sun Dec 15 21:07:42 2013].945944 mapserv request processing time (msLoadMap not incl.): 0.064s
+[Sun Dec 15 21:07:42 2013].946234 msFreeMap(): freeing map at 0x96b59a8.
+[Sun Dec 15 21:07:59 2013].938522 CGI Request 1 on process 3808
+[Sun Dec 15 21:07:59 2013].941074 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:07:59 2013].941118 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:07:59 2013].955502 msDrawMap(): Layer 5 (land6), 0.014s
+[Sun Dec 15 21:07:59 2013].955544 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:07:59 2013].955551 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:07:59 2013].955557 msDrawMap() total time: 0.017s
+[Sun Dec 15 21:08:00 2013].10851 msSaveImage(stdout) total time: 0.055s
+[Sun Dec 15 21:08:00 2013].11282 mapserv request processing time (msLoadMap not incl.): 0.073s
+[Sun Dec 15 21:08:00 2013].11293 msFreeMap(): freeing map at 0x83d8998.
+[Sun Dec 15 21:08:17 2013].712217 CGI Request 1 on process 3812
+[Sun Dec 15 21:08:17 2013].714162 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:08:17 2013].714193 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:08:17 2013].728380 msDrawMap(): Layer 5 (land6), 0.014s
+[Sun Dec 15 21:08:17 2013].728417 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:08:17 2013].728424 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:08:17 2013].728430 msDrawMap() total time: 0.016s
+[Sun Dec 15 21:08:17 2013].775973 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 21:08:17 2013].776410 mapserv request processing time (msLoadMap not incl.): 0.064s
+[Sun Dec 15 21:08:17 2013].776420 msFreeMap(): freeing map at 0x91f5998.
+[Sun Dec 15 21:08:32 2013].389787 CGI Request 1 on process 3817
+[Sun Dec 15 21:08:32 2013].392699 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:08:32 2013].392731 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:08:32 2013].400497 msDrawMap(): Layer 5 (land6), 0.008s
+[Sun Dec 15 21:08:32 2013].400534 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:08:32 2013].400542 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:08:32 2013].400548 msDrawMap() total time: 0.011s
+[Sun Dec 15 21:08:32 2013].451329 msSaveImage(stdout) total time: 0.051s
+[Sun Dec 15 21:08:32 2013].451775 mapserv request processing time (msLoadMap not incl.): 0.062s
+[Sun Dec 15 21:08:32 2013].451786 msFreeMap(): freeing map at 0x87489a8.
+[Sun Dec 15 21:08:37 2013].650093 CGI Request 1 on process 3820
+[Sun Dec 15 21:08:37 2013].652317 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:08:37 2013].652353 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:08:37 2013].666689 msDrawMap(): Layer 5 (land6), 0.014s
+[Sun Dec 15 21:08:37 2013].666731 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:08:37 2013].666738 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:08:37 2013].666744 msDrawMap() total time: 0.017s
+[Sun Dec 15 21:08:37 2013].715285 msSaveImage(stdout) total time: 0.048s
+[Sun Dec 15 21:08:37 2013].715717 mapserv request processing time (msLoadMap not incl.): 0.066s
+[Sun Dec 15 21:08:37 2013].715730 msFreeMap(): freeing map at 0x93299a0.
+[Sun Dec 15 21:09:13 2013].37144 CGI Request 1 on process 3827
+[Sun Dec 15 21:09:13 2013].39663 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:09:13 2013].39704 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:09:13 2013].54917 msDrawMap(): Layer 5 (land6), 0.015s
+[Sun Dec 15 21:09:13 2013].54981 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:09:13 2013].54989 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:09:13 2013].54994 msDrawMap() total time: 0.018s
+[Sun Dec 15 21:09:13 2013].98708 msSaveImage(stdout) total time: 0.044s
+[Sun Dec 15 21:09:13 2013].99277 mapserv request processing time (msLoadMap not incl.): 0.062s
+[Sun Dec 15 21:09:13 2013].99294 msFreeMap(): freeing map at 0x823f9a0.
+[Sun Dec 15 21:10:13 2013].590957 CGI Request 1 on process 3836
+[Sun Dec 15 21:10:13 2013].593457 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:10:13 2013].593546 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:10:13 2013].606228 msDrawMap(): Layer 5 (land6), 0.013s
+[Sun Dec 15 21:10:13 2013].606273 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:10:13 2013].606280 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:10:13 2013].606286 msDrawMap() total time: 0.015s
+[Sun Dec 15 21:10:13 2013].651996 msSaveImage(stdout) total time: 0.046s
+[Sun Dec 15 21:10:13 2013].652428 mapserv request processing time (msLoadMap not incl.): 0.061s
+[Sun Dec 15 21:10:13 2013].652438 msFreeMap(): freeing map at 0x82479a8.
+[Sun Dec 15 21:10:19 2013].572677 CGI Request 1 on process 3840
+[Sun Dec 15 21:10:19 2013].575449 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:10:19 2013].575534 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:10:19 2013].587723 msDrawMap(): Layer 5 (land6), 0.012s
+[Sun Dec 15 21:10:19 2013].587765 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:10:19 2013].587772 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:10:19 2013].587778 msDrawMap() total time: 0.015s
+[Sun Dec 15 21:10:19 2013].634909 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 21:10:19 2013].635571 mapserv request processing time (msLoadMap not incl.): 0.063s
+[Sun Dec 15 21:10:19 2013].635590 msFreeMap(): freeing map at 0x89b79a8.
+[Sun Dec 15 21:10:30 2013].482250 CGI Request 1 on process 3841
+[Sun Dec 15 21:10:30 2013].484476 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:10:30 2013].484512 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:10:30 2013].492184 msDrawMap(): Layer 4 (land5), 0.008s
+[Sun Dec 15 21:10:30 2013].492215 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:10:30 2013].492222 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:10:30 2013].492227 msDrawMap() total time: 0.010s
+[Sun Dec 15 21:10:30 2013].539476 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 21:10:30 2013].539899 mapserv request processing time (msLoadMap not incl.): 0.058s
+[Sun Dec 15 21:10:30 2013].539910 msFreeMap(): freeing map at 0x81679b0.
+[Sun Dec 15 21:11:23 2013].119969 CGI Request 1 on process 3850
+[Sun Dec 15 21:11:23 2013].122124 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:11:23 2013].122160 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:11:23 2013].130219 msDrawMap(): Layer 4 (land5), 0.008s
+[Sun Dec 15 21:11:23 2013].130262 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:11:23 2013].130269 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:11:23 2013].130275 msDrawMap() total time: 0.010s
+[Sun Dec 15 21:11:23 2013].177571 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 21:11:23 2013].177992 mapserv request processing time (msLoadMap not incl.): 0.058s
+[Sun Dec 15 21:11:23 2013].178005 msFreeMap(): freeing map at 0x88fc9a8.
+[Sun Dec 15 21:11:35 2013].513792 loadStyle(): Unknown identifier. Parsing error near (buffer):(line 49)
+[Sun Dec 15 21:11:35 2013].513829 msFreeMap(): freeing map at 0x86169b0.
+[Sun Dec 15 21:11:45 2013].517198 loadStyle(): Unknown identifier. Parsing error near (buffer):(line 49)
+[Sun Dec 15 21:11:45 2013].517237 msFreeMap(): freeing map at 0x8e849b0.
+[Sun Dec 15 21:11:50 2013].948440 CGI Request 1 on process 3862
+[Sun Dec 15 21:11:50 2013].950609 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:11:50 2013].950640 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:11:50 2013].957919 msDrawMap(): Layer 4 (land5), 0.007s
+[Sun Dec 15 21:11:50 2013].957964 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:11:50 2013].957971 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:11:50 2013].957977 msDrawMap() total time: 0.009s
+[Sun Dec 15 21:11:51 2013].7247 msSaveImage(stdout) total time: 0.049s
+[Sun Dec 15 21:11:51 2013].7708 mapserv request processing time (msLoadMap not incl.): 0.059s
+[Sun Dec 15 21:11:51 2013].7719 msFreeMap(): freeing map at 0x80cf9a8.
+[Sun Dec 15 21:12:17 2013].748896 CGI Request 1 on process 3868
+[Sun Dec 15 21:12:17 2013].751091 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:12:17 2013].751129 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:12:17 2013].758437 msDrawMap(): Layer 4 (land5), 0.007s
+[Sun Dec 15 21:12:17 2013].758469 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:12:17 2013].758476 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:12:17 2013].758482 msDrawMap() total time: 0.009s
+[Sun Dec 15 21:12:17 2013].807746 msSaveImage(stdout) total time: 0.049s
+[Sun Dec 15 21:12:17 2013].808173 mapserv request processing time (msLoadMap not incl.): 0.059s
+[Sun Dec 15 21:12:17 2013].808193 msFreeMap(): freeing map at 0x89b19b0.
+[Sun Dec 15 21:12:52 2013].105837 CGI Request 1 on process 3875
+[Sun Dec 15 21:12:52 2013].107966 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:12:52 2013].108002 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:12:52 2013].115937 msDrawMap(): Layer 4 (land5), 0.008s
+[Sun Dec 15 21:12:52 2013].115965 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:12:52 2013].115972 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:12:52 2013].115978 msDrawMap() total time: 0.010s
+[Sun Dec 15 21:12:52 2013].165274 msSaveImage(stdout) total time: 0.049s
+[Sun Dec 15 21:12:52 2013].165691 mapserv request processing time (msLoadMap not incl.): 0.060s
+[Sun Dec 15 21:12:52 2013].165702 msFreeMap(): freeing map at 0x8dac9b0.
+[Sun Dec 15 21:13:07 2013].597467 CGI Request 1 on process 3879
+[Sun Dec 15 21:13:07 2013].599694 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:13:07 2013].599752 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:13:07 2013].603764 msDrawMap(): Layer 4 (land5), 0.004s
+[Sun Dec 15 21:13:07 2013].603794 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:13:07 2013].603802 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:13:07 2013].603807 msDrawMap() total time: 0.006s
+[Sun Dec 15 21:13:07 2013].649516 msSaveImage(stdout) total time: 0.046s
+[Sun Dec 15 21:13:07 2013].649927 mapserv request processing time (msLoadMap not incl.): 0.052s
+[Sun Dec 15 21:13:07 2013].649939 msFreeMap(): freeing map at 0x86199b0.
+[Sun Dec 15 21:13:23 2013].958875 CGI Request 1 on process 3884
+[Sun Dec 15 21:13:23 2013].960959 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:13:23 2013].960991 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:13:23 2013].965074 msDrawMap(): Layer 4 (land5), 0.004s
+[Sun Dec 15 21:13:23 2013].965104 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:13:23 2013].965111 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:13:23 2013].965117 msDrawMap() total time: 0.006s
+[Sun Dec 15 21:13:24 2013].12565 msSaveImage(stdout) total time: 0.047s
+[Sun Dec 15 21:13:24 2013].12975 mapserv request processing time (msLoadMap not incl.): 0.054s
+[Sun Dec 15 21:13:24 2013].12989 msFreeMap(): freeing map at 0x8f3c9b0.
+[Sun Dec 15 21:14:20 2013].848422 CGI Request 1 on process 3893
+[Sun Dec 15 21:14:20 2013].850824 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:14:20 2013].850858 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:14:20 2013].855900 msDrawMap(): Layer 4 (land5), 0.005s
+[Sun Dec 15 21:14:20 2013].855943 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:14:20 2013].855951 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:14:20 2013].855957 msDrawMap() total time: 0.007s
+[Sun Dec 15 21:14:20 2013].904259 msSaveImage(stdout) total time: 0.048s
+[Sun Dec 15 21:14:20 2013].904694 mapserv request processing time (msLoadMap not incl.): 0.056s
+[Sun Dec 15 21:14:20 2013].904705 msFreeMap(): freeing map at 0x87959b0.
+[Sun Dec 15 21:14:35 2013].757988 CGI Request 1 on process 3897
+[Sun Dec 15 21:14:35 2013].759997 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Sun Dec 15 21:14:35 2013].760037 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Sun Dec 15 21:14:35 2013].765284 msDrawMap(): Layer 4 (land5), 0.005s
+[Sun Dec 15 21:14:35 2013].765334 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Sun Dec 15 21:14:35 2013].765342 msDrawMap(): Drawing Label Cache, 0.000s
+[Sun Dec 15 21:14:35 2013].765348 msDrawMap() total time: 0.007s
+[Sun Dec 15 21:14:35 2013].816601 msSaveImage(stdout) total time: 0.051s
+[Sun Dec 15 21:14:35 2013].817402 mapserv request processing time (msLoadMap not incl.): 0.059s
+[Sun Dec 15 21:14:35 2013].817428 msFreeMap(): freeing map at 0x9a0d9b0.
+[Mon Dec 16 00:59:13 2013].974872 CGI Request 1 on process 5302
+[Mon Dec 16 00:59:13 2013].976923 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Mon Dec 16 00:59:13 2013].976952 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Mon Dec 16 00:59:13 2013].983819 msDrawMap(): Layer 3 (land4), 0.007s
+[Mon Dec 16 00:59:13 2013].983854 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Mon Dec 16 00:59:13 2013].983862 msDrawMap(): Drawing Label Cache, 0.000s
+[Mon Dec 16 00:59:13 2013].983869 msDrawMap() total time: 0.009s
+[Mon Dec 16 00:59:14 2013].41683 msSaveImage(stdout) total time: 0.058s
+[Mon Dec 16 00:59:14 2013].42095 mapserv request processing time (msLoadMap not incl.): 0.067s
+[Mon Dec 16 00:59:14 2013].42106 msFreeMap(): freeing map at 0x92179b8.
+[Mon Dec 16 00:59:14 2013].935981 CGI Request 1 on process 5303
+[Mon Dec 16 00:59:14 2013].937632 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Mon Dec 16 00:59:14 2013].937661 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Mon Dec 16 00:59:14 2013].947925 msDrawMap(): Layer 2 (land3), 0.010s
+[Mon Dec 16 00:59:14 2013].947957 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Mon Dec 16 00:59:14 2013].947964 msDrawMap(): Drawing Label Cache, 0.000s
+[Mon Dec 16 00:59:14 2013].947970 msDrawMap() total time: 0.012s
+[Mon Dec 16 00:59:15 2013].3572 msSaveImage(stdout) total time: 0.056s
+[Mon Dec 16 00:59:15 2013].3962 mapserv request processing time (msLoadMap not incl.): 0.068s
+[Mon Dec 16 00:59:15 2013].3973 msFreeMap(): freeing map at 0x83bf9b8.
+[Mon Dec 16 00:59:18 2013].800892 CGI Request 1 on process 5304
+[Mon Dec 16 00:59:18 2013].803002 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Mon Dec 16 00:59:18 2013].803032 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Mon Dec 16 00:59:18 2013].804222 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Mon Dec 16 00:59:18 2013].804237 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Mon Dec 16 00:59:18 2013].813501 msDrawMap(): Layer 1 (land2), 0.010s
+[Mon Dec 16 00:59:18 2013].813528 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Mon Dec 16 00:59:18 2013].813536 msDrawMap(): Drawing Label Cache, 0.000s
+[Mon Dec 16 00:59:18 2013].813542 msDrawMap() total time: 0.013s
+[Mon Dec 16 00:59:18 2013].874352 msSaveImage(stdout) total time: 0.061s
+[Mon Dec 16 00:59:18 2013].874712 mapserv request processing time (msLoadMap not incl.): 0.074s
+[Mon Dec 16 00:59:18 2013].874725 msFreeMap(): freeing map at 0x9d199b8.
+[Mon Dec 16 00:59:41 2013].406274 CGI Request 1 on process 5310
+[Mon Dec 16 00:59:41 2013].408292 msDrawMap(): rendering using outputformat named png (AGG/PNG).
+[Mon Dec 16 00:59:41 2013].408321 msDrawMap(): WMS/WFS set-up and query, 0.000s
+[Mon Dec 16 00:59:41 2013].409511 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Mon Dec 16 00:59:41 2013].409526 msProjectPoint(): Projection library error. proj says: tolerance condition error
+[Mon Dec 16 00:59:41 2013].418359 msDrawMap(): Layer 1 (land2), 0.010s
+[Mon Dec 16 00:59:41 2013].418389 msDrawLabelCache(): labelcache_map_edge_buffer = 10
+[Mon Dec 16 00:59:41 2013].418396 msDrawMap(): Drawing Label Cache, 0.000s
+[Mon Dec 16 00:59:41 2013].418402 msDrawMap() total time: 0.012s
+[Mon Dec 16 00:59:41 2013].474268 msSaveImage(stdout) total time: 0.056s
+[Mon Dec 16 00:59:41 2013].474629 mapserv request processing time (msLoadMap not incl.): 0.068s
+[Mon Dec 16 00:59:41 2013].474639 msFreeMap(): freeing map at 0x81eb9b8.

@@ -1,0 +1,15 @@
+#!/bin/bash
+sudo git init
+sudo git remote add origin $1
+sudo git add epsg
+sudo git add config
+sudo git add editor/
+sudo git add symbols/
+sudo git add symbol.map 
+sudo git add fonts/
+sudo git add fonts.lst 
+sudo git add map/
+sudo git add debugFile.log 
+sudo git commit -m "scribeui git init"
+sudo git config http.postBuffer 524288000
+sudo git push -u origin master
