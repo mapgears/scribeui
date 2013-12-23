@@ -77,6 +77,8 @@
                                     <button id="btn_open_map">Open Map</button>
                                     <button id="btn_export_map">Export Map</button>
                                     <button id="btn_delete_map">Delete Map</button>
+                                    <button id="btn_configure_map">Configure</button>
+                                    <button id="btn_commit_map">Commit</button>
                             </div>
                          </div>
                      </div>
@@ -336,6 +338,31 @@
             <input type="text" id="minX" class="extent-input" value="minX" style="display:none"/>
             <input type="text" id="maxX" class="extent-input" value="maxX" style="display:none"/>
             <input type="text" id="minY" class="extent-input" value="minY" style="display:none"/> <br>
+        </div>
+
+        <div id="configuremap-form" title="Configure map" style="display:none" class="scribe-dialog">
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group">
+                        <label for="git-url">Git URL</label>
+                        <div class="control">
+                            <input type="text" name="git-url" id="git-url" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git user</label>
+                        <div class="control">
+                            <input type="text" name="git-user" id="git-user" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git user password</label>
+                        <div class="control">
+                            <input type="password" id="git-password"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
   </body>

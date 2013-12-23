@@ -1015,3 +1015,114 @@ def string2json(string):
     return ("{\"" + t)
 
 
+#===============================  
+#       Configure map
+#===============================
+@app.route('/_configure_map', methods=['POST'])
+def configure_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        gitURL = request.form['gitURL']
+        gitUser = request.form['gitUser']
+        gitPassword = request.form['gitPassword']
+
+        mapID = get_map_id(mapName, session['ws_name'])
+        
+        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+        os.chdir(mapPath)
+
+        wsmap = query_db('''select git_url, git_user, git_password from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), mapName], one=True)
+        
+        errors = []
+
+        if gitURL != wsmap['git_url'] or gitUser != wsmap['git_user'] or gitPassword != wsmap['git_password']:
+            # remove remote origin
+            try:
+                subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e)
+
+            # init new git
+            try:
+                subprocess.check_output(['git init'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e)
+            
+            # link new git to remote url
+            # user/pass are coded directly in the git url 
+            userString = gitUser
+            if gitPassword != '':
+                userString += ':' + gitPassword
+            userString += '@'
+            gitFullURL = 'https://' + userString + gitURL[8:]
+
+            try:
+                subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e)
+
+            gitignore = open('.gitignore', 'w')
+            gitignoreContent = 'data\n'
+            gitignoreContent += 'pdata\n'
+            gitignoreContent += 'debugFile.log\n'
+            gitignoreContent += 'map\n'
+            gitignoreContent += 'pdata'
+            gitignore.write(gitignoreContent)
+
+            if len(errors) == 0:
+                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_upassword = ? WHERE map_id = ?''', [gitURL, gitUser, gitPassword, mapID])
+                g.db.commit()
+
+                response['status'] = 'ok'
+
+        response['errors'] = errors
+
+    return jsonify(response)
+
+
+#===============================  
+#       Git commit map
+#===============================
+@app.route('/_git_commit_map', methods=['POST'])
+def git_commit_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        message = request.form['message']
+
+        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+        os.chdir(mapPath)
+
+        errors = []
+        
+        try:
+            subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+        
+        try:
+            subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+        
+        try:
+            subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+
+        try:
+            subprocess.check_output(['git push --verbose origin master'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+        
+        if len(errors) == 0:
+
+            g.db.execute('''UPDATE maps SET git_url = ? WHERE map_id = ?''', [gitURL, mapID])
+            g.db.commit()
+
+            response['status'] = 'ok'
+        
+        response['errors'] = errors
+
+    return jsonify(response)

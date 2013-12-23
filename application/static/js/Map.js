@@ -493,6 +493,23 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
     }); 
 }
 
+Map.prototype.configure = function(config){
+    config['name'] = this.name;
+     $.post($SCRIPT_ROOT + '/_configure_map', config, function(status) {
+       console.log(status)
+    });
+}
+
+Map.prototype.gitCommit = function(message){
+    var data = {
+        name: this.name,
+        message: message
+    }
+    $.post($SCRIPT_ROOT + '/_git_commit_map', data, function(status) {
+       console.log(status)
+    });
+}
+
 Map.prototype.getResultingMapfile = function(){
     var self = this;
     $.getJSON($SCRIPT_ROOT + '/_load_mapfile_generated', {

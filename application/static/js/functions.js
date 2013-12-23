@@ -299,6 +299,48 @@ function exportMap(){
     }        
 }
 
+function configureMap(){
+    var name = $("#map-list .ui-selected").text();
+     if (name){
+        $("#configuremap-form").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: _workspace.popupWidth,
+            height:_workspace.popupHeight,
+            modal: true,
+            buttons: {
+                "Save": function() {
+                    var gitURL = $("#git-url").val();
+                    var gitUser = $("#git-user").val();
+                    var gitPassword = $("#git-password").val();
+
+                    var config = {
+                        gitURL: gitURL,
+                        gitUser: gitUser,
+                        gitPassword: gitPassword    
+                    }
+
+                    var map = new Map(name);
+                    map.configure(config);
+
+                    $(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).find('input').val();
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {}
+        }).dialog("open");
+    }
+}
+
+function commitMap(){
+    var name = $("#map-list .ui-selected").text();
+    var map = new Map(name);
+    map.gitCommit('Commit from ScribeUI');
+}
+
 function createNewGroup(){
     $("#creategroup-form").dialog({
         autoOpen: false,

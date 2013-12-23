@@ -139,6 +139,14 @@ jQuery(function() {
 	    deleteMap();
     });
 
+    $('#btn_configure_map').button().click(function(){
+        configureMap();
+    });
+
+    $('#btn_commit_map').button().click(function(){
+        commitMap();
+    });
+
     $("#newmap-type").bind('blur', function(){
 	    displayTemplates('templates', $("#newmap-type").val());
 	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
