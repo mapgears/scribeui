@@ -24,11 +24,12 @@ a{
 	outline: 0;
 }
 select {
-   max-width: 200px;
    padding: 1px 0px 0px 1px;
+	width:200px;
 }
 input {
     border-radius: 4px;
+	width:200px;
 }
 label {
     font-size: 1.2em;
@@ -396,6 +397,10 @@ button {
 	border-bottom:solid 1px #f7f7f7;
 	height:30px;
     padding: 4px 4px 0px 4px;
+}
+#editor-toolbar select{
+	max-width:200px;
+	width:auto;
 }
 .main-editor {
     overflow-y: auto;
