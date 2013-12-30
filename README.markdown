@@ -22,17 +22,17 @@ You can use the Makefile to automatically setup ScribeUI for you, simply run:
 This will download and install the required dependencies, setup the differents
 configurations files and install them in the proper directories. 
 
-NOTE: If you install ScribeUI on your 'localhost' on specific port, you have to modify './config.py'
-and specify  '127.0.0.1:port' instead of "my_server_name" 
+NOTE: If you install ScribeUI on your 'localhost' on specific port, you have to modify "./config.py" 
+and specify "127.0.0.1:port" instead of "my_server_name" 
 
-	ip=127.0.0.1:8080
+        ip=127.0.0.1:8080
 
 Downloading template data is optional, but recommended for a better 
 experience.  The basicscribe-data option is for a light download: 
 
-         sudo make load-demo-data   ==> (644Mb)
+        sudo make load-demo-data   ==> (644Mb)
 or
-         sudo make load-basicscribe-data   ==> (8Mb)
+        sudo make load-basicscribe-data   ==> (8Mb)
 
 This will download some natural earth data and will help you get started with
 ScribeUI by making templates readily working so you don't start with an empty
