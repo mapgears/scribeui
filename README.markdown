@@ -32,6 +32,7 @@ experience.  The basicscribe-data option is for a light download:
 
         sudo make load-demo-data   ==> (644Mb)
 or
+
         sudo make load-basicscribe-data   ==> (8Mb)
 
 This will download some natural earth data and will help you get started with
