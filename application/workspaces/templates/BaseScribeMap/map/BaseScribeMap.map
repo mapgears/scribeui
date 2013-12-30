@@ -1,0 +1,396 @@
+MAP
+    CONFIG 'ON_MISSING_DATA' 'IGNORE'
+    CONFIG "MS_ERRORFILE" "../debugFile.log"
+    CONFIG 'PROJ_LIB' '../'
+    FONTSET '../fonts.lst'
+    IMAGETYPE png
+    MAXSIZE 4000
+    SIZE 800 800
+    UNITS meters
+    EXTENT -20000000 -20000000 20000000 20000000
+    IMAGECOLOR '#ffffff'
+    SHAPEPATH '../pdata/naturalEarth/'
+    WEB
+        METADATA
+            "ows_enable_request" "*"
+            "wms_srs" "EPSG:900913 EPSG:4326"
+            "labelcache_map_edge_buffer" "-10"
+            "wms_title" "ScribeUI base map"
+        END
+        IMAGEPATH '/tmp/ms_tmp/'
+        IMAGEURL '/ms_tmp/'
+    END
+    DEBUG 5
+    PROJECTION
+        "init=epsg:900913"
+    END
+    INCLUDE '../symbols.map'
+#---- LEVEL 1 ----#
+    LAYER
+        MAXSCALEDENOM 999999999
+        MINSCALEDENOM 268435456
+        NAME 'land1'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 2 ----#
+    LAYER
+        MAXSCALEDENOM 268435456
+        MINSCALEDENOM 134217728
+        NAME 'land2'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 3 ----#
+    LAYER
+        MAXSCALEDENOM 134217728
+        MINSCALEDENOM 67108864
+        NAME 'land3'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 4 ----#
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'land4'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 5 ----#
+    LAYER
+        MAXSCALEDENOM 33554432
+        MINSCALEDENOM 16777216
+        NAME 'land5'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 6 ----#
+    LAYER
+        MAXSCALEDENOM 16777216
+        MINSCALEDENOM 8388608
+        NAME 'land6'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '50m_physical/ne_50m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 7 ----#
+    LAYER
+        MAXSCALEDENOM 8388608
+        MINSCALEDENOM 4194304
+        NAME 'land7'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '50m_physical/ne_50m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 8 ----#
+    LAYER
+        MAXSCALEDENOM 4194304
+        MINSCALEDENOM 2097152
+        NAME 'land8'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '50m_physical/ne_50m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 9 ----#
+    LAYER
+        MAXSCALEDENOM 2097152
+        MINSCALEDENOM 1048576
+        NAME 'land9'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '50m_physical/ne_50m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 10 ----#
+    LAYER
+        MAXSCALEDENOM 1048576
+        MINSCALEDENOM 524288
+        NAME 'land10'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '50m_physical/ne_50m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 11 ----#
+    LAYER
+        MAXSCALEDENOM 524288
+        MINSCALEDENOM 262144
+        NAME 'land11'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 12 ----#
+    LAYER
+        MAXSCALEDENOM 262144
+        MINSCALEDENOM 131072
+        NAME 'land12'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 13 ----#
+    LAYER
+        MAXSCALEDENOM 131072
+        MINSCALEDENOM 65536
+        NAME 'land13'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 14 ----#
+    LAYER
+        MAXSCALEDENOM 65536
+        MINSCALEDENOM 32768
+        NAME 'land14'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 15 ----#
+    LAYER
+        MAXSCALEDENOM 32768
+        MINSCALEDENOM 16384
+        NAME 'land15'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+#---- LEVEL 16 ----#
+    LAYER
+        MAXSCALEDENOM 16384
+        MINSCALEDENOM 8192
+        NAME 'land16'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '10m_physical/ne_10m_land'
+        CLASS
+            STYLE
+                COLOR '#ffffff'
+                OUTLINECOLOR '#66A3D2'
+                WIDTH 0.5
+            END
+        END
+    END
+
+END
