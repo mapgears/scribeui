@@ -334,12 +334,12 @@ function cloneMap(){
                 $(this).dialog("close");
             },
             Cancel: function() {
-                $(this).find('input').val('');
                 $(this).dialog("close");
             }
         },
         close: function() {
-            $(this).find('input').val('');    
+            $(this).find('input').val('');
+            $(this).find('textarea').val('');    
         }
     }).dialog("open");
 }
@@ -373,7 +373,6 @@ function configureMap(){
                     $(this).dialog("close");
                 },
                 Cancel: function() {
-                    $(this).find('input').val('');
                     $(this).dialog("close");
                 }
             },
@@ -409,8 +408,6 @@ function commitMap(){
                     //$(this).dialog("close");
                 },
                 Cancel: function() {
-                    $(this).find('input').val('');
-                    $(this).find('textarea').val('');
                     $(this).dialog("close");
                 }
             },
