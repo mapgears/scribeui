@@ -504,12 +504,15 @@ Map.prototype.configure = function(config){
 }
 
 Map.prototype.gitCommit = function(message, callback){
+    var self = this;
     var data = {
         name: this.name,
         message: message
     }
     $.post($SCRIPT_ROOT + '/_git_commit_map', data, function(response) {
         callback.call(null, response);
+        
+        self.open();
     });
 }
 

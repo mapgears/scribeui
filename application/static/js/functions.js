@@ -391,7 +391,13 @@ function displayConfiguration(config){
 
 function commitMap(){
     var name = $("#map-list .ui-selected").text();
-    var map = new Map(name);
+    if(_workspace.openedMap.name != name){
+        var map = _workspace.openedMap;
+    } else{
+        var map = new Map(name, {
+            "workspace": _workspace
+        });
+    }
 
     if (name){
         $("#commitmap-form").dialog({
