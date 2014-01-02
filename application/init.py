@@ -1073,7 +1073,10 @@ def git_configure_map(name, url, user, password):
         # user/password are coded directly in the git url 
         userString = user
         if password != '':
-            userString += ':' + password
+            if password == session['dummy_password']:
+                userString += ':' + wsmap['git_password']    
+            else:
+                userString += ':' + password
         userString += '@'
         gitFullURL = 'https://' + userString + url[8:]
 
@@ -1091,7 +1094,10 @@ def git_configure_map(name, url, user, password):
         gitignore.write(gitignoreContent)
 
         if len(errors) == 0:
-            g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [url, user, password, mapID])
+            if password != wsmap['git_password'] and password != session['dummy_password']:
+                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [url, user, password, mapID])
+            else:
+                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ? WHERE map_id = ?''', [url, user, mapID])
             g.db.commit()
 
         response['status'] = 'ok'
