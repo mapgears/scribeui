@@ -517,9 +517,9 @@ Map.prototype.gitClone = function(config){
     var self = this;
     config['name'] = this.name;
     $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
-        console.log(response);
         self.workspace.maps.push(self);
         self.workspace.displayMaps();
+        $("#" + self.workspace.mapActions).hide();
     });
 }
 
