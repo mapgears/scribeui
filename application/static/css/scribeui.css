@@ -350,18 +350,18 @@ button {
 #map-description p{
     padding: 5px;
 }
-#map-actions table:first-child button {
+.three-col-actions button {
     max-width: 80px;
     width: 80px;
 }
-#map-actions table:last-child button {
+.two-col-actions button {
     max-width: 124px;
     width: 124px;
 }
-#map-actions table {
+.maps-buttons table {
     width: 100%;
 }
-#map-actions button .ui-button-text{
+.maps-buttons button .ui-button-text{
 	padding-left:8px;
 	padding-right:8px;
 }
@@ -404,11 +404,12 @@ button {
 .map-table {
     width: 100%;
 }
+/*
 #btn_new_map{
 	display:block;
 	width:100%;
 }
-
+*/
 /*== Editor ===*/
 #editor-toolbar{
 	background-color:#FCFCFC;

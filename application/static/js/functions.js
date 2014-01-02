@@ -15,23 +15,23 @@ function displayWorkspaces(select){
 function openNewWorkspaceWindow(options){
     $("#createws-form").dialog({
         autoOpen: false,
-		resizable: false,
-		width: options.popupWidth,
-		height:options.popupHeight,
+        resizable: false,
+        width: options.popupWidth,
+        height:options.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
                 var name = $("#newws-name").val();
-		        var password = $("#newws-password").val();
+                var password = $("#newws-password").val();
                 options["password"] = password;
                 
                 if(_workspace){
                     _workspace.close();
                 }
 
-		_workspace = new Workspace(name, options)
+        _workspace = new Workspace(name, options)
 
-		_workspace.create();
+        _workspace.create();
                 $(this).dialog("close");
             },
             Cancel: function() {
@@ -54,9 +54,9 @@ function deleteWorkspace(options){
         div.dialog({
             title: "Confirm",
             resizable: false,
-			
-			width: options.popupWidth,
-			height:options.popupHeight,
+            
+            width: options.popupWidth,
+            height:options.popupHeight,
 
             buttons: [{
                  text: "Yes",
@@ -95,40 +95,40 @@ function openWorkspace(options){
 
     _workspace = new Workspace(name, options);
     if(_workspace.open())
-		return true;
-	else return false;
+        return true;
+    else return false;
    
 }
 
 function openWorkspacePopup(options){
     displayWorkspaces(options.workspaceSelect);
-	var dClass = 'no-close';
+    var dClass = 'no-close';
     if(_workspace){
-			dClass = ''; // If there is a workspace opened, we allow closing the window
-	}
-	$('#'+options.workspaceManage).dialog({
-		modal:true,
-		width: options.popupWidth,
-		height:options.popupHeight,
-		resizable: false,
-		dialogClass: dClass,
-		modal:true,
-		buttons:{
-			"New Workspace": function(e){ 
-				openNewWorkspaceWindow(options)
-			},
-			"Open Workspace": function(e){
-	    			openWorkspace(options)
-			},
-			"Delete Workspace": function(e){
-	    		deleteWorkspace(options);
-			}
-		}
-	})
+            dClass = ''; // If there is a workspace opened, we allow closing the window
+    }
+    $('#'+options.workspaceManage).dialog({
+        modal:true,
+        width: options.popupWidth,
+        height:options.popupHeight,
+        resizable: false,
+        dialogClass: dClass,
+        modal:true,
+        buttons:{
+            "New Workspace": function(e){ 
+                openNewWorkspaceWindow(options)
+            },
+            "Open Workspace": function(e){
+                    openWorkspace(options)
+            },
+            "Delete Workspace": function(e){
+                deleteWorkspace(options);
+            }
+        }
+    })
 }
 
 function closeWorkspacePopup(options){
-	$('#'+options.workspaceManage).dialog('close');
+    $('#'+options.workspaceManage).dialog('close');
 }
 function getTemplatesOfType(type){
     $.post($SCRIPT_ROOT + '/_export_map', {
@@ -148,20 +148,20 @@ function openNewMapWindow(){
 
     $("#createmap-form").dialog({
         autoOpen: false,
-	resizable: false,
-		width: _workspace.popupWidth,
-		height:_workspace.popupHeight,
+    resizable: false,
+        width: _workspace.popupWidth,
+        height:_workspace.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
                 var name = $("#newmap-name").val();
                 var type = $("#newmap-type option:selected").val();
-		var template = $("#newmap-template option:selected").val();
+                var template = $("#newmap-template option:selected").val();
                 var templateLocation = $("#newmap-workspace-select").val();
                 var locationPassword = $("#newmap-workspace-password").val();
                 var description = $("#newmap-description").val();
 
-		var map = new Map(name, {
+                var map = new Map(name, {
                     "type": type,
                     "description": description,
                     "workspace": _workspace,
@@ -170,7 +170,7 @@ function openNewMapWindow(){
                     "locationPassword": locationPassword ? locationPassword : ""
                 });
 
-		map.create();
+                map.create();
                 $(this).dialog("close");
             },
             "+": function(){
@@ -190,13 +190,13 @@ function openNewMapWindow(){
                 
             },
             Cancel: function() {
-		$("#newmap-workspace-select").empty();
+        $("#newmap-workspace-select").empty();
                 $("#newmap-ws").addClass("invisible");
                 $(this).dialog("close");
             }
         },
         close: function() {
-	    $("#newmap-workspace-select").empty();
+        $("#newmap-workspace-select").empty();
             $("#newmap-ws").addClass("invisible");
         }
     }).dialog("open");
@@ -233,8 +233,8 @@ function deleteMap(){
         div.dialog({
             title: "Confirm",
             resizable: false,
-			width: _workspace.popupWidth,
-			height:_workspace.popupHeight,
+            width: _workspace.popupWidth,
+            height:_workspace.popupHeight,
             buttons: [{
                  text: "Yes",
                  click: function () {
@@ -267,9 +267,9 @@ function exportMap(){
          $("#preparingExport").css("visibility","hidden");
          $("#exportmap-form").dialog({
             autoOpen: false,
-	        resizable: false,
-			width: 300,
-			height: 200,
+            resizable: false,
+            width: 300,
+            height: 200,
             modal: true,
             buttons: {
                 "Export": function() {
@@ -297,6 +297,51 @@ function exportMap(){
             close: function() {}
         }).dialog("open");
     }        
+}
+
+function cloneMap(){
+    $("#clonemap-form").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: _workspace.popupWidth,
+        height:_workspace.popupHeight,
+        modal: true,
+        buttons: {
+            "Clone": function() {
+                var name = $("#git-clone-name").val();
+                var type = $("#git-clone-type option:selected").val();
+                var description = $("#git-clone-description").val();
+                var gitURL = $("#git-clone-url").val();
+                var gitUser = $("#git-clone-user").val();
+                var gitPassword = $("#git-clone-password").val();
+
+                var map = new Map(name, {
+                    "type": type,
+                    "description": description,
+                    "workspace": _workspace,
+                    "template": "*Dummy"
+                });
+
+                var config = {
+                    gitURL: gitURL,
+                    gitUser: gitUser,
+                    gitPassword: gitPassword    
+                }
+
+                map.create(config);
+                //map.gitClone(config);
+
+                $(this).dialog("close");
+            },
+            Cancel: function() {
+                $(this).find('input').val('');
+                $(this).dialog("close");
+            }
+        },
+        close: function() {
+            $(this).find('input').val('');    
+        }
+    }).dialog("open");
 }
 
 function configureMap(){
@@ -384,15 +429,15 @@ function displayCommitLogs(e){
 function createNewGroup(){
     $("#creategroup-form").dialog({
         autoOpen: false,
-	resizable: false,
-		width: _workspace.popupWidth,
-		height:_workspace.popupHeight,
+    resizable: false,
+        width: _workspace.popupWidth,
+        height:_workspace.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
                 var name = $("#newgroup-name").val();
 
-		_workspace.openedMap.createGroup(name);
+        _workspace.openedMap.createGroup(name);
                 $(this).dialog("close");
             },
             Cancel: function() {
@@ -423,26 +468,26 @@ function openGroupOrderWindow(){
 
     $("#grouporder-form").dialog({
         autoOpen: false,
-		resizable: false,
-		width: _workspace.popupWidth,
-		height:_workspace.popupHeight,
+        resizable: false,
+        width: _workspace.popupWidth,
+        height:_workspace.popupHeight,
         modal: true,
         buttons: [
-		{
+        {
             text: "Delete",
-			showText: false,
-			icons: { primary: 'ui-icon-trash'},
-			click: function(){
-					var group = $("#" + _workspace.groupOl + " .ui-selected");
-					group.addClass('to-be-deleted');
-			}
-		},
+            showText: false,
+            icons: { primary: 'ui-icon-trash'},
+            click: function(){
+                    var group = $("#" + _workspace.groupOl + " .ui-selected");
+                    group.addClass('to-be-deleted');
+            }
+        },
 
-	    {
+        {
             text: "+",
-			showText: false,
-			icons: { primary: 'ui-icon-carat-1-s'},
-	    	click: function(){
+            showText: false,
+            icons: { primary: 'ui-icon-carat-1-s'},
+            click: function(){
                 var group = $("#" + _workspace.groupOl + " .ui-selected");
                 var bumped = $("#" + _workspace.groupOl + " .ui-selected").next();
                 
@@ -456,16 +501,16 @@ function openGroupOrderWindow(){
                     group.text(bumpedName);
 
                     group.removeClass("ui-selected");
-	            bumped.addClass("ui-selected");
+                bumped.addClass("ui-selected");
                 }
             }
-		},
-		{
+        },
+        {
             text: "-",
-			showText: false,
-			icons: { primary: 'ui-icon-carat-1-n'},
-			click: function(){
-				var group = $("#" + _workspace.groupOl + " .ui-selected");
+            showText: false,
+            icons: { primary: 'ui-icon-carat-1-n'},
+            click: function(){
+                var group = $("#" + _workspace.groupOl + " .ui-selected");
                 var bumped = $("#" + _workspace.groupOl + " .ui-selected").prev();
                 
                 var groupName = group.text();
@@ -478,21 +523,21 @@ function openGroupOrderWindow(){
                     group.text(bumpedName);
 
                     group.removeClass("ui-selected");
-	           		bumped.addClass("ui-selected");
-				}                
-			}
-		},
-		{
+                       bumped.addClass("ui-selected");
+                }                
+            }
+        },
+        {
             text: "Apply",
-	    	click:  function() {
+            click:  function() {
                 _workspace.openedMap.updateGroupOrder();
-				deleteGroup({mapType:_workspace.openedMap.type});
+                deleteGroup({mapType:_workspace.openedMap.type});
                 $(this).dialog("close");
             }
-		},
-		{
+        },
+        {
             text: "Cancel",
-			click: function() {
+            click: function() {
                 $(this).dialog("close");
             }
         }],
@@ -523,14 +568,14 @@ function addPOI(){
         if(_workspace.openedMap){
             $("#addpoi-form").dialog({
                 autoOpen: false,
-	        resizable: false,
-				width: _workspace.popupWidth,
-				height:_workspace.popupHeight,
+            resizable: false,
+                width: _workspace.popupWidth,
+                height:_workspace.popupHeight,
                 modal: true,
                 buttons: {
                     "Add": function() {
                         var name = $("#newpoi-name").val();
-		        _workspace.addPointOfInterest(name);
+                _workspace.addPointOfInterest(name);
                         $(this).dialog("close");
                     },
                     Cancel: function() {
@@ -552,7 +597,7 @@ function unregisterDebug(){
 function registerDebug(){
     if(_workspace.openedMap.OLMap != null){
          _workspace.openedMap.OLMap.events.on({
-	     "moveend": onMapMoveEnd
+         "moveend": onMapMoveEnd
          });
      }
 }
@@ -566,7 +611,7 @@ function clearDebug(){
 
 function displayDebug(){
     if($('.olTileImage').filter(function(){ return this.style && this.style.visibility === 'hidden' }).length > 0){
-	onMapMoveEnd();
+    onMapMoveEnd();
     }else{
        _workspace.openedMap.getDebug();
     }
@@ -580,212 +625,212 @@ function onMapMoveEnd(){
 /* layout functions */
 
 function resizeEditors(){
-	//$('#editor-tab').css("overflow","hidden");
-	if( $('.secondary-wrap').is(':visible'))
-		var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
-	else var remainingSpace = $('#editors-container').height();
-   	var divTwo = $('.main-editor');
-   	var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
-   	divTwo.css('height', divTwoHeight + 'px');	
+    //$('#editor-tab').css("overflow","hidden");
+    if( $('.secondary-wrap').is(':visible'))
+        var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
+    else var remainingSpace = $('#editors-container').height();
+       var divTwo = $('.main-editor');
+       var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
+       divTwo.css('height', divTwoHeight + 'px');    
 }
 function openSecondaryPanel(value, editor){
-	$('#secondary-editor > .tabcontent-small').hide();
-	$('.secondary-wrap').hide();
-	if(value != 'x'){
-		$('.secondary-wrap').show();
-		$('#'+value.substr(0, value.length-1)+'-tab').show();
-       	editor.refresh();
-	}else{
-		 $('.secondary-wrap').hide();
-	}
+    $('#secondary-editor > .tabcontent-small').hide();
+    $('.secondary-wrap').hide();
+    if(value != 'x'){
+        $('.secondary-wrap').show();
+        $('#'+value.substr(0, value.length-1)+'-tab').show();
+           editor.refresh();
+    }else{
+         $('.secondary-wrap').hide();
+    }
 
-	resizeEditors();
+    resizeEditors();
 }
 
 function onMapOpened(){
-	$('#group-edition-select').change(function(e){
-		var editor = null;
-		var val = this.value;
-		switch(this.value){
-			case 'map': 
-				editor = mapEditor;
-				val = 'maps';
-				break;
-			case 'scales': 
-				editor = scaleEditor;
-				break;
-			case 'symbols': 
-				editor = symbolEditor;
-				break;
-			case 'fonts': 
-				editor = fontEditor;
-				break;
-			case 'projections': 
-				editor = projectionEditor;
-				break;
-			case 'variables':
-				editor = variableEditor;
-				break;
-				
-		}
-		openSecondaryPanel(val, editor);
-	});
-	$('#txt-logs').val('');
-	$('#txt-debug').val('');
+    $('#group-edition-select').change(function(e){
+        var editor = null;
+        var val = this.value;
+        switch(this.value){
+            case 'map': 
+                editor = mapEditor;
+                val = 'maps';
+                break;
+            case 'scales': 
+                editor = scaleEditor;
+                break;
+            case 'symbols': 
+                editor = symbolEditor;
+                break;
+            case 'fonts': 
+                editor = fontEditor;
+                break;
+            case 'projections': 
+                editor = projectionEditor;
+                break;
+            case 'variables':
+                editor = variableEditor;
+                break;
+                
+        }
+        openSecondaryPanel(val, editor);
+    });
+    $('#txt-logs').val('');
+    $('#txt-debug').val('');
 
-	//Needed to prevent being able to ctrl-z to previous' map content
-	groupEditor.clearHistory();
-	mapEditor.clearHistory();
-	variableEditor.clearHistory();
-	scaleEditor.clearHistory();
-	fontEditor.clearHistory();
-	projectionEditor.clearHistory();
+    //Needed to prevent being able to ctrl-z to previous' map content
+    groupEditor.clearHistory();
+    mapEditor.clearHistory();
+    variableEditor.clearHistory();
+    scaleEditor.clearHistory();
+    fontEditor.clearHistory();
+    projectionEditor.clearHistory();
 
-	if(_workspace.openedMap.type == "Scribe"){
-		$("#btn_delete_group").hide();
-		$("#btn_change_group_order").show();
-	}else if(_workspace.openedMap.type == "Standard"){
-		$("#btn_delete_group").show();
-		$("#btn_change_group_order").hide();
-	}
+    if(_workspace.openedMap.type == "Scribe"){
+        $("#btn_delete_group").hide();
+        $("#btn_change_group_order").show();
+    }else if(_workspace.openedMap.type == "Standard"){
+        $("#btn_delete_group").show();
+        $("#btn_change_group_order").hide();
+    }
 
     for(i in plugins){
-		if(plugins[i].onMapOpened)
-			plugins[i].onMapOpened();
-	}
+        if(plugins[i].onMapOpened)
+            plugins[i].onMapOpened();
+    }
 }
 function onWorkspaceOpened(){
     for(plugin in plugins){
-		if(plugin.onWorkspaceOpened)
-			plugin.onWorkspaceOpened();
-	}
+        if(plugin.onWorkspaceOpened)
+            plugin.onWorkspaceOpened();
+    }
 }
 function scribeLog(msg){
-	if(msg.indexOf("**ERRORS**") != -1){
-		if(!$('#logs').is(':visible'))
-			$('#log-notification').show('pulsate', 1000);				
-	}else{
-		$('#log-notification').hide();				
-	}
-	$("#" + self.workspace.logTextarea).val(msg);
+    if(msg.indexOf("**ERRORS**") != -1){
+        if(!$('#logs').is(':visible'))
+            $('#log-notification').show('pulsate', 1000);                
+    }else{
+        $('#log-notification').hide();                
+    }
+    $("#" + self.workspace.logTextarea).val(msg);
 }
 
 function removeIncludeFromMap(filename){
-	for(var i=0; i<mapEditor.lineCount(); i++){
-		if(mapEditor.getLine(i).indexOf("layers/"+filename+"'") !== -1){
-			var line = mapEditor.getLine(i);
-			mapEditor.removeLine(i);
-			//Highlight for a short time:
-			mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-			mapEditor.setLineClass(i-1, 'background', 'setextent-highlighted-line');
-			setTimeout(function(){
-				mapEditor.setLineClass(i, 'background', '');
-				mapEditor.setLineClass(i-1, 'background', '');
-			}, 3000);
-			break;
-		}
-	}
-	_workspace.openedMap.commit();
+    for(var i=0; i<mapEditor.lineCount(); i++){
+        if(mapEditor.getLine(i).indexOf("layers/"+filename+"'") !== -1){
+            var line = mapEditor.getLine(i);
+            mapEditor.removeLine(i);
+            //Highlight for a short time:
+            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+            mapEditor.setLineClass(i-1, 'background', 'setextent-highlighted-line');
+            setTimeout(function(){
+                mapEditor.setLineClass(i, 'background', '');
+                mapEditor.setLineClass(i-1, 'background', '');
+            }, 3000);
+            break;
+        }
+    }
+    _workspace.openedMap.commit();
 
 }
 function addIncludeToMap(filename){
-	//Find the includes in the mapeditor
-	lastinc = -1;
-	openSecondaryPanel("maps", mapEditor);
-	for(var i=0; i<mapEditor.lineCount(); i++){
-		if(mapEditor.getLine(i).indexOf("INCLUDE") !== -1){
-			lastinc = i;
-		}else if(lastinc > -1){
-			//We add the new file at the end of the include list
-			var line = mapEditor.getLine((i-1));
-			//TODO detect indentation 
-			mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
-			//Highlight for a short time:
-			mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-			setTimeout(function(){
-				mapEditor.setLineClass(i, 'background', '');
-			}, 3000);
-			break;
-		}
-	}
-	_workspace.openedMap.commit();
+    //Find the includes in the mapeditor
+    lastinc = -1;
+    openSecondaryPanel("maps", mapEditor);
+    for(var i=0; i<mapEditor.lineCount(); i++){
+        if(mapEditor.getLine(i).indexOf("INCLUDE") !== -1){
+            lastinc = i;
+        }else if(lastinc > -1){
+            //We add the new file at the end of the include list
+            var line = mapEditor.getLine((i-1));
+            //TODO detect indentation 
+            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
+            //Highlight for a short time:
+            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+            setTimeout(function(){
+                mapEditor.setLineClass(i, 'background', '');
+            }, 3000);
+            break;
+        }
+    }
+    _workspace.openedMap.commit();
 }
 
 /* 
 name: string, Name of the tab
 destinationSelector: jquery selector of the tab group, ex #main-tabs or #log-tabs
 options: (optional) object
-	onclick: function called when tab link is clicked
-	position: string, where to add tab, possible values: last, first
+    onclick: function called when tab link is clicked
+    position: string, where to add tab, possible values: last, first
 
 Returns: The div element to be used as tab content
 */
 function addTab(name, destinationSelector, options){
     options = (options) ? options : {};
-	var onclick = options.onclick || null;
-	var position = options.position || 'last';
-	if($(destinationSelector).exists()){
-		var link = $('<a href="#'+name+'-tab">'+name+'</a>');
-		if(onclick) link.bind('click', onclick);
+    var onclick = options.onclick || null;
+    var position = options.position || 'last';
+    if($(destinationSelector).exists()){
+        var link = $('<a href="#'+name+'-tab">'+name+'</a>');
+        if(onclick) link.bind('click', onclick);
 
-		var li = $('<li class="tab-large"></li>');
-		li.append(link);
+        var li = $('<li class="tab-large"></li>');
+        li.append(link);
                 
-		if(position == 'last')
-			$(destinationSelector+' .tabheader').append(li)
-		if(position == 'first')
-			$(destinationSelector+' .tabheader').prepend(li)
+        if(position == 'last')
+            $(destinationSelector+' .tabheader').append(li)
+        if(position == 'first')
+            $(destinationSelector+' .tabheader').prepend(li)
                 var div = $('<div id="'+name+'-tab"></div>');
-		$(destinationSelector).append(div);
-		$(destinationSelector).tabs('refresh');
-		return div;
-	}else return null;
+        $(destinationSelector).append(div);
+        $(destinationSelector).tabs('refresh');
+        return div;
+    }else return null;
 }
 /*
 component: a jquery object
 destinationSelector: jquery selector of the destination
 options: (optional) object
-	position: string, where to add tab, possible values: last, first
+    position: string, where to add tab, possible values: last, first
 
 Returns: The component
 */
 
 function addComponent(component, destinationSelector, options){
         options = (options) ? options : {};
-	var position = options.position || 'last';
-	if($(destinationSelector).exists()){
-		if(position == 'last')
-			$(destinationSelector).append(component)
-		if(position == 'first')
-			$(destinationSelector).prepend(component)
- 		return component;
+    var position = options.position || 'last';
+    if($(destinationSelector).exists()){
+        if(position == 'last')
+            $(destinationSelector).append(component)
+        if(position == 'first')
+            $(destinationSelector).prepend(component)
+         return component;
 
-	}else return null;
+    }else return null;
 }
 /* 
 name: string, Name of the button
 destinationSelector: jquery selector of the toolbar, ex editor-toolbar, tools-left or tools-right 
 options: (optional) object
-	onclick: function called when button is clicked
-	position: string, where to add tab, possible values: last, first
-	buttonid: string, id to give to the button
+    onclick: function called when button is clicked
+    position: string, where to add tab, possible values: last, first
+    buttonid: string, id to give to the button
 
 Returns: The button element
 */
 function addButton(name, destinationSelector, options){
     options = (options) ? options : {};
-	var onclick = options.onclick || null;
-	var position = options.position || 'last';
-	var buttonid = options.buttonid || name;
-	if($(destinationSelector).exists()){
-		button = $('<button id="'+buttonid+'">'+name+'</button>').button();
-		button.click(onclick);
-		return addComponent(button, destinationSelector, options)
-	}else return null;
+    var onclick = options.onclick || null;
+    var position = options.position || 'last';
+    var buttonid = options.buttonid || name;
+    if($(destinationSelector).exists()){
+        button = $('<button id="'+buttonid+'">'+name+'</button>').button();
+        button.click(onclick);
+        return addComponent(button, destinationSelector, options)
+    }else return null;
 }
 
 function addPlugin(plugin){
-	plugins.push(plugin);
-	plugin.init();
+    plugins.push(plugin);
+    plugin.init();
 }
 

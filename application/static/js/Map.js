@@ -24,7 +24,7 @@
     }
 }
 
-Map.prototype.create = function(workspace){
+Map.prototype.create = function(clone){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_map', {
         name: this.name,
@@ -35,10 +35,13 @@ Map.prototype.create = function(workspace){
         description: this.description
     }, function(status) {
         if(status == "1") {
-            self.workspace.maps.push(self);
-            self.workspace.displayMaps();
-            
-            self.open();
+            if(clone){
+                self.gitClone(clone);
+            } else{
+                self.workspace.maps.push(self);
+                self.workspace.displayMaps();
+                self.open();    
+            }
         }else {
             alert(status);
         }
@@ -495,8 +498,8 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
 
 Map.prototype.configure = function(config){
     config['name'] = this.name;
-     $.post($SCRIPT_ROOT + '/_configure_map', config, function(response) {
-       console.log(response)
+    $.post($SCRIPT_ROOT + '/_configure_map', config, function(response) {
+        console.log(response)
     });
 }
 
@@ -506,7 +509,17 @@ Map.prototype.gitCommit = function(message, callback){
         message: message
     }
     $.post($SCRIPT_ROOT + '/_git_commit_map', data, function(response) {
-       callback.call(null, response);
+        callback.call(null, response);
+    });
+}
+
+Map.prototype.gitClone = function(config){
+    var self = this;
+    config['name'] = this.name;
+    $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
+        console.log(response);
+        self.workspace.maps.push(self);
+        self.workspace.displayMaps();
     });
 }
 

@@ -71,10 +71,21 @@
                          </div>
                      <div class="maps-buttons">
                          <div class="buttons-container">
-                             <button id="btn_new_map" >New Map</button>
+                            <div>
+                                <table class="two-col-actions">
+                                    <tr>
+                                        <td align="center">
+                                            <button id="btn_new_map" >New Map</button>
+                                        </td>
+                                        <td align="center">
+                                            <button id="btn_clone_map">Clone Map</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                             <div id="map-description" class="map-description-container"></div>
                             <div id="map-actions" style="display:none">
-                                <table>
+                                <table class="three-col-actions">
                                     <tr>
                                         <td align="center">
                                             <button id="btn_open_map">Open Map</button>
@@ -87,7 +98,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table>
+                                <table class="two-col-actions">
                                     <tr>
                                         <td align="center">
                                             <button id="btn_configure_map">Configure</button>
@@ -396,6 +407,49 @@
                         <label>Logs</label>
                         <div class="control">
                             <textarea id="git-logs" disabled></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="clonemap-form" title="Clone map" style="display:none" class="scribe-dialog">
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group">
+                        <label>Name</label>
+                        <div class="control">
+                            <input type="text" name="git-clone-name" id="git-clone-name" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Type</label>
+                        <div class="control">
+                            <select id="git-clone-type" class="newmap-template" class="shadow_select"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git URL</label>
+                        <div class="control">
+                            <input type="text" name="git-clone-url" id="git-clone-url" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git User</label>
+                        <div class="control">
+                            <input type="text" name="git-clone-user" id="git-clone-user" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git Password</label>
+                        <div class="control">
+                            <input type="password" id="git-clone-password"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Description</label>
+                        <div class="control">
+                            <textarea id="git-clone-description" class="newmap-description"></textarea>
                         </div>
                     </div>
                 </form>

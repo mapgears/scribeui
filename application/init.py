@@ -291,7 +291,10 @@ def create_map():
 
     #Copy the template directory to the directory of the new map    
     if ws_template == "templates":
-        map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))['map_id']
+        if template != '*Dummy':
+            map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))['map_id']
+        else:
+            map_cur = None
         template = template[1:]
         pathTemplate = path+"workspaces/templates/"+template
     else:
@@ -315,10 +318,11 @@ def create_map():
 
     
     #Add layers in the bd
-    groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
-    for j in range(len(groups)):
-        g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
-    g.db.commit()
+    if map_cur:
+        groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
+        for j in range(len(groups)):
+            g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
+        g.db.commit()
 
     return "1"
 
@@ -1035,58 +1039,67 @@ def configure_map():
         gitUser = request.form['gitUser']
         gitPassword = request.form['gitPassword']
 
-        mapID = get_map_id(mapName, session['ws_name'])
-        
-        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
-        os.chdir(mapPath)
-
-        wsmap = query_db('''select git_url, git_user, git_password from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), mapName], one=True)
-        
-        errors = []
-
-        if gitURL != wsmap['git_url'] or gitUser != wsmap['git_user'] or (gitPassword != wsmap['git_password'] and gitPassword != session['dummy_password']):
-            # remove remote origin
-            try:
-                subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e)
-
-            # init new git
-            try:
-                subprocess.check_output(['git init'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e)
-            
-            # link new git to remote url
-            # user/password are coded directly in the git url 
-            userString = gitUser
-            if gitPassword != '':
-                userString += ':' + gitPassword
-            userString += '@'
-            gitFullURL = 'https://' + userString + gitURL[8:]
-
-            try:
-                subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e)
-
-            gitignore = open('.gitignore', 'w')
-            gitignoreContent = 'data\n'
-            gitignoreContent += 'pdata\n'
-            gitignoreContent += 'debugFile.log\n'
-            gitignoreContent += 'map\n'
-            gitignoreContent += 'pdata'
-            gitignore.write(gitignoreContent)
-
-            if len(errors) == 0:
-                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [gitURL, gitUser, gitPassword, mapID])
-                g.db.commit()
-
-                response['status'] = 'ok'
-
-        response['errors'] = errors
+        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
 
     return jsonify(response)
+
+def git_configure_map(name, url, user, password):
+    response = {'status': 'error'}
+
+    mapID = get_map_id(name, session['ws_name'])
+        
+    mapPath = (path + "workspaces/" + session['ws_name'] + "/" + name) +"/"
+    os.chdir(mapPath)
+
+    wsmap = query_db('''select git_url, git_user, git_password from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), name], one=True)
+    
+    errors = []
+
+    if url != wsmap['git_url'] or user != wsmap['git_user'] or (password != wsmap['git_password'] and password != session['dummy_password']):
+        # remove remote origin
+        try:
+            subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            pass
+            #errors.append(e.output)
+
+        # init new git
+        try:
+            subprocess.check_output(['git init'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+        
+        # link new git to remote url
+        # user/password are coded directly in the git url 
+        userString = user
+        if password != '':
+            userString += ':' + password
+        userString += '@'
+        gitFullURL = 'https://' + userString + url[8:]
+
+        try:
+            subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+
+        gitignore = open('.gitignore', 'w')
+        gitignoreContent = 'data\n'
+        gitignoreContent += 'pdata\n'
+        gitignoreContent += 'debugFile.log\n'
+        gitignoreContent += 'map/*\n'
+        gitignoreContent += 'pdata'
+        gitignore.write(gitignoreContent)
+
+        if len(errors) == 0:
+            g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [url, user, password, mapID])
+            g.db.commit()
+
+        response['status'] = 'ok'
+
+    response['errors'] = errors
+
+    return response
+
 
 #Return map config
 @app.route('/_get_config', methods=['POST'])
@@ -1145,8 +1158,40 @@ def git_commit_map():
         
         if len(errors) == 0:
             response['status'] = 'ok'
-            response['log'] = output
         
+        response['log'] = output
         response['errors'] = errors
 
+    return jsonify(response)
+
+#===============================  
+#       Git clone map
+#===============================
+@app.route('/_git_clone_map', methods=['POST'])
+def git_clone_map():
+    response = {'status': 'error'}
+    
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        
+        gitURL = request.form['gitURL']
+        gitUser = request.form['gitUser']
+        gitPassword = request.form['gitPassword']
+
+        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+        os.chdir(mapPath)
+        
+        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
+        output = ''
+
+        if response['status'] == 'ok':
+            try:
+                subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
+                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                response['errors'].append(e.output)
+                output = e.output
+
+        response['log'] = output
+        
     return jsonify(response)

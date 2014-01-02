@@ -143,6 +143,10 @@ jQuery(function() {
         configureMap();
     });
 
+    $('#btn_clone_map').button().click(function(){
+        cloneMap();
+    });
+
     $('#btn_commit_map').button().click(function(){
         commitMap();
     });
@@ -211,9 +215,11 @@ jQuery(function() {
         displayDataBrowser();
     });
 
-    var typeSelect = $("#newmap-type");
+    var newMapTypeSelect = $("#newmap-type");
+    var cloneMapTypeSelect = $("#git-clone-type");
     for(var i = 0; i < mapTypes.length; i++){
-        typeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
+        newMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
+        cloneMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
     }
 	
 	//Shortcut for commit
