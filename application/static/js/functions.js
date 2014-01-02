@@ -301,7 +301,10 @@ function exportMap(){
 
 function configureMap(){
     var name = $("#map-list .ui-selected").text();
-     if (name){
+    var map = new Map(name);
+    var config = map.getConfiguration(displayConfiguration);
+
+    if (name){
         $("#configuremap-form").dialog({
             autoOpen: false,
             resizable: false,
@@ -320,25 +323,62 @@ function configureMap(){
                         gitPassword: gitPassword    
                     }
 
-                    var map = new Map(name);
                     map.configure(config);
 
                     $(this).dialog("close");
                 },
                 Cancel: function() {
-                    $(this).find('input').val();
+                    $(this).find('input').val('');
                     $(this).dialog("close");
                 }
             },
-            close: function() {}
+            close: function() {
+                $(this).find('input').val('');    
+            }
         }).dialog("open");
     }
+}
+
+function displayConfiguration(config){
+    $("#git-url").val(config.gitURL);
+    $("#git-user").val(config.gitUser);
+    $("#git-password").val(config.gitPassword);
 }
 
 function commitMap(){
     var name = $("#map-list .ui-selected").text();
     var map = new Map(name);
-    map.gitCommit('Commit from ScribeUI');
+
+    if (name){
+        $("#commitmap-form").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: _workspace.popupWidth,
+            height:_workspace.popupHeight,
+            modal: true,
+            buttons: {
+                "Commit": function() {
+                    var message = $("#git-message").val();
+                    map.gitCommit(message, displayCommitLogs);
+
+                    //$(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).find('input').val('');
+                    $(this).find('textarea').val('');
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $(this).find('input').val('');
+                $(this).find('textarea').val('');    
+            }
+        }).dialog("open");
+    }
+}
+
+function displayCommitLogs(e){
+    $("#git-logs").val(e.log);
 }
 
 function createNewGroup(){

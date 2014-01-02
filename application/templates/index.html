@@ -6,12 +6,13 @@
         <title>ScribeUI v0.5-dev</title>
         
         <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/scribeui.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/css/scribeui/scribeui.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/elfinder/css/elfinder.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/codemirror.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/dialog.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/simple-hint.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/scribeui.css') }}">
+        <!--link rel="stylesheet" href="{{ url_for('static', filename='css/scribeui.css') }}"-->
      
         {% for css in plugins_css %}
         <link rel="stylesheet" href="{{ css }}"/>
@@ -74,11 +75,29 @@
                              <button id="btn_new_map" >New Map</button>
                             <div id="map-description" class="map-description-container"></div>
                             <div id="map-actions" style="display:none">
-                                    <button id="btn_open_map">Open Map</button>
-                                    <button id="btn_export_map">Export Map</button>
-                                    <button id="btn_delete_map">Delete Map</button>
-                                    <button id="btn_configure_map">Configure</button>
-                                    <button id="btn_commit_map">Commit</button>
+                                <table>
+                                    <tr>
+                                        <td align="center">
+                                            <button id="btn_open_map">Open Map</button>
+                                        </td>
+                                        <td align="center">
+                                            <button id="btn_export_map">Export Map</button>
+                                        </td>
+                                        <td align="center">
+                                            <button id="btn_delete_map">Delete Map</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td align="center">
+                                            <button id="btn_configure_map">Configure</button>
+                                        </td>
+                                        <td align="center">
+                                            <button id="btn_commit_map">Commit</button>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                          </div>
                      </div>
@@ -350,15 +369,34 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label>Git user</label>
+                        <label>Git User</label>
                         <div class="control">
                             <input type="text" name="git-user" id="git-user" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label>Git user password</label>
+                        <label>Git Password</label>
                         <div class="control">
                             <input type="password" id="git-password"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="commitmap-form" title="Commit map" style="display:none" class="scribe-dialog">
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group">
+                        <label for="git-message">Message</label>
+                        <div class="control">
+                            <textarea id="git-message"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Logs</label>
+                        <div class="control">
+                            <textarea id="git-logs" disabled></textarea>
                         </div>
                     </div>
                 </form>

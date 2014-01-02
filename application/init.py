@@ -15,6 +15,7 @@ import datetime #download
 import pprint #For debugging purposes
 import imp #For plugins
 import traceback #output exceptions to apache's log. Mostly helpful for plugin development.
+import string
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -122,6 +123,13 @@ def before_request():
 @app.teardown_request
 def teardown_request(exception):
     g.db.close()
+#===============================
+#   Utilities
+#===============================
+def generate_dummy_password(length):
+    s = string.lowercase + string.digits
+    dummy = ''.join(random.sample(s, length))           
+    return dummy
 
 #===============================   
 #          Homepage                              
@@ -1036,7 +1044,7 @@ def configure_map():
         
         errors = []
 
-        if gitURL != wsmap['git_url'] or gitUser != wsmap['git_user'] or gitPassword != wsmap['git_password']:
+        if gitURL != wsmap['git_url'] or gitUser != wsmap['git_user'] or (gitPassword != wsmap['git_password'] and gitPassword != session['dummy_password']):
             # remove remote origin
             try:
                 subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
@@ -1050,7 +1058,7 @@ def configure_map():
                 errors.append(e)
             
             # link new git to remote url
-            # user/pass are coded directly in the git url 
+            # user/password are coded directly in the git url 
             userString = gitUser
             if gitPassword != '':
                 userString += ':' + gitPassword
@@ -1071,7 +1079,7 @@ def configure_map():
             gitignore.write(gitignoreContent)
 
             if len(errors) == 0:
-                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_upassword = ? WHERE map_id = ?''', [gitURL, gitUser, gitPassword, mapID])
+                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [gitURL, gitUser, gitPassword, mapID])
                 g.db.commit()
 
                 response['status'] = 'ok'
@@ -1080,6 +1088,17 @@ def configure_map():
 
     return jsonify(response)
 
+#Return map config
+@app.route('/_get_config', methods=['POST'])
+def get_config():
+    if 'ws_name' in session:
+        mapName = request.form['name']
+        wsID = get_ws_id(session['ws_name'])
+        config = query_db("select git_url as gitURL, git_user as gitUser, git_password as gitPassword from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+        dummyPassword = generate_dummy_password(len(config['gitPassword']))
+        session['dummy_password'] = dummyPassword
+        config['gitPassword'] = dummyPassword
+        return jsonify(config)
 
 #===============================  
 #       Git commit map
@@ -1094,34 +1113,39 @@ def git_commit_map():
         mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
         os.chdir(mapPath)
 
+        output = ''
         errors = []
         
         try:
-            subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
+            output += subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
+            output += e.output
         
         try:
-            subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
+            output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            errors.append(e.output)
+            if '(working directory clean)' in e.output:
+                pass
+            else:
+                errors.append(e.output)
+            output += e.output
         
         try:
-            subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+            output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
+            output += e.output
 
         try:
-            subprocess.check_output(['git push --verbose origin master'], shell=True, stderr=subprocess.STDOUT)
+            output += subprocess.check_output(['git push --verbose origin master'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
+            output += e.output
         
         if len(errors) == 0:
-
-            g.db.execute('''UPDATE maps SET git_url = ? WHERE map_id = ?''', [gitURL, mapID])
-            g.db.commit()
-
             response['status'] = 'ok'
+            response['log'] = output
         
         response['errors'] = errors
 
