@@ -1111,7 +1111,6 @@ def git_configure_map(name, url, user, password):
         gitignoreContent += 'pdata\n'
         gitignoreContent += 'debugFile.log\n'
         gitignoreContent += 'map/*\n'
-        gitignoreContent += 'pdata'
         gitignore.write(gitignoreContent)
 
         if len(errors) == 0:
