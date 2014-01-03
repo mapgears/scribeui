@@ -1,0 +1,392 @@
+{"SCALES":[
+  {"1":"268435456"},
+  {"2":"134217728"},
+  {"3":"67108864"},
+  {"4":"33554432"},
+  {"5":"16777216"},
+  {"6":"8388608"},
+  {"7":"4194304"},
+  {"8":"2097152"},
+  {"9":"1048576"},
+  {"10":"524288"},
+  {"11":"262144"},
+  {"12":"131072"},
+  {"13":"65536"},
+  {"14":"32768"},
+  {"15":"16384"},
+  {"16":"8192"}],"VARIABLES":[
+   {"connection":[
+       {"CONNECTION":"\"host=localhost dbname=ne user=ne password=ne port=5432\""},
+       {"CONNECTIONTYPE":"POSTGIS"}]},{"layerconfig":[
+       {"GROUP":"'default'"},
+       {"STATUS":"ON"},
+       {"PROJECTION":[{"VOID":"'init=epsg:4326'"}]},{"PROCESSING":"'LABEL_NO_CLIP=ON'"},
+       {"PROCESSING":"'CLOSE_CONNECTION=DEFER'"}]},{"watercolor":"'#C6E2F2'"},
+   {"watercolor_ol":"'#469FC3'"},
+   {"watercolor_lbl":"'#80C0FF'"},
+   {"rivercolor":"'#6CAAC3'"}],"MAP":[
+   {"CONFIG":"'ON_MISSING_DATA' 'IGNORE'"},
+   {"CONFIG":"\"MS_ERRORFILE\" \"../debugFile.log\""},
+   {"CONFIG":"'PROJ_LIB' '../'"},
+   {"FONTSET":"'../fonts.lst'"},
+   {"IMAGETYPE":"png"},
+   {"MAXSIZE":"4000"},
+   {"SIZE":"800 800"},
+   {"UNITS":"meters"},
+   {"EXTENT":"-20000000 -20000000 20000000 20000000"},
+   {"IMAGECOLOR":"'#C6E2F2'"},
+   {"SHAPEPATH":"'../../../../data/naturalEarth'"},
+   {"WEB":[
+       {"METADATA":[{"VOID":"\"ows_enable_request\" \"*\""},{"VOID":"            \"wms_srs\" \"EPSG:900913 EPSG:4326\""},{"VOID":"            \"labelcache_map_edge_buffer\" \"-10\""},{"VOID":"            \"wms_title\" \"Natural Earth World WMS\""}]},{"IMAGEPATH":"'/tmp/ms_tmp/'"},
+       {"IMAGEURL":"'/ms_tmp/'"}]},{"DEBUG":"5"},
+   {"PROJECTION":[{"VOID":"\"init=epsg:900913\""}]}],"LAYERS":[{"LAYER":[
+   {"1:16":[
+       {"NAME":"'ocean'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"1:5":"'110m_physical/ne_110m_ocean'"},
+           {"6:10":"'50m_physical/ne_50m_ocean'"},
+           {"11:16":"'10m_physical/ne_10m_ocean'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#C6E2F2'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"1:16":[
+       {"NAME":"'land'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"1:5":"'110m_physical/ne_110m_land'"},
+           {"6:10":"'50m_physical/ne_50m_land'"},
+           {"11:16":"'10m_physical/ne_10m_land'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#EEECDF'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"5:16":[
+       {"NAME":"'urban_areas'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"5:10":"'50m_cultural/ne_50m_urban_areas'"},
+           {"11:16":"'10m_cultural/ne_10m_urban_areas'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#FAE4B7'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"1:16":[
+       {"NAME":"'coastline'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"1:5":"'110m_physical/ne_110m_coastline'"},
+		{"6:10":"'50m_physical/ne_50m_coastline'"},
+           {"11:16":"'10m_physical/ne_10m_coastline'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"VARIABLE:watercolor_ol"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"3:16":[
+       {"NAME":"'lakes'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"1:4":"'110m_physical/ne_110m_lakes'"},
+           {"5:10":"'50m_physical/ne_50m_lakes'"},
+           {"11:16":"'10m_physical/ne_10m_lakes'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"VARIABLE:watercolor"},
+               {"OUTLINECOLOR":"VARIABLE:watercolor_ol"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"5:16":[
+       {"NAME":"'rivers'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+           {"5:10":"'50m_physical/ne_50m_rivers_lake_centerlines_scale_rank'"},
+           {"11:16":"'10m_physical/ne_10m_rivers_lake_centerlines_scale_rank'"}]},{"LABELITEM":"\"name\""},
+       {"CLASS":[
+           {"EXPRESSION":"([strokeweig] >= 0 AND [strokeweig] <= 0.2)"},
+           {"STYLE":[
+               {"COLOR":"VARIABLE:rivercolor"},
+               {"WIDTH":[
+				{"5:6":"1.5"},
+				{"7:16":"3"}]}
+            ]},{"LABEL":[
+               {"6:16":[
+                {"COLOR":"VARIABLE:watercolor_lbl"},
+                {"OUTLINECOLOR":"255 255 255"},
+                {"FONT":"'scb'"},
+                {"TYPE":"truetype"},
+                {"SIZE":"10"},
+                   {"REPEATDISTANCE":"100"},
+                   {"MINDISTANCE":"300"},
+                {"ANGLE":"FOLLOW"},
+                {"POSITION":"AUTO"},
+                {"PARTIALS":"FALSE"}]}
+            ]}    
+        ]},{"CLASS":[
+           {"EXPRESSION":"([strokeweig] >= 0.200000001 AND [strokeweig] <= 0.35)"},
+           {"STYLE":[
+               {"COLOR":"VARIABLE:rivercolor"},
+               {"WIDTH":[
+				{"5:6":"2"},
+				{"7:16":"4"}]}
+            ]},{"LABEL":[
+               {"6:16":[
+                {"COLOR":"VARIABLE:watercolor_lbl"},
+                {"OUTLINECOLOR":"255 255 255"},
+                {"FONT":"'scb'"},
+                {"TYPE":"truetype"},
+                {"SIZE":"10"},
+                   {"REPEATDISTANCE":"100"},
+                   {"MINDISTANCE":"300"},
+                {"ANGLE":"FOLLOW"},
+                {"POSITION":"AUTO"},
+                {"PARTIALS":"FALSE"}]}
+            ]} 
+        ]},{"CLASS":[
+           {"EXPRESSION":"([strokeweig] >= 0.350000001 AND [strokeweig] <= 0.6)"},
+           {"STYLE":[
+               {"COLOR":"VARIABLE:rivercolor"},
+               {"WIDTH":[
+				{"5:6":"3"},
+				{"7:16":"6"}]}
+            ]},{"LABEL":[
+               {"6:16":[
+                {"COLOR":"VARIABLE:watercolor_lbl"},
+                {"OUTLINECOLOR":"255 255 255"},
+                {"FONT":"'scb'"},
+                {"TYPE":"truetype"},
+                {"SIZE":"10"},
+                   {"REPEATDISTANCE":"100"},
+                   {"MINDISTANCE":"300"},
+                {"ANGLE":"FOLLOW"},
+                {"POSITION":"AUTO"},
+                {"PARTIALS":"FALSE"}]}
+            ]} 
+        ]},{"CLASS":[
+           {"EXPRESSION":"([strokeweig] >= 0.600000001 AND [strokeweig] <= 1)"},
+           {"STYLE":[
+               {"COLOR":"VARIABLE:rivercolor"},
+               {"WIDTH":[
+				{"5:6":"4"},
+				{"7:16":"8"}]}
+            ]},{"LABEL":[
+               {"6:16":[
+                {"COLOR":"VARIABLE:watercolor_lbl"},
+                {"OUTLINECOLOR":"255 255 255"},
+                {"FONT":"'scb'"},
+                {"TYPE":"truetype"},
+                {"SIZE":"10"},
+                   {"REPEATDISTANCE":"100"},
+                   {"MINDISTANCE":"100"},
+                {"ANGLE":"FOLLOW"},
+                {"POSITION":"AUTO"},
+                {"PARTIALS":"FALSE"}]}
+            ]} 
+        ]},{"CLASS":[
+           {"EXPRESSION":"([strokeweig] >= 1.000000001 AND [strokeweig] <= 2)"},
+           {"STYLE":[
+               {"COLOR":"VARIABLE:rivercolor"},
+               {"WIDTH":[
+				{"5:6":"5"},
+				{"7:16":"10"}]}
+            ]},{"LABEL":[
+               {"6:16":[
+                {"COLOR":"VARIABLE:watercolor_lbl"},
+                {"OUTLINECOLOR":"255 255 255"},
+                {"FONT":"'scb'"},
+                {"TYPE":"truetype"},
+                {"SIZE":"10"},
+                   {"REPEATDISTANCE":"100"},
+                   {"MINDISTANCE":"300"},
+                {"ANGLE":"FOLLOW"},
+                {"POSITION":"AUTO"},
+                {"PARTIALS":"FALSE"}]}
+            ]} 
+        ]}
+    ]}
+]},{"LAYER":[
+   {"1:16":[
+       {"NAME":"'country_boundaries'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+	   {"1:5":"'110m_cultural/ne_110m_admin_0_boundary_lines_land'"},
+           {"6:10":"'50m_cultural/ne_50m_admin_0_boundary_lines_land'"},
+           {"11:16":"'10m_cultural/ne_10m_admin_0_boundary_lines_land'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#CBCCCA'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"3:16":[
+       {"NAME":"'countries'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+	   {"1:5":"'110m_cultural/ne_110m_admin_0_countries'"},
+           {"6:10":"'50m_cultural/ne_50m_admin_0_countries'"},
+           {"11:16":"'10m_cultural/ne_10m_admin_0_countries'"}]},{"LABELITEM":"'NAME'"},
+       {"CLASS":[
+           {"LABEL":[
+              {"COLOR":"100 100 100"},
+              {"OUTLINECOLOR":"255 255 255"},
+              {"FONT":"'sc'"},
+              {"TYPE":"truetype"},
+              {"SIZE":[
+		       {"1:3":"10"},
+                  {"4:10":"12"},
+                  {"11:16":"8"}]},{"POSITION":"AUTO"},
+              {"PARTIALS":"FALSE"}]}
+           
+        ]}
+    ]}
+]},{"LAYER":[
+   {"5:16":[
+       {"NAME":"'us_states_boundaries'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+	   {"1:5":"'110m_cultural/ne_110m_admin_1_states_provinces_lines'"},
+           {"6:16":"'50m_cultural/ne_50m_admin_1_states_provinces_lines'"}]},{"CLASS":[
+           {"STYLE":[
+               {"COLOR":"'#CBCCCA'"}]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"5:16":[
+       {"NAME":"'us_states_name'"},
+       {"TYPE":"POLYGON"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+	       {"1:5":"'110m_cultural/ne_110m_admin_1_states_provinces_shp'"},
+           {"6:16":"'50m_cultural/ne_50m_admin_1_states_provinces_shp'"}]},{"LABELITEM":"'NAME'"},
+       {"CLASS":[
+           {"LABEL":[
+              {"COLOR":"150 150 150"},
+              {"OUTLINECOLOR":"255 255 255"},
+              {"FONT":"'scb'"},
+              {"TYPE":"truetype"},
+              {"SIZE":[
+		  	       {"1:3":"8"},
+                  {"4:10":"10"},
+                  {"11:16":"8"}]},{"POSITION":"AUTO"},
+              {"PARTIALS":"FALSE"}]}           
+        ]}
+    ]}
+]},{"LAYER":[
+   {"6:16":[
+       {"NAME":"'roads'"},
+       {"TYPE":"LINE"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":"'10m_cultural/ne_10m_roads'"},
+       {"CLASSITEM":"'type'"},
+ 	   {"LABELITEM":"'name'"},
+       {"CLASS":[
+           {"6:16":[
+               {"EXPRESSION":"'Major Highway'"},
+               {"STYLE":[
+                   {"COLOR":"'#919191'"}]},{"LABEL":[
+                   {"8:16":[
+                       {"COLOR":"255 255 255"},
+                	   {"OUTLINECOLOR":"'#919191'"},
+                    {"OUTLINEWIDTH":"2"},
+                	   {"FONT":"'scb'"},
+                	   {"TYPE":"truetype"},
+                	   {"SIZE":"7"},
+                       {"REPEATDISTANCE":"100"},
+                       {"MINDISTANCE":"300"},
+                	   {"POSITION":"AUTO"},
+                	   {"PARTIALS":"FALSE"}]}	
+            	]}
+            ]}
+        ]},{"CLASS":[
+           {"7:16":[
+               {"EXPRESSION":"'Secondary Highway'"},
+               {"STYLE":[
+                   {"COLOR":"'#DDA0DD'"}]},{"LABEL":[
+                   {"8:16":[
+                	   {"COLOR":"255 255 255"},
+                	   {"OUTLINECOLOR":"'#DDA0DD'"},
+                       {"OUTLINEWIDTH":"2"},
+                	   {"FONT":"'scb'"},
+                	   {"TYPE":"truetype"},
+                	   {"SIZE":"7"},
+                       {"REPEATDISTANCE":"100"},
+                       {"MINDISTANCE":"300"},
+                	   {"POSITION":"AUTO"},
+                	   {"PARTIALS":"FALSE"}]}	
+            	]}
+            ]}
+        ]},{"CLASS":[
+           {"7:16":[
+               {"STYLE":[
+                   {"COLOR":"'#DDA0DD'"}]}
+            ]}
+        ]}
+    ]}
+]},{"LAYER":[
+   {"5:16":[
+       {"NAME":"'populated_places'"},
+       {"TYPE":"POINT"},
+       {"VARIABLE":"layerconfig"},
+       {"DATA":[
+	       {"1:5":"'110m_cultural/ne_110m_populated_places'"},
+           {"6:8":"'50m_cultural/ne_50m_populated_places'"},
+           {"8:16":"'10m_cultural/ne_10m_populated_places'"}]},{"LABELITEM":"'NAME'"},
+       {"CLASS":[
+           {"5:16":[
+               {"EXPRESSION":"([WORLDCITY] = 1)"},
+               {"LABEL":[
+                  {"COLOR":"0 0 0"},
+                  {"OUTLINECOLOR":"255 255 255"},
+                  {"OUTLINEWIDTH":"3"},
+                  {"FONT":"'sc'"},
+                  {"TYPE":"truetype"},
+                  {"SIZE":[
+                      {"4:6":"8"},
+                      {"7:16":"12"}]},{"POSITION":"AUTO"},
+                  {"PARTIALS":"FALSE"}]},{"STYLE":[
+                   {"5:8":[
+                       {"SYMBOL":"'circle'"},
+                       {"OUTLINECOLOR":"'#000000'"},
+                       {"OUTLINEWIDTH":"1"},
+                       {"COLOR":"'#FF0000'"},
+                       {"SIZE":"6"}]}
+		        ]}
+            ]}
+        ]},{"CLASS":[
+           {"5:16":[
+               {"EXPRESSION":"([WORLDCITY] = 0)"},
+               {"LABEL":[
+                  {"COLOR":"0 0 0"},
+                  {"OUTLINECOLOR":"255 255 255"},
+                  {"OUTLINEWIDTH":"3"},
+                  {"FONT":"'sc'"},
+                  {"TYPE":"truetype"},
+                  {"SIZE":[
+                      {"5:7":"8"},
+                      {"8:16":"10"}]},{"POSITION":"AUTO"},
+                  {"PARTIALS":"FALSE"}]},{"STYLE":[
+                   {"5:8":[
+                       {"SYMBOL":"'circle'"},
+                       {"OUTLINECOLOR":"'#000000'"},
+                       {"OUTLINEWIDTH":"1"},
+                       {"COLOR":"'#AAAAAA'"},
+                       {"SIZE":"6"}]}
+		        ]}
+            ]}
+        ]}
+    ]}
+]}
+
+]}

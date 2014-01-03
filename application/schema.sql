@@ -35,6 +35,7 @@ create table pois (
 
 -- INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("0","*OSM-GoogleLike", "Scribe","Template OSM-GoogleLike","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("1","*NaturalEarth", "Scribe", "Template Natural Earth","0");
+INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("4","*BaseScribeMap", "Scribe", "Template Base Scribe Map","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("2","*OSM-Basemaps", "Basemaps", "Template Basemaps","0");
 INSERT INTO maps(map_id, map_name, map_type, map_desc, ws_id) VALUES("3","*Standard", "Standard", "Template Standard","0");
 
@@ -66,5 +67,7 @@ INSERT INTO groups(group_name, group_index, map_id) VALUES("land.map", "0", "2")
 INSERT INTO groups(group_name, group_index, map_id) VALUES("admin.map", "2", "3");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("ocean.map", "1", "3");
 INSERT INTO groups(group_name, group_index, map_id) VALUES("land.map", "0", "3");
+
+INSERT INTO groups(group_name, group_index, map_id) VALUES("base", "1", "4");
 
 INSERT INTO pois(poi_name, latitude, longitude, scalelvl, ws_id) VALUES("Quebec - Quebec","46.83","-71.11","524288","0");
