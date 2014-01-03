@@ -46,6 +46,7 @@ listfiles = [{'name':'scales','url':'editor/scales'},
              {'name':'projections','url':'epsg'}, 
              {'name':'fonts','url':'fonts.lst'},
              {'name':'symbols','url':'symbols.map'},
+             {'name':'readme','url':'README'}
              ]
 
 listfilesBasemaps = [{'name':'scales','url':'Makefile'},
@@ -54,12 +55,14 @@ listfilesBasemaps = [{'name':'scales','url':'Makefile'},
                     {'name':'projections','url':'epsg'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbol.map'},
+                    {'name':'readme','url':'README'}
                     ]
 
 listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'projections','url':'epsg'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbols.map'},
+                    {'name':'readme','url':'README'}
                     ]
 plugins = {}
 
@@ -363,23 +366,41 @@ def open_map():
         pathGroups = pathMap + "editor/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
         for i in range(len(listfiles)):
-            document = open(pathMap + listfiles[i]['url'], "r")
-            contentfiles[listfiles[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfiles[i]['url'], "r") as document:
+                    contentfiles[listfiles[i]['name']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfiles[i]['name']] = ''
     elif wsmap['map_type'] == 'Basemaps':
         pathGroups = pathMap
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "osm-" + namemap +".map"
         for i in range(len(listfilesBasemaps)):
-            document = open(pathMap + listfilesBasemaps[i]['url'], "r")
-            contentfiles[listfilesBasemaps[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfilesBasemaps[i]['url'], "r") as document:
+                    contentfiles[listfilesBasemaps[i]['url']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfilesBasemaps[i]['name']] = ''
+            #document = open(pathMap + listfilesBasemaps[i]['url'], "r")
+            #contentfiles[listfilesBasemaps[i]['name']] = document.read()
+            #document.close()
     elif wsmap['map_type'] == 'Standard':
         pathGroups = pathMap + "map/layers/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
         for i in range(len(listfilesStandard)):
-            document = open(pathMap + listfilesStandard[i]['url'], "r")
-            contentfiles[listfilesStandard[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfilesStandard[i]['url'], "r") as document:
+                    contentfiles[listfilesStandard[i]['url']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfilesStandard[i]['name']] = ''
+            #document = open(pathMap + listfilesStandard[i]['url'], "r")
+            #contentfiles[listfilesStandard[i]['name']] = document.read()
+            #document.close()
         document = open(pathMap + "map/" + namemap + ".map", "r")
         contentfiles['map'] = document.read()
         document.close()
@@ -1114,9 +1135,14 @@ def get_config():
         mapName = request.form['name']
         wsID = get_ws_id(session['ws_name'])
         config = query_db("select git_url as gitURL, git_user as gitUser, git_password as gitPassword from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
-        dummyPassword = generate_dummy_password(len(config['gitPassword']))
+        if config['gitPassword']:
+            dummyPassword = generate_dummy_password(len(config['gitPassword']))
+            config['gitPassword'] = dummyPassword
+        else:
+            dummyPassword = generate_dummy_password(16)
+            config['gitPassword'] = ''
         session['dummy_password'] = dummyPassword
-        config['gitPassword'] = dummyPassword
+        
         return jsonify(config)
 
 #===============================  

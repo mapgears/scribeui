@@ -129,6 +129,7 @@
                             <option value="fonts">Fonts</option>
                             <option value="projections">Projections</option>
                             <option value="variables">Variables</option>
+                            <option value="readme">Readme</option>
                         </select>
 
                         <div class="log-button-container">
@@ -138,26 +139,29 @@
                     </div>
                     <div id="editors-container">
                             <div class="secondary-wrap" style="height:250px">
-                                    <div id="secondary-editor">
-                                            <div id="map-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="map-editor" class="code-area"></textarea>
-                                            </div>
-                                            <div id="variable-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="variable-editor" class="code-area"></textarea>
-                                            </div>
-                                            <div id="scale-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="scale-editor" class="code-area"></textarea>
-                                            </div>
-                                            <div id="symbol-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="symbol-editor" class="code-area"></textarea>
-                                            </div>
-                                            <div id="font-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="font-editor" class="code-area"></textarea>
-                                            </div>
-                                            <div id="projection-tab" class="tabcontent-small" style="display:none">
-                                                <textarea id="projection-editor" class="code-area" ></textarea>
-                                            </div>
+                                <div id="secondary-editor">
+                                    <div id="map-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="map-editor" class="code-area"></textarea>
                                     </div>
+                                    <div id="variable-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="variable-editor" class="code-area"></textarea>
+                                    </div>
+                                    <div id="scale-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="scale-editor" class="code-area"></textarea>
+                                    </div>
+                                    <div id="symbol-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="symbol-editor" class="code-area"></textarea>
+                                    </div>
+                                    <div id="font-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="font-editor" class="code-area"></textarea>
+                                    </div>
+                                    <div id="projection-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="projection-editor" class="code-area" ></textarea>
+                                    </div>
+                                    <div id="readme-tab" class="tabcontent-small" style="display:none">
+                                        <textarea id="readme-editor" class="code-area" ></textarea>
+                                    </div>
+                                </div>
                             </div>
                             <div class="main-editor">
                                 <textarea id="editor" class="code-area" style="display:none"></textarea>
@@ -406,7 +410,7 @@
                     <div class="control-group">
                         <label>Logs</label>
                         <div class="control">
-                            <textarea id="git-logs" disabled></textarea>
+                            <textarea id="git-logs" readonly></textarea>
                         </div>
                     </div>
                 </form>

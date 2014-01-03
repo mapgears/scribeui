@@ -153,6 +153,7 @@ Map.prototype.displayComponents = function(){
     symbolEditor.setValue(this.symbols);
     fontEditor.setValue(this.fonts);
     projectionEditor.setValue(this.projections);
+    readmeEditor.setValue(this.readme);
 
     if (this.type == "Basemaps"){
         $("a[href='#scale-tab']").html("Config");
@@ -214,7 +215,8 @@ Map.prototype.updateComponents = function(){
     this.variables = variableEditor.getValue();
     this.symbols = symbolEditor.getValue();
     this.fonts = fontEditor.getValue();
-    this.projections = projectionEditor.getValue();     
+    this.projections = projectionEditor.getValue();
+    this.readme = readmeEditor.getValue();     
 }
 
 Map.prototype.commit = function(){
@@ -228,6 +230,7 @@ Map.prototype.commit = function(){
         symbols: this.symbols,
         fonts: this.fonts,
         projections: this.projections,
+        readme: this.readme,
         groups: this.groups
     })
 
@@ -374,6 +377,7 @@ Map.prototype.clearComponents = function(){
     symbolEditor.setValue("");
     fontEditor.setValue("");
     projectionEditor.setValue("");
+    readmeEditor.setValue("");
 };
 
 Map.prototype.displayGroupsIndex = function(){

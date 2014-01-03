@@ -52,6 +52,7 @@ jQuery(function() {
     symbolEditor = CodeMirror.fromTextArea(document.getElementById("symbol-editor"), options);
     fontEditor = CodeMirror.fromTextArea(document.getElementById("font-editor"), options);
     projectionEditor = CodeMirror.fromTextArea(document.getElementById("projection-editor"), options);
+    readmeEditor = CodeMirror.fromTextArea(document.getElementById("readme-editor"), options);
 	
     /*--------------------------------
       Tabs and buttons
@@ -204,6 +205,7 @@ jQuery(function() {
 	    symbolEditor.refresh();
 	    fontEditor.refresh();
 	    projectionEditor.refresh();
+        readmeEditor.refresh();
     });
 	$(".secondary-wrap").resizable({
 		handles: 's',

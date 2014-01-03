@@ -391,7 +391,7 @@ function displayConfiguration(config){
 
 function commitMap(){
     var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap.name != name){
+    if(_workspace.openedMap && _workspace.openedMap.name != name){
         var map = _workspace.openedMap;
     } else{
         var map = new Map(name, {
@@ -674,6 +674,9 @@ function onMapOpened(){
             case 'variables':
                 editor = variableEditor;
                 break;
+            case 'readme':
+                editor = readmeEditor;
+                break;
                 
         }
         openSecondaryPanel(val, editor);
@@ -688,6 +691,7 @@ function onMapOpened(){
     scaleEditor.clearHistory();
     fontEditor.clearHistory();
     projectionEditor.clearHistory();
+    readmeEditor.clearHistory();
 
     if(_workspace.openedMap.type == "Scribe"){
         $("#btn_delete_group").hide();
