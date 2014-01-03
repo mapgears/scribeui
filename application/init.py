@@ -46,7 +46,7 @@ listfiles = [{'name':'scales','url':'editor/scales'},
              {'name':'projections','url':'epsg'}, 
              {'name':'fonts','url':'fonts.lst'},
              {'name':'symbols','url':'symbols.map'},
-             {'name':'readme','url':'README'}
+             {'name':'readme','url':'README.markdown'}
              ]
 
 listfilesBasemaps = [{'name':'scales','url':'Makefile'},
@@ -1160,12 +1160,16 @@ def git_commit_map():
         output = ''
         errors = []
         
+        output += 'git add .\n'
+        output += '---------------------------------------------------\n'
         try:
             output += subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
             output += e.output
         
+        output += 'git commit -m "' + message + '"\n'
+        output += '---------------------------------------------------\n'
         try:
             output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
@@ -1175,14 +1179,18 @@ def git_commit_map():
                 errors.append(e.output)
             output += e.output
         
+        output += 'git pull origin master\n'
+        output += '---------------------------------------------------\n'
         try:
             output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
             output += e.output
 
+        output += 'git push origin master\n'
+        output += '---------------------------------------------------\n'
         try:
-            output += subprocess.check_output(['git push --verbose origin master'], shell=True, stderr=subprocess.STDOUT)
+            output += subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
             output += e.output

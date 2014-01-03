@@ -646,7 +646,6 @@ function openSecondaryPanel(value, editor){
     }else{
          $('.secondary-wrap').hide();
     }
-
     resizeEditors();
 }
 
@@ -674,7 +673,7 @@ function onMapOpened(){
             case 'variables':
                 editor = variableEditor;
                 break;
-            case 'readme':
+            case 'readmes':
                 editor = readmeEditor;
                 break;
                 
