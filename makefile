@@ -53,5 +53,12 @@ load-demo-data:
 	test -d ./application/data/naturalEarth/50m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/50m_cultural.zip && unzip -o 50m_cultural.zip -d ./application/data/naturalEarth/50m_cultural/ && rm 50m_cultural.zip)
 
 	test -d ./application/naturalEarth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/50m_physical.zip && unzip -o 50m_physical.zip -d ./application/data/naturalEarth/50m_physical/ && rm 50m_physical.zip)
-	
-	rm *.zip
+
+load-basescribe-data:
+	mkdir -p ./application/data/naturalEarth
+
+	test -d ./application/data/naturalEarth/110m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/ne_110m_land.zip && unzip -o ne_110m_land.zip -d ./application/data/naturalEarth/110m_physical/ && rm ne_110m_land.zip)
+
+	test -d ./application/data/naturalEarth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/ne_50m_land.zip && unzip -o ne_50m_land.zip -d ./application/data/naturalEarth/50m_physical/ && rm ne_50m_land.zip)
+
+	test -d ./application/data/naturalEarth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_land.zip &&unzip -o ne_10m_land.zip -d ./application/data/naturalEarth/10m_physical/ && rm ne_10m_land.zip)
