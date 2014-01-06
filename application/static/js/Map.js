@@ -24,7 +24,7 @@
     }
 }
 
-Map.prototype.create = function(clone){
+Map.prototype.create = function(clone, callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_map', {
         name: this.name,
@@ -36,7 +36,7 @@ Map.prototype.create = function(clone){
     }, function(status) {
         if(status == "1") {
             if(clone){
-                self.gitClone(clone);
+                self.gitClone(clone, callback);
             } else{
                 self.workspace.maps.push(self);
                 self.workspace.displayMaps();
@@ -48,7 +48,7 @@ Map.prototype.create = function(clone){
     });
 }
 
-Map.prototype.open = function(){
+Map.prototype.open = function(callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_open_map', {
         name: this.name
@@ -70,6 +70,10 @@ Map.prototype.open = function(){
             $("#info").text(self.workspace.name + " / " + self.name);
             
             onMapOpened();
+
+            if(callback){
+                callback.call(self);
+            }
         }else {
         alert(data);
     }
@@ -520,13 +524,18 @@ Map.prototype.gitCommit = function(message, callback){
     });
 }
 
-Map.prototype.gitClone = function(config){
+Map.prototype.gitClone = function(config, callback){
     var self = this;
     config['name'] = this.name;
     $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
         self.workspace.maps.push(self);
         self.workspace.displayMaps();
         $("#" + self.workspace.mapActions).hide();
+
+        self.groups = [];
+        self.open(self.commit);
+
+        callback.call(null, response);
     });
 }
 

@@ -312,8 +312,6 @@ function cloneMap(){
                 var type = $("#git-clone-type option:selected").val();
                 var description = $("#git-clone-description").val();
                 var gitURL = $("#git-clone-url").val();
-                var gitUser = $("#git-clone-user").val();
-                var gitPassword = $("#git-clone-password").val();
 
                 var map = new Map(name, {
                     "type": type,
@@ -323,15 +321,12 @@ function cloneMap(){
                 });
 
                 var config = {
-                    gitURL: gitURL,
-                    gitUser: gitUser,
-                    gitPassword: gitPassword    
+                    gitURL: gitURL  
                 }
 
-                map.create(config);
-                //map.gitClone(config);
+                map.create(config, displayCloneLogs);
 
-                $(this).dialog("close");
+                //$(this).dialog("close");
             },
             Cancel: function() {
                 $(this).dialog("close");
@@ -427,6 +422,10 @@ function commitMap(){
 
 function displayCommitLogs(e){
     $("#git-logs").val(e.log);
+}
+
+function displayCloneLogs(e){
+    $("#git-clone-logs").val(e.log);
 }
 
 function createNewGroup(){

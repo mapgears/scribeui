@@ -788,4 +788,13 @@ div.olControlZoom a {
     height: 200px;
     font-size: 10px;
 }
+#git-clone-description {
+    width: 400px;
+    height: 100px;
+}
+#git-clone-logs {
+    width: 400px;
+    height: 100px;
+    font-size: 10px;
+}
 

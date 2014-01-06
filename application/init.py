@@ -183,7 +183,7 @@ def create_new_ws():
     if (re.search(expression, name) is None):
         return "Invalid name"
     if (get_ws_id(name) is not None) or (name=="templates"):
-        return "Existing"
+        return "A workspace with that name already exists"
     g.db.execute('insert into workspaces (ws_name, password) values (?, ?)',
                  [name, generate_password_hash(request.form['password'])])
     g.db.commit()
@@ -285,7 +285,7 @@ def create_map():
     wsmap = query_db("select map_name from maps where ws_id = ?", [get_ws_id(session['ws_name'])], one=False)
     for i in range(len(wsmap)):
         if name == wsmap[i]['map_name']:
-            return "Existing"
+            return "A map with that name already exists"
 
     #Add the map in the bd      
     g.db.execute('insert into maps (map_name, map_type, map_desc, ws_id) values (?, ?, ?, ?)',
@@ -615,7 +615,7 @@ def add_layer():
 	    for gr in groupsFiles:
                 name = getGroupNameFromFile(gr)
                 if groupname == name:
-                    return "Existing"
+                    return "A group with that name already exists"
 
             inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
             inputConfigContent = inputConfigFile.read()
@@ -641,7 +641,7 @@ def add_layer():
                 groupname = groupname+".map"
             for i in range(len(groups)):
                 if groupname == groups[i]['group_name']:
-                    return "Existing"
+                    return "A group with that name already exists"
                                                     
             g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
             g.db.commit()
@@ -857,7 +857,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 ' + path + '/scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1091,22 +1091,30 @@ def git_configure_map(name, url, user, password):
             errors.append(e.output)
         
         # link new git to remote url
-        # user/password are coded directly in the git url 
-        userString = user
-        if password != '':
-            if password == session['dummy_password']:
-                userString += ':' + wsmap['git_password']    
-            else:
-                userString += ':' + password
-        userString += '@'
-        gitFullURL = 'https://' + userString + url[8:]
+        # user/password are coded directly in the git url
+        if user and password:
+            userString = user
+            if password != '':
+                if password == session['dummy_password']:
+                    userString += ':' + wsmap['git_password']    
+                else:
+                    userString += ':' + password
+            userString += '@'
+            gitFullURL = 'https://' + userString + url[8:]
+        else:
+            gitFullURL = url
 
         try:
             subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
 
-        gitignore = open('.gitignore', 'w')
+        try:
+            subprocess.check_output(['git config http.sslVerify "false"'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)   
+
+        gitignore = open('.gitignore', 'w+')
         gitignoreContent = 'data\n'
         gitignoreContent += 'pdata\n'
         gitignoreContent += 'debugFile.log\n'
@@ -1214,13 +1222,13 @@ def git_clone_map():
         mapName = request.form['name']
         
         gitURL = request.form['gitURL']
-        gitUser = request.form['gitUser']
-        gitPassword = request.form['gitPassword']
+        #gitUser = request.form['gitUser']
+        #gitPassword = request.form['gitPassword']
 
         mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
         os.chdir(mapPath)
         
-        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
+        response = git_configure_map(mapName, gitURL, None, None)
         output = ''
 
         if response['status'] == 'ok':
