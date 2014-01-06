@@ -183,8 +183,10 @@ Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
 
     for(var i = 0; i < this.pointsOfInterest.length; i++){
-	$("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
-    }   
+	   $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
+    }
+
+    $("#" + this.poiSelect).trigger('chosen:updated');   
 };
 
 Workspace.prototype.display = function(){

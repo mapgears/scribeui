@@ -857,7 +857,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 ' + path + '/scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 ' + path + '/scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config -j ' + pathMap + 'editor/map.json' , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1222,13 +1222,13 @@ def git_clone_map():
         mapName = request.form['name']
         
         gitURL = request.form['gitURL']
-        #gitUser = request.form['gitUser']
-        #gitPassword = request.form['gitPassword']
+        gitUser = request.form['gitUser']
+        gitPassword = request.form['gitPassword']
 
         mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
         os.chdir(mapPath)
         
-        response = git_configure_map(mapName, gitURL, None, None)
+        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
         output = ''
 
         if response['status'] == 'ok':

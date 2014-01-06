@@ -8,6 +8,7 @@ function displayWorkspaces(select){
             for(ws in workspaces){
                workspaceSelect.append($("<option></option>").attr("value", workspaces[ws]).text(workspaces[ws])); 
             }
+            workspaceSelect.trigger("chosen:updated");
         }
     });
 }
@@ -212,6 +213,7 @@ function displayTemplates(ws_name, type){
             for(temp in templates){
                 $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
             }
+            $("#newmap-template").trigger("chosen:updated");
         }
     });
 }
@@ -312,6 +314,8 @@ function cloneMap(){
                 var type = $("#git-clone-type option:selected").val();
                 var description = $("#git-clone-description").val();
                 var gitURL = $("#git-clone-url").val();
+                var gitUser = $("#git-clone-user").val();
+                var gitPassword = $("#git-clone-password").val();
 
                 var map = new Map(name, {
                     "type": type,
@@ -321,7 +325,9 @@ function cloneMap(){
                 });
 
                 var config = {
-                    gitURL: gitURL  
+                    gitURL: gitURL,
+                    gitUser: gitUser,
+                    gitPassword: gitPassword  
                 }
 
                 map.create(config, displayCloneLogs);
@@ -439,7 +445,7 @@ function createNewGroup(){
             "Create": function() {
                 var name = $("#newgroup-name").val();
 
-        _workspace.openedMap.createGroup(name);
+                _workspace.openedMap.createGroup(name);
                 $(this).dialog("close");
             },
             Cancel: function() {
@@ -476,8 +482,18 @@ function openGroupOrderWindow(){
         modal: true,
         buttons: [
         {
+            text: "+",
+            showText: false,
+            'class': 'btn-group-first',
+            icons: { primary: 'ui-icon-plus'},
+            click: function(){
+                createNewGroup();
+            }
+        },
+        {
             text: "Delete",
             showText: false,
+            'class': 'btn-group-last',
             icons: { primary: 'ui-icon-trash'},
             click: function(){
                     var group = $("#" + _workspace.groupOl + " .ui-selected");
@@ -486,8 +502,9 @@ function openGroupOrderWindow(){
         },
 
         {
-            text: "+",
+            text: '+',
             showText: false,
+            'class': 'btn-group-first',
             icons: { primary: 'ui-icon-carat-1-s'},
             click: function(){
                 var group = $("#" + _workspace.groupOl + " .ui-selected");
@@ -508,8 +525,9 @@ function openGroupOrderWindow(){
             }
         },
         {
-            text: "-",
+            text: '-',
             showText: false,
+            'class': 'btn-group-last',
             icons: { primary: 'ui-icon-carat-1-n'},
             click: function(){
                 var group = $("#" + _workspace.groupOl + " .ui-selected");
@@ -531,6 +549,7 @@ function openGroupOrderWindow(){
         },
         {
             text: "Apply",
+            'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
                 _workspace.openedMap.updateGroupOrder();
                 deleteGroup({mapType:_workspace.openedMap.type});
@@ -539,12 +558,17 @@ function openGroupOrderWindow(){
         },
         {
             text: "Cancel",
+            'class': 'btn-group-last grouporder-btn-right',
             click: function() {
                 $(this).dialog("close");
             }
         }],
         close: function() {}
-    }).dialog("open");
+    });
+
+    $('.grouporder-btn-right').wrapAll('<div class="grouporder-btnset-right"></div>');
+
+    $("#grouporder-form").dialog("open");
 }
 
 function displayDataBrowser(){

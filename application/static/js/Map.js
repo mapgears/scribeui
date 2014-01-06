@@ -115,6 +115,9 @@ Map.prototype.createGroup = function(name){
                 
                 var groupSelect = $("#" + self.workspace.groupSelect);
                 groupSelect.append($("<option></option>").attr("value", group.name).text(group.name));
+                groupSelect.trigger('chosen:updated');
+
+                self.displayGroupsIndex();
                 
                 //Include the new group in the map
                 if(self.type == "Standard")
@@ -141,6 +144,7 @@ Map.prototype.removeGroup = function(name){
                 groupSelect.find("option[value='" + group.name + "']").remove();
                 $('#'+self.workspace.groupOl).find("li.ui-selected").remove();
                 groupSelect.trigger("change");
+                groupSelect.trigger('chosen:updated');
 
                 //Remove include statement in the map element
                 if(self.type == "Standard")
@@ -178,6 +182,7 @@ Map.prototype.displayGroups = function(){
     for(var i = 0; i < this.groups.length; i++){
         groupSelect.append($("<option></option>").attr("value", this.groups[i].name).text(this.groups[i].name));
     }
+    groupSelect.trigger("chosen:updated");
     var self = this;
     groupSelect.focus(function(e) {
         self.setGroupContent(this.value, groupEditor.getValue());

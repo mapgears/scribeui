@@ -24,8 +24,8 @@ a{
 	outline: 0;
 }
 select {
-   padding: 1px 0px 0px 1px;
-	width:200px;
+    padding: 1px 0px 0px 1px;
+    width:200px;
 }
 input {
     border-radius: 4px;
@@ -48,6 +48,10 @@ input, select, textarea {
 button {
     font-size: 10px !important;
     border-radius: 4px !important;
+    border-color: #AAAAAA !important;
+    height: 25px;
+    margin-top: -1px;
+    box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .main {
@@ -120,7 +124,7 @@ button {
     float: right;
     height: 30px;
     margin-right: 30px;
-    margin-top: 2px;
+    margin-top: 7px;
 }
 
 .poi-container {
@@ -414,8 +418,8 @@ button {
 #editor-toolbar{
 	background-color:#FCFCFC;
 	border-bottom:solid 1px #f7f7f7;
-	height:30px;
-    padding: 4px 4px 0px 4px;
+	height:32px !important;
+    padding: 7px 4px 0px 4px;
 }
 #editor-toolbar select{
 	max-width:200px;
@@ -451,6 +455,7 @@ button {
 .ui-button{
 	margin-top:0;
 	margin-bottom:0;
+    margin-right: 0;
 }
 .ui-icon {
     margin-top: -9px !important;
@@ -462,7 +467,7 @@ button {
     font-family: monospace !important;
 }
 #editors-container .CodeMirror-scroll{
-	overflow:hidden;
+	overflow: visible !important;
 	height:auto;
 }
 
@@ -564,12 +569,14 @@ button {
 }
 
 .group-select{
-    margin-left: 5px;
+    /*margin-left: 5px;*/
     width: 200px;
 }
+/*
 #group-edition-select{
-	float:right;
+    width: 200px;
 }
+*/
 .group-table{
     width: 240px;
 }
@@ -608,12 +615,12 @@ button {
     border-top-right-radius: 0px !important;
     border-top-left-radius: 0px !important; 
 }
-
+/*
 .button-commit {
     position: relative;
     left: 48%;
 }
-
+*/
 .newmap-description{
     height: 160px;
 }
@@ -756,14 +763,14 @@ div.olControlZoom a {
 }
 
 .log-button-container{
-    margin-top: 2px;
-    padding: 2px 4px 0px 4px;
+    /*margin-top: 2px;
+    padding: 2px 4px 0px 4px;*/
 	float:right;
 }
 #log-notification{
 	position:absolute;
-	margin-top: 2px;
-	margin-left: 15px;
+	margin-top: 0px;
+	right: -3px;
 	background-image:none;
 	background-color:transparent;
 	z-index:10;
@@ -796,5 +803,74 @@ div.olControlZoom a {
     width: 400px;
     height: 100px;
     font-size: 10px;
+}
+
+.chosen-container {
+    /*width: auto !important;*/
+    min-width: 100px;
+}
+
+#group_select_chosen {
+    margin-left: -5px;
+}
+
+#group_select_chosen a{
+    /*border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;*/
+    border-radius: 0px !important;
+}
+
+#group_edition_select_chosen a{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+#poi_select_chosen a{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;    
+}
+
+#poi_select_chosen .chosen-drop {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: auto;
+    bottom: 25px;
+    border-radius: 4px 4px 0px 0px;
+}
+
+#poi_select_chosen.chosen-container-active a{
+    border-radius: 0px 0px 0px 4px !important;
+}
+
+.control-group .chosen-container {
+    width: 200px !important;
+}
+
+.btn-group-first {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.btn-group-last {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    margin-left: -5px !important;
+}
+
+.grouporder-btnset-right {
+    float: right;
+}
+
+.ui-dialog-buttonpane {
+    padding-left: 1em !important;
+    float: none;
+}
+
+#grouporder-form {
+    min-width: 300px !important;
+}
+
+#grouporder-form + .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: none !important;
 }
 

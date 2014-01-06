@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/css/scribeui/scribeui.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery/elfinder/css/elfinder.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/chosen/chosen.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/codemirror.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/dialog.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/CodeMirror-2.25/lib/util/simple-hint.css') }}">
@@ -23,6 +24,7 @@
         <script src="{{ url_for('static', filename='lib/jquery/js/jquery.form.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/jquery/elfinder/js/elfinder.min.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/jquery/elfinder/js/proxy/elFinderSupportVer1.js') }}" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ url_for('static', filename='lib/chosen/chosen.jquery.js') }}" type="text/javascript"></script>
         <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/codemirror.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/util/search.js') }}"></script>
         <script src="{{ url_for('static', filename='lib/CodeMirror-2.25/lib/util/searchcursor.js') }}"></script>
@@ -116,13 +118,8 @@
                 </div>
                 <div id="editor-tab" class="tabcontent">
                     <div id="editor-toolbar" class=" ui-corner-all">
-                        <select id="group-select" class="group-select" class="shadow_select"></select>
-                        <button id="btn_new_group" class="group-button">New Group</button>
-                        <button id="btn_delete_group" class="group-button">Delete Group</button>
-                        <button id="btn_change_group_order" class="group-button">Group Settings</button>
-
                         <select id="group-edition-select">
-                            <option value="x"></option>
+                            <option value="x">Groups</option>
                             <option value="map">Map</option>
                             <option value="scales">Scales</option>
                             <option value="symbols">Symbols</option>
@@ -132,9 +129,26 @@
                             <option value="readmes">Readme</option>
                         </select>
 
+                        <select id="group-select" class="group-select" class="shadow_select"></select>
+                        <!--button id="btn_new_group" class="group-button">New Group</button-->
+                        <!--button id="btn_delete_group" class="group-button">Delete Group</button-->
+                        <button id="btn_change_group_order" class="group-button btn-group-last">Group Settings</button>
+
+                        <!--select id="group-edition-select">
+                            <option value="x"></option>
+                            <option value="map">Map</option>
+                            <option value="scales">Scales</option>
+                            <option value="symbols">Symbols</option>
+                            <option value="fonts">Fonts</option>
+                            <option value="projections">Projections</option>
+                            <option value="variables">Variables</option>
+                            <option value="readmes">Readme</option>
+                        </select-->
+
                         <div class="log-button-container">
                             <span id="log-notification" class="ui-state-error"><span class="ui-icon ui-icon-alert"></span></span>
-                            <button id="btn-open-logs" class="group-button">Open Logs</button>
+                            <button id="btn_commit" class="button-commit btn-group-first" title="Save ( Ctrl+S )">Save</button>
+                            <button id="btn-open-logs" class="group-button btn-group-last">Logs</button>
                         </div>
                     </div>
                     <div id="editors-container">
@@ -201,13 +215,13 @@
                     <div class="tools-right">
                         <div class="poi-container">
                             <select id="poi-select" class="shadow_select"></select>
-                            <button id="btn-zoom-poi" >Go!</button>
-                            <button id="btn-add-poi">+</button>
+                            <button id="btn-zoom-poi" class="btn-group-first btn-group-last">Go!</button>
+                            <button id="btn-add-poi" class="btn-group-last">+</button>
                         </div>
                     </div>
-                    <div class="tools-left">
+                    <!--div class="tools-left">
                         <button id="btn_commit" class="button-commit" title="Save ( Ctrl+S )">Save</button>
-                    </div>
+                    </div-->
                 </div>
             </div>
         </div>
@@ -436,6 +450,18 @@
                         <label>Git URL</label>
                         <div class="control">
                             <input type="text" name="git-clone-url" id="git-clone-url" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git User</label>
+                        <div class="control">
+                            <input type="text" name="git-clone-user" id="git-clone-user" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git Password</label>
+                        <div class="control">
+                            <input type="password" id="git-clone-password"/>
                         </div>
                     </div>
                     <div class="control-group">

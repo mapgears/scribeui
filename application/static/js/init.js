@@ -157,7 +157,9 @@ jQuery(function() {
 	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
     });
 
-    $('#btn_commit').button().click( function(){
+    $('#btn_commit').button({
+        icons: { primary: 'ui-icon-disk' }
+    }).click( function(){
 	    _workspace.openedMap.commit();
     });
 
@@ -181,7 +183,7 @@ jQuery(function() {
 	    openGroupOrderWindow();
     });
 	$('#btn-open-logs').button({
-		text:false,
+		/*text:false,*/
 		icons: { primary: 'ui-icon-flag' }	
 	}).click(function(){
 	    $('#logs').toggle();
@@ -223,6 +225,8 @@ jQuery(function() {
         newMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
         cloneMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
     }
+
+    $('select').chosen();
 	
 	//Shortcut for commit
 	$("body").keypress(function(e){
