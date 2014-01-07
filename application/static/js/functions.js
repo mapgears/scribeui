@@ -150,7 +150,7 @@ function openNewMapWindow(){
 
     $("#createmap-form").dialog({
         autoOpen: false,
-    resizable: false,
+        resizable: false,
         width: _workspace.popupWidth,
         height:_workspace.popupHeight,
         modal: true,

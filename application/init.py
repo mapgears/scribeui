@@ -909,8 +909,6 @@ def execute():
     else:
         result = "**ERRORS**\n----------\n" + errorMsg + "\n**LOG**\n----------\n" + logMsg
 
-    create_thumbnail(pathMap)
-
     return jsonify(result=result)
 
 
