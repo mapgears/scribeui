@@ -1096,15 +1096,52 @@ def configure_map():
     if ('ws_name' in session):
         mapName = request.form['name']
         gitURL = request.form['gitURL']
-        gitUser = request.form['gitUser']
-        gitPassword = request.form['gitPassword']
         description = request.form['description']
 
-        response = git_configure_map(mapName, gitURL, gitUser, gitPassword, description)
+        response = git_configure_map(mapName, gitURL, description)
+
 
     return jsonify(response)
 
-def git_configure_map(name, url, user, password, description=None):
+def git_remove_remote_url():
+    try:
+        subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        pass    
+
+def git_add_remote_url(url, user, password):
+    # link new git to remote url
+    # user/password are coded directly in the git url
+    response = {'status': 'error'}
+    errors = []
+
+    if user and password:
+        userString = user
+        if password != '':
+            userString += ':' + password
+        userString += '@'
+        gitFullURL = 'https://' + userString + url[8:]
+    else:
+        gitFullURL = url
+
+    git_remove_remote_url()
+
+    try:
+        subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        errors.append(e.output)
+
+    try:
+        subprocess.check_output(['git config http.sslVerify "false"'], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        errors.append(e.output)
+
+    if len(errors) == 0:
+        response['status'] = 'ok'
+
+    return response    
+
+def git_configure_map(name, url, description=None):
     response = {'status': 'error'}
 
     mapID = get_map_id(name, session['ws_name'])
@@ -1112,47 +1149,19 @@ def git_configure_map(name, url, user, password, description=None):
     mapPath = (path + "workspaces/" + session['ws_name'] + "/" + name) +"/"
     os.chdir(mapPath)
 
-    wsmap = query_db('''select git_url, git_user, git_password from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), name], one=True)
+    wsmap = query_db('''select git_url from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), name], one=True)
     
     errors = []
 
-    if url != wsmap['git_url'] or user != wsmap['git_user'] or (password != wsmap['git_password'] and password != session['dummy_password']):
+    if url != wsmap['git_url']:
         # remove remote origin
-        try:
-            subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            pass
-            #errors.append(e.output)
+        git_remove_remote_url()
 
         # init new git
         try:
             subprocess.check_output(['git init'], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             errors.append(e.output)
-        
-        # link new git to remote url
-        # user/password are coded directly in the git url
-        if user and password:
-            userString = user
-            if password != '':
-                if password == session['dummy_password']:
-                    userString += ':' + wsmap['git_password']    
-                else:
-                    userString += ':' + password
-            userString += '@'
-            gitFullURL = 'https://' + userString + url[8:]
-        else:
-            gitFullURL = url
-
-        try:
-            subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            errors.append(e.output)
-
-        try:
-            subprocess.check_output(['git config http.sslVerify "false"'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            errors.append(e.output)   
 
         gitignore = open('.gitignore', 'w+')
         gitignoreContent = 'data\n'
@@ -1162,10 +1171,7 @@ def git_configure_map(name, url, user, password, description=None):
         gitignore.write(gitignoreContent)
 
         if len(errors) == 0:
-            if password != wsmap['git_password'] and password != session['dummy_password']:
-                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [url, user, password, mapID])
-            else:
-                g.db.execute('''UPDATE maps SET git_url = ?, git_user = ? WHERE map_id = ?''', [url, user, mapID])
+            g.db.execute('''UPDATE maps SET git_url = ? WHERE map_id = ?''', [url, mapID])
 
             response['status'] = 'ok'
     
@@ -1189,14 +1195,7 @@ def get_config():
     if 'ws_name' in session:
         mapName = request.form['name']
         wsID = get_ws_id(session['ws_name'])
-        config = query_db("select git_url as gitURL, git_user as gitUser, git_password as gitPassword, map_desc as description from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
-        if config['gitPassword']:
-            dummyPassword = generate_dummy_password(len(config['gitPassword']))
-            config['gitPassword'] = dummyPassword
-        else:
-            dummyPassword = generate_dummy_password(16)
-            config['gitPassword'] = ''
-        session['dummy_password'] = dummyPassword
+        config = query_db("select git_url as gitURL, map_desc as description from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
         
         return jsonify(config)
 
@@ -1207,55 +1206,77 @@ def get_config():
 def git_commit_map():
     response = {'status': 'error'}
     if ('ws_name' in session):
+        wsID = get_ws_id(session['ws_name'])
+
         mapName = request.form['name']
         message = request.form['message']
-
-        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
-        os.chdir(mapPath)
+        user = request.form['gitUser']
+        password = request.form['gitPassword']
 
         output = ''
-        errors = []
-        
-        output += 'git add .\n'
-        output += '---------------------------------------------------\n'
-        try:
-            output += subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            errors.append(e.output)
-            output += e.output
-        
-        output += 'git commit -m "' + message + '"\n'
-        output += '---------------------------------------------------\n'
-        try:
-            output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            if '(working directory clean)' in e.output:
-                pass
-            else:
-                errors.append(e.output)
-            output += e.output
-        
-        output += 'git pull origin master\n'
-        output += '---------------------------------------------------\n'
-        try:
-            output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            errors.append(e.output)
-            output += e.output
 
-        output += 'git push origin master\n'
-        output += '---------------------------------------------------\n'
-        try:
-            output += subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            errors.append(e.output)
-            output += e.output
-        
-        if len(errors) == 0:
-            response['status'] = 'ok'
-        
-        response['log'] = output
-        response['errors'] = errors
+        if user and message:
+            data = query_db("select git_url as gitURL from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+
+            if data['gitURL'] and data['gitURL'] != '':
+                mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+                os.chdir(mapPath)
+
+                response = git_add_remote_url(data['gitURL'], user, password)
+
+                if response['status'] == 'ok':
+                    response['status'] = 'error'
+                    errors = []
+                    
+                    output += 'git add .\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                    
+                    output += 'git commit -m "' + message + '"\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        if '(working directory clean)' in e.output:
+                            pass
+                        else:
+                            errors.append(e.output)
+                        output += e.output
+                    
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git push origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                    
+                    if len(errors) == 0:
+                        response['status'] = 'ok'
+                    
+                    response['log'] = output
+                    response['errors'] = errors
+
+                git_remove_remote_url()
+        else:
+            if user is None or user == '':
+                output += 'You need to specify a user\n'
+            if message is None or message == '':
+                output += 'You need to enter a commit message'
+
+            response['log'] = output
 
     return jsonify(response)
 
@@ -1267,77 +1288,90 @@ def git_commit_map():
 def git_pull_map():
     response = {'status': 'error'}
     if ('ws_name' in session):
+        wsID = get_ws_id(session['ws_name'])
+
         mapName = request.form['name']
         changes = request.form['changes']
+        user = request.form['gitUser']
+        password = request.form['gitPassword']
 
-        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
-        os.chdir(mapPath)
+        data = query_db("select git_url as gitURL from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
 
-        output = ''
-        errors = []
+        if data['gitURL'] and data['gitURL'] != '':
+            mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+            os.chdir(mapPath)
 
-        if changes == 'merge':
-            output += 'git pull origin master\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
-        elif changes == 'overwrite':
-            output += 'git fetch origin master\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git fetch origin master'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
+            response = git_add_remote_url(data['gitURL'], user, password)
 
-            output += 'git reset --hard FETCH_HEAD\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git reset --hard FETCH_HEAD'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
+            if response['status'] == 'ok':
+                response['status'] = 'error'
+                output = ''
+                errors = []
 
-            output += 'git clean -df\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git clean -f'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
-        elif changes == 'stash':
-            output += 'git stash\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git stash'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
-        
-            output += 'git pull origin master\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
+                if changes == 'merge':
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                elif changes == 'overwrite':
+                    output += 'git fetch origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git fetch origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
 
-            output += 'git stash pop\n'
-            output += '---------------------------------------------------\n'
-            try:
-                output += subprocess.check_output(['git stash pop'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                errors.append(e.output)
-                output += e.output
-        
-        if len(errors) == 0:
-            response['status'] = 'ok'
-        
-        response['log'] = output
-        response['errors'] = errors
+                    output += 'git reset --hard FETCH_HEAD\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git reset --hard FETCH_HEAD'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git clean -df\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git clean -f'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                elif changes == 'stash':
+                    output += 'git stash\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git stash'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git stash pop\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git stash pop'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                
+                if len(errors) == 0:
+                    response['status'] = 'ok'
+                
+                response['log'] = output
+                response['errors'] = errors
+
+            git_remove_remote_url()
 
     return jsonify(response)
 
@@ -1359,17 +1393,29 @@ def git_clone_map():
         mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
         os.chdir(mapPath)
         
-        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
-        output = ''
+        response = git_configure_map(mapName, gitURL)
 
         if response['status'] == 'ok':
-            try:
-                subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
-                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
-            except subprocess.CalledProcessError as e:
-                response['errors'].append(e.output)
-                output = e.output
+            response = git_add_remote_url(gitURL, gitUser, gitPassword)
 
-        response['log'] = output
+            if response['status'] ==  'ok':
+                response['status'] = 'error'
+                output = ''
+                errors = []
+
+                try:
+                    subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
+                    output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    errors = e.output
+                    output = e.output 
+
+                if len(errors) == 0:
+                    response['status'] = 'ok'
+                
+                response['log'] = output
+                response['errors'] = errors
+
+            git_remove_remote_url()
         
     return jsonify(response)

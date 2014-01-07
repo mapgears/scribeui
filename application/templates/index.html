@@ -399,7 +399,7 @@
                             <input type="text" name="git-url" id="git-url" />
                         </div>
                     </div>
-                    <div class="control-group">
+                    <!--div class="control-group">
                         <label>Git User</label>
                         <div class="control">
                             <input type="text" name="git-user" id="git-user" />
@@ -410,7 +410,7 @@
                         <div class="control">
                             <input type="password" id="git-password"/>
                         </div>
-                    </div>
+                    </div-->
                     <div class="control-group">
                         <label for="configure-description">Description</label>
                         <div class="control">
@@ -424,6 +424,18 @@
         <div id="commitmap-form" title="Commit map" style="display:none" class="scribe-dialog">
             <div class="dialog-content">
                 <form>
+                    <div class="control-group">
+                        <label>Git User</label>
+                        <div class="control">
+                            <input type="text" name="git-commit-user" id="git-commit-user" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git Password</label>
+                        <div class="control">
+                            <input type="password" id="git-commit-password"/>
+                        </div>
+                    </div>
                     <div class="control-group">
                         <label for="git-message">Message</label>
                         <div class="control">
@@ -459,6 +471,18 @@
                         <label for="overwrite">Overwrite local changes</label>
                         <div class="control">
                             <input type="radio" name="changes" value="overwrite">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git User</label>
+                        <div class="control">
+                            <input type="text" name="git-pull-user" id="git-pull-user" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Git Password</label>
+                        <div class="control">
+                            <input type="password" name="git-pull-password" id="git-pull-password"/>
                         </div>
                     </div>
                     <div class="control-group">

@@ -523,37 +523,36 @@ Map.prototype.configure = function(config){
     var self = this;
     config['name'] = this.name;
     $.post($SCRIPT_ROOT + '/_configure_map', config, function(response) {
-        if(response.description){
+        if(response.status == 'ok' && response.description){
             self.description = response.description;
             self.displayDescription();    
         }
     });
 }
 
-Map.prototype.gitCommit = function(message, callback){
+Map.prototype.gitCommit = function(config, callback){
     var self = this;
-    var data = {
-        name: this.name,
-        message: message
-    }
-    $.post($SCRIPT_ROOT + '/_git_commit_map', data, function(response) {
+    config['name'] = this.name;
+
+    $.post($SCRIPT_ROOT + '/_git_commit_map', config, function(response) {
         callback.call(null, response);
-        
-        self.open();
+
+        if(response.status == 'ok'){
+            self.open();   
+        }
     });
 }
 
-Map.prototype.gitPull = function(changes, callback){
+Map.prototype.gitPull = function(config, callback){
     var self = this;
-    var data = {
-        changes: changes,
-        name: this.name
-    }
+    config['name'] = this.name;
     
-    $.post($SCRIPT_ROOT + '/_git_pull_map', data, function(response) {
+    $.post($SCRIPT_ROOT + '/_git_pull_map', config, function(response) {
         callback.call(null, response);
-        
-        self.open();
+
+        if(response.status == 'ok'){
+            self.open();
+        }
     });
  
 }
@@ -562,13 +561,16 @@ Map.prototype.gitClone = function(config, callback){
     var self = this;
     config['name'] = this.name;
     $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
-        self.workspace.maps.push(self);
-        self.workspace.displayMaps();
-        $("#" + self.workspace.mapActions).hide();
+        if(response.status ==  'ok'){
+            self.workspace.maps.push(self);
+            self.workspace.displayMaps();
+            $("#" + self.workspace.mapActions).hide();
 
-        self.groups = [];
-        self.open(self.commit);
-
+            self.groups = [];
+            self.open(self.commit);
+        } else{
+            self.destroy();
+        }
         callback.call(null, response);
     });
 }

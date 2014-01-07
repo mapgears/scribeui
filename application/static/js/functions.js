@@ -415,7 +415,15 @@ function commitMap(){
             buttons: {
                 "Commit": function() {
                     var message = $("#git-message").val();
-                    map.gitCommit(message, displayCommitLogs);
+                    var gitUser = $("#git-commit-user").val();
+                    var gitPassword = $("#git-commit-password").val();
+
+                    var config = {
+                        message: message,
+                        gitUser: gitUser,
+                        gitPassword: gitPassword
+                    }
+                    map.gitCommit(config, displayCommitLogs);
 
                     //$(this).dialog("close");
                 },
@@ -451,7 +459,16 @@ function pullMap(){
             buttons: {
                 "Pull": function() {
                     var changes = $('input[name="changes"]:radio:checked', '#pullmap-form').val();
-                    map.gitPull(changes, displayPullLogs);
+                    var gitUser = $("#git-pull-user").val();
+                    var gitPassword = $("#git-pull-password").val();
+
+                    var config = {
+                        changes: changes,
+                        gitUser: gitUser,
+                        gitPassword: gitPassword
+                    }
+
+                    map.gitPull(config, displayPullLogs);
 
                     //$(this).dialog("close");
                 },
@@ -460,7 +477,8 @@ function pullMap(){
                 }
             },
             close: function() {
-                $(this).find('textarea').val('');    
+                $(this).find('textarea').val('');
+                $(this).find('input[type="text"]').val('');    
             }
         }).dialog("open");
     }
