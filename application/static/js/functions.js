@@ -348,8 +348,7 @@ function cloneMap(){
 
 function configureMap(){
     var name = $("#map-list .ui-selected").text();
-    var map = new Map(name);
-    map.workspace = _workspace;
+    var map = _workspace.getMapByName(name);
     var config = map.getConfiguration(displayConfiguration);
 
     if (name){
@@ -400,9 +399,7 @@ function commitMap(){
     if(_workspace.openedMap && _workspace.openedMap.name != name){
         var map = _workspace.openedMap;
     } else{
-        var map = new Map(name, {
-            "workspace": _workspace
-        });
+        var map = _workspace.getMapByName(name);
     }
 
     if (name){
@@ -444,9 +441,7 @@ function pullMap(){
     if(_workspace.openedMap && _workspace.openedMap.name != name){
         var map = _workspace.openedMap;
     } else{
-        var map = new Map(name, {
-            "workspace": _workspace
-        });
+        var map = _workspace.getMapByName(name);
     }
 
     if (name){
