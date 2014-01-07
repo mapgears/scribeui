@@ -1059,12 +1059,13 @@ def configure_map():
         gitURL = request.form['gitURL']
         gitUser = request.form['gitUser']
         gitPassword = request.form['gitPassword']
+        description = request.form['description']
 
-        response = git_configure_map(mapName, gitURL, gitUser, gitPassword)
+        response = git_configure_map(mapName, gitURL, gitUser, gitPassword, description)
 
     return jsonify(response)
 
-def git_configure_map(name, url, user, password):
+def git_configure_map(name, url, user, password, description=None):
     response = {'status': 'error'}
 
     mapID = get_map_id(name, session['ws_name'])
@@ -1126,9 +1127,17 @@ def git_configure_map(name, url, user, password):
                 g.db.execute('''UPDATE maps SET git_url = ?, git_user = ?, git_password = ? WHERE map_id = ?''', [url, user, password, mapID])
             else:
                 g.db.execute('''UPDATE maps SET git_url = ?, git_user = ? WHERE map_id = ?''', [url, user, mapID])
-            g.db.commit()
 
-        response['status'] = 'ok'
+            response['status'] = 'ok'
+    
+    if description:
+        g.db.execute('''UPDATE maps SET map_desc = ? WHERE map_id = ?''', [description, mapID])
+        response['description'] = description
+
+        if len(errors) == 0:
+            response['status'] = 'ok'    
+
+    g.db.commit()
 
     response['errors'] = errors
 
@@ -1141,7 +1150,7 @@ def get_config():
     if 'ws_name' in session:
         mapName = request.form['name']
         wsID = get_ws_id(session['ws_name'])
-        config = query_db("select git_url as gitURL, git_user as gitUser, git_password as gitPassword from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+        config = query_db("select git_url as gitURL, git_user as gitUser, git_password as gitPassword, map_desc as description from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
         if config['gitPassword']:
             dummyPassword = generate_dummy_password(len(config['gitPassword']))
             config['gitPassword'] = dummyPassword
@@ -1210,6 +1219,89 @@ def git_commit_map():
         response['errors'] = errors
 
     return jsonify(response)
+
+
+#===============================  
+#       Git pull map
+#===============================
+@app.route('/_git_pull_map', methods=['POST'])
+def git_commit_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        changes = request.form['changes']
+
+        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+        os.chdir(mapPath)
+
+        output = ''
+        errors = []
+
+        if changes == 'merge':
+            output += 'git pull origin master\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+        elif changes == 'overwrite':
+            output += 'git fetch origin master\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git fetch origin master'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+
+            output += 'git reset --hard FETCH_HEAD\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git reset --hard FETCH_HEAD'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+
+            output += 'git clean -df\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git clean -f'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+        elif changes == 'stash':
+            output += 'git stash\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git stash'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+        
+            output += 'git pull origin master\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+
+            output += 'git stash pop\n'
+            output += '---------------------------------------------------\n'
+            try:
+                output += subprocess.check_output(['git stash pop'], shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                errors.append(e.output)
+                output += e.output
+        
+        if len(errors) == 0:
+            response['status'] = 'ok'
+        
+        response['log'] = output
+        response['errors'] = errors
+
+    return jsonify(response)
+
 
 #===============================  
 #       Git clone map

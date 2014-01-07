@@ -510,9 +510,13 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
 }
 
 Map.prototype.configure = function(config){
+    var self = this;
     config['name'] = this.name;
     $.post($SCRIPT_ROOT + '/_configure_map', config, function(response) {
-        console.log(response)
+        if(response.description){
+            self.description = response.description;
+            self.displayDescription();    
+        }
     });
 }
 
@@ -527,6 +531,21 @@ Map.prototype.gitCommit = function(message, callback){
         
         self.open();
     });
+}
+
+Map.prototype.gitPull = function(changes, callback){
+    var self = this;
+    var data = {
+        changes: changes,
+        name: this.name
+    }
+    
+    $.post($SCRIPT_ROOT + '/_git_pull_map', data, function(response) {
+        callback.call(null, response);
+        
+        self.open();
+    });
+ 
 }
 
 Map.prototype.gitClone = function(config, callback){

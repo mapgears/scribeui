@@ -152,6 +152,10 @@ jQuery(function() {
         commitMap();
     });
 
+    $('#btn_pull_map').button().click(function(){
+        pullMap();
+    });
+
     $("#newmap-type").bind('blur', function(){
 	    displayTemplates('templates', $("#newmap-type").val());
 	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    

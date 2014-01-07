@@ -418,7 +418,7 @@ button {
 #editor-toolbar{
 	background-color:#FCFCFC;
 	border-bottom:solid 1px #f7f7f7;
-	height:32px !important;
+	height:32px;
     padding: 7px 4px 0px 4px;
 }
 #editor-toolbar select{
@@ -623,6 +623,7 @@ button {
 */
 .newmap-description{
     height: 160px;
+    width: 300px;
 }
 
 .invisible{
@@ -730,6 +731,14 @@ div.olControlZoom a {
     margin-left: 140px;
 }
 
+.control-group.wide label {
+    width: 270px;
+}
+
+.control-group.wide .control {
+    margin-left: 290px;
+}
+
 #map-list{
 	min-width:100px;
 	min-height:100px;
@@ -790,19 +799,14 @@ div.olControlZoom a {
 #git-message {
     width: 400px;
 }
-#git-logs {
-    width: 400px;
-    height: 200px;
-    font-size: 10px;
-}
 #git-clone-description {
     width: 400px;
     height: 100px;
 }
-#git-clone-logs {
+.git-logs {
     width: 400px;
     height: 100px;
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 .chosen-container {

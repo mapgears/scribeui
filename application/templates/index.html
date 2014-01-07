@@ -100,13 +100,16 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table class="two-col-actions">
+                                <table class="three-col-actions">
                                     <tr>
                                         <td align="center">
                                             <button id="btn_configure_map">Configure</button>
                                         </td>
                                         <td align="center">
-                                            <button id="btn_commit_map">Commit</button>
+                                            <button id="btn_pull_map">Pull</button>
+                                        </td>
+                                        <td align="center">
+                                            <button id="btn_commit_map">Push</button>
                                         </td>
                                     </tr>
                                 </table>
@@ -408,6 +411,12 @@
                             <input type="password" id="git-password"/>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label for="configure-description">Description</label>
+                        <div class="control">
+                            <textarea id="configure-description" class="newmap-description"></textarea>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -424,7 +433,38 @@
                     <div class="control-group">
                         <label>Logs</label>
                         <div class="control">
-                            <textarea id="git-logs" readonly></textarea>
+                            <textarea id="git-logs" class="git-logs" readonly></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="pullmap-form" title="Pull map" style="display:none" class="scribe-dialog">
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group wide">
+                        <label for="overwrite">Merge with local changes</label>
+                        <div class="control">
+                            <input type="radio" name="changes" value="merge" checked>
+                        </div>
+                    </div>
+                    <div class="control-group wide">
+                        <label for="stash">Stash/Apply local changes</label>
+                        <div class="control">
+                            <input type="radio" name="changes" value="stash">
+                        </div>
+                    </div>
+                    <div class="control-group wide">
+                        <label for="overwrite">Overwrite local changes</label>
+                        <div class="control">
+                            <input type="radio" name="changes" value="overwrite">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Logs</label>
+                        <div class="control">
+                            <textarea id="git-pull-logs" class="git-logs" readonly></textarea>
                         </div>
                     </div>
                 </form>
@@ -473,7 +513,7 @@
                     <div class="control-group">
                         <label>Logs</label>
                         <div class="control">
-                            <textarea id="git-clone-logs" readonly></textarea>
+                            <textarea id="git-clone-logs" class="git-logs" readonly></textarea>
                         </div>
                     </div>
                 </form>

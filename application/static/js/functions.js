@@ -348,6 +348,7 @@ function cloneMap(){
 function configureMap(){
     var name = $("#map-list .ui-selected").text();
     var map = new Map(name);
+    map.workspace = _workspace;
     var config = map.getConfiguration(displayConfiguration);
 
     if (name){
@@ -362,11 +363,13 @@ function configureMap(){
                     var gitURL = $("#git-url").val();
                     var gitUser = $("#git-user").val();
                     var gitPassword = $("#git-password").val();
+                    var description = $("#configure-description").val();
 
                     var config = {
                         gitURL: gitURL,
                         gitUser: gitUser,
-                        gitPassword: gitPassword    
+                        gitPassword: gitPassword,
+                        description: description    
                     }
 
                     map.configure(config);
@@ -388,6 +391,7 @@ function displayConfiguration(config){
     $("#git-url").val(config.gitURL);
     $("#git-user").val(config.gitUser);
     $("#git-password").val(config.gitPassword);
+    $("#configure-description").val(config.description);
 }
 
 function commitMap(){
@@ -426,6 +430,41 @@ function commitMap(){
     }
 }
 
+function pullMap(){
+    var name = $("#map-list .ui-selected").text();
+    if(_workspace.openedMap && _workspace.openedMap.name != name){
+        var map = _workspace.openedMap;
+    } else{
+        var map = new Map(name, {
+            "workspace": _workspace
+        });
+    }
+
+    if (name){
+        $("#pullmap-form").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: _workspace.popupWidth,
+            height:_workspace.popupHeight,
+            modal: true,
+            buttons: {
+                "Pull": function() {
+                    var changes = $('input[name="changes"]:radio:checked', '#pullmap-form').val();
+                    map.gitPull(changes, displayPullLogs);
+
+                    //$(this).dialog("close");
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                $(this).find('textarea').val('');    
+            }
+        }).dialog("open");
+    }
+}
+
 function displayCommitLogs(e){
     $("#git-logs").val(e.log);
 }
@@ -434,6 +473,10 @@ function displayCloneLogs(e){
     $("#git-clone-logs").val(e.log);
 }
 
+
+function displayPullLogs(e){
+    $("#git-pull-logs").val(e.log);
+}
 function createNewGroup(){
     $("#creategroup-form").dialog({
         autoOpen: false,
