@@ -464,7 +464,7 @@ def open_map():
             mapfile.close();
             scalefile.close();
         except:
-            contentfiles['errorMsg'].append("The header is bad")
+            contentfiles['errorMsg'].append("There is an error in the MAP header")
         try:
             contentfiles['OLScales']=list2dict(scaledata['SCALES'])
         except:
