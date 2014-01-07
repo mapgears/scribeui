@@ -372,11 +372,18 @@ button {
 #map-preview-img-large{
 	height:200px;
 	width:200px;
-    background-image:url('images/map-preview-placeholder.png');
+    /*background-image:url('images/map-preview-placeholder.png');*/
 	background-size:200px 200px;
 
 	margin:auto;
 	display:block;
+}
+.default-preview {
+    background-image:url('images/map-preview-placeholder.png');   
+}
+.thumbnail-preview {
+    border-radius: 6px;
+    border: 1px solid #AAAAAA;
 }
 
 .separator{ 
@@ -761,11 +768,31 @@ div.olControlZoom a {
 	width: 64px;
 	height: 64px;
 }
-#map-list .map-preview.ui-selected{
-	background-color: #F6F6F6;
+
+#map-list .map-preview .thumbnail-preview{
+    -moz-box-shadow: 2px 2px 2px 0 #AAAAAA;
+    -webkit-box-shadow: 2px 2px 2px 0 #AAAAAA;
+    -o-box-shadow: 2px 2px 2px 0 #AAAAAA;
+    box-shadow: 2px 2px 2px 0 #AAAAAA;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#AAAAAA, Direction=134, Strength=2);
+}
+#map-list .map-preview.ui-selected .thumbnail-preview{
+    -moz-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
+    -webkit-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
+    -o-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
+    box-shadow: inset 2px 2px 2px 0 #AAAAAA;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#AAAAAA, Direction=134, Strength=2);
+}
+#map-list .map-preview-name{
+    display: block;
+    padding-top: 5px;
+}
+#map-list .map-preview.ui-selected.li-default-thumbnail{
+    background-color: #F6F6F6;
     border: 1px solid #DDDDDD;
     color: #444444;
 }
+
 #group-ol .to-be-deleted{
 	color:#AFAFAF;
 	text-decoration:line-through;

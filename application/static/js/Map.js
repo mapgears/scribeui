@@ -1,6 +1,7 @@
  function Map(name, options){
     this.name = name;
     this.url = null;
+    this.thumbnail = null;
     this.workspace = null;
     this.type = "Scribe";
     this.template = null;
@@ -13,6 +14,7 @@
 
     if(options){
         this.url = options.url ? options.url : this.url;
+        this.thumbnail = options.thumbnail ? options.thumbnail : this.thumbnail;
         this.workspace = options.workspace ? options.workspace : null;
         this.type = options.type ? options.type : this.template;
         this.template = options.template ? options.template : this.template;
@@ -184,6 +186,7 @@ Map.prototype.displayGroups = function(){
     }
     groupSelect.trigger("chosen:updated");
     var self = this;
+
     groupSelect.focus(function(e) {
         self.setGroupContent(this.value, groupEditor.getValue());
     }).change(function(e){
@@ -203,7 +206,14 @@ Map.prototype.displayGroups = function(){
 
 Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).empty();
-    $("#" + this.workspace.mapDescription).append('<div id="map-preview-img-large"></div>');
+    var image = $('<div>').attr('id', 'map-preview-img-large');
+    if(this.thumbnail){
+        image.addClass('thumbnail-preview').css('background-image', 'url("' + this.thumbnail + '")');
+    } else{
+        image.addClass('default-preview');
+    }
+    //$("#" + this.workspace.mapDescription).append('<div id="map-preview-img-large"></div>');
+    $("#" + this.workspace.mapDescription).append(image);
     $("#" + this.workspace.mapDescription).append("<p class=\"map-title\">" + this.name + "</p>");
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
     $("#" + this.workspace.mapActions).show();

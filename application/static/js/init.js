@@ -156,9 +156,9 @@ jQuery(function() {
         pullMap();
     });
 
-    $("#newmap-type").bind('blur', function(){
+    $("#newmap-type").bind('change', function(){
 	    displayTemplates('templates', $("#newmap-type").val());
-	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
+	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());  
     });
 
     $('#btn_commit').button({

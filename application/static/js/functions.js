@@ -139,6 +139,7 @@ function getTemplatesOfType(type){
             for(temp in templates){
                 $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
             }
+            $('#newmap-template').trigger('chosen:updated'); 
         }
     });
 }
@@ -181,8 +182,8 @@ function openNewMapWindow(){
                 $("#newmap-workspace-select").empty();
                 $("#newmap-workspace-select").append($("<option></option>").attr("value", " ").text(" "));
                 displayWorkspaces("newmap-workspace-select");
-                $("#newmap-workspace-select").unbind('blur');
-                $("#newmap-workspace-select").bind('blur', function(){
+                $("#newmap-workspace-select").unbind('change');
+                $("#newmap-workspace-select").bind('change', function(){
                     var password = $("#newmap-workspace-password").val();
                     var workspaceSelect = $("#newmap-workspace-select").val()
                     displayTemplates("templates", $("#newmap-type").val());

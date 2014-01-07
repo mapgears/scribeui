@@ -341,10 +341,13 @@ def get_maps():
         maps = {}
         maps["name"] = wsmap[i]['map_name']
         maps["type"] = wsmap[i]['map_type']
+
+        maps['thumbnail'] = None
         if maps["type"] == "Basemaps":
             maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/osm-" + wsmap[i]['map_name'] +".map"
         else:
             maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/map/" + wsmap[i]['map_name'] +".map"
+            maps['thumbnail'] = get_thumbnail_url(wsmap[i]['map_name'], maps['url'], maps["type"])
         maps["description"] = wsmap[i]['map_desc']
         listmaps["maps"].append(maps)
 
@@ -365,6 +368,7 @@ def open_map():
     if wsmap['map_type'] == 'Scribe':
         pathGroups = pathMap + "editor/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
+        contentfiles["thumbnail"] = get_thumbnail_url(namemap, contentfiles["url"], wsmap['map_type'])
         for i in range(len(listfiles)):
             try:
                 with open(pathMap + listfiles[i]['url'], "r") as document:
@@ -390,10 +394,11 @@ def open_map():
     elif wsmap['map_type'] == 'Standard':
         pathGroups = pathMap + "map/layers/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
+        contentfiles["thumbnail"] = get_thumbnail_url(namemap, contentfiles["url"], wsmap['map_type'])
         for i in range(len(listfilesStandard)):
             try:
                 with open(pathMap + listfilesStandard[i]['url'], "r") as document:
-                    contentfiles[listfilesStandard[i]['url']] = document.read()
+                    contentfiles[listfilesStandard[i]['name']] = document.read()
                     document.close()
                     #document = open(pathMap + listfiles[i]['url'], "r")
             except IOError:
@@ -410,7 +415,7 @@ def open_map():
         # Read groups from config file instead of the BD
         groupFiles = getGroupFiles(pathMap, pathGroups)
 
-	for i in range(0, len(groupFiles)):
+        for i in range(0, len(groupFiles)):
             if (os.path.isfile(groupFiles[i])):
                 unGroup = {}
                 unGroup["name"] = getGroupNameFromFile(groupFiles[i])
@@ -424,10 +429,11 @@ def open_map():
         for j in range(len(groups)):
             unGroup = {}
             unGroup["name"] = groups[j]['group_name']
-            document = open(pathGroups + unGroup["name"], "r")
-            unGroup["content"] = document.read()
-            document.close()
-            contentfiles["groups"].append(unGroup)
+            if os.path.isfile(pathGroups + unGroup["name"]):
+                document = open(pathGroups + unGroup["name"], "r")
+                unGroup["content"] = document.read()
+                document.close()
+                contentfiles["groups"].append(unGroup)
 
 
     #Parameters map
@@ -540,6 +546,38 @@ def open_map():
         subprocess.call(['chmod','+x', connectorFile])
 
     return jsonify(**contentfiles)
+
+def get_thumbnail_url(map_name, map_url, type="Scribe"):
+    thumbnail_url = None
+    projection = None
+    extent = None
+    try:
+        if type == "Scribe":
+            mapfile = open(path + "workspaces/" + session['ws_name'] + "/" + map_name +"/editor/map")
+        elif type == "Standard":
+            mapfile = open(path + "workspaces/" + session['ws_name'] + "/" + map_name +"/map/" + map_name + ".map")
+        mapdata = mapfile.readlines()
+        projection = None
+        extent = None
+
+        for l in mapdata:
+            line = l.strip()
+            index = line.find('init=')
+            if index != -1:
+                projection = line[6:-1].strip()
+            index = line.find('EXTENT')
+            if index != -1:
+                extent = line[index+6:].replace(':', '').strip().replace(' ', ',')
+        mapfile.close();
+    except:
+        pass
+
+    if projection and extent:
+        thumbnail_url = map_url
+        thumbnail_url += "&LAYERS=default&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=" + projection
+        thumbnail_url += "&BBOX=" + extent + "&WIDTH=200&HEIGHT=200&EXCEPTIONS=application/vnd.ogc.se_blank"
+
+    return thumbnail_url
 
 #List to dict
 def list2dict(ls):
@@ -871,7 +909,10 @@ def execute():
     else:
         result = "**ERRORS**\n----------\n" + errorMsg + "\n**LOG**\n----------\n" + logMsg
 
+    create_thumbnail(pathMap)
+
     return jsonify(result=result)
+
 
 #Return the contents of the mapfile generated 
 @app.route('/_load_mapfile_generated',methods=['GET'])
