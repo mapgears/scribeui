@@ -1266,7 +1266,7 @@ def git_commit_map():
 #       Git pull map
 #===============================
 @app.route('/_git_pull_map', methods=['POST'])
-def git_commit_map():
+def git_pull_map():
     response = {'status': 'error'}
     if ('ws_name' in session):
         mapName = request.form['name']
