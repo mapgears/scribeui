@@ -341,7 +341,7 @@ Map.prototype.display = function(){
         );
 
         OLMap.addLayers([WMSLayer]);
-        OLMap.zoomToMaxExtent();
+        OLMap.zoomToExtent(extent);
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
