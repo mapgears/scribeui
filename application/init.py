@@ -126,13 +126,7 @@ def before_request():
 @app.teardown_request
 def teardown_request(exception):
     g.db.close()
-#===============================
-#   Utilities
-#===============================
-def generate_dummy_password(length):
-    s = string.lowercase + string.digits
-    dummy = ''.join(random.sample(s, length))           
-    return dummy
+    
 
 #===============================   
 #          Homepage                              
