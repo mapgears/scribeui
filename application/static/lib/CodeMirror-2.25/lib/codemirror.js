@@ -1102,6 +1102,7 @@ var CodeMirror = (function() {
                 var docURL = MSDOC + $(this).text().toLowerCase() + ".html";
                 var win = window.open(docURL, '_blank');
               }
+              return false;
             })
           }
           /*------*/
