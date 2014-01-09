@@ -31,11 +31,7 @@ jQuery(function() {
     --------------------------------*/
     var options = {
         lineNumbers: true,
-        mode: {
-            name: "python",
-            version: 2,
-            singleLineStringErrors: false
-        },
+        mode: "scribe",
         indentUnit: 4,
         autofocus: true,
         tabMode: "spaces",
@@ -45,6 +41,18 @@ jQuery(function() {
 		}
     }
 
+    var readmeOptions = {
+        lineNumbers: true,
+        mode: "markdown",
+        indentUnit: 4,
+        autofocus: true,
+        tabMode: "spaces",
+        matchBrackets: true,
+        onChange: function(e){
+            _workspace.openedMap.saved = false;
+        }
+    }
+
     groupEditor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
     mapEditor = CodeMirror.fromTextArea(document.getElementById("map-editor"), options);
     variableEditor = CodeMirror.fromTextArea(document.getElementById("variable-editor"), options);
@@ -52,7 +60,7 @@ jQuery(function() {
     symbolEditor = CodeMirror.fromTextArea(document.getElementById("symbol-editor"), options);
     fontEditor = CodeMirror.fromTextArea(document.getElementById("font-editor"), options);
     projectionEditor = CodeMirror.fromTextArea(document.getElementById("projection-editor"), options);
-    readmeEditor = CodeMirror.fromTextArea(document.getElementById("readme-editor"), options);
+    readmeEditor = CodeMirror.fromTextArea(document.getElementById("readme-editor"), readmeOptions);
 	
     /*--------------------------------
       Tabs and buttons

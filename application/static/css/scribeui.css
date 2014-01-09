@@ -473,6 +473,9 @@ button {
 	height:100%;
     font-family: monospace !important;
 }
+.cm-variable {
+    color: blue !important;
+}
 #editors-container .CodeMirror-scroll{
 	overflow: visible !important;
 	height:auto;
