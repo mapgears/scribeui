@@ -1086,7 +1086,7 @@ var CodeMirror = (function() {
             });
 
             $(keyword).mousemove(function(e){
-              if(e.ctrlKey){
+              if(e.altKey){
                 $(this).css('cursor', 'help');
               } else{
                 $(this).css('cursor', 'auto');  
@@ -1098,7 +1098,7 @@ var CodeMirror = (function() {
             });
 
             $(keyword).mousedown(function(e){
-              if(e.which == 1 && e.ctrlKey){
+              if(e.which == 1 && e.altKey){
                 var docURL = MSDOC + $(this).text().toLowerCase() + ".html";
                 var win = window.open(docURL, '_blank');
               }
