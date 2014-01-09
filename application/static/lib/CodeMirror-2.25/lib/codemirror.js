@@ -1076,6 +1076,36 @@ var CodeMirror = (function() {
               '" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: -2">&#160;</pre>' + html + "</div>";
           }
           scratch.innerHTML = html;
+
+          /*-----*/
+          var keyword = $(scratch.firstChild).find('.cm-keyword.cm-block');
+
+          if(keyword.length > 0){
+            $(keyword).click(function(){
+              return false;
+            });
+
+            $(keyword).mousemove(function(e){
+              if(e.ctrlKey){
+                $(this).css('cursor', 'help');
+              } else{
+                $(this).css('cursor', 'auto');  
+              }
+            });
+
+            $(keyword).mouseout(function(e){
+              $(this).css('cursor', 'auto');
+            });
+
+            $(keyword).mousedown(function(e){
+              if(e.which == 1 && e.ctrlKey){
+                var docURL = MSDOC + $(this).text().toLowerCase() + ".html";
+                var win = window.open(docURL, '_blank');
+              }
+            })
+          }
+          /*------*/
+
           lineDiv.insertBefore(scratch.firstChild, curNode);
         } else {
           curNode = curNode.nextSibling;

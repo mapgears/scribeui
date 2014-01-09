@@ -50,8 +50,15 @@ CodeMirror.defineMode("scribe", function(config, parserConfig) {
     stream.eatWhile(/[\w\$_]/);
     var cur = stream.current().toUpperCase();
     if (keywords.propertyIsEnumerable(cur)) {
-      if (blockKeywords.propertyIsEnumerable(cur)) curPunc = "newstatement";
-      return "keyword";
+      if (blockKeywords.propertyIsEnumerable(cur)){
+        curPunc = "newstatement";  
+      } 
+
+      if(MSTAGS.indexOf(cur) >= 0){
+        return "keyword block";
+      } else{
+        return "keyword";
+      }
     }
     return "word";
   }
