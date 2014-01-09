@@ -11,6 +11,7 @@
     this.OLMap = null;
     this.WMSLayer = null;
     this.saved = true;
+    this.previousGroup = null;
 
     if(options){
         this.url = options.url ? options.url : this.url;
@@ -186,11 +187,15 @@ Map.prototype.displayGroups = function(){
     }
     groupSelect.trigger("chosen:updated");
     var self = this;
+    
+    groupSelect.change(function(e){
+        if(self.previousGroup){
+            self.setGroupContent(self.previousGroup, groupEditor.getValue());
+        }
 
-    groupSelect.focus(function(e) {
-        self.setGroupContent(this.value, groupEditor.getValue());
-    }).change(function(e){
         var group = self.getGroupByName(this.value);
+        self.previousGroup = this.value;
+
         resizeEditors();
         if(group){
             groupEditor.setValue(group.content);
@@ -200,8 +205,11 @@ Map.prototype.displayGroups = function(){
             groupEditor.clearHistory();
         }
         
-    e.stopPropagation();
+        e.stopPropagation();
     }).trigger("change");
+
+    self.previousGroup = groupSelect.val();
+    self.setGroupContent(self.previousGroup, groupEditor.getValue());
 }
 
 Map.prototype.displayDescription = function(){
