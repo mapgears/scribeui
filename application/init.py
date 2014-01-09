@@ -16,6 +16,7 @@ import pprint #For debugging purposes
 import imp #For plugins
 import traceback #output exceptions to apache's log. Mostly helpful for plugin development.
 import string
+from  werkzeug import url_fix
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -1108,8 +1109,9 @@ def git_add_remote_url(url, user, password):
     # user/password are coded directly in the git url
     response = {'status': 'error'}
     errors = []
-
     if user and password:
+        user = url_fix(user)
+        password = url_fix(password)
         userString = user
         if password != '':
             userString += ':' + password
@@ -1117,7 +1119,6 @@ def git_add_remote_url(url, user, password):
         gitFullURL = 'https://' + userString + url[8:]
     else:
         gitFullURL = url
-
     git_remove_remote_url()
 
     try:
