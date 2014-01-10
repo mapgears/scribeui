@@ -176,7 +176,7 @@ Map.prototype.displayComponents = function(){
     this.displayGroups();
 };
 
-Map.prototype.displayGroups = function(){
+Map.prototype.displayGroups = function(silent){
     if (this.type == "Basemaps" || this.type == "Standard"){
         $("#btn_change_group_order").button("disable");
     }
@@ -206,10 +206,15 @@ Map.prototype.displayGroups = function(){
         }
         
         e.stopPropagation();
-    }).trigger("change");
+    })
+    if(!silent){
+        groupSelect.trigger("change");
+        self.previousGroup = groupSelect.val();
+        self.setGroupContent(self.previousGroup, groupEditor.getValue());    
+    }
 
-    self.previousGroup = groupSelect.val();
-    self.setGroupContent(self.previousGroup, groupEditor.getValue());
+    //self.previousGroup = groupSelect.val();
+    //self.setGroupContent(self.previousGroup, groupEditor.getValue());
 }
 
 Map.prototype.displayDescription = function(){
@@ -467,6 +472,7 @@ Map.prototype.updateGroupOrder = function(){
             self.clearGroups();
             self.displayGroups(true);
             $("#" + self.workspace.groupSelect).val(selected);
+            $("#" + self.workspace.groupSelect).trigger('chosen:updated');
             groupEditor.setValue(content);
             self.commit();
         }

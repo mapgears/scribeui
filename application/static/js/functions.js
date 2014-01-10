@@ -40,8 +40,7 @@ function openNewWorkspaceWindow(options){
             }
         },
         close: function(e) {
-            var inputs = $(this).find('input');
-            $(inputs).val('');
+            $(this).find('input').val('');
         }
     }).dialog("open");
 }
@@ -509,7 +508,9 @@ function createNewGroup(){
                 $(this).dialog("close");
             }
         },
-        close: function() {}
+        close: function() {
+            $(this).find('input').val('');
+        }
     }).dialog("open");
 }
 
@@ -665,7 +666,9 @@ function addPOI(){
                         $(this).dialog("close");
                     }
                 },
-                close: function() {}
+                close: function() {
+                    $(this).find('input').val('');
+                }
             }).dialog("open");
         }
     } 
