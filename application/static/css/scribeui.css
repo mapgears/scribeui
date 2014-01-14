@@ -468,10 +468,14 @@ button {
     margin-top: -9px !important;
 }
 /*=== Codemirror ===*/
+@font-face {
+    font-family: "Menlo-Regular";
+    src: url('fonts/Menlo-Regular.ttf') format("truetype");
+}
 .CodeMirror {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	height:100%;
-    font-family: monospace !important;
+    font-family: Menlo-Regular, sans-serif !important;
 }
 .cm-variable {
     color: blue !important;
