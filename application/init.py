@@ -1190,7 +1190,11 @@ def get_config():
     if 'ws_name' in session:
         mapName = request.form['name']
         wsID = get_ws_id(session['ws_name'])
+        mapPath = path + "workspaces/" + session['ws_name'] + "/" + mapName + "/"
+        url = "http://" + ip + "/cgi-bin/mapserv?map=" + mapPath + "map/" + mapName +".map"
+
         config = query_db("select git_url as gitURL, map_desc as description from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+        config['url'] = url
         
         return jsonify(config)
 
@@ -1231,7 +1235,7 @@ def git_commit_map():
                         errors.append(e.output)
                         output += e.output
                     
-                    output += 'git commit -m "' + message + '"\n'
+                    output += u'git commit -m "' + message + u'"\n'
                     output += '---------------------------------------------------\n'
                     try:
                         output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)

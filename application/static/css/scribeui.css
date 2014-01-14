@@ -826,8 +826,15 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
+#git-url, #git-clone-url {
+    width: 300px;
+}
 #git-message {
     width: 400px;
+}
+#git-commit-info {
+    text-align: center;
+    color: red;
 }
 #git-clone-description {
     width: 400px;

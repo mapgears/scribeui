@@ -177,9 +177,9 @@ Map.prototype.displayComponents = function(){
 };
 
 Map.prototype.displayGroups = function(silent){
-    if (this.type == "Basemaps" || this.type == "Standard"){
-        $("#btn_change_group_order").button("disable");
-    }
+    //if (this.type == "Basemaps" || this.type == "Standard"){
+    //    $("#btn_change_group_order").button("disable");
+    //}
 
     var groupSelect = $("#" + this.workspace.groupSelect);
     for(var i = 0; i < this.groups.length; i++){
@@ -474,6 +474,13 @@ Map.prototype.updateGroupOrder = function(){
             $("#" + self.workspace.groupSelect).val(selected);
             $("#" + self.workspace.groupSelect).trigger('chosen:updated');
             groupEditor.setValue(content);
+
+            if(self.type == 'Standard'){
+                $.each(self.groups, function(index, group){
+                    removeIncludeFromMap(group.name, false);
+                    addIncludeToMap(group.name, false);
+                });
+            } 
             self.commit();
         }
     })
@@ -548,11 +555,20 @@ Map.prototype.gitCommit = function(config, callback){
     var self = this;
     config['name'] = this.name;
 
-    $.post($SCRIPT_ROOT + '/_git_commit_map', config, function(response) {
-        callback.call(null, response);
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_commit_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+             callback.call(null, response);
 
-        if(response.status == 'ok'){
-            self.open();   
+            if(response.status == 'ok'){
+                self.open();   
+            }
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
     });
 }
@@ -560,12 +576,21 @@ Map.prototype.gitCommit = function(config, callback){
 Map.prototype.gitPull = function(config, callback){
     var self = this;
     config['name'] = this.name;
-    
-    $.post($SCRIPT_ROOT + '/_git_pull_map', config, function(response) {
-        callback.call(null, response);
 
-        if(response.status == 'ok'){
-            self.open();
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_pull_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+             callback.call(null, response);
+
+            if(response.status == 'ok'){
+                self.open();   
+            }
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
     });
  
@@ -574,18 +599,28 @@ Map.prototype.gitPull = function(config, callback){
 Map.prototype.gitClone = function(config, callback){
     var self = this;
     config['name'] = this.name;
-    $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
-        if(response.status ==  'ok'){
-            self.workspace.maps.push(self);
-            self.workspace.displayMaps();
-            $("#" + self.workspace.mapActions).hide();
 
-            self.groups = [];
-            self.open(self.commit);
-        } else{
-            self.destroy();
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_clone_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+            if(response.status ==  'ok'){
+                self.workspace.maps.push(self);
+                self.workspace.displayMaps();
+                $("#" + self.workspace.mapActions).hide();
+
+                self.groups = [];
+                self.open(self.commit);
+            } else{
+                self.destroy();
+            }
+            callback.call(null, response);
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
-        callback.call(null, response);
     });
 }
 

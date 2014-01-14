@@ -302,6 +302,8 @@ function exportMap(){
 }
 
 function cloneMap(){
+    $('#git-logs').val('');
+
     $("#clonemap-form").dialog({
         autoOpen: false,
         resizable: false,
@@ -390,12 +392,15 @@ function displayConfiguration(config){
     $("#git-url").val(config.gitURL);
     $("#git-user").val(config.gitUser);
     $("#git-password").val(config.gitPassword);
+    $("#configure-url").val(config.url);
     $("#configure-description").val(config.description);
 }
 
 function commitMap(){
+    $('#git-logs').val('');
+
     var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap && _workspace.openedMap.name != name){
+    if(_workspace.openedMap && _workspace.openedMap.name == name){
         var map = _workspace.openedMap;
     } else{
         var map = _workspace.getMapByName(name);
@@ -419,9 +424,10 @@ function commitMap(){
                         gitUser: gitUser,
                         gitPassword: gitPassword
                     }
-                    map.gitCommit(config, displayCommitLogs);
 
-                    //$(this).dialog("close");
+                    $('#git-logs').val('Processing request. This may take a few seconds.');
+
+                    map.gitCommit(config, displayCommitLogs);
                 },
                 Cancel: function() {
                     $(this).dialog("close");
@@ -437,7 +443,9 @@ function commitMap(){
 
 function pullMap(){
     var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap && _workspace.openedMap.name != name){
+    $('#git-logs').val('');
+
+    if(_workspace.openedMap && _workspace.openedMap.name == name){
         var map = _workspace.openedMap;
     } else{
         var map = _workspace.getMapByName(name);
@@ -462,9 +470,9 @@ function pullMap(){
                         gitPassword: gitPassword
                     }
 
-                    map.gitPull(config, displayPullLogs);
+                    $('#git-logs').val('Processing request. This may take a few seconds.');
 
-                    //$(this).dialog("close");
+                    map.gitPull(config, displayPullLogs);
                 },
                 Cancel: function() {
                     $(this).dialog("close");
@@ -515,19 +523,20 @@ function createNewGroup(){
 }
 
 function deleteGroup(options){
-    options = (options) ? options : {};
-    if(options.hasOwnProperty("mapType")){
-        if(options.mapType == "Scribe"){
+    //options = (options) ? options : {};
+    //if(options.hasOwnProperty("mapType")){
+        //if(options.mapType == "Scribe"){
             $(".to-be-deleted").each(function(i){
                 var name = $(this).text();
                 _workspace.openedMap.removeGroup(name);
             });
-        }else if(options.mapType == "Standard"){
+        /*}else if(options.mapType == "Standard"){
             var name = $("#group-select option:selected").text();
             var r = confirm("Are you sure you want to remove the group "+name+"?");
             _workspace.openedMap.removeGroup(name);
-        }
-    }
+        */
+        //}
+    //}
 }
 function openGroupOrderWindow(){
     _workspace.openedMap.displayGroupsIndex();
@@ -780,7 +789,7 @@ function onMapOpened(){
         $("#btn_change_group_order").show();
     }else if(_workspace.openedMap.type == "Standard"){
         $("#btn_delete_group").show();
-        $("#btn_change_group_order").hide();
+        $("#btn_change_group_order").show();
     }
 
     for(i in plugins){
@@ -804,25 +813,20 @@ function scribeLog(msg){
     $("#" + self.workspace.logTextarea).val(msg);
 }
 
-function removeIncludeFromMap(filename){
+function removeIncludeFromMap(filename, commit){
     for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("layers/"+filename+"'") !== -1){
+        if(mapEditor.getLine(i).indexOf("layers/"+filename) !== -1){
             var line = mapEditor.getLine(i);
             mapEditor.removeLine(i);
-            //Highlight for a short time:
-            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-            mapEditor.setLineClass(i-1, 'background', 'setextent-highlighted-line');
-            setTimeout(function(){
-                mapEditor.setLineClass(i, 'background', '');
-                mapEditor.setLineClass(i-1, 'background', '');
-            }, 3000);
             break;
         }
     }
-    _workspace.openedMap.commit();
+    if(commit == undefined || commit == true){
+        _workspace.openedMap.commit();    
+    }
 
 }
-function addIncludeToMap(filename){
+function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
     lastinc = -1;
     openSecondaryPanel("maps", mapEditor);
@@ -833,7 +837,7 @@ function addIncludeToMap(filename){
             //We add the new file at the end of the include list
             var line = mapEditor.getLine((i-1));
             //TODO detect indentation 
-            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
+            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
             mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
             setTimeout(function(){
@@ -842,7 +846,9 @@ function addIncludeToMap(filename){
             break;
         }
     }
-    _workspace.openedMap.commit();
+    if(commit == undefined || commit == true){
+        _workspace.openedMap.commit();
+    }
 }
 
 /* 
