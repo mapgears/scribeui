@@ -36,9 +36,13 @@ jQuery(function() {
         autofocus: true,
         tabMode: "spaces",
         matchBrackets: true,
-		onChange: function(e){
+		onChange: function(){
 			_workspace.openedMap.saved = false;
-		}
+		},
+        onGutterClick: function(cm, line, gutter, e){
+            var text = cm.getLine(line);
+            displayLineEditor(cm, line, text);
+        }
     }
 
     var readmeOptions = {
@@ -48,7 +52,7 @@ jQuery(function() {
         autofocus: true,
         tabMode: "spaces",
         matchBrackets: true,
-        onChange: function(e){
+        onChange: function(){
             _workspace.openedMap.saved = false;
         }
     }
@@ -252,5 +256,34 @@ jQuery(function() {
 		if(_workspace.openedMap.saved == false)
 			return 'All unsaved changes will be lost, do you want to continue ?';	
 	}
+
+    $.event.special.tripleclick = {
+
+        setup: function(data, namespaces) {
+            var elem = this, $elem = jQuery(elem);
+            $elem.bind('click', jQuery.event.special.tripleclick.handler);
+        },
+
+        teardown: function(namespaces) {
+            var elem = this, $elem = jQuery(elem);
+            $elem.unbind('click', jQuery.event.special.tripleclick.handler)
+        },
+
+        handler: function(event) {
+            var elem = this, $elem = jQuery(elem), clicks = $elem.data('clicks') || 0;
+            clicks += 1;
+            if ( clicks === 3 ) {
+                clicks = 0;
+
+                // set event type to "tripleclick"
+                event.type = "tripleclick";
+                
+                // let jQuery handle the triggering of "tripleclick" event handlers
+                jQuery.event.handle.apply(this, arguments)  
+            }
+            $elem.data('clicks', clicks);
+        }
+        
+    };
 });
 

@@ -639,6 +639,10 @@ button {
     height: 160px;
     width: 300px;
 }
+#edit-line-content {
+    height: 120px;
+    width: 500px;
+}
 
 .invisible{
     display: none;

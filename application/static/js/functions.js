@@ -851,6 +851,37 @@ function addIncludeToMap(filename, commit){
     }
 }
 
+function displayLineEditor(cm, line, text){
+    $('#edit-line-content').val(text);
+
+    $("#edit-line").dialog({
+        autoOpen: false,
+        resizable: false,
+        /*width: _workspace.popupWidth,
+        height:_workspace.popupHeight,*/
+        modal: true,
+        buttons: [
+        {
+            text: "Write",
+            'class': 'btn-group-first grouporder-btn-right',
+            click:  function() {
+                cm.setLine(line, $('#edit-line-content').val());
+                $(this).dialog("close");
+            }
+        },
+        {
+            text: "Cancel",
+            'class': 'btn-group-last grouporder-btn-right',
+            click: function() {
+                $(this).dialog("close");
+            }
+        }],
+        close: function() {
+            $(this).find('textarea').val('');
+        }
+    }).dialog("open");   
+}
+
 /* 
 name: string, Name of the tab
 destinationSelector: jquery selector of the tab group, ex #main-tabs or #log-tabs
