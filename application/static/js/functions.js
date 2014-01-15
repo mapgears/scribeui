@@ -302,7 +302,7 @@ function exportMap(){
 }
 
 function cloneMap(){
-    $('#git-logs').val('');
+    $('#git-clone-logs').val('');
 
     $("#clonemap-form").dialog({
         autoOpen: false,
@@ -443,7 +443,7 @@ function commitMap(){
 
 function pullMap(){
     var name = $("#map-list .ui-selected").text();
-    $('#git-logs').val('');
+    $('#git-pull-logs').val('');
 
     if(_workspace.openedMap && _workspace.openedMap.name == name){
         var map = _workspace.openedMap;
@@ -470,7 +470,7 @@ function pullMap(){
                         gitPassword: gitPassword
                     }
 
-                    $('#git-logs').val('Processing request. This may take a few seconds.');
+                    $('#git-pull-logs').val('Processing request. This may take a few seconds.');
 
                     map.gitPull(config, displayPullLogs);
                 },

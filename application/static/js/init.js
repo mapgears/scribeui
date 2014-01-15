@@ -54,6 +54,10 @@ jQuery(function() {
         matchBrackets: true,
         onChange: function(){
             _workspace.openedMap.saved = false;
+        },
+        onGutterClick: function(cm, line, gutter, e){
+            var text = cm.getLine(line);
+            displayLineEditor(cm, line, text);
         }
     }
 

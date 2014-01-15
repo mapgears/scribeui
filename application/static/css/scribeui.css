@@ -728,6 +728,7 @@ div.olControlZoom a {
     width: auto !important;    
     height: auto !important;
     min-width: 200px;
+    overflow: visible !important;
 }
 
 .control-group {
