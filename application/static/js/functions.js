@@ -55,8 +55,8 @@ function deleteWorkspace(options){
             title: "Confirm",
             resizable: false,
             
-            width: options.popupWidth,
-            height:options.popupHeight,
+            //width: options.popupWidth,
+            //height:options.popupHeight,
 
             buttons: [{
                  text: "Yes",
@@ -336,7 +336,7 @@ function cloneMap(){
 
                 //$(this).dialog("close");
             },
-            Cancel: function() {
+            Close: function() {
                 $(this).dialog("close");
             }
         },
@@ -377,7 +377,7 @@ function configureMap(){
 
                     $(this).dialog("close");
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -429,7 +429,7 @@ function commitMap(){
 
                     map.gitCommit(config, displayCommitLogs);
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -474,7 +474,7 @@ function pullMap(){
 
                     map.gitPull(config, displayPullLogs);
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -523,20 +523,10 @@ function createNewGroup(){
 }
 
 function deleteGroup(options){
-    //options = (options) ? options : {};
-    //if(options.hasOwnProperty("mapType")){
-        //if(options.mapType == "Scribe"){
-            $(".to-be-deleted").each(function(i){
-                var name = $(this).text();
-                _workspace.openedMap.removeGroup(name);
-            });
-        /*}else if(options.mapType == "Standard"){
-            var name = $("#group-select option:selected").text();
-            var r = confirm("Are you sure you want to remove the group "+name+"?");
-            _workspace.openedMap.removeGroup(name);
-        */
-        //}
-    //}
+    $(".to-be-deleted").each(function(i){
+        var name = $(this).text();
+        _workspace.openedMap.removeGroup(name);
+    });
 }
 function openGroupOrderWindow(){
     _workspace.openedMap.displayGroupsIndex();
@@ -857,8 +847,6 @@ function displayLineEditor(cm, line, text){
     $("#edit-line").dialog({
         autoOpen: false,
         resizable: false,
-        /*width: _workspace.popupWidth,
-        height:_workspace.popupHeight,*/
         modal: true,
         buttons: [
         {
@@ -870,7 +858,7 @@ function displayLineEditor(cm, line, text){
             }
         },
         {
-            text: "Cancel",
+            text: "Close",
             'class': 'btn-group-last grouporder-btn-right',
             click: function() {
                 $(this).dialog("close");

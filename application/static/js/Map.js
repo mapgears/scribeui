@@ -66,6 +66,7 @@ Map.prototype.open = function(callback){
             }
 
             self.workspace.openedMap = self;
+            self.previousGroup = null;
             self.displayComponents();
             self.display();
             self.getResultingMapfile();
@@ -177,10 +178,6 @@ Map.prototype.displayComponents = function(){
 };
 
 Map.prototype.displayGroups = function(silent){
-    //if (this.type == "Basemaps" || this.type == "Standard"){
-    //    $("#btn_change_group_order").button("disable");
-    //}
-
     var groupSelect = $("#" + this.workspace.groupSelect);
     for(var i = 0; i < this.groups.length; i++){
         groupSelect.append($("<option></option>").attr("value", this.groups[i].name).text(this.groups[i].name));

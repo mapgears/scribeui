@@ -1077,14 +1077,15 @@ var CodeMirror = (function() {
           }
           scratch.innerHTML = html;
 
-          /*-----*/
+          /* MapServer documentation */
           var keyword = $(scratch.firstChild).find('.cm-keyword.cm-block');
 
           if(keyword.length > 0){
+            
             $(keyword).click(function(){
               return false;
             });
-
+            
             $(keyword).mousemove(function(e){
               if(e.altKey){
                 $(this).css('cursor', 'help');
@@ -1102,10 +1103,9 @@ var CodeMirror = (function() {
                 var docURL = MSDOC + $(this).text().toLowerCase() + ".html";
                 var win = window.open(docURL, '_blank');
               }
-              return false;
             })
           }
-          /*------*/
+          /*-------------------------*/
 
           lineDiv.insertBefore(scratch.firstChild, curNode);
         } else {

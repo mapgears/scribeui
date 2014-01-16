@@ -205,11 +205,11 @@ button {
 }
 
 .tab-container {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
 }
 
 .tab-container-small {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     border-bottom: 1px solid #AAAAAA !important;
 }
 

@@ -36,6 +36,7 @@ jQuery(function() {
         autofocus: true,
         tabMode: "spaces",
         matchBrackets: true,
+        lineWrapping: true,
 		onChange: function(){
 			_workspace.openedMap.saved = false;
 		},
@@ -52,6 +53,7 @@ jQuery(function() {
         autofocus: true,
         tabMode: "spaces",
         matchBrackets: true,
+        lineWrapping: true,
         onChange: function(){
             _workspace.openedMap.saved = false;
         },
