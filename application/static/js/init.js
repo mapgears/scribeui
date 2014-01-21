@@ -15,17 +15,17 @@ jQuery(function() {
         "logTextarea": "txt-logs",
         "resultTextarea": "txt-result",
         "debugTextarea": "txt-debug",
-	"popupHeight":400,
-	"popupWidth":400
+    "popupHeight":400,
+    "popupWidth":400
     }
 
     mapTypes = ["Scribe",  "Standard"];
-	
-	plugins = [];
-	
+    
+    plugins = [];
+    
     openWorkspacePopup(workspaceConfig); 
 
-	
+    
     /*--------------------------------
       Init code editors
     --------------------------------*/
@@ -37,9 +37,9 @@ jQuery(function() {
         tabMode: "spaces",
         matchBrackets: true,
         lineWrapping: true,
-		onChange: function(){
-			_workspace.openedMap.saved = false;
-		},
+        onChange: function(){
+            _workspace.openedMap.saved = false;
+        },
         onGutterClick: function(cm, line, gutter, e){
             var text = cm.getLine(line);
             displayLineEditor(cm, line, text);
@@ -71,45 +71,45 @@ jQuery(function() {
     fontEditor = CodeMirror.fromTextArea(document.getElementById("font-editor"), options);
     projectionEditor = CodeMirror.fromTextArea(document.getElementById("projection-editor"), options);
     readmeEditor = CodeMirror.fromTextArea(document.getElementById("readme-editor"), readmeOptions);
-	
+    
     /*--------------------------------
       Tabs and buttons
     --------------------------------*/
 
     $('.main').height( $('body').height()-$('.navbar').height())
     $("#main-tabs").tabs({heightStyle: "fill"});
-	$("#logs").resizable({
-		handles: 'n',
-		alsoResize: '#logs .tabcontent'
-	});
+    $("#logs").resizable({
+        handles: 'n',
+        alsoResize: '#logs .tabcontent'
+    });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
-	$('#log-tabs .tabheader').append(
-		$('#logs-close-button').button({ 
-			text: false,
-			title: 'Close',
-			icons: {
-				primary: "ui-icon-close"
-			}
-		}).click(function(e){
-			$('#logs').hide();
-		})
-	);
+    $('#log-tabs .tabheader').append(
+        $('#logs-close-button').button({ 
+            text: false,
+            title: 'Close',
+            icons: {
+                primary: "ui-icon-close"
+            }
+        }).click(function(e){
+            $('#logs').hide();
+        })
+    );
     // Fix for ticket #40 https://github.com/mapgears/scribeui/issues/40
     $('#logs').css('top', $('#logs').position().top);
-	
-	$('#logs').hide();
+    
+    $('#logs').hide();
 
-	$('#editors-container').height($('#editor-tab').height() - 40);
-	$(window).on('resize', function () {
-    	$('.main').height( $('body').height()-$('.navbar').height())
+    $('#editors-container').height($('#editor-tab').height() - 40);
+    $(window).on('resize', function () {
+        $('.main').height( $('body').height()-$('.navbar').height())
         $('#main-tabs').tabs('refresh');
-		$('#editors-container').height($('#editor-tab').height() - 40);
-		resizeEditors();
+        $('#editors-container').height($('#editor-tab').height() - 40);
+        resizeEditors();
     });
 
     $("button").button({
-		text: true
+        text: true
     });
 
     $(".map-button").button('disable');
@@ -139,23 +139,23 @@ jQuery(function() {
     $("a[href = '#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
         groupEditor.refresh();
-	    variableEditor.refresh();
+        variableEditor.refresh();
     });
 
     $('#btn_new_map').button().click(function(){
-	    openNewMapWindow();
+        openNewMapWindow();
     });
 
     $('#btn_open_map').button().click(function(){
-	    openMap();
+        openMap();
     });
 
     $('#btn_export_map').button().click(function(){
-	    exportMap();
+        exportMap();
     });
 
     $('#btn_delete_map').button().click(function(){
-	    deleteMap();
+        deleteMap();
     });
 
     $('#btn_configure_map').button().click(function(){
@@ -175,68 +175,68 @@ jQuery(function() {
     });
 
     $("#newmap-type").bind('change', function(){
-	    displayTemplates('templates', $("#newmap-type").val());
-	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());  
+        displayTemplates('templates', $("#newmap-type").val());
+        displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());  
     });
 
     $('#btn_commit').button({
         icons: { primary: 'ui-icon-disk' }
     }).click( function(){
-	    _workspace.openedMap.commit();
+        _workspace.openedMap.commit();
     });
 
     $('#btn_new_group').button({
-		text: false,
-		icons: { primary: 'ui-icon-plus' }
-	}).click(function(e){
-	   	createNewGroup();
+        text: false,
+        icons: { primary: 'ui-icon-plus' }
+    }).click(function(e){
+           createNewGroup();
     });
     $('#btn_delete_group').button({
-		text: false,
-		icons: { primary: 'ui-icon-minus' }
-	}).click(function(e){
-	   	deleteGroup({mapType: _workspace.openedMap.type});
+        text: false,
+        icons: { primary: 'ui-icon-minus' }
+    }).click(function(e){
+           deleteGroup({mapType: _workspace.openedMap.type});
     });
 
     $('#btn_change_group_order').button({
-		text:false,
-		icons: { primary: 'ui-icon-wrench' }	
-	}).click(function(){
-	    openGroupOrderWindow();
+        text:false,
+        icons: { primary: 'ui-icon-wrench' }    
+    }).click(function(){
+        openGroupOrderWindow();
     });
-	$('#btn-open-logs').button({
-		/*text:false,*/
-		icons: { primary: 'ui-icon-flag' }	
-	}).click(function(){
-	    $('#logs').toggle();
-		$('#log-notification').hide();				
+    $('#btn-open-logs').button({
+        /*text:false,*/
+        icons: { primary: 'ui-icon-flag' }    
+    }).click(function(){
+        $('#logs').toggle();
+        $('#log-notification').hide();                
     });
     $('#btn-zoom-poi').button().click( function(){
-	    zoomToPOI();
+        zoomToPOI();
     });
 
     $('#btn-add-poi').button({
-		text: false,
-		icons: { primary: 'ui-icon-plus' }
-	}).click( function(){
+        text: false,
+        icons: { primary: 'ui-icon-plus' }
+    }).click( function(){
         addPOI();
     });
 
     $("a[href = '#editor-tab']").bind('click', function(){
         mapEditor.refresh();
-	    variableEditor.refresh();
-	    scaleEditor.refresh();
-	    symbolEditor.refresh();
-	    fontEditor.refresh();
-	    projectionEditor.refresh();
+        variableEditor.refresh();
+        scaleEditor.refresh();
+        symbolEditor.refresh();
+        fontEditor.refresh();
+        projectionEditor.refresh();
         readmeEditor.refresh();
     });
-	$(".secondary-wrap").resizable({
-		handles: 's',
-		resize: resizeEditors
-	});
-	$('.secondary-wrap').hide();
-	
+    $(".secondary-wrap").resizable({
+        handles: 's',
+        resize: resizeEditors
+    });
+    $('.secondary-wrap').hide();
+    
     $("a[href = '#data-tab']").bind('click', function(){
         displayDataBrowser();
     });
@@ -249,19 +249,19 @@ jQuery(function() {
     }
 
     $('select').chosen();
-	
-	//Shortcut for commit
-	$("body").keypress(function(e){
-		if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
-			_workspace.openedMap.commit();
-			e.preventDefault();
-			return false;
-	});
-	//Warn the user if leaving before saving
-	window.onbeforeunload = function(e){
-		if(_workspace.openedMap.saved == false)
-			return 'All unsaved changes will be lost, do you want to continue ?';	
-	}
+    
+    //Shortcut for commit
+    $("body").keypress(function(e){
+        if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
+            _workspace.openedMap.commit();
+            e.preventDefault();
+            return false;
+    });
+    //Warn the user if leaving before saving
+    window.onbeforeunload = function(e){
+        if(_workspace.openedMap.saved == false)
+            return 'All unsaved changes will be lost, do you want to continue ?';    
+    }
 
     $.event.special.tripleclick = {
 
@@ -291,5 +291,11 @@ jQuery(function() {
         }
         
     };
+
+    getFeatureInfoDialog = $("#get-feature-info").dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true
+    });
 });
 

@@ -1403,7 +1403,7 @@ def git_clone_map():
                 errors = []
 
                 try:
-                    subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
+                    #subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
                     output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
                 except subprocess.CalledProcessError as e:
                     errors = e.output

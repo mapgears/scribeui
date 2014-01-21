@@ -638,7 +638,6 @@ def main():
             jsonContent = string2json(jsonInput)
             if outputJSONFile is not None:
                 jFile = codecs.open(outputJSONFile, encoding='utf-8', mode="w+")
-                jFile.write(jsonContent.encode('utf-8'))
                 
             try:
                 jsonToMap(jsonContent, outputDirectory, mapName, clean)

@@ -139,20 +139,7 @@
                         </select>
 
                         <select id="group-select" class="group-select" class="shadow_select"></select>
-                        <!--button id="btn_new_group" class="group-button">New Group</button-->
-                        <!--button id="btn_delete_group" class="group-button">Delete Group</button-->
                         <button id="btn_change_group_order" class="group-button btn-group-last">Group Settings</button>
-
-                        <!--select id="group-edition-select">
-                            <option value="x"></option>
-                            <option value="map">Map</option>
-                            <option value="scales">Scales</option>
-                            <option value="symbols">Symbols</option>
-                            <option value="fonts">Fonts</option>
-                            <option value="projections">Projections</option>
-                            <option value="variables">Variables</option>
-                            <option value="readmes">Readme</option>
-                        </select-->
 
                         <div class="log-button-container">
                             <span id="log-notification" class="ui-state-error"><span class="ui-icon ui-icon-alert"></span></span>
@@ -246,141 +233,128 @@
                     </p>
                 </div>
                 <div class="control-group">
-	                <label>Name</label>
-	                <div class="control">
-	                	<select id="workspace-select" class="workspace-select shadow_select"></select>
-	                </div>
-	            </div>
-	            <div class="control-group">
-	                <label>Password</label>
-	                <div class="control">
-	                	<input id="workspace-password" class="workspace-input" type="password"/>
-	                </div>
-	            </div>
+                    <label>Name</label>
+                    <div class="control">
+                        <select id="workspace-select" class="workspace-select shadow_select"></select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Password</label>
+                    <div class="control">
+                        <input id="workspace-password" class="workspace-input" type="password"/>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="scribe-dialog" id="createws-form" title="Create new workspace" style="display:none">
-        	<div class="dialog-content">
-	            <form>
-	                <!--fieldset-->
-	                    <div class="control-group">
-	                        <label for="newws-name">Name</label>
-	                        <div class="control">
-	                        	<input type="text" name="newws-name" id="newws-name"/>
-	                        </div>
-	                    </div>
-	                    <div class="control-group">
-	                        <label for="newws-password">Password</label>
-	                        <div class="control">
-	                        	<input type="password" name="newws-password" id="newws-password" value="" />
-	                        </div>
-	                    </div>
-	                <!--/fieldset-->
-	            </form>
-	        </div>
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group">
+                        <label for="newws-name">Name</label>
+                        <div class="control">
+                            <input type="text" name="newws-name" id="newws-name"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="newws-password">Password</label>
+                        <div class="control">
+                            <input type="password" name="newws-password" id="newws-password" value="" />
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div id="createmap-form" title="Create new map" style="display:none" class="scribe-dialog">
-        	<div class="dialog-content">
-	            <form>
-	                <!--fieldset-->
-	                	<div class="control-group">
-	                    	<label for="newmap-name">Name</label>
-	                    	<div class="control">
-	                    		<input type="text" name="newmap-name" id="newmap-name" />
-	                    	</div>
-	                    </div>
-	                    <div class="control-group">
-	                    	<label for="newmap-type">Type</label>
-	                    	<div class="control">
-	                    		<select id="newmap-type" class="newmap-template" class="shadow_select"></select>
-	                    	</div>
-	                    </div>
-	                    <div id="newmap-ws" class="invisible">
-	                    	<div class="control-group">
-		                        <label>Workspace</label>
-		                        <div class="control">
-		                        	<select id="newmap-workspace-select" class="shadow_select"></select>
-		                        </div>
-		                    </div>
-	                        <div class="control-group">
-		                        <label>Password</label>
-		                        <div class="control">
-		                        	<input type="password" id="newmap-workspace-password"/>
-		                        </div>
-		                    </div>
-	                    </div>
-	                    <div class="control-group">
-		                    <label for="newmap-template">Template</label>
-		                    <div class="control">
-		                    	<select id="newmap-template" class="newmap-template" class="shadow_select"></select>
-		                    </div>
-		                </div>
-		                <div class="control-group">
-                    		<label for="newmap-description">Description</label>
-                    		<div class="control">
-                    			<textarea id="newmap-description" class="newmap-description"></textarea>
-                    		</div>
-                    	</div>
-	                <!--/fieldset-->
-	            </form>
-	        </div>
+            <div class="dialog-content">
+                <form>
+                    <div class="control-group">
+                        <label for="newmap-name">Name</label>
+                        <div class="control">
+                            <input type="text" name="newmap-name" id="newmap-name" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="newmap-type">Type</label>
+                        <div class="control">
+                            <select id="newmap-type" class="newmap-template" class="shadow_select"></select>
+                        </div>
+                    </div>
+                    <div id="newmap-ws" class="invisible">
+                        <div class="control-group">
+                            <label>Workspace</label>
+                            <div class="control">
+                                <select id="newmap-workspace-select" class="shadow_select"></select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Password</label>
+                            <div class="control">
+                                <input type="password" id="newmap-workspace-password"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="newmap-template">Template</label>
+                        <div class="control">
+                            <select id="newmap-template" class="newmap-template" class="shadow_select"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="newmap-description">Description</label>
+                        <div class="control">
+                            <textarea id="newmap-description" class="newmap-description"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div id="exportmap-form" title="Export map" style="display:none" class="scribe-dialog">
             <form>
-                <!--fieldset-->
                 <div class="control-group">
-                	<label for="exportComponents">Public data</label>
-            		<div class="control">
-            			<input type="checkbox" name="exportComponents" value="publicData" checked="true">
-            		</div>
+                    <label for="exportComponents">Public data</label>
+                    <div class="control">
+                        <input type="checkbox" name="exportComponents" value="publicData" checked="true">
+                    </div>
                 </div>
                 <div class="control-group">
-                	<label for="exportComponents">Private data</label>
-            		<div class="control">
-            			<input type="checkbox" name="exportComponents" value="privateData" checked="true">
-            		</div>
+                    <label for="exportComponents">Private data</label>
+                    <div class="control">
+                        <input type="checkbox" name="exportComponents" value="privateData" checked="true">
+                    </div>
                 </div>
-                <!--/fieldset-->
             </form>
             <div id="preparingExport" class="hidden">Preparing data...</div>
         </div>
 
         <div id="creategroup-form" title="Create new group" style="display:none" class="scribe-dialog">
             <form>
-                <!--fieldset-->
-            	<div class="control-group">
-                	<label for="newgroup-name">Name</label>
-            		<div class="control">
-            			<input type="text" name="newgroup-name" id="newgroup-name"/>
-            		</div>
+                <div class="control-group">
+                    <label for="newgroup-name">Name</label>
+                    <div class="control">
+                        <input type="text" name="newgroup-name" id="newgroup-name"/>
+                    </div>
                 </div>
-                    
-                <!--/fieldset-->
             </form>
         </div>
 
         <div id="grouporder-form" title="Change group order" style="display:none" class="scribe-dialog">
             <form>
-                <!--fieldset-->
-                    <ol id="group-ol" class="group-ol">
-                    </ol>
-                <!--/fieldset-->
+                <ol id="group-ol" class="group-ol">
+                </ol>
             </form>
         </div>
 
         <div id="addpoi-form" title="Add point of interest" style="display:none" class="scribe-dialog">
             <form>
-                <!--fieldset-->
                 <div class="control-group">
-                	<label for="newpoi-name">Name</label>
-            		<div class="control">
-            			<input type="text" name="newpoi-name" id="newpoi-name" />
-            		</div>
+                    <label for="newpoi-name">Name</label>
+                    <div class="control">
+                        <input type="text" name="newpoi-name" id="newpoi-name" />
+                    </div>
                 </div>
-                <!--/fieldset-->
             </form>
         </div>
 
@@ -405,18 +379,6 @@
                             <input type="text" name="git-url" id="git-url" />
                         </div>
                     </div>
-                    <!--div class="control-group">
-                        <label>Git User</label>
-                        <div class="control">
-                            <input type="text" name="git-user" id="git-user" />
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label>Git Password</label>
-                        <div class="control">
-                            <input type="password" id="git-password"/>
-                        </div>
-                    </div-->
                     <div class="control-group">
                         <label for="configure-description">Description</label>
                         <div class="control">
@@ -563,6 +525,7 @@
             <textarea id="edit-line-content" value=""></textarea>
         </div>
 
+        <div id="get-feature-info" style="display:none"><pre></pre></div>
   </body>
 
 </html>

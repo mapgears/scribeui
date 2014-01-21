@@ -314,28 +314,28 @@ Map.prototype.display = function(){
         };
 
         var OLMap = new OpenLayers.Map(this.workspace.mapDiv, mapOptions);
-    //Openlayers control to display the current zoom level
-    var currentZoomControl = new OpenLayers.Control();
-    OpenLayers.Util.extend(currentZoomControl, {
-        draw: function(){
-            OpenLayers.Control.prototype.draw.apply(this, arguments);
-                if (!this.element) {
-                    this.element = document.createElement("div");
-                this.div.setAttribute("class","olControlNoSelect");
-                this.div.setAttribute("class","olCurrentZoomLevelControl");
-                    this.div.appendChild(this.element);
-                }
-                this.map.events.register( 'zoomend', this, this.updateZoomLevel);
-                this.updateZoomLevel();
-                return this.div;
-         },
-        updateZoomLevel: function(){
-            var zoomlevel = this.map.getZoom();
-             zoomlevel++;
-            this.element.innerHTML = "Zoom level : "+zoomlevel;
-        }
+        //Openlayers control to display the current zoom level
+        var currentZoomControl = new OpenLayers.Control();
+        OpenLayers.Util.extend(currentZoomControl, {
+            draw: function(){
+                OpenLayers.Control.prototype.draw.apply(this, arguments);
+                    if (!this.element) {
+                        this.element = document.createElement("div");
+                    this.div.setAttribute("class","olControlNoSelect");
+                    this.div.setAttribute("class","olCurrentZoomLevelControl");
+                        this.div.appendChild(this.element);
+                    }
+                    this.map.events.register( 'zoomend', this, this.updateZoomLevel);
+                    this.updateZoomLevel();
+                    return this.div;
+             },
+            updateZoomLevel: function(){
+                var zoomlevel = this.map.getZoom();
+                 zoomlevel++;
+                this.element.innerHTML = "Zoom level : "+zoomlevel;
+            }
 
-    });
+        });
         OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
 
         var WMSLayer = new OpenLayers.Layer.WMS(
@@ -351,6 +351,27 @@ Map.prototype.display = function(){
         );
 
         OLMap.addLayers([WMSLayer]);
+
+        OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+        var getFeatureInfo = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: this.url, 
+            queryVisible: true,
+            infoFormat: 'text/plain',
+            vendorParams: {
+                'FEATURE_COUNT': 100
+            },
+            eventListeners: {
+                getfeatureinfo: function(event) {
+                    if(event.text != ""){
+                        getFeatureInfoDialog.find('pre').html(event.text);
+                        getFeatureInfoDialog.dialog('open');
+                    }
+                }
+            }
+        });
+        OLMap.addControl(getFeatureInfo);
+        getFeatureInfo.activate();
+
         OLMap.zoomToExtent(extent);
         
         this.OLMap = OLMap;
