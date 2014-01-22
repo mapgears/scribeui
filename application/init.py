@@ -62,6 +62,7 @@ listfilesStandard = [{'name':'scales','url':'scales'},
                     ]
 plugins = {}
 
+#===============================
 #	Plugin load code
 #===============================
 def load_plugins():
@@ -77,7 +78,45 @@ def load_plugins():
                 traceback.print_exc(file=sys.stdout)
                 
     return "1"
+
 load_plugins()
+#===============================
+#	Template load code
+#===============================
+def load_templates():
+    path = "workspaces/templates/"
+    wstemplates = query_db('''select * from maps where ws_id = 0''', one=False)
+    template_list = []
+    file_list = []
+    for i in range(len(wstemplates)): 
+        template = wstemplates[i]['map_name']
+        template = template[1:]
+        template_list.append(template)
+    for filename in os.listdir(path):
+        file_list.append(filename)
+    
+    if not file_list and not template_list:
+        return
+    filesNotInDb = set(file_list) - set(template_list)
+    dbEntriesNotInFiles = set(template_list) - set(file_list)
+    pprint.pprint(filesNotInDb)
+    pprint.pprint(dbEntriesNotInFiles)
+    # Let's enter the new templates in the db
+    for filename in filesNotInDb:
+        pprint.pprint(filename)
+        # Check if map is scribe
+        if os.path.isfile(path+filename+'/config'):
+            maptype = "Scribe"
+        else: 
+            maptype = "Standard"
+        g.db.execute('insert into maps (map_name, map_type, ws_id) values (?, ?, ?)',
+                 ["*"+filename, maptype, 0])
+        g.db.commit()
+    # Let's remove from the db the templates that are not there anymore
+    for entry in dbEntriesNotInFiles:
+        g.db.execute('delete from maps where map_name="*'+entry+'" and ws_id=0')
+        g.db.commit()
+    return
 
 #===============================
 #        DATABASE
@@ -159,6 +198,7 @@ def index():
                     plugins_css.append(css)
         except AttributeError:
             pass
+    load_templates()
     return render_template('index.html', plugins_js=plugins_js, plugins_css=plugins_css)
 
 #===============================
