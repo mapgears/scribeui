@@ -15,6 +15,8 @@ import datetime #download
 import pprint #For debugging purposes
 import imp #For plugins
 import traceback #output exceptions to apache's log. Mostly helpful for plugin development.
+import string
+from  werkzeug import url_fix
 
 #Get path of the application                            
 path = os.path.abspath(os.path.dirname(__file__))+"/"
@@ -45,6 +47,7 @@ listfiles = [{'name':'scales','url':'editor/scales'},
              {'name':'projections','url':'epsg'}, 
              {'name':'fonts','url':'fonts.lst'},
              {'name':'symbols','url':'symbols.map'},
+             {'name':'readme','url':'README.markdown'}
              ]
 
 listfilesBasemaps = [{'name':'scales','url':'Makefile'},
@@ -53,12 +56,14 @@ listfilesBasemaps = [{'name':'scales','url':'Makefile'},
                     {'name':'projections','url':'epsg'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbol.map'},
+                    {'name':'readme','url':'README'}
                     ]
 
 listfilesStandard = [{'name':'scales','url':'scales'},
                     {'name':'projections','url':'epsg'},
                     {'name':'fonts','url':'fonts.lst'},
                     {'name':'symbols','url':'symbols.map'},
+                    {'name':'readme','url':'README'}
                     ]
 plugins = {}
 
@@ -170,6 +175,7 @@ def before_request():
 @app.teardown_request
 def teardown_request(exception):
     g.db.close()
+    
 
 #===============================   
 #          Homepage                              
@@ -221,7 +227,7 @@ def create_new_ws():
     if (re.search(expression, name) is None):
         return "Invalid name"
     if (get_ws_id(name) is not None) or (name=="templates"):
-        return "Existing"
+        return "A workspace with that name already exists"
     g.db.execute('insert into workspaces (ws_name, password) values (?, ?)',
                  [name, generate_password_hash(request.form['password'])])
     g.db.commit()
@@ -323,7 +329,7 @@ def create_map():
     wsmap = query_db("select map_name from maps where ws_id = ?", [get_ws_id(session['ws_name'])], one=False)
     for i in range(len(wsmap)):
         if name == wsmap[i]['map_name']:
-            return "Existing"
+            return "A map with that name already exists"
 
     #Add the map in the bd      
     g.db.execute('insert into maps (map_name, map_type, map_desc, ws_id) values (?, ?, ?, ?)',
@@ -332,7 +338,10 @@ def create_map():
 
     #Copy the template directory to the directory of the new map    
     if ws_template == "templates":
-        map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))['map_id']
+        if template != '*Dummy':
+            map_cur = (query_db('''select map_id from maps where map_name = ? and ws_id = "0"''',[template], one=True))['map_id']
+        else:
+            map_cur = None
         template = template[1:]
         pathTemplate = path+"workspaces/templates/"+template
     else:
@@ -356,10 +365,11 @@ def create_map():
 
     
     #Add layers in the bd
-    groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
-    for j in range(len(groups)):
-        g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
-    g.db.commit()
+    if map_cur:
+        groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
+        for j in range(len(groups)):
+            g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
+        g.db.commit()
 
     return "1"
 
@@ -375,10 +385,13 @@ def get_maps():
         maps = {}
         maps["name"] = wsmap[i]['map_name']
         maps["type"] = wsmap[i]['map_type']
+
+        maps['thumbnail'] = None
         if maps["type"] == "Basemaps":
             maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/osm-" + wsmap[i]['map_name'] +".map"
         else:
             maps["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + path + "workspaces/" + session['ws_name'] + "/" + wsmap[i]['map_name'] +  "/map/" + wsmap[i]['map_name'] +".map"
+            maps['thumbnail'] = get_thumbnail_url(wsmap[i]['map_name'], maps['url'], maps["type"])
         maps["description"] = wsmap[i]['map_desc']
         listmaps["maps"].append(maps)
 
@@ -399,24 +412,44 @@ def open_map():
     if wsmap['map_type'] == 'Scribe':
         pathGroups = pathMap + "editor/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
+        contentfiles["thumbnail"] = get_thumbnail_url(namemap, contentfiles["url"], wsmap['map_type'])
         for i in range(len(listfiles)):
-            document = open(pathMap + listfiles[i]['url'], "r")
-            contentfiles[listfiles[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfiles[i]['url'], "r") as document:
+                    contentfiles[listfiles[i]['name']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfiles[i]['name']] = ''
     elif wsmap['map_type'] == 'Basemaps':
         pathGroups = pathMap
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "osm-" + namemap +".map"
         for i in range(len(listfilesBasemaps)):
-            document = open(pathMap + listfilesBasemaps[i]['url'], "r")
-            contentfiles[listfilesBasemaps[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfilesBasemaps[i]['url'], "r") as document:
+                    contentfiles[listfilesBasemaps[i]['url']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfilesBasemaps[i]['name']] = ''
+            #document = open(pathMap + listfilesBasemaps[i]['url'], "r")
+            #contentfiles[listfilesBasemaps[i]['name']] = document.read()
+            #document.close()
     elif wsmap['map_type'] == 'Standard':
         pathGroups = pathMap + "map/layers/"
         contentfiles["url"] = "http://" + ip + "/cgi-bin/mapserv?map=" + pathMap + "map/" + namemap +".map"
+        contentfiles["thumbnail"] = get_thumbnail_url(namemap, contentfiles["url"], wsmap['map_type'])
         for i in range(len(listfilesStandard)):
-            document = open(pathMap + listfilesStandard[i]['url'], "r")
-            contentfiles[listfilesStandard[i]['name']] = document.read()
-            document.close()
+            try:
+                with open(pathMap + listfilesStandard[i]['url'], "r") as document:
+                    contentfiles[listfilesStandard[i]['name']] = document.read()
+                    document.close()
+                    #document = open(pathMap + listfiles[i]['url'], "r")
+            except IOError:
+                contentfiles[listfilesStandard[i]['name']] = ''
+            #document = open(pathMap + listfilesStandard[i]['url'], "r")
+            #contentfiles[listfilesStandard[i]['name']] = document.read()
+            #document.close()
         document = open(pathMap + "map/" + namemap + ".map", "r")
         contentfiles['map'] = document.read()
         document.close()
@@ -426,7 +459,7 @@ def open_map():
         # Read groups from config file instead of the BD
         groupFiles = getGroupFiles(pathMap, pathGroups)
 
-	for i in range(0, len(groupFiles)):
+        for i in range(0, len(groupFiles)):
             if (os.path.isfile(groupFiles[i])):
                 unGroup = {}
                 unGroup["name"] = getGroupNameFromFile(groupFiles[i])
@@ -440,10 +473,11 @@ def open_map():
         for j in range(len(groups)):
             unGroup = {}
             unGroup["name"] = groups[j]['group_name']
-            document = open(pathGroups + unGroup["name"], "r")
-            unGroup["content"] = document.read()
-            document.close()
-            contentfiles["groups"].append(unGroup)
+            if os.path.isfile(pathGroups + unGroup["name"]):
+                document = open(pathGroups + unGroup["name"], "r")
+                unGroup["content"] = document.read()
+                document.close()
+                contentfiles["groups"].append(unGroup)
 
 
     #Parameters map
@@ -480,7 +514,7 @@ def open_map():
             mapfile.close();
             scalefile.close();
         except:
-            contentfiles['errorMsg'].append("The header is bad")
+            contentfiles['errorMsg'].append("There is an error in the MAP header")
         try:
             contentfiles['OLScales']=list2dict(scaledata['SCALES'])
         except:
@@ -557,6 +591,38 @@ def open_map():
 
     return jsonify(**contentfiles)
 
+def get_thumbnail_url(map_name, map_url, type="Scribe"):
+    thumbnail_url = None
+    projection = None
+    extent = None
+    try:
+        if type == "Scribe":
+            mapfile = open(path + "workspaces/" + session['ws_name'] + "/" + map_name +"/editor/map")
+        elif type == "Standard":
+            mapfile = open(path + "workspaces/" + session['ws_name'] + "/" + map_name +"/map/" + map_name + ".map")
+        mapdata = mapfile.readlines()
+        projection = None
+        extent = None
+
+        for l in mapdata:
+            line = l.strip()
+            index = line.find('init=')
+            if index != -1:
+                projection = line[6:-1].strip()
+            index = line.find('EXTENT')
+            if index != -1:
+                extent = line[index+6:].replace(':', '').strip().replace(' ', ',')
+        mapfile.close();
+    except:
+        pass
+
+    if projection and extent:
+        thumbnail_url = map_url
+        thumbnail_url += "&LAYERS=default&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=" + projection
+        thumbnail_url += "&BBOX=" + extent + "&WIDTH=200&HEIGHT=200&EXCEPTIONS=application/vnd.ogc.se_blank"
+
+    return thumbnail_url
+
 #List to dict
 def list2dict(ls):
     dc = {}
@@ -631,7 +697,7 @@ def add_layer():
 	    for gr in groupsFiles:
                 name = getGroupNameFromFile(gr)
                 if groupname == name:
-                    return "Existing"
+                    return "A group with that name already exists"
 
             inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
             inputConfigContent = inputConfigFile.read()
@@ -657,7 +723,7 @@ def add_layer():
                 groupname = groupname+".map"
             for i in range(len(groups)):
                 if groupname == groups[i]['group_name']:
-                    return "Existing"
+                    return "A group with that name already exists"
                                                     
             g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
             g.db.commit()
@@ -873,7 +939,7 @@ def execute():
         return jsonify(result=result)
 
     if wsmap['map_type'] == 'Scribe':
-        sub = subprocess.Popen('/usr/bin/python2.7 scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        sub = subprocess.Popen('/usr/bin/python2.7 ' + path + '/scribe.py -n ' + session['map_name'] + ' -i ' + pathMap + 'editor/ -o ' + pathMap + 'map/ -f ' + pathMap + 'config -j ' + pathMap + 'editor/map.json' , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
     elif wsmap['map_type'] == 'Basemaps':
         os.chdir(pathMap)
         sub = subprocess.Popen("make", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -888,6 +954,7 @@ def execute():
         result = "**ERRORS**\n----------\n" + errorMsg + "\n**LOG**\n----------\n" + logMsg
 
     return jsonify(result=result)
+
 
 #Return the contents of the mapfile generated 
 @app.route('/_load_mapfile_generated',methods=['GET'])
@@ -1064,3 +1131,335 @@ def string2json(string):
     return ("{\"" + t)
 
 
+#===============================  
+#       Configure map
+#===============================
+@app.route('/_configure_map', methods=['POST'])
+def configure_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        gitURL = request.form['gitURL']
+        description = request.form['description']
+
+        response = git_configure_map(mapName, gitURL, description)
+
+
+    return jsonify(response)
+
+def git_remove_remote_url():
+    try:
+        subprocess.check_output(['git remote rm origin'], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        pass    
+
+def git_add_remote_url(url, user, password):
+    # link new git to remote url
+    # user/password are coded directly in the git url
+    response = {'status': 'error'}
+    errors = []
+    if user and password:
+        user = url_fix(user)
+        password = url_fix(password)
+        userString = user
+        if password != '':
+            userString += ':' + password
+        userString += '@'
+        gitFullURL = 'https://' + userString + url[8:]
+    else:
+        gitFullURL = url
+    git_remove_remote_url()
+
+    try:
+        subprocess.check_output(['git remote add origin ' + gitFullURL], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        errors.append(e.output)
+
+    try:
+        subprocess.check_output(['git config http.sslVerify "false"'], shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        errors.append(e.output)
+
+    if len(errors) == 0:
+        response['status'] = 'ok'
+
+    return response    
+
+def git_configure_map(name, url, description=None):
+    response = {'status': 'error'}
+
+    mapID = get_map_id(name, session['ws_name'])
+        
+    mapPath = (path + "workspaces/" + session['ws_name'] + "/" + name) +"/"
+    os.chdir(mapPath)
+
+    wsmap = query_db('''select git_url from maps where ws_id = ? and map_name = ?''', [get_ws_id(session['ws_name']), name], one=True)
+    
+    errors = []
+
+    if url != wsmap['git_url']:
+        # remove remote origin
+        git_remove_remote_url()
+
+        # init new git
+        try:
+            subprocess.check_output(['git init'], shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            errors.append(e.output)
+
+        gitignore = open('.gitignore', 'w+')
+        gitignoreContent = 'data\n'
+        gitignoreContent += 'pdata\n'
+        gitignoreContent += 'debugFile.log\n'
+        gitignoreContent += 'map/*\n'
+        gitignore.write(gitignoreContent)
+
+        if len(errors) == 0:
+            g.db.execute('''UPDATE maps SET git_url = ? WHERE map_id = ?''', [url, mapID])
+
+            response['status'] = 'ok'
+    
+    if description:
+        g.db.execute('''UPDATE maps SET map_desc = ? WHERE map_id = ?''', [description, mapID])
+        response['description'] = description
+
+        if len(errors) == 0:
+            response['status'] = 'ok'    
+
+    g.db.commit()
+
+    response['errors'] = errors
+
+    return response
+
+
+#Return map config
+@app.route('/_get_config', methods=['POST'])
+def get_config():
+    if 'ws_name' in session:
+        mapName = request.form['name']
+        wsID = get_ws_id(session['ws_name'])
+        config = query_db("select git_url as gitURL, map_desc as description from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+        
+        return jsonify(config)
+
+#===============================  
+#       Git commit map
+#===============================
+@app.route('/_git_commit_map', methods=['POST'])
+def git_commit_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        wsID = get_ws_id(session['ws_name'])
+
+        mapName = request.form['name']
+        message = request.form['message']
+        user = request.form['gitUser']
+        password = request.form['gitPassword']
+
+        output = ''
+
+        if user and message:
+            data = query_db("select git_url as gitURL from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+
+            if data['gitURL'] and data['gitURL'] != '':
+                mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+                os.chdir(mapPath)
+
+                response = git_add_remote_url(data['gitURL'], user, password)
+
+                if response['status'] == 'ok':
+                    response['status'] = 'error'
+                    errors = []
+                    
+                    output += 'git add .\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git add .'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                    
+                    output += 'git commit -m "' + message + '"\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git commit -m "' + message + '"'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        if '(working directory clean)' in e.output:
+                            pass
+                        else:
+                            errors.append(e.output)
+                        output += e.output
+                    
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git push origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                    
+                    if len(errors) == 0:
+                        response['status'] = 'ok'
+                    
+                    response['log'] = output
+                    response['errors'] = errors
+
+                git_remove_remote_url()
+        else:
+            if user is None or user == '':
+                output += 'You need to specify a user\n'
+            if message is None or message == '':
+                output += 'You need to enter a commit message'
+
+            response['log'] = output
+
+    return jsonify(response)
+
+
+#===============================  
+#       Git pull map
+#===============================
+@app.route('/_git_pull_map', methods=['POST'])
+def git_pull_map():
+    response = {'status': 'error'}
+    if ('ws_name' in session):
+        wsID = get_ws_id(session['ws_name'])
+
+        mapName = request.form['name']
+        changes = request.form['changes']
+        user = request.form['gitUser']
+        password = request.form['gitPassword']
+
+        data = query_db("select git_url as gitURL from maps where ws_id = ? and map_name = ?", [wsID, mapName], one=True)
+
+        if data['gitURL'] and data['gitURL'] != '':
+            mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+            os.chdir(mapPath)
+
+            response = git_add_remote_url(data['gitURL'], user, password)
+
+            if response['status'] == 'ok':
+                response['status'] = 'error'
+                output = ''
+                errors = []
+
+                if changes == 'merge':
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                elif changes == 'overwrite':
+                    output += 'git fetch origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git fetch origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git reset --hard FETCH_HEAD\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git reset --hard FETCH_HEAD'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git clean -df\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git clean -f'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                elif changes == 'stash':
+                    output += 'git stash\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git stash'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                
+                    output += 'git pull origin master\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+
+                    output += 'git stash pop\n'
+                    output += '---------------------------------------------------\n'
+                    try:
+                        output += subprocess.check_output(['git stash pop'], shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        errors.append(e.output)
+                        output += e.output
+                
+                if len(errors) == 0:
+                    response['status'] = 'ok'
+                
+                response['log'] = output
+                response['errors'] = errors
+
+            git_remove_remote_url()
+
+    return jsonify(response)
+
+
+#===============================  
+#       Git clone map
+#===============================
+@app.route('/_git_clone_map', methods=['POST'])
+def git_clone_map():
+    response = {'status': 'error'}
+    
+    if ('ws_name' in session):
+        mapName = request.form['name']
+        
+        gitURL = request.form['gitURL']
+        gitUser = request.form['gitUser']
+        gitPassword = request.form['gitPassword']
+
+        mapPath = (path + "workspaces/" + session['ws_name'] + "/" + mapName) +"/"
+        os.chdir(mapPath)
+        
+        response = git_configure_map(mapName, gitURL)
+
+        if response['status'] == 'ok':
+            response = git_add_remote_url(gitURL, gitUser, gitPassword)
+
+            if response['status'] ==  'ok':
+                response['status'] = 'error'
+                output = ''
+                errors = []
+
+                try:
+                    subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
+                    output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    errors = e.output
+                    output = e.output 
+
+                if len(errors) == 0:
+                    response['status'] = 'ok'
+                
+                response['log'] = output
+                response['errors'] = errors
+
+            git_remove_remote_url()
+        
+    return jsonify(response)

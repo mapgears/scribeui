@@ -1,6 +1,7 @@
  function Map(name, options){
     this.name = name;
     this.url = null;
+    this.thumbnail = null;
     this.workspace = null;
     this.type = "Scribe";
     this.template = null;
@@ -9,22 +10,24 @@
     this.description = "";
     this.OLMap = null;
     this.WMSLayer = null;
-	this.saved = true;
+    this.saved = true;
+    this.previousGroup = null;
 
     if(options){
         this.url = options.url ? options.url : this.url;
+        this.thumbnail = options.thumbnail ? options.thumbnail : this.thumbnail;
         this.workspace = options.workspace ? options.workspace : null;
         this.type = options.type ? options.type : this.template;
         this.template = options.template ? options.template : this.template;
         this.templateLocation = options.templateLocation ? options.templateLocation : this.templateLocation;
         this.locationPassword = options.locationPassword ? options.locationPassword : this.locationPassword;
-	    this.description = options.description ? options.description : this.description;
+        this.description = options.description ? options.description : this.description;
         this.OLMap = options.OLMap ? options.OLMap : this.OLMap;
         this.WMSLayer = options.WMSLayer ? options.WMSLayer : this.WMSLayer;
     }
 }
 
-Map.prototype.create = function(workspace){
+Map.prototype.create = function(clone, callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_map', {
         name: this.name,
@@ -35,25 +38,28 @@ Map.prototype.create = function(workspace){
         description: this.description
     }, function(status) {
         if(status == "1") {
-            self.workspace.maps.push(self);
-            self.workspace.displayMaps();
-            
-            self.open();
+            if(clone){
+                self.gitClone(clone, callback);
+            } else{
+                self.workspace.maps.push(self);
+                self.workspace.displayMaps();
+                self.open();    
+            }
         }else {
             alert(status);
         }
     });
 }
 
-Map.prototype.open = function(){
+Map.prototype.open = function(callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_open_map', {
         name: this.name
     }, function(data) {
         if(typeof(data) == "object") {
-	        $.each(data, function(key, element){
-		    self[key] = element;
-	    });
+            $.each(data, function(key, element){
+            self[key] = element;
+        });
 
             if(self.workspace.openedMap){
                 self.workspace.openedMap.close();
@@ -63,31 +69,35 @@ Map.prototype.open = function(){
             self.displayComponents();
             self.display();
             self.getResultingMapfile();
-			self.saved = true;
+            self.saved = true;
             $("#info").text(self.workspace.name + " / " + self.name);
-			
-			onMapOpened();
+            
+            onMapOpened();
+
+            if(callback){
+                callback.call(self);
+            }
         }else {
-	    alert(data);
-	}
+        alert(data);
+    }
     });
 };
 
 Map.prototype.getGroupByName = function(name){
     for(var i = 0; i < this.groups.length; i++){
-	if(this.groups[i].name == name){
-	    return this.groups[i];
-	}
+    if(this.groups[i].name == name){
+        return this.groups[i];
+    }
     }
     return null;
 };
 
 Map.prototype.getGroupIndexByName = function(name){
     for(var i = 0; i < this.groups.length; i++){
-	if(this.groups[i].name == name){
-	    return i;
-	    break;
-	}
+    if(this.groups[i].name == name){
+        return i;
+        break;
+    }
     }
     return null;
 };
@@ -100,21 +110,24 @@ Map.prototype.createGroup = function(name){
         }, function(status) {
             if(status == 1){
                 var group = {"name": name, "content": ""}
-				if(self.type == "Standard")
-                	if(group.name.indexOf(".map") == -1)
-						group.name = group.name+".map";
-				
+                if(self.type == "Standard")
+                    if(group.name.indexOf(".map") == -1)
+                        group.name = group.name+".map";
+                
                 self.groups.push(group);
                 
                 var groupSelect = $("#" + self.workspace.groupSelect);
                 groupSelect.append($("<option></option>").attr("value", group.name).text(group.name));
-				
-				//Include the new group in the map
-				if(self.type == "Standard")
-					addIncludeToMap(group.name)
+                groupSelect.trigger('chosen:updated');
+
+                self.displayGroupsIndex();
+                
+                //Include the new group in the map
+                if(self.type == "Standard")
+                    addIncludeToMap(group.name)
             }else{
-		alert(status);
-		}           
+        alert(status);
+        }           
         });       
     }
 };
@@ -134,10 +147,11 @@ Map.prototype.removeGroup = function(name){
                 groupSelect.find("option[value='" + group.name + "']").remove();
                 $('#'+self.workspace.groupOl).find("li.ui-selected").remove();
                 groupSelect.trigger("change");
+                groupSelect.trigger('chosen:updated');
 
                 //Remove include statement in the map element
-				if(self.type == "Standard")
-					removeIncludeFromMap(group.name)
+                if(self.type == "Standard")
+                    removeIncludeFromMap(group.name)
             }
         });       
     }
@@ -150,6 +164,7 @@ Map.prototype.displayComponents = function(){
     symbolEditor.setValue(this.symbols);
     fontEditor.setValue(this.fonts);
     projectionEditor.setValue(this.projections);
+    readmeEditor.setValue(this.readme);
 
     if (this.type == "Basemaps"){
         $("a[href='#scale-tab']").html("Config");
@@ -170,31 +185,47 @@ Map.prototype.displayGroups = function(){
     for(var i = 0; i < this.groups.length; i++){
         groupSelect.append($("<option></option>").attr("value", this.groups[i].name).text(this.groups[i].name));
     }
+    groupSelect.trigger("chosen:updated");
     var self = this;
-    groupSelect.focus(function(e) {
-        self.setGroupContent(this.value, groupEditor.getValue());
-    }).change(function(e){
-		var group = self.getGroupByName(this.value);
-		resizeEditors();
+    
+    groupSelect.change(function(e){
+        if(self.previousGroup){
+            self.setGroupContent(self.previousGroup, groupEditor.getValue());
+        }
+
+        var group = self.getGroupByName(this.value);
+        self.previousGroup = this.value;
+
+        resizeEditors();
         if(group){
             groupEditor.setValue(group.content);
-			groupEditor.clearHistory();
+            groupEditor.clearHistory();
         } else{
             groupEditor.setValue("");
-			groupEditor.clearHistory();
+            groupEditor.clearHistory();
         }
         
-	e.stopPropagation();
+        e.stopPropagation();
     }).trigger("change");
+
+    self.previousGroup = groupSelect.val();
+    self.setGroupContent(self.previousGroup, groupEditor.getValue());
 }
 
 Map.prototype.displayDescription = function(){
     $("#" + this.workspace.mapDescription).empty();
-    $("#" + this.workspace.mapDescription).append('<div id="map-preview-img-large"></div>');
+    var image = $('<div>').attr('id', 'map-preview-img-large');
+    if(this.thumbnail){
+        image.addClass('thumbnail-preview').css('background-image', 'url("' + this.thumbnail + '")');
+    } else{
+        image.addClass('default-preview');
+    }
+    //$("#" + this.workspace.mapDescription).append('<div id="map-preview-img-large"></div>');
+    $("#" + this.workspace.mapDescription).append(image);
     $("#" + this.workspace.mapDescription).append("<p class=\"map-title\">" + this.name + "</p>");
     $("#" + this.workspace.mapDescription).append("<p class=\"map-description\">" + this.description + "</p>");
     $("#" + this.workspace.mapActions).show();
-	 
+     
 };
 
 Map.prototype.setGroupContent = function(name, content){
@@ -211,7 +242,8 @@ Map.prototype.updateComponents = function(){
     this.variables = variableEditor.getValue();
     this.symbols = symbolEditor.getValue();
     this.fonts = fontEditor.getValue();
-    this.projections = projectionEditor.getValue();     
+    this.projections = projectionEditor.getValue();
+    this.readme = readmeEditor.getValue();     
 }
 
 Map.prototype.commit = function(){
@@ -225,6 +257,7 @@ Map.prototype.commit = function(){
         symbols: this.symbols,
         fonts: this.fonts,
         projections: this.projections,
+        readme: this.readme,
         groups: this.groups
     })
 
@@ -242,7 +275,7 @@ Map.prototype.commit = function(){
                 self.WMSLayer.redraw(true);
             }
             self.getResultingMapfile();
-			self.saved = true;
+            self.saved = true;
         }
     })
 }
@@ -279,28 +312,28 @@ Map.prototype.display = function(){
         };
 
         var OLMap = new OpenLayers.Map(this.workspace.mapDiv, mapOptions);
-	//Openlayers control to display the current zoom level
-	var currentZoomControl = new OpenLayers.Control();
-	OpenLayers.Util.extend(currentZoomControl, {
-		draw: function(){
-			OpenLayers.Control.prototype.draw.apply(this, arguments);
-        		if (!this.element) {
-		            this.element = document.createElement("div");
-			    this.div.setAttribute("class","olControlNoSelect");
-			    this.div.setAttribute("class","olCurrentZoomLevelControl");
-		            this.div.appendChild(this.element);
-		        }
-		        this.map.events.register( 'zoomend', this, this.updateZoomLevel);
-		        this.updateZoomLevel();
-		        return this.div;
-		 },
-		updateZoomLevel: function(){
-			var zoomlevel = this.map.getZoom();
- 			zoomlevel++;
-			this.element.innerHTML = "Zoom level : "+zoomlevel;
-		}
+    //Openlayers control to display the current zoom level
+    var currentZoomControl = new OpenLayers.Control();
+    OpenLayers.Util.extend(currentZoomControl, {
+        draw: function(){
+            OpenLayers.Control.prototype.draw.apply(this, arguments);
+                if (!this.element) {
+                    this.element = document.createElement("div");
+                this.div.setAttribute("class","olControlNoSelect");
+                this.div.setAttribute("class","olCurrentZoomLevelControl");
+                    this.div.appendChild(this.element);
+                }
+                this.map.events.register( 'zoomend', this, this.updateZoomLevel);
+                this.updateZoomLevel();
+                return this.div;
+         },
+        updateZoomLevel: function(){
+            var zoomlevel = this.map.getZoom();
+             zoomlevel++;
+            this.element.innerHTML = "Zoom level : "+zoomlevel;
+        }
 
-	});
+    });
         OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
 
         var WMSLayer = new OpenLayers.Layer.WMS(
@@ -316,7 +349,7 @@ Map.prototype.display = function(){
         );
 
         OLMap.addLayers([WMSLayer]);
-        OLMap.zoomToMaxExtent();
+        OLMap.zoomToExtent(extent);
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
@@ -350,7 +383,7 @@ Map.prototype.destroy = function(callback){
         if(status == "1") {
             $("#" + self.workspace.mapList + " .ui-selected").remove();
             $("#" + self.workspace.mapDescription).html("");
-	    $("#" + self.workspace.mapActions).hide();
+        $("#" + self.workspace.mapActions).hide();
             var index = self.workspace.getMapIndexByName(self.name);
             self.workspace.maps.splice(index, 1);
 
@@ -371,6 +404,7 @@ Map.prototype.clearComponents = function(){
     symbolEditor.setValue("");
     fontEditor.setValue("");
     projectionEditor.setValue("");
+    readmeEditor.setValue("");
 };
 
 Map.prototype.displayGroupsIndex = function(){
@@ -378,16 +412,16 @@ Map.prototype.displayGroupsIndex = function(){
 
     var data = ""
     for(var i = 0; i < this.groups.length; i++){
-	data += "<li class=\"ui-state-default\">" + this.groups[i].name + "</li>";
+    data += "<li class=\"ui-state-default\">" + this.groups[i].name + "</li>";
     }
     $("#" + this.workspace.groupOl).append(data);
     $("#" + this.workspace.groupOl).selectable();
     var self = this;
     $("#" + this.workspace.groupOl + " li").click(function(e){
-	$("#" + self.workspace.groupOl + " li").removeClass("map-selected");
-	$(this).addClass("map-selected");
+    $("#" + self.workspace.groupOl + " li").removeClass("map-selected");
+    $(this).addClass("map-selected");
 
-	e.stopPropagation();
+    e.stopPropagation();
     });
 }
 
@@ -443,14 +477,14 @@ Map.prototype.openDataBrowser = function(){
     var newDivName = "data-browser-child-" + this.name;
     $("#" + this.workspace.dataDiv).append($("<div>").attr("id", newDivName));
     $("#" + newDivName).elfinder({
-	url: '/cgi-bin/elfinder-python/connector-' + this.workspace.name + '-' + this.name + '.py',
+    url: '/cgi-bin/elfinder-python/connector-' + this.workspace.name + '-' + this.name + '.py',
         transport : new elFinderSupportVer1(),
         cssClass: 'file-manager',
         resizable: false,
         commands: [
-	    'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 
-	    'rename', 'mkdir', 'mkfile', 'copy', 'paste', 'help', 'rm',
-	    'sort', 'tree', 'upload', 'extract', 'archive', 'view'
+        'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 
+        'rename', 'mkdir', 'mkfile', 'copy', 'paste', 'help', 'rm',
+        'sort', 'tree', 'upload', 'extract', 'archive', 'view'
         ]
     }).elfinder('instance');
 
@@ -493,10 +527,74 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
     }); 
 }
 
+Map.prototype.configure = function(config){
+    var self = this;
+    config['name'] = this.name;
+    $.post($SCRIPT_ROOT + '/_configure_map', config, function(response) {
+        if(response.status == 'ok' && response.description){
+            self.description = response.description;
+            self.displayDescription();    
+        }
+    });
+}
+
+Map.prototype.gitCommit = function(config, callback){
+    var self = this;
+    config['name'] = this.name;
+
+    $.post($SCRIPT_ROOT + '/_git_commit_map', config, function(response) {
+        callback.call(null, response);
+
+        if(response.status == 'ok'){
+            self.open();   
+        }
+    });
+}
+
+Map.prototype.gitPull = function(config, callback){
+    var self = this;
+    config['name'] = this.name;
+    
+    $.post($SCRIPT_ROOT + '/_git_pull_map', config, function(response) {
+        callback.call(null, response);
+
+        if(response.status == 'ok'){
+            self.open();
+        }
+    });
+ 
+}
+
+Map.prototype.gitClone = function(config, callback){
+    var self = this;
+    config['name'] = this.name;
+    $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
+        if(response.status ==  'ok'){
+            self.workspace.maps.push(self);
+            self.workspace.displayMaps();
+            $("#" + self.workspace.mapActions).hide();
+
+            self.groups = [];
+            self.open(self.commit);
+        } else{
+            self.destroy();
+        }
+        callback.call(null, response);
+    });
+}
+
+Map.prototype.getConfiguration = function(callback){
+    var data = {name: this.name};
+    
+    $.post($SCRIPT_ROOT + '/_get_config', data, function(response) {
+       callback.call(null, response);
+    });
+}
+
 Map.prototype.getResultingMapfile = function(){
     var self = this;
     $.getJSON($SCRIPT_ROOT + '/_load_mapfile_generated', {
-	mapToEdit: this.name
+    mapToEdit: this.name
     }, function(data) {
         $("#" + self.workspace.resultTextarea).val(data["text"]);
     });
@@ -506,8 +604,8 @@ Map.prototype.getDebug = function(){
     var self = this;
     $.getJSON($SCRIPT_ROOT + '/_load_debug', {
     }, function(data) {
-	$("#" + self.workspace.debugTextarea).val(data.text);
-    });	
+    $("#" + self.workspace.debugTextarea).val(data.text);
+    });    
 }
 
 
