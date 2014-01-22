@@ -115,6 +115,7 @@ def load_templates():
         elif os.path.isdir(path+filename+'/map') and \
             os.path.isfile(path+filename+'/symbols.map') and \
             os.path.isfile(path+filename+'/scales') and \
+            os.path.isdir(path+filename+'/map/layers') and \
             os.path.isfile(path+filename+'/fonts.lst'):
             maptype = "Standard"
         if maptype != "":
