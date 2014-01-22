@@ -99,19 +99,28 @@ def load_templates():
         return
     filesNotInDb = set(file_list) - set(template_list)
     dbEntriesNotInFiles = set(template_list) - set(file_list)
-    pprint.pprint(filesNotInDb)
-    pprint.pprint(dbEntriesNotInFiles)
     # Let's enter the new templates in the db
     for filename in filesNotInDb:
-        pprint.pprint(filename)
-        # Check if map is scribe
-        if os.path.isfile(path+filename+'/config'):
+        maptype = ""
+        # Check if map is scribe and is valid
+        if os.path.isfile(path+filename+'/config') and \
+            os.path.isdir(path+filename+'/editor') and \
+            os.path.isfile(path+filename+'/symbols.map') and \
+            os.path.isfile(path+filename+'/fonts.lst'):
             maptype = "Scribe"
-        else: 
+        elif os.path.isfile(path+filename+'/generate_style.py') and \
+            os.path.isfile(path+filename+'/fonts.lst') and \
+            os.path.isfile(path+filename+'/Makefile'):
+            maptype = "Basemaps"
+        elif os.path.isdir(path+filename+'/map') and \
+            os.path.isfile(path+filename+'/symbols.map') and \
+            os.path.isfile(path+filename+'/scales') and \
+            os.path.isfile(path+filename+'/fonts.lst'):
             maptype = "Standard"
-        g.db.execute('insert into maps (map_name, map_type, ws_id) values (?, ?, ?)',
+        if maptype != "":
+            g.db.execute('insert into maps (map_name, map_type, ws_id) values (?, ?, ?)',
                  ["*"+filename, maptype, 0])
-        g.db.commit()
+            g.db.commit()
     # Let's remove from the db the templates that are not there anymore
     for entry in dbEntriesNotInFiles:
         g.db.execute('delete from maps where map_name="*'+entry+'" and ws_id=0')
