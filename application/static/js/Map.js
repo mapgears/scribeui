@@ -111,9 +111,9 @@ Map.prototype.createGroup = function(name){
         }, function(status) {
             if(status == 1){
                 var group = {"name": name, "content": ""}
-                if(self.type == "Standard")
-                    if(group.name.indexOf(".map") == -1)
-                        group.name = group.name+".map";
+                //if(self.type == "Standard")
+                //    if(group.name.indexOf(".map") == -1)
+                //        group.name = group.name+".map";
                 
                 self.groups.push(group);
                 
@@ -125,7 +125,7 @@ Map.prototype.createGroup = function(name){
                 
                 //Include the new group in the map
                 if(self.type == "Standard")
-                    addIncludeToMap(group.name)
+                    addIncludeToMap(group.name + '.map')
             }else{
         alert(status);
         }           
@@ -152,7 +152,7 @@ Map.prototype.removeGroup = function(name){
 
                 //Remove include statement in the map element
                 if(self.type == "Standard")
-                    removeIncludeFromMap(group.name)
+                    removeIncludeFromMap(group.name + '.map')
             }
         });       
     }
@@ -470,7 +470,7 @@ Map.prototype.lowerGroupIndex = function(name){
     }
 }
 
-Map.prototype.updateGroupOrder = function(){
+Map.prototype.updateGroupOrder = function(callback){
     var self = this;
     var data = [];
     for(var i = 0; i < this.groups.length; i++){
@@ -495,11 +495,16 @@ Map.prototype.updateGroupOrder = function(){
 
             if(self.type == 'Standard'){
                 $.each(self.groups, function(index, group){
-                    removeIncludeFromMap(group.name, false);
-                    addIncludeToMap(group.name, false);
+                    removeIncludeFromMap(group.name + '.map', false);
+                    addIncludeToMap(group.name + '.map', false);
                 });
             } 
+
             self.commit();
+
+            if(callback != null){
+                callback.call();    
+            }
         }
     })
 }

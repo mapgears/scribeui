@@ -316,11 +316,11 @@ def create_map():
 
     
     #Add layers in the bd
-    if map_cur:
-        groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
-        for j in range(len(groups)):
-            g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
-        g.db.commit()
+    #if map_cur:
+    #    groups = query_db('''select * from groups where map_id = ?''', [map_cur], one=False)
+    #    for j in range(len(groups)):
+    #        g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)', [groups[j]['group_name'], groups[j]['group_index'], get_map_id(name, session['ws_name'])])
+    #    g.db.commit()
 
     return "1"
 
@@ -406,29 +406,29 @@ def open_map():
         document.close()
 
     contentfiles['groups'] = []
-    if wsmap['map_type'] == 'Scribe':
-        # Read groups from config file instead of the BD
-        groupFiles = getGroupFiles(pathMap, pathGroups)
+    #if wsmap['map_type'] == 'Scribe':
+    # Read groups from config file instead of the BD
+    groupFiles = getGroupFiles(pathMap, pathGroups)
 
-        for i in range(0, len(groupFiles)):
-            if (os.path.isfile(groupFiles[i])):
-                unGroup = {}
-                unGroup["name"] = getGroupNameFromFile(groupFiles[i])
-                document = open(groupFiles[i], "r")
-                unGroup["content"] = document.read()
-                document.close()
-                contentfiles["groups"].append(unGroup)
-    else:
-        groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
-        groups = sorted(groups)
-        for j in range(len(groups)):
+    for i in range(0, len(groupFiles)):
+        if (os.path.isfile(groupFiles[i])):
             unGroup = {}
-            unGroup["name"] = groups[j]['group_name']
-            if os.path.isfile(pathGroups + unGroup["name"]):
-                document = open(pathGroups + unGroup["name"], "r")
-                unGroup["content"] = document.read()
-                document.close()
-                contentfiles["groups"].append(unGroup)
+            unGroup["name"] = getGroupNameFromFile(groupFiles[i])
+            document = open(groupFiles[i], "r")
+            unGroup["content"] = document.read()
+            document.close()
+            contentfiles["groups"].append(unGroup)
+    #else:
+    #    groups = query_db('''select group_name, group_index from groups where map_id = ?''', [wsmap['map_id']], one=False)
+    #    groups = sorted(groups)
+    #    for j in range(len(groups)):
+    #        unGroup = {}
+    #        unGroup["name"] = groups[j]['group_name']
+    #        if os.path.isfile(pathGroups + unGroup["name"]):
+    #            document = open(pathGroups + unGroup["name"], "r")
+    #            unGroup["content"] = document.read()
+    #            document.close()
+    #            contentfiles["groups"].append(unGroup)
 
 
     #Parameters map
@@ -643,47 +643,58 @@ def add_layer():
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
 
     	if wsmap['map_type'] == 'Scribe':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer" 
-            groupsFiles = getGroupFiles(pathMap, pathGroup)
-	    for gr in groupsFiles:
-                name = getGroupNameFromFile(gr)
-                if groupname == name:
-                    return "A group with that name already exists"
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer"
+        elif wsmap['map_type'] == 'Standard':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"#+groupname+".layer"
+
+        groupsFiles = getGroupFiles(pathMap, pathGroup)
+        for gr in groupsFiles:
+            name = getGroupNameFromFile(gr)
+            if groupname == name:
+                return "A group with that name already exists"
 
             inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
             inputConfigContent = inputConfigFile.read()
             inputConfigFile.close()
 
             jsonConfig = json.loads(string2json(inputConfigContent))
-            jsonConfig['ORDER'].append({str(len(jsonConfig['ORDER'])+1):'groups/'+groupname+'.layer'})
+
+            if wsmap['map_type'] == 'Scribe':
+                group = 'groups/'+groupname+'.layer'
+                suffix = '.layer'
+            elif wsmap['map_type'] == 'Standard':
+                suffix = '.map'
+                group = groupname+'.map'
+
+            jsonConfig['ORDER'].append({str(len(jsonConfig['ORDER'])+1):group})
             with open(pathMap+'config', 'w+') as f:
                 f.write("ORDER {\n")
                 for i in range(len(jsonConfig['ORDER'])):
                     key, value = jsonConfig['ORDER'][i].popitem()
                     f.write(" "+key+": "+value+" \n")
                 f.write("}")
-            file(pathGroup+groupname+'.layer', 'w+')
-	else:
-            groups = query_db("select group_name, group_index from groups where map_id = ?", [mapid], one=False)
-            if groups:
-                groups = sorted(groups)
-                maxindex = groups[-1]['group_index']
-            else:
-                maxindex = 0  
-            if not ".map" in groupname:
-                groupname = groupname+".map"
-            for i in range(len(groups)):
-                if groupname == groups[i]['group_name']:
-                    return "A group with that name already exists"
-                                                    
-            g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
-            g.db.commit()
-        
-            if wsmap['map_type'] == 'Basemaps':
-                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
-            elif wsmap['map_type'] == 'Standard':
-                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
-            file(pathGroup, 'w+')
+            file(pathGroup+groupname+suffix, 'w+')
+        #else:
+        #    groups = query_db("select group_name, group_index from groups where map_id = ?", [mapid], one=False)
+        #    if groups:
+        #        groups = sorted(groups)
+        #        maxindex = groups[-1]['group_index']
+        #    else:
+        #        maxindex = 0  
+        #    if not ".map" in groupname:
+        #        groupname = groupname+".map"
+        #    for i in range(len(groups)):
+        #        if groupname == groups[i]['group_name']:
+        #            return "A group with that name already exists"
+        #                                            
+        #    g.db.execute('insert into groups (group_name, group_index, map_id) values (?,?,?)',[groupname, maxindex+1, mapid])
+        #    g.db.commit()
+        # 
+        #    if wsmap['map_type'] == 'Basemaps':
+        #        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+        #    elif wsmap['map_type'] == 'Standard':
+        #        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
+        #    file(pathGroup, 'w+')
     return "1"
 
 #Remove Group
@@ -697,36 +708,41 @@ def remove_group():
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
 
         if wsmap['map_type'] == 'Scribe':
-            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer" 
-            groupsFiles = getGroupFiles(pathMap, pathGroup)
+            suffix = '.layer'
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"#+groupname+".layer"
+        elif wsmap['map_type'] == 'Standard':
+            suffix = '.map'
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"#+groupname+".layer"
 
-            inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
-            inputConfigContent = inputConfigFile.read()
-            inputConfigFile.close()
+        groupsFiles = getGroupFiles(pathMap, pathGroup)
 
-            jsonConfig = json.loads(string2json(inputConfigContent))
-            with open(pathMap+'config', 'w+') as f:
-                f.write("ORDER {\n")
-                found = False
-                for i in range(len(jsonConfig['ORDER'])):
-                    key, value = jsonConfig['ORDER'][i].popitem()
-                    if groupname in value:
-                        found = True
-                        continue
-                    if found:
-                        key = int(key)-1
-                    f.write("    "+str(key)+": "+value+" \n")
-                f.write("}")
-            pathGroup = pathGroup+groupname+'.layer'
-        else:
-            g.db.execute("DELETE from groups where map_id = ? and group_name = ?", [mapid, groupname])
-            g.db.commit()
+        inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+        inputConfigContent = inputConfigFile.read()
+        inputConfigFile.close()
 
-            if wsmap['map_type'] == 'Basemaps':
-                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
-            elif wsmap['map_type'] == 'Standard':
-                pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
-        if os.path.isfile(pathGroup) :
+        jsonConfig = json.loads(string2json(inputConfigContent))
+        with open(pathMap+'config', 'w+') as f:
+            f.write("ORDER {\n")
+            found = False
+            for i in range(len(jsonConfig['ORDER'])):
+                key, value = jsonConfig['ORDER'][i].popitem()
+                if groupname in value:
+                    found = True
+                    continue
+                if found:
+                    key = int(key)-1
+                f.write("    "+str(key)+": "+value+" \n")
+            f.write("}")
+        pathGroup = pathGroup+groupname+suffix
+        #else:
+        #    g.db.execute("DELETE from groups where map_id = ? and group_name = ?", [mapid, groupname])
+        #    g.db.commit()
+        #
+        #    if wsmap['map_type'] == 'Basemaps':
+        #        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/"+groupname
+        #    elif wsmap['map_type'] == 'Standard':
+        #        pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"+groupname
+        if os.path.isfile(pathGroup):
             subprocess.call(['rm', pathGroup])
     return "1" 
 
@@ -741,21 +757,27 @@ def change_groups_index():
         wsmap = query_db('''select map_type from maps where map_id = ?''', [mapid], one=True)
         if wsmap['map_type'] == 'Scribe':
             pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/editor/groups/"
+        elif wsmap['map_type'] == 'Standard':
+            pathGroup = path+"workspaces/"+session['ws_name']+"/"+session['map_name']+"/map/layers/"
             
-            inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
-            inputConfigContent = inputConfigFile.read()
-            inputConfigFile.close()
+        inputConfigFile = codecs.open(pathMap + 'config', encoding='utf8')
+        inputConfigContent = inputConfigFile.read()
+        inputConfigFile.close()
 
-            jsonConfig = json.loads(string2json(inputConfigContent))
-            with open(pathMap+'config', 'w+') as f:
-                f.write("ORDER {\n")
-                for i in range(len(groups)):
-                    f.write(" "+str(i+1)+": groups/"+groups[i]+".layer \n")
-                f.write("}")
-        else:
+        jsonConfig = json.loads(string2json(inputConfigContent))
+        with open(pathMap+'config', 'w+') as f:
+            f.write("ORDER {\n")
             for i in range(len(groups)):
-                g.db.execute('''UPDATE groups SET group_index = ? WHERE group_name = ? AND map_id = ?''', [i,groups[i],mapid])
-                g.db.commit()
+                if wsmap['map_type'] == 'Scribe':
+                    group = 'groups/' + groups[i] + '.layer \n'
+                elif wsmap['map_type'] == 'Standard':
+                    group = groups[i] + '.map \n'
+                f.write(" "+str(i+1)+": " + group)
+            f.write("}")
+        #else:
+        #    for i in range(len(groups)):
+        #        g.db.execute('''UPDATE groups SET group_index = ? WHERE group_name = ? AND map_id = ?''', [i,groups[i],mapid])
+        #        g.db.commit()
 
     return "1" 
 
@@ -872,7 +894,7 @@ def save(data):
         document.close()
     if wsmap['map_type'] != 'Scribe':
         for i in range(len(data['groups'])):
-            document = open(pathGroups + data['groups'][i]['name'], "w+")
+            document = open(pathGroups + data['groups'][i]['name'] + '.map', "w+")
             document.write(data['groups'][i]['content'].encode('utf-8'))
             document.close()
 
@@ -1005,7 +1027,15 @@ def getGroupFiles(pathMap, pathGroups):
     jsonConfig = json.loads(string2json(inputConfigContent))
     groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
     for i in range(0, len(jsonConfig["ORDER"])):
+
+        print '\n\n'
+        print i
+        print '\n\n'
+
         for j in jsonConfig["ORDER"][i]:
+            print '\n\n'
+            print pathGroups + jsonConfig["ORDER"][i][j]
+            print '\n\n'
             groupFiles[int(j)] = pathGroups + jsonConfig["ORDER"][i][j]
     return groupFiles
 
@@ -1162,7 +1192,7 @@ def git_configure_map(name, url, description=None):
         gitignoreContent = 'data\n'
         gitignoreContent += 'pdata\n'
         gitignoreContent += 'debugFile.log\n'
-        gitignoreContent += 'map/*\n'
+        #gitignoreContent += 'map/*\n'
         gitignore.write(gitignoreContent)
 
         if len(errors) == 0:
@@ -1403,11 +1433,18 @@ def git_clone_map():
                 errors = []
 
                 try:
-                    #subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
+                    subprocess.check_output(['rm map/*.map'], shell=True, stderr=subprocess.STDOUT)
+                    subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
                     output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
                 except subprocess.CalledProcessError as e:
                     errors = e.output
-                    output = e.output 
+                    output = e.output
+
+                try:
+                    output += subprocess.check_output(['mv map/*.map map/' + mapName + '.map'], shell=True, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    errors += e.output
+                    output += e.output  
 
                 if len(errors) == 0:
                     response['status'] = 'ok'

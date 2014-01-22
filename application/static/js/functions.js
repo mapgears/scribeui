@@ -522,10 +522,9 @@ function createNewGroup(){
     }).dialog("open");
 }
 
-function deleteGroup(options){
-    $(".to-be-deleted").each(function(i){
-        var name = $(this).text();
-        _workspace.openedMap.removeGroup(name);
+function deleteGroup(groups){
+    $.each(groups, function(index, group){
+        _workspace.openedMap.removeGroup(group);
     });
 }
 function openGroupOrderWindow(){
@@ -608,9 +607,16 @@ function openGroupOrderWindow(){
             text: "Apply",
             'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
-                _workspace.openedMap.updateGroupOrder();
-                deleteGroup({mapType:_workspace.openedMap.type});
+                var groups = [];
+                $(".to-be-deleted").each(function(){
+                    groups.push($(this).text());
+                });
+                
                 $(this).dialog("close");
+                _workspace.openedMap.updateGroupOrder(function(){
+                    deleteGroup(groups);
+                });
+                
             }
         },
         {
@@ -829,10 +835,10 @@ function addIncludeToMap(filename, commit){
             //TODO detect indentation 
             mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
-            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-            setTimeout(function(){
-                mapEditor.setLineClass(i, 'background', '');
-            }, 3000);
+            //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+            //setTimeout(function(){
+            //    mapEditor.setLineClass(i, 'background', '');
+            //}, 3000);
             break;
         }
     }
