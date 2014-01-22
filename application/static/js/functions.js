@@ -18,7 +18,7 @@ function openNewWorkspaceWindow(options){
         autoOpen: false,
         resizable: false,
         width: options.popupWidth,
-        height:options.popupHeight,
+        height: options.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {

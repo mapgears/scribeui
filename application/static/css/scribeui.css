@@ -53,6 +53,9 @@ button {
     margin-top: -1px;
     box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
+pre {
+    font-family: courier !important;
+}
 
 .main {
     height: 100%;
@@ -922,5 +925,16 @@ div.olControlZoom a {
 
 #grouporder-form + .ui-dialog-buttonpane .ui-dialog-buttonset {
     float: none !important;
+}
+
+#get-feature-info {
+    max-height: 600px !important;
+    min-width: 200px !important;
+    max-width: 400px !important;
+    overflow: auto;
+}
+
+#get-feature-info pre {
+    padding: 10px;
 }
 

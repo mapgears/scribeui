@@ -294,7 +294,7 @@ jQuery(function() {
 
     getFeatureInfoDialog = $("#get-feature-info").dialog({
         autoOpen: false,
-        resizable: false,
+        resizable: true,
         modal: true
     });
 });
