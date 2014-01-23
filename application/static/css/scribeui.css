@@ -859,8 +859,11 @@ div.olControlZoom a {
 }
 
 .chosen-container {
-    /*width: auto !important;*/
     min-width: 100px;
+}
+
+#group_select_chosen.chosen-container {
+    min-width: 150px;
 }
 
 #group_select_chosen {
@@ -868,8 +871,6 @@ div.olControlZoom a {
 }
 
 #group_select_chosen a{
-    /*border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;*/
     border-radius: 0px !important;
 }
 
