@@ -1430,7 +1430,7 @@ def git_clone_map():
                     pass
 
                 try:
-                    output += += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                    output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
                 except subprocess.CalledProcessError as e:
                     errors = e.output
                     output = e.output
