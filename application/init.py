@@ -1027,15 +1027,7 @@ def getGroupFiles(pathMap, pathGroups):
     jsonConfig = json.loads(string2json(inputConfigContent))
     groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
     for i in range(0, len(jsonConfig["ORDER"])):
-
-        print '\n\n'
-        print i
-        print '\n\n'
-
         for j in jsonConfig["ORDER"][i]:
-            print '\n\n'
-            print pathGroups + jsonConfig["ORDER"][i][j]
-            print '\n\n'
             groupFiles[int(j)] = pathGroups + jsonConfig["ORDER"][i][j]
     return groupFiles
 
@@ -1433,18 +1425,26 @@ def git_clone_map():
                 errors = []
 
                 try:
-                    subprocess.check_output(['rm map/*.map'], shell=True, stderr=subprocess.STDOUT)
                     subprocess.check_output(['rm .gitignore'], shell=True, stderr=subprocess.STDOUT)
-                    output += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    pass
+
+                try:
+                    output += += subprocess.check_output(['git pull origin master'], shell=True, stderr=subprocess.STDOUT)
                 except subprocess.CalledProcessError as e:
                     errors = e.output
                     output = e.output
 
                 try:
-                    output += subprocess.check_output(['mv map/*.map map/' + mapName + '.map'], shell=True, stderr=subprocess.STDOUT)
+                    subprocess.check_output(['rm map/level*.map'], shell=True, stderr=subprocess.STDOUT)
                 except subprocess.CalledProcessError as e:
-                    errors += e.output
-                    output += e.output  
+                    pass
+
+                try:
+                    subprocess.check_output(['mv map/*.map map/' + mapName + '.map'], shell=True, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    pass
+
 
                 if len(errors) == 0:
                     response['status'] = 'ok'
