@@ -786,9 +786,9 @@ function onMapOpened(){
     }
 }
 function onWorkspaceOpened(){
-    for(plugin in plugins){
-        if(plugin.onWorkspaceOpened)
-            plugin.onWorkspaceOpened();
+    for(i in plugins){
+        if(plugins[i].onWorkspaceOpened)
+            plugins[i].onWorkspaceOpened();
     }
 }
 function scribeLog(msg){
