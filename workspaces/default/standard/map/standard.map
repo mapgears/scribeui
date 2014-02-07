@@ -1,6 +1,6 @@
 MAP
     CONFIG 'ON_MISSING_DATA' 'IGNORE'
-    CONFIG "MS_ERRORFILE" "../debugFile.log"
+    ##CONFIG "MS_ERRORFILE" "../debugFile.log"
     CONFIG 'PROJ_LIB' '../'
     FONTSET '../fonts.lst'
     IMAGETYPE png
@@ -9,7 +9,7 @@ MAP
     UNITS meters
     EXTENT -180 -90 180 90
     IMAGECOLOR '#C6E2F2'
-    SHAPEPATH '../pdata/naturalEarth/'
+    SHAPEPATH '../pdata/natural_earth/'
     WEB
         METADATA
             "ows_enable_request" "*"

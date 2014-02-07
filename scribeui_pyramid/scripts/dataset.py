@@ -17,3 +17,11 @@ class MapData(DataSet):
         extent = '-8197285.4456571,5695806.3467685,-8184591.9930116,5705655.9111164'
         projection = 'EPSG:900913'
         workspace_id = 1
+
+    class standard:
+        name = u'standard'
+        description = u'Standard map'
+        type = u'Standard'
+        extent = '-8197285.4456571,5695806.3467685,-8184591.9930116,5705655.9111164'
+        projection = 'EPSG:900913'
+        workspace_id = 1

@@ -526,7 +526,7 @@ class APIMap(object):
                             response['logs'] = '**Errors**\n----------\n' + errors + '\n**Logs**\n----------\n' + logs
                             response['errors'].append('An error occured while running scribe.py')
                     else:
-                        reponse['logs'] = '**Success**'
+                        response['logs'] = '**Success**'
 
                     try:
                         with codecs.open(mapfile, encoding='utf8') as f:
