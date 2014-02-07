@@ -1,0 +1,64 @@
+{% macro render(field, show_label=True, show_errors=True, prefix=None, label_cls=None) %}
+<div class="control-group{{' error' if field.errors else ''}}{{' hidden' if not(field.errors) and  field.type == 'HiddenField' else ''}}">
+    {% if show_label %}
+    <label class="control-label {{ label_cls if label_cls}}" for="{{field.label.field_id}}">
+        {{field.label.text}}
+    </label>
+    {% endif %}
+    <div class="controls">
+    {% if prefix %}
+        <div class="input-prepend">
+          <span class="add-on">{{prefix}}</span>
+    {% endif %}
+
+    {% if field.type == 'BooleanField'%}
+        <div class="checkbox-form">
+            {{field(**kwargs)}}
+        </div>
+    {% else%}
+        {{field(**kwargs)}}
+    {% endif %}    
+    {% if prefix %}
+        </div>
+    {% endif %}
+        {% if field.errors and show_errors %}
+        <dl>
+            {% for error in field.errors %}
+            <dd class="help-inline">{{error}}</dd>
+            {% endfor %}
+        </dl>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro renderColorPicker(field, color="rgb(255, 146, 180)", format="rgb", show_label=True, show_errors=True) %}
+<div class="control-group{{' error' if field.errors else ''}}">
+    {% if show_label %}
+    <label class="control-label" for="{{field.label.field_id}}">
+        {{field.label.text}}
+    </label>
+    {% endif %}
+    <div class="controls">
+        <div class="input-append color" id="colorpicker-{{field.label.field_id}}" data-color="{{color}}" data-color-format="{{format}}">
+            {{field(**kwargs)}}
+            <span class="add-on"><i style="background-color: rgb(255, 146, 180)"></i></span>
+        </div>
+        
+        <script>
+            $('#colorpicker-{{field.label.field_id}}').colorpicker()
+            /*.on('changeColor', function(ev) {
+                //$('.colorpicker').hide();
+            });*/
+        </script>
+        
+        {% if field.errors and show_errors %}
+        <dl>
+            {% for error in field.errors %}
+            <dd class="help-inline">{{error}}</dd>
+            {% endfor %}
+        </dl>        
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}

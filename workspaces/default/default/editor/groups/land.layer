@@ -1,0 +1,17 @@
+LAYER {
+    1-16 {
+        NAME: 'land'
+        TYPE: POLYGON
+        @layerconfig
+        DATA {
+            1-5: '110m_physical/ne_110m_land'
+            6-10: '50m_physical/ne_50m_land'
+            11-16: '10m_physical/ne_10m_land'
+	    }
+        CLASS {
+            STYLE {
+                COLOR: '#EEECDF'
+            }
+        }
+    }
+}

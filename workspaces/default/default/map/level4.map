@@ -1,0 +1,122 @@
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'ocean4'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_ocean'
+        CLASS
+            STYLE
+                COLOR '#C6E2F2'
+            END
+        END
+    END
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'land4'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_land'
+        CLASS
+            STYLE
+                COLOR '#EEECDF'
+            END
+        END
+    END
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'coastline4'
+        TYPE LINE
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_coastline'
+        CLASS
+            STYLE
+                COLOR '#469FC3'
+            END
+        END
+    END
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'lakes4'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_physical/ne_110m_lakes'
+        CLASS
+            STYLE
+                COLOR '#C6E2F2'
+                OUTLINECOLOR '#469FC3'
+            END
+        END
+    END
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'country_boundaries4'
+        TYPE LINE
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_cultural/ne_110m_admin_0_boundary_lines_land'
+        CLASS
+            STYLE
+                COLOR '#CBCCCA'
+            END
+        END
+    END
+    LAYER
+        MAXSCALEDENOM 67108864
+        MINSCALEDENOM 33554432
+        NAME 'countries4'
+        TYPE POLYGON
+        GROUP 'default'
+        STATUS ON
+        PROJECTION
+            'init=epsg:4326'
+        END
+        PROCESSING 'LABEL_NO_CLIP=ON'
+        PROCESSING 'CLOSE_CONNECTION=DEFER'
+        DATA '110m_cultural/ne_110m_admin_0_countries'
+        LABELITEM 'NAME'
+        CLASS
+            LABEL
+                COLOR 100 100 100
+                OUTLINECOLOR 255 255 255
+                FONT 'sc'
+                TYPE truetype
+                SIZE 12
+                POSITION AUTO
+                PARTIALS FALSE
+            END
+        END
+    END

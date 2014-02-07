@@ -1,0 +1,62 @@
+{% extends main_template %}
+{% from "scribeui_pyramid:modules/webui/templates/forms/fields.jinja2" import render %}
+{% from "scribeui_pyramid:modules/webui/templates/forms/error.jinja2" import errorsMgs %}
+{% block body %}              
+<h2>
+{{form.extras.title}}
+{% if form.extras.subtitle %}
+   <small>{{form.extras.subtitle}}</small>
+{% endif %}
+</h2>
+
+{{panel('form-tabs', tabs=form.extras.tabs)}}
+{{errorsMgs()}}
+
+<form
+    id="{{form.extras.form_id}}"
+    class="form-horizontal"
+    method="post"
+    action="{{form.extras.action_url}}",
+    enctype="multipart/form-data">
+
+    <fieldset>
+        <div class="control-group">
+            {% for field in form %}
+            
+                {% if field.name in form.extras.omitted %}
+                    {% set kwargs = {'readonly': 'readonly'} %}
+                {% elif field.name in form.extras.disabled %}
+                    {% set kwargs = {'readonly': 'readonly', 'disabled': 'true'} %}    
+                {% else %}
+                    {% set kwargs = {} %}
+                {% endif %}
+            
+                {{render(field, **kwargs)}}
+            {% endfor %}
+        </div>
+        
+        {{panel('table', items=form.extras.table)}}
+        
+        <div id="extra-content"></div>
+        <div id="map"></div>
+        
+        <div class="form-actions">
+            {% for button in form.extras.buttons %}
+            <button type="submit" name="{{button}}" class="btn btn-primary">{{button.capitalize()}}</button>
+            {% endfor %}
+            <a href="{{form.extras.cancel_url}}" class="btn">Cancel</a>
+        </div>
+    </fieldset>
+</form>
+
+<script>
+$(document).ready(function() {
+    {% if form.extras.onload %}
+        {% for fctn in form.extras.onload %}
+            {{fctn.name}}('{{fctn.input}}');
+        {% endfor %}
+    {% endif %}
+});
+</script>
+
+{% endblock body %}

@@ -1,0 +1,7 @@
+{% if queues %}
+    {% for q, flash in queues %}
+    <div class="alert alert-block alert-{{q or 'warning'}}">
+        <p>{{flash|join('<br/>')}}</p>
+    </div>
+    {% endfor %}
+{% endif %}

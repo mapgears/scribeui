@@ -1,0 +1,98 @@
+{% extends main_template %}
+{% from "scribeui_pyramid:modules/webui/templates/forms/fields.jinja2" import render %}
+{% from "scribeui_pyramid:modules/webui/templates/forms/fields.jinja2" import renderColorPicker %}
+{% from "scribeui_pyramid:modules/webui/templates/forms/error.jinja2" import errorsMgs %}
+{% block body %}
+<h2>{{form.extras.title}}
+{% if form.extras.subtitle %}
+   <small>{{form.extras.subtitle}}</small>
+{% endif %}
+</h2>
+
+
+{{panel('form-tabs', tabs=form.extras.tabs)}}
+{{errorsMgs()}}
+<div class="span12 no-margin">
+
+<form
+    id="{{form.extras.form_id}}"
+    class="form-horizontal"
+    method="post"
+    action="{{form.extras.action_url}}",
+    enctype="multipart/form-data">
+    
+    {% for field_set in form.field_sets %}
+        {% if field_set.type == 'separator' %}
+            <div class="span12">
+                <hr>
+            </div>
+        {% elif field_set.type == 'fields' %}
+            <div>
+            {% for field in field_set.content %}
+                <div class="{{'span12' if loop.length == 1 else 'span'}} no-margin">
+                    <fieldset>
+                        {% if field.type == 'colorpicker' %}
+                            {% set kwargs = {'readonly': 'readonly'} %}
+                            {{renderColorPicker(form[field.name], **kwargs)}}
+                        {% elif field.type == 'hidden' %}
+                            {% set kwargs = {'readonly': 'readonly'} if field.name in form.extras.omitted else {} %}
+                            {{render(form[field.name], False, **kwargs)}}
+                        {% else %}
+                            {% if field.name in form.extras.omitted %}
+                                {% set kwargs = {'readonly': 'readonly'} %}
+                            {% elif field.name in form.extras.disabled %}
+                                {% set kwargs = {'readonly': 'readonly', 'disabled': 'true'} %}    
+                            {% else %}
+                                {% set kwargs = {'placeholder': field.help} %}
+                            {% endif %}
+
+                            {{render(form[field.name], prefix=field.prefix, label_cls=field.label_cls, **kwargs)}}  
+
+                        {% endif %}
+                    </fieldset>
+                </div>
+            {% endfor %}
+            </div>
+        {% elif field_set.type == 'text' %}
+            <div class="span12">
+                <h5>
+                    {{field_set.content}}
+                </h5>
+            </div>
+        {% endif %}           
+    {% endfor %}
+    
+    <div class="span12 no-margin">
+        <fieldset>
+            <div id="extra-content"></div>
+            
+            <div class="form-actions">
+                {% for button in form.extras.buttons %}
+                    <button type="submit" name="{{button}}" class="btn btn-primary">{{button.capitalize() if button != 'OK' else button}}</button>
+                {% endfor %}
+                <a href="{{form.extras.cancel_url}}" class="btn">Annuler</a>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+</div>
+
+<script>
+$(document).ready(function() {
+    $('.modal-body').text('');
+    if ($('.help-inline').length > 0) {
+        $('.help-inline').each(function() {
+	          $('.modal-body').append('<p>'+$(this).text()+'</p>');
+        });  
+        $('#myModal').modal();
+    };
+    
+    {% if form.extras.onload %}
+        {% for fctn in form.extras.onload %}
+            {{fctn.name}}('{{fctn.input}}');
+        {% endfor %}
+    {% endif %}
+});
+</script>
+{% endblock body %}

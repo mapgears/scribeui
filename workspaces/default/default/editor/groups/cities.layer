@@ -1,0 +1,67 @@
+LAYER {
+    5-16 {
+        NAME: 'populated_places'
+        TYPE: POINT
+        @layerconfig
+        DATA {
+	        1-5: '110m_cultural/ne_110m_populated_places'
+            6-8: '50m_cultural/ne_50m_populated_places'
+            8-16: '10m_cultural/ne_10m_populated_places'
+	    }
+    	LABELITEM: 'NAME'
+        CLASS {
+            5-16 {
+                EXPRESSION: ([WORLDCITY] = 1)
+                LABEL {
+                  	COLOR: 0 0 0
+                  	OUTLINECOLOR: 255 255 255
+                  	OUTLINEWIDTH: 3
+                  	FONT: 'sc'
+                  	TYPE: truetype
+                  	SIZE {
+                      	4-6: 8
+                      	7-16: 12
+                  	}
+                  	POSITION: AUTO
+                  	PARTIALS: FALSE
+                }
+            	STYLE {
+                    5-8 {
+                        SYMBOL: 'circle'
+                        OUTLINECOLOR: '#000000'
+                        OUTLINEWIDTH: 1
+                        COLOR: '#FF0000'
+                        SIZE: 6
+                    }
+		        }
+            }
+        }
+        CLASS {
+            5-16 {
+                EXPRESSION: ([WORLDCITY] = 0)
+                LABEL {
+                  	COLOR: 0 0 0
+                  	OUTLINECOLOR: 255 255 255
+                  	OUTLINEWIDTH: 3
+                  	FONT: 'sc'
+                  	TYPE: truetype
+                  	SIZE {
+                      	5-7: 8
+                      	8-16: 10
+                  	}
+                  	POSITION: AUTO
+                  	PARTIALS: FALSE
+                }
+            	STYLE {
+                    5-8 {
+                        SYMBOL: 'circle'
+                        OUTLINECOLOR: '#000000'
+                        OUTLINEWIDTH: 1
+                        COLOR: '#AAAAAA'
+                        SIZE: 6
+                    }
+		        }
+            }
+        }
+    }
+}

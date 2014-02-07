@@ -1,0 +1,35 @@
+LAYER
+    NAME 'ocean'
+    TYPE POLYGON
+    GROUP 'default'
+    STATUS ON
+    PROJECTION
+    	'init=epsg:4326'
+    END
+    PROCESSING 'LABEL_NO_CLIP=ON'
+    PROCESSING 'CLOSE_CONNECTION=DEFER'
+    DATA '50m_physical/ne_50m_ocean'
+    CLASS
+        STYLE
+        	COLOR '#C6E2F2'
+        END
+    END
+END
+
+LAYER
+    NAME 'coastline'
+    TYPE LINE
+    GROUP 'default'
+    STATUS ON
+    PROJECTION
+    	'init=epsg:4326'
+    END
+    PROCESSING 'LABEL_NO_CLIP=ON'
+    PROCESSING 'CLOSE_CONNECTION=DEFER'
+    DATA '50m_physical/ne_50m_coastline'
+    CLASS
+        STYLE
+        	COLOR '#469FC3'
+        END
+    END
+END
