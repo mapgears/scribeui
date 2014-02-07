@@ -144,7 +144,7 @@ jQuery(function() {
     });
 
     $(".map-button").button('disable');
-    $(".group-button").button('disable');
+    $("#editor-toolbar button").button('disable');
 
     $("a[href = '#manager-tab'], a[href = '#help-tab']").bind('click', function(){
         $("div[class='CodeMirror']").hide();

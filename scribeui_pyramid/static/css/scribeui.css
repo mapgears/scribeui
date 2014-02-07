@@ -96,6 +96,18 @@ pre {
     float: left;
 }
 
+.navbar #map-name {
+    margin: auto;
+    width: 200px;
+    text-align: center;
+    padding: 5px;
+}
+
+.navbar #logout {
+    float: right;
+    padding: 5px 10px;
+}
+
 .title-left {
     position: relative;
     float: left;

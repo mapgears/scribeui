@@ -78,7 +78,7 @@ Map.prototype.open = function(callback){
 
                 self.saved = true;
 
-                $("#info").text(self.workspace.name + " / " + self.name);
+                $("#map-name").text(self.name);
             }
         }
     );
