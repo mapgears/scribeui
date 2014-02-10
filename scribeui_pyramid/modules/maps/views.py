@@ -269,8 +269,8 @@ class APIMap(object):
                                 'scale': float(poi[3]) if len(poi) >= 4 else None,
                                 'projection': poi[4] if len(poi) == 5 else None  
                                 })
-                        else:
-                            response['errors'].append("Invalid poi file.")
+                        #else:
+                        #    response['errors'].append("Invalid poi file.")
 
             if len(response['errors']) == 0:
                 connector_directory = self.request.registry.settings.get('cgi.directory', '') + '/elfinder-python/'
