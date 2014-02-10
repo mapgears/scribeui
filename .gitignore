@@ -44,3 +44,4 @@ paster.log
 *.ipynb
 *~
 *.sqlite
+pyramid.wsgi

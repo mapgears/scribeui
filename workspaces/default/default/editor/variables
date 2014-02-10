@@ -11,6 +11,10 @@ VARIABLES {
         }}
         PROCESSING: 'LABEL_NO_CLIP=ON'
         PROCESSING: 'CLOSE_CONNECTION=DEFER'
+        METADATA {{
+              "wms_include_items" "all" 
+        }}
+        TEMPLATE: 'blank.html'
     }
     watercolor: '#C6E2F2'
     watercolor_ol: '#469FC3'

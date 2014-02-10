@@ -1,6 +1,10 @@
 LAYER
     NAME 'country_boundaries'
     TYPE LINE
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
     GROUP 'default'
     STATUS ON
     PROJECTION
@@ -20,6 +24,10 @@ END
 LAYER
     MAXSCALEDENOM 134217728
     NAME 'countries'
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
     TYPE POLYGON
     GROUP 'default'
     STATUS ON

@@ -10,6 +10,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_physical/ne_50m_ocean'
         CLASS
             STYLE
@@ -29,6 +33,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_physical/ne_50m_land'
         CLASS
             STYLE
@@ -48,6 +56,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_cultural/ne_50m_urban_areas'
         CLASS
             STYLE
@@ -67,6 +79,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_physical/ne_50m_coastline'
         CLASS
             STYLE
@@ -86,6 +102,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_physical/ne_50m_lakes'
         CLASS
             STYLE
@@ -106,6 +126,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_physical/ne_50m_rivers_lake_centerlines_scale_rank'
         LABELITEM "name"
         CLASS
@@ -216,6 +240,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_cultural/ne_50m_admin_0_boundary_lines_land'
         CLASS
             STYLE
@@ -235,6 +263,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_cultural/ne_50m_admin_0_countries'
         LABELITEM 'NAME'
         CLASS
@@ -261,6 +293,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_cultural/ne_50m_admin_1_states_provinces_lines'
         CLASS
             STYLE
@@ -280,6 +316,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '50m_cultural/ne_50m_admin_1_states_provinces_shp'
         LABELITEM 'NAME'
         CLASS
@@ -306,6 +346,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '10m_cultural/ne_10m_roads'
         CLASSITEM 'type'
         LABELITEM 'name'
@@ -363,6 +407,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '10m_cultural/ne_10m_populated_places'
         LABELITEM 'NAME'
         CLASS

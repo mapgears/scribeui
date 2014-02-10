@@ -443,7 +443,7 @@ Map.prototype.setGroups = function(callback){
 }
 
 Map.prototype.openDataBrowser = function(){
-    var div = $('<div>').attr('idi', "data-browser-child-" + this.name);
+    var div = $('<div>').attr('id', "data-browser-child-" + this.name);
     selectors.dataBrowser().append(div);
 
     div.elfinder({
@@ -462,7 +462,7 @@ Map.prototype.openDataBrowser = function(){
 }
 
 Map.prototype.closeDataBrowser = function(){ 
-    if($("#" + this.workspace.dataDiv).children().length > 0){
+    if(selectors.dataBrowser().children().length > 0){
         $("#data-browser-child-" + this.name).elfinder('destroy');
         $("#data-browser-child-" + this.name).remove();
     }

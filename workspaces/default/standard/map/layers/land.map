@@ -1,6 +1,10 @@
 LAYER
     NAME 'land'
     TYPE POLYGON
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
     GROUP 'default'
     STATUS ON
     PROJECTION

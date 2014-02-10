@@ -10,6 +10,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '110m_physical/ne_110m_ocean'
         CLASS
             STYLE
@@ -29,6 +33,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '110m_physical/ne_110m_land'
         CLASS
             STYLE
@@ -48,6 +56,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '110m_physical/ne_110m_coastline'
         CLASS
             STYLE
@@ -67,6 +79,10 @@
         END
         PROCESSING 'LABEL_NO_CLIP=ON'
         PROCESSING 'CLOSE_CONNECTION=DEFER'
+        METADATA
+            "wms_include_items" "all"
+        END
+        TEMPLATE 'blank.html'
         DATA '110m_cultural/ne_110m_admin_0_boundary_lines_land'
         CLASS
             STYLE

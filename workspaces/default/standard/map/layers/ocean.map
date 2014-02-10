@@ -1,6 +1,10 @@
 LAYER
     NAME 'ocean'
     TYPE POLYGON
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
     GROUP 'default'
     STATUS ON
     PROJECTION
@@ -19,6 +23,10 @@ END
 LAYER
     NAME 'coastline'
     TYPE LINE
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
     GROUP 'default'
     STATUS ON
     PROJECTION
