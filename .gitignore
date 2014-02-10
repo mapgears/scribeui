@@ -43,3 +43,4 @@ ropevim.vim
 paster.log
 *.ipynb
 *~
+*.sqlite
