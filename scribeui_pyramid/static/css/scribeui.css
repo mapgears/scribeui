@@ -85,6 +85,8 @@ pre {
     display: inline-block;
     position: absolute;
     top: 6px;
+    left: 30px;
+    width: 80px;
     /*padding-top: 8px;*/  
 }
 .faded{
@@ -127,9 +129,10 @@ pre {
 }
 
 .title-left {
-    position: relative;
-    float: left;
-    padding-left: 10px;
+    position: absolute;
+    left: 10px;
+    /*float: left;
+    padding-left: 10px;*/
 }
 
 .title-right {
