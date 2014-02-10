@@ -19,6 +19,8 @@ Development
 
   - Edit the proxy.cgi file and add your server host to the list of allowed hosts
 
+- sudo apt-get install build-essential swig libpq-dev python-dev sudo apt-get install libmysqlclient-dev sudo apt-get install python-pip sudo pip install virtualenv libmysqlclient-dev
+
 - make install
 
 - make start
@@ -41,6 +43,8 @@ Production
 - Copy the proxy.cgi file in your cgi-bin directory
 
   - Edit the proxy.cgi file and add your server host to the list of allowed hosts
+
+- sudo apt-get install build-essential swig libpq-dev python-dev sudo apt-get install libmysqlclient-dev sudo apt-get install python-pip sudo pip install virtualenv
 
 - make install
 

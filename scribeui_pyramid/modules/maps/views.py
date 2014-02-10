@@ -880,10 +880,10 @@ class APIMap(object):
                 except subprocess.CalledProcessError as e:
                     response['errors'].append(e.output)
 
-                try:
-                    subprocess.call(['mv', mapfile_directory + template + '.map', mapfile]) 
-                except subprocess.CalledProcessError as e:
-                    response['errors'].append(e.output)
+                #try:
+                #    subprocess.call(['mv', mapfile_directory + template + '.map', mapfile]) 
+                #except subprocess.CalledProcessError as e:
+                #    response['errors'].append(e.output)
                                           
 
                 if len(response['errors']) == 0:
