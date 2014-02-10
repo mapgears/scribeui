@@ -104,8 +104,26 @@ pre {
 }
 
 .navbar #logout {
-    float: right;
-    padding: 5px 10px;
+    position: absolute;
+    right: 0px;
+    height: 30px;
+    min-width: 100px;
+}
+
+.navbar #logout button{
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    border-right-width: 0px !important;
+    border-radius: 0px !important;
+    border-color: #1C8D61 !important;
+    height: 30px;
+    width: 100%;
+}
+
+.ui-menu { 
+    position: absolute; 
+    width: 100px;
+    font-size: 14px; 
 }
 
 .title-left {

@@ -6,4 +6,5 @@ def includeme(config):
     config.include('.workspaces')
     config.include('.maps')
     config.include('.webui')
+    config.include('.plugins')
     config.include('.main')

@@ -237,12 +237,6 @@ jQuery(function() {
     }).click(function(e){
            createNewGroup();
     });
-    $('#btn_delete_group').button({
-        text: false,
-        icons: { primary: 'ui-icon-minus' }
-    }).click(function(e){
-           deleteGroup({mapType: _workspace.openedMap.type});
-    });
 
     $('#btn_change_group_order').button({
         text:false,
@@ -301,7 +295,7 @@ jQuery(function() {
     });
     //Warn the user if leaving before saving
     window.onbeforeunload = function(e){
-        if(_workspace.openedMap.saved == false)
+        if(workspace.openedMap && workspace.openedMap.saved == false)
             return 'All unsaved changes will be lost, do you want to continue ?';    
     }
 
@@ -339,5 +333,27 @@ jQuery(function() {
         resizable: true,
         modal: true
     });
+
+    $("#workspace")
+        .button({
+            icons: {
+                secondary: "ui-icon-triangle-1-s"
+            }
+        })
+        .click(function() {
+            var menu = $( this ).parent().next().show().position({
+                my: "left top",
+                at: "left bottom",
+                of: this
+            });
+            $( document ).one( "click", function() {
+                menu.hide();
+            });
+            return false;
+        })
+        .parent()
+            .next()
+                .hide()
+                .menu();
 });
 

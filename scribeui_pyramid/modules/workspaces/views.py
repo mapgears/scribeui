@@ -9,11 +9,7 @@ from pyramid.httpexceptions import (
 from pyramid.view import view_config
 
 from ..app.sqla import DBSession
-from ..app.utils import Bunch
-from ..webui.ui import (
-    PageAction,
-    FormTab
-)
+
 from ..webui.views import (
     BaseView,
     FormView
@@ -21,6 +17,7 @@ from ..webui.views import (
 from .forms import (
     NewWorkspaceForm
 )
+
 from .models import Workspace
 from . import WorkspaceManager
 
@@ -120,7 +117,11 @@ class APIWorkspace(object):
             password = None
 
         if len(response['errors']) == 0:
-            workspace = Workspace.authenticate(name, password)
+            if name == 'default':
+                workspace = None
+                response['errors'].append('The default workspace cannot be deleted.')
+            else:
+                workspace = Workspace.authenticate(name, password)
 
             if workspace:
                 workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + name

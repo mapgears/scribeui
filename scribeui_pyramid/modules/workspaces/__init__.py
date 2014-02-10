@@ -8,7 +8,6 @@ def routes_api(config):
     config.add_route('workspaces.delete', '/workspaces/delete')
 
 def includeme(config):
-    #config.include(routes)
     config.include(routes_api, route_prefix='api')
     config.scan('.')
 

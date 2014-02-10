@@ -215,7 +215,7 @@ class APIMap(object):
                             response['errors'].append("File " + group_file + " not found.")
 
                         if len(response['errors']) == 0:
-                            group_name = g[index].replace('.layer', '').split('/')[-1]
+                            group_name = g[index].replace('.layer', '').replace('.map', '').split('/')[-1]
                             data['groups'][int(index) - 1] = {
                                 'name': group_name,
                                 'content': group_data
