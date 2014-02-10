@@ -60,5 +60,6 @@ class MainView(BaseView):
             'api_url': self.request.route_url('home') + '/api',
             'workspace': self.request.userid ,
             'logo': self.request.static_url('scribeui_pyramid:static/img/logo_mini.png'),
-            'logout_url': self.request.route_url('auth.logout')
+            'logout_url': self.request.route_url('auth.logout'),
+            'version': 'v0.7-dev'
         }
