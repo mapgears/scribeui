@@ -350,6 +350,7 @@ Map.prototype.close = function(){
     this.clearGroups();
 
     this.clearComponents();
+    this.clearPois();
     this.workspace.openedMap = null;
     this.previousGroup = null;
 }
@@ -565,6 +566,10 @@ Map.prototype.getDebug = function(){
     }, function(data) {
     $("#" + self.workspace.debugTextarea).val(data.text);
     });    
+}
+
+Map.prototype.clearPois = function(){
+    selectors.poiSelect().empty().trigger('chosen:updated');
 }
 
 Map.prototype.getPOIByName = function(name){
