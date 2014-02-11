@@ -89,8 +89,8 @@ jQuery(function() { $(document).ready(function(){
 		openSecondaryPanel("maps", editors['maps']);
 				
 	}
-        //This will be called by functions.js once the map is opened.
-        //There exists also a onWorkspaceOpened function
+	
+    //This will be called by functions.js once the map is opened.
 	setExtent.prototype.onMapOpened = function(){
 		$('#setMapExtent').button('enable');
 	}

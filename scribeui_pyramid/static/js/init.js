@@ -31,29 +31,9 @@ jQuery(function() {
     workspace = new Workspace($WSNAME);
     workspace.open();
 
-    workspaceConfig = {
-        "workspaceSelect": "workspace-select",
-        "workspaceManage": "workspace-manage",
-        "workspacePassword": "workspace-password",
-        "mapDiv": "map",
-        "mapActions": "map-actions",
-        "mapList": "map-list",
-        "mapDescription": "map-description",
-        "poiSelect": "poi-select",
-        "groupSelect": "group-select",
-        "groupOl": "group-ol",
-        "dataDiv": "data-tab",
-        "logTextarea": "txt-logs",
-        "resultTextarea": "txt-result",
-        "debugTextarea": "txt-debug",
-    }
-
     mapTypes = ["Scribe",  "Standard"];
     
     plugins = [];
-    
-    //openWorkspacePopup(workspaceConfig); 
-
     
     /*--------------------------------
       Init code editors
@@ -126,6 +106,7 @@ jQuery(function() {
             $('#logs').hide();
         })
     );
+
     // Fix for ticket #40 https://github.com/mapgears/scribeui/issues/40
     $('#logs').css('top', $('#logs').position().top);
     
@@ -210,24 +191,20 @@ jQuery(function() {
     });
 
     selectors.newMapTypeSelect().bind('change', function(){
+        var templateWorkspace, password;
         if($("#newmap-ws").hasClass('invisible')){
-            var templateWorkspace = 'default';
-            var password = null;
+            templateWorkspace = 'default';
+            password = null;
         } else{
-            var templateWorkspace = selectors.templateWorkspaceSelect().val();
-            var password = selectors.templateWorkspacePassword().val();
+            templateWorkspace = selectors.templateWorkspaceSelect().val();
+            password = selectors.templateWorkspacePassword().val();
         }
 
         getTemplates(templateWorkspace, $(this).val(), password, function(templates){
             displayTemplates(templates);
         });
     });
-/*
-    $("#newmap-type").bind('change', function(){
-        displayTemplates('templates', $("#newmap-type").val());
-        displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());  
-    });
-*/
+
     $('#btn_commit').button({
         icons: { primary: 'ui-icon-disk' }
     }).click( function(){
@@ -238,7 +215,7 @@ jQuery(function() {
         text: false,
         icons: { primary: 'ui-icon-plus' }
     }).click(function(e){
-           createNewGroup();
+        createNewGroup();
     });
 
     $('#btn_change_group_order').button({
@@ -248,7 +225,6 @@ jQuery(function() {
         openGroupOrderDialog();
     });
     $('#btn-open-logs').button({
-        /*text:false,*/
         icons: { primary: 'ui-icon-flag' }    
     }).click(function(){
         $('#logs').toggle();
@@ -280,13 +256,6 @@ jQuery(function() {
         displayDataBrowser();
     });
 
-    var newMapTypeSelect = $("#newmap-type");
-    var cloneMapTypeSelect = $("#git-clone-type");
-    for(var i = 0; i < mapTypes.length; i++){
-        newMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
-        cloneMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
-    }
-
     $('select').chosen();
     
     //Shortcut for commit
@@ -301,35 +270,6 @@ jQuery(function() {
         if(workspace.openedMap && workspace.openedMap.saved == false)
             return 'All unsaved changes will be lost, do you want to continue ?';    
     }
-
-    $.event.special.tripleclick = {
-
-        setup: function(data, namespaces) {
-            var elem = this, $elem = jQuery(elem);
-            $elem.bind('click', jQuery.event.special.tripleclick.handler);
-        },
-
-        teardown: function(namespaces) {
-            var elem = this, $elem = jQuery(elem);
-            $elem.unbind('click', jQuery.event.special.tripleclick.handler)
-        },
-
-        handler: function(event) {
-            var elem = this, $elem = jQuery(elem), clicks = $elem.data('clicks') || 0;
-            clicks += 1;
-            if ( clicks === 3 ) {
-                clicks = 0;
-
-                // set event type to "tripleclick"
-                event.type = "tripleclick";
-                
-                // let jQuery handle the triggering of "tripleclick" event handlers
-                jQuery.event.handle.apply(this, arguments)  
-            }
-            $elem.data('clicks', clicks);
-        }
-        
-    };
 
     getFeatureInfoDialog = $("#get-feature-info").dialog({
         autoOpen: false,

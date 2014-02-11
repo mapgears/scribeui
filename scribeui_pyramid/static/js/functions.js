@@ -197,7 +197,7 @@ function openNewMapDialog(){
                         selectors.templateWorkspaceSelect().bind('change', function(){
                             var templateWorkspace = $(this).val();
                             var password = selectors.templateWorkspacePassword().val();
-                            var type = selectors.newMapTypeSelect.val()
+                            var type = selectors.newMapTypeSelect().val()
 
                             getTemplates(templateWorkspace, type, null, function(templates){
                                 displayTemplates(templates);
@@ -760,68 +760,6 @@ function openSecondaryPanel(value){
     resizeEditors();
 }
 
-function onMapOpened(){
-    $('#group-edition-select').change(function(e){
-        var editor = null;
-        var val = this.value;
-        switch(this.value){
-            case 'map': 
-                editor = mapEditor;
-                val = 'maps';
-                break;
-            case 'scales': 
-                editor = scaleEditor;
-                break;
-            case 'symbols': 
-                editor = symbolEditor;
-                break;
-            case 'fonts': 
-                editor = fontEditor;
-                break;
-            case 'projections': 
-                editor = projectionEditor;
-                break;
-            case 'variables':
-                editor = variableEditor;
-                break;
-            case 'readmes':
-                editor = readmeEditor;
-                break;
-                
-        }
-        openSecondaryPanel(val, editor);
-    });
-    $('#txt-logs').val('');
-    $('#txt-debug').val('');
-
-    //Needed to prevent being able to ctrl-z to previous' map content
-    groupEditor.clearHistory();
-    mapEditor.clearHistory();
-    variableEditor.clearHistory();
-    scaleEditor.clearHistory();
-    fontEditor.clearHistory();
-    projectionEditor.clearHistory();
-    readmeEditor.clearHistory();
-
-    if(_workspace.openedMap.type == "Scribe"){
-        $("#btn_delete_group").hide();
-        $("#btn_change_group_order").show();
-    }else if(_workspace.openedMap.type == "Standard"){
-        $("#btn_delete_group").show();
-        $("#btn_change_group_order").show();
-    }
-
-    for(i in plugins){
-        if(plugins[i].onMapOpened)
-            plugins[i].onMapOpened();
-    }
-}
-function onWorkspaceOpened(){
-    for(plugin in plugins){
-        if(plugin.onWorkspaceOpened)
-            plugin.onWorkspaceOpened();
-    }
-}
 function scribeLog(msg){
     if(msg.indexOf("**ERRORS**") != -1){
         if(!$('#logs').is(':visible'))

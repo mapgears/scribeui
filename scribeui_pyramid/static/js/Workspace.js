@@ -35,9 +35,6 @@ function Workspace(name, options){
 
 Workspace.prototype.open = function(){
     this.getMaps();
-    /*this.getPointsOfInterest(this.displayPointsOfInterest);
-    $("#info").text(this.name);
-    onWorkspaceOpened();*/
 };
 
 Workspace.prototype.createMap = function(data){

@@ -91,10 +91,12 @@ class APIMap(object):
                 workspace = Workspace.by_name(template_workspace)
                 
             if len(response['errors']) == 0:
+                current_workspace = Workspace.by_name(self.request.userid)
+
                 if not MapManager.is_valid_name(name):
                     response['errors'].append('Name is not valid.')
 
-                if workspace.get_map_by_name(name):
+                if current_workspace.get_map_by_name(name):
                     response['errors'].append('A map with that name already exists.')
 
                 if len(response['errors']) == 0:
@@ -116,10 +118,7 @@ class APIMap(object):
                                               
 
                     if len(response['errors']) == 0:
-                        if template_workspace == self.request.userid:
-                            workspace_id = workspace.id
-                        else: 
-                            workspace_id = Workspace.by_name(self.request.userid).id
+                        workspace_id = current_workspace.id
 
                         (projection, extent) = MapManager.get_proj_extent_from_mapfile(mapfile)
 

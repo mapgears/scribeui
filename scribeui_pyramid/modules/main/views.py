@@ -45,14 +45,10 @@ class MainView(BaseView):
         plugins_js = [
             self.request.static_url('scribeui_pyramid:static/js/init.js')
         ]
+        plugins_js += getJsFiles(self.request)
 
         plugins_css = []
-
-        js_files = getJsFiles(self.request)
-        plugins_js += js_files
-
-        css_files = getCssFiles(self.request)
-        plugins_css += css_files
+        plugins_css += getCssFiles(self.request)
 
         return {
             'plugins_js': plugins_js,
