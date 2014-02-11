@@ -978,7 +978,7 @@ div.olControlZoom a {
 .login {
     margin-left: auto;
     margin-right: auto;
-    width: 362px;
+    width: 384px;
     height: 300px;
     margin-top: 50px;
 }
@@ -1010,14 +1010,11 @@ div.olControlZoom a {
 }
 
 .login form {
-    /*background-color: #efefef;
-    border: 1px solid rgba(82, 168, 236, 0.8);*/
     padding: 50px 10px 10px;
     position: absolute;
     top: 260px;
-    /*padding: 10px;*/
+    width: 360px;
     background-color: #F5F5F5;
-    /*border: 1px solid #E3E3E3;*/
     border: 2px solid #1c8d61;
     border-radius: 4px 4px 4px 4px;
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
