@@ -427,17 +427,19 @@ Map.prototype.setGroups = function(callback){
             groups: this.updatedGroups.join()
         }, 
         function(response) {
-            console.log(response);
             if(response.status == 1){
                 self.clearGroups();
                 self.displayGroups(true);
-                /*
+                
                 if(self.type == 'Standard'){
+                    $.each(self.removedGroups, function(index, name){
+                        removeIncludeFromMap(name + '.map', false);
+                    });
                     $.each(self.groups, function(index, group){
                         removeIncludeFromMap(group.name + '.map', false);
                         addIncludeToMap(group.name + '.map', false);
                     });
-                }*/
+                }
             }
         }
     );

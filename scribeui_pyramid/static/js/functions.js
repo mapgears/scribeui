@@ -154,7 +154,8 @@ function displayTemplates(templates){
 }
 
 function openNewMapDialog(){
-    getTemplates('default', 'Scribe', null, function(templates){
+    var type = selectors.newMapTypeSelect().val();
+    getTemplates('default', type, null, function(templates){
         displayTemplates(templates);
 
         $("#createmap-form").dialog({
@@ -771,30 +772,27 @@ function scribeLog(msg){
 }
 
 function removeIncludeFromMap(filename, commit){
-    for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("layers/"+filename) !== -1){
-            var line = mapEditor.getLine(i);
-            mapEditor.removeLine(i);
+    for(var i=0; i < editors['maps'].lineCount(); i++){
+        if( editors['maps'].getLine(i).indexOf("layers/" + filename) !== -1){
+            var line =  editors['maps'].getLine(i);
+            editors['maps'].removeLine(i);
             break;
         }
     }
-    if(commit == undefined || commit == true){
-        _workspace.openedMap.commit();    
-    }
-
+    workspace.openedMap.save();    
 }
 function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
     lastinc = -1;
-    openSecondaryPanel("maps", mapEditor);
-    for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("INCLUDE") !== -1){
+    openSecondaryPanel("maps",  editors['maps']);
+    for(var i=0; i <  editors['maps'].lineCount(); i++){
+        if( editors['maps'].getLine(i).indexOf("INCLUDE") !== -1){
             lastinc = i;
         }else if(lastinc > -1){
             //We add the new file at the end of the include list
-            var line = mapEditor.getLine((i-1));
+            var line =  editors['maps'].getLine((i-1));
             //TODO detect indentation 
-            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
+            editors['maps'].setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
             //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
             //setTimeout(function(){
@@ -803,9 +801,7 @@ function addIncludeToMap(filename, commit){
             break;
         }
     }
-    if(commit == undefined || commit == true){
-        _workspace.openedMap.commit();
-    }
+    workspace.openedMap.save();
 }
 
 function displayLineEditor(cm, line, text){
