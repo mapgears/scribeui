@@ -99,17 +99,15 @@ pre {
 }
 
 .navbar #map-name {
-    margin: auto;
-    width: 200px;
+    float:right;
     text-align: center;
-    padding: 5px;
+    padding: 7px;
 }
 
 .navbar #logout {
-    position: absolute;
-    right: 0px;
+    float:right;
     height: 30px;
-    min-width: 100px;
+    min-width: 120px;
 }
 
 .navbar #logout button{
@@ -120,6 +118,7 @@ pre {
     border-color: #1C8D61 !important;
     height: 30px;
     width: 100%;
+    font-size: 14px !important;
 }
 
 .ui-menu { 
