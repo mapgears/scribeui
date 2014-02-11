@@ -169,9 +169,11 @@ jQuery(function() {
 
     $("a[href='#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
-        resizeEditors();
+        editors['groups'].focus();
         $.each(editors, function(key, editor){
-            editor.refresh();
+            //Need to use a timeout for the editors to refresh properly.
+            // See http://stackoverflow.com/questions/10575833/codemirror-has-content-but-wont-display-until-keypress
+            setTimeout(editor.refresh, 0)
         });
     });
 
