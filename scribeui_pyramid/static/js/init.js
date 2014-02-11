@@ -150,7 +150,7 @@ jQuery(function() {
         $("div[class='CodeMirror']").hide();
     }); 
 
-    $("a[href = '#manager-tab'], a[href = '#log-tab'], a[href = '#editor-tab'], a[href = '#mapfile-tab'], a[href = '#help-tab']").bind('click', function(){
+    $("a[href='#manager-tab'], a[href='#log-tab'], a[href='#editor-tab'], a[href='#mapfile-tab'], a[href='#help-tab']").bind('click', function(){
          if(workspace) {
              if(workspace.openedMap){
                 unregisterDebug();
@@ -158,7 +158,7 @@ jQuery(function() {
          }
     });
 
-    $("a[href = '#debug-tab']").bind('click', function(){
+    $("a[href='#debug-tab']").bind('click', function(){
         if(workspace != null) {
             if(workspace.openedMap){
                 clearDebug();
@@ -167,8 +167,9 @@ jQuery(function() {
         }
     });
 
-    $("a[href = '#editor-tab']").bind('click', function(){
+    $("a[href='#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
+        resizeEditors();
         $.each(editors, function(key, editor){
             editor.refresh();
         });
