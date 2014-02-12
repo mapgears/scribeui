@@ -1,11 +1,19 @@
-from flask import Flask, Blueprint, render_template, url_for, current_app, request, g
+# Job status
+#	0 - Finished 
+#	1 - In progress
+#	2 - Stopped (error)
+
+from flask import Flask, Blueprint, render_template, url_for, current_app, request, g, jsonify
 import simplejson, pprint, sys
+from processManager import addProcess, stopProcess
+
 sys.path.append("../../") # Gives access to init.py functions
 
 plugin = Blueprint('mapcache', __name__, static_folder='static', template_folder='templates')
 
 def getJsFiles():
-    return url_for('mapcache.static',filename='js/mapcache.js')
+	createTable()
+	return url_for('mapcache.static',filename='js/mapcache.js')
 
 def getCssFiles():
     return url_for('mapcache.static',filename='css/mapcache.css')
@@ -18,9 +26,80 @@ def startJob():
 	mapName = request.args.get("map",'')
 	mapEntry = get_map_id(mapName, workspaceName)
 	if mapEntry is not None:
-		return "Job started for "+mapName
+		cur = g.db.execute('INSERT INTO jobs(map, status) VALUES(?,?)',[mapEntry, 1])
+		g.db.commit()
+		jobid = cur.lastrowid;
+		addProcess(jobid)
+		job = getJob(jobid)
+		return simplejson.dumps(job)
 	else:
 		return "ERROR: "+mapName+" map is unavailable or does not exist"
 
+@plugin.route('/getjobs', methods=['GET'])
+def printJobs():
+	from init import get_ws_id 
+	workspaceName = request.args.get("ws",'')
+	workspaceId = get_ws_id(workspaceName)
+	
+	if workspaceId is not None:
+		jobs = getJobs(workspaceId)
+		return simplejson.dumps(jobs)
+	else:
+		return "ERROR: Invalid workspace id"
+
+#Clear job removes a finished (status 0 or 2) job from the database.
+@plugin.route('/clearjob', methods=['GET'])
+def clearJob():
+	jobId = request.args.get("job",'')
+	
+	job = getJob(jobId)
+	
+	if job[0]['status'] == 1: #Cancel clear if job is still in progress 
+		return '[{"result": "Error", "message","Job is in progress, please stop before clearing"}]'
+	else:	
+		g.db.execute('DELETE FROM jobs WHERE id=?',[job[0]['id']])
+		g.db.commit()
+		#TODO handle db errors
+		return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was cleared.", "jobid":"'+str(job[0]['id'])+'"}]'
+	
+	return "Clear"
+
+#Stop job in progress
+@plugin.route('/stopjob', methods=['GET'])
+def stopJob():
+	jobId = request.args.get("job",'')
+	
+	job = getJob(jobId)
+	
+	warning = False	
+	if job[0]['status'] == 1: 
+		stopProcess(job[0]['id'])
+		g.db.execute('UPDATE jobs SET status=2 WHERE id=? and status=1',[job[0]['id']])
+		g.db.commit()
+		job = getJob(jobId)
+		if job[0]['status'] == 2: 
+			#TODO handle db errors
+			return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was stopped.", "jobid":"'+str(job[0]['id'])+'"}]'
+		
+		else: #in the event the job finished already
+			warning = True
+	else:
+		warning = True
+
+	if warning:
+		return '[{"result": "Warning","message":"Job was already finished or stopped","job":'+json.dumps(job)+'}]'
+		
+
+def getJobs(ws):
+	from init import query_db 
+	return query_db('select jobs.id, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and maps.ws_id = ?', [ws])
+
+def getJob(i):
+	from init import query_db 
+	return query_db('select jobs.id, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and jobs.id=?', [i])
+
 # Creates the table if it doesn't exist
-#def createTable():
+def createTable():
+	rv = g.db.execute('CREATE TABLE IF NOT EXISTS jobs(id integer primary key autoincrement, map integer not null, status integer not null)')
+	g.db.commit()
+	return
