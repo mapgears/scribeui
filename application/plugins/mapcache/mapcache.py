@@ -4,7 +4,7 @@
 #	2 - Stopped (error)
 
 from flask import Flask, Blueprint, render_template, url_for, current_app, request, g, jsonify
-import simplejson, pprint, sys
+import simplejson, pprint, sys, os
 from processManager import addProcess, stopProcess
 
 sys.path.append("../../") # Gives access to init.py functions
@@ -24,13 +24,19 @@ def startJob():
 	
 	workspaceName = request.args.get("ws",'')
 	mapName = request.args.get("map",'')
+	jobTitle = request.args.get("title",'')
 	mapEntry = get_map_id(mapName, workspaceName)
 	if mapEntry is not None:
-		cur = g.db.execute('INSERT INTO jobs(map, status) VALUES(?,?)',[mapEntry, 1])
+		cur = g.db.execute('INSERT INTO jobs(map, status, title) VALUES(?,?, ?)',[mapEntry, 1, jobTitle])
 		g.db.commit()
 		jobid = cur.lastrowid;
-		addProcess(jobid)
 		job = getJob(jobid)
+		
+		#finding the project's path
+		curdir = os.path.realpath(__file__)
+		last = curdir.find("application")
+		projectdir = curdir[:last] + "application/workspaces/"+workspaceName+"/"+mapName
+		addProcess(job[0], projectdir)
 		return simplejson.dumps(job)
 	else:
 		return "ERROR: "+mapName+" map is unavailable or does not exist"
@@ -87,19 +93,19 @@ def stopJob():
 		warning = True
 
 	if warning:
-		return '[{"result": "Warning","message":"Job was already finished or stopped","job":'+json.dumps(job)+'}]'
+		return '[{"result": "Warning","message":"Job was already finished or stopped","job":'+simplejson.dumps(job)+'}]'
 		
 
 def getJobs(ws):
 	from init import query_db 
-	return query_db('select jobs.id, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and maps.ws_id = ?', [ws])
+	return query_db('select jobs.id, jobs.title, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and maps.ws_id = ?', [ws])
 
 def getJob(i):
 	from init import query_db 
-	return query_db('select jobs.id, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and jobs.id=?', [i])
+	return query_db('select jobs.id, jobs.title, jobs.status, jobs.map, maps.map_name from jobs, maps where maps.map_id = jobs.map and jobs.id=?', [i])
 
 # Creates the table if it doesn't exist
 def createTable():
-	rv = g.db.execute('CREATE TABLE IF NOT EXISTS jobs(id integer primary key autoincrement, map integer not null, status integer not null)')
+	rv = g.db.execute("CREATE TABLE IF NOT EXISTS jobs(id integer primary key autoincrement, title varchar(255) not null default '', map integer not null, status integer not null)")
 	g.db.commit()
 	return

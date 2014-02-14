@@ -1,6 +1,6 @@
 from flask import Flask, request, session, g, current_app
 from subprocess import Popen
-import pprint, time, threading, os, sys, sqlite3
+import pprint, time, threading, os, sys, sqlite3, shutil
 
 # Pokes the processes to see their exit status. Stops when there is no running thread left.
 class pollProcesses (threading.Thread):
@@ -36,20 +36,38 @@ processes = []
 lock = threading.Lock()
 thread = None
 
-def addProcess(jobid):
+def addProcess(job, projectdir):
 	global thread, processes
 	pprint.pprint("-----------")
 	path = os.path.realpath(__file__)
-	path = path.replace("processManager.py","testscript.sh")
+		
+	# Create mapcache folder if not exist
+	if not os.path.exists(projectdir+"/mapcache"):
+		os.makedirs(projectdir+"/mapcache")
+	jobdir = projectdir+"/mapcache/job-"+job['title']+str(job['id'])
+	os.makedirs(jobdir)
+	
+	inFile = open(path.replace("processManager.py","mapcacheConfig.xml.default"))
+	outFile = open(projectdir+"/mapcacheConfig.xml","w")
+	replacements = {'<!--SCRIBEUIPATH-->':jobdir, '<!--SCRIBEUITITLE-->':"job-"+job['title']+str(job['id']), '<!--SCRIBEUIMAPFILEPATH-->':projectdir+'/map/'+job['map_name']+'.map'}
+
+	for line in inFile:
+		for src, target in replacements.iteritems():
+			line = line.replace(src, target)
+		outFile.write(line)
+	inFile.close()
+	outFile.close()
+	
 	pprint.pprint("Adding new process")
-	p = Popen([path])
-	p.jobid = jobid
+	p = Popen(["mapcache_seed -c "+projectdir+"/mapcacheConfig.xml -t default -z 1,5 -M 8,8"], shell=True)
+	p.jobid = job['id']
 	
 	# Lock the processes list before adding data
 	lock.acquire()
 	processes.append(p)
 	lock.release()
 	
+
 	#If thread is finished, start it up
 	if thread is None or not thread.isAlive():
 		pprint.pprint("Starting thread")

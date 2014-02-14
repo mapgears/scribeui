@@ -2,12 +2,14 @@ jQuery(function() { $(document).ready(function(){
     function mapcache(){
 		this.name = "Mapcache Plug-in";
 		this.dialogDiv = null;
+		this.optionsDialog = null;
 		this.jobs = [];
 	}
 
-	function job(id, map, status){
+	function job(id, title, map, status){
 		this.map = map;	
 		this.id = id;
+		this.title = title;
 		this.status = status;
 	}
 	
@@ -51,7 +53,7 @@ jQuery(function() { $(document).ready(function(){
 			var startButton = $('<button id="start-new-mapcache-job">Start new tiling job for <span id="start-new-mapcache-job-mapname">'+mapname+'</span></button>').button().click($.proxy(function(){
 				var mapname = $("#map-description .map-title").text();
 				var map = _workspace.getMapByName(mapname);
-				$.proxy(this.addJob(map), this);
+				$.proxy(this.openOptionPopup(map), this);
 
 			}, this));
 			this.dialogDiv.append(startButton);
@@ -71,14 +73,41 @@ jQuery(function() { $(document).ready(function(){
 		this.updateJobListTable(map);		
 		this.dialogDiv.dialog("open");
 	} 
+	mapcache.prototype.openOptionPopup = function(map){
+		if(this.optionsDialog == null){
+			this.optionsDialog = $('<div id="mapcache-options-dialog">'+
+				'<p><label for="mapcache-title">Title:</label><input id="mapcache-title" type="text"/><br/>'+
+				'</div>')
+			this.optionsDialog.hide();
+			$('.main').append(this.optionsDialog);
+			this.optionsDialog.dialog({
+				autoOpen: false,
+				resizable: true,
+				width: "500px",
+				height: "auto",
+				modal: false,
+				title: "Mapcache job",
+			});
+			
+			//Start new job button
+			var startButton = $('<button id="start-new-mapcache-job">Launch job</button>').button().click($.proxy(function(){
+				var mapname = $("#map-description .map-title").text();
+				var map = _workspace.getMapByName(mapname);
+				$.proxy(this.addJob(map), this);
+			}, this));
+			this.optionsDialog.append(startButton);
+		}
+		this.optionsDialog.dialog("open");
+	}
 	//Creates a new job and adds it to the list
 	mapcache.prototype.addJob = function(map){
+		jobtitle = $('#mapcache-title').val();
 		$.ajax({
-			url: "http://localhost/ScribeUI/plugins/mapcache/startjob?map="+map.name+"&ws="+_workspace.name,
+			url: "http://localhost/ScribeUI/plugins/mapcache/startjob?map="+map.name+"&ws="+_workspace.name+"&title="+jobtitle,
 			context: this,
 			dataType: "json"
 		}).done(function(data){
-			var j = new job(data[0].id, _workspace.getMapByName(data[0].map_name), data[0].status);
+			var j = new job(data[0].id, data[0].title, _workspace.getMapByName(data[0].map_name), data[0].status);
 			this.jobs.push(j);
 			this.updateJobListTable(map);		
 		});
@@ -118,7 +147,7 @@ jQuery(function() { $(document).ready(function(){
 		}).done(function(data){
 			this.jobs = [];
 			for(i in data){
-				var j = new job(data[i].id, _workspace.getMapByName(data[i].map_name), data[i].status);
+				var j = new job(data[i].id, data[i].title, _workspace.getMapByName(data[i].map_name), data[i].status);
 				this.jobs.push(j);
 			}
 			if(typeof(callback) != "undefined"){
@@ -134,12 +163,13 @@ jQuery(function() { $(document).ready(function(){
 		$('#start-new-mapcache-job-mapname').text(map.name);
 		if(this.jobs.length != 0){
 			var table = $('<table id="mapcache-jobs-list"><tr>'+
-				'<th>ID</th><th>Map</th><th>Status</th><th>Action</th></tr>');
+				'<th>ID</th><th>Title</th><th>Map</th><th>Status</th><th>Action</th></tr>');
 			for(i in this.jobs){
 				if(this.jobs[i].map == map || showall){
 					nojobs = false;
 					var tr = $('<tr id="jobid'+this.jobs[i].id+'"></tr>');
 					tr.append('<td>'+this.jobs[i].id+'</td>');
+					tr.append('<td>'+this.jobs[i].title+'</td>');
 					tr.append('<td>'+this.jobs[i].map.name+'</td>');
 					tr.append('<td>'+this.printStatus(this.jobs[i].status)+'</td>');
 					var td = $('<td></td>');
