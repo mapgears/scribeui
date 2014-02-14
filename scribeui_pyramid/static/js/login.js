@@ -35,15 +35,18 @@ function openNewWorkspaceDialog(){
                     data['password'] = password;
                 }
 
+                var self = this;
+
                 $.post($API + '/workspaces/new', data, function(response) {
                     if(response.status == 1){
                         var option = $('<option>').val(name).text(name).prop('selected', true);
                         $('select#name').append(option);
                         $('select#name').trigger('chosen:updated');
+
+                        $(self).dialog("close");
                     }
                 });
 
-                $(this).dialog("close");
             },
             Cancel: function() {
                 $(this).dialog("close");

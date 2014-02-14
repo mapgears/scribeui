@@ -534,40 +534,24 @@ Map.prototype.gitPull = function(data){
     });
 }
 
-Map.prototype.gitClone = function(config, callback){
-    var self = this;
-    config['name'] = this.name;
-
-    $.ajax({
-        url: $SCRIPT_ROOT + '/_git_clone_map',
-        type: "POST",
-        data: config,
-        dataType:"json",
-        success: function(response) {
-            if(response.status ==  'ok'){
-                self.workspace.maps.push(self);
-                self.workspace.displayMaps();
-                $("#" + self.workspace.mapActions).hide();
-
-                self.groups = [];
-                self.open(self.commit);
-            } else{
-                self.destroy();
-            }
-            callback.call(null, response);
-        },
-        error: function(xhr) {
-            $('#git-logs').val('An error occured.');
-        }
-    });
-}
-
 Map.prototype.getDebug = function(){
     var self = this;
-    $.getJSON($SCRIPT_ROOT + '/_load_debug', {
-    }, function(data) {
-    $("#" + self.workspace.debugTextarea).val(data.text);
+    $.getJSON($API + '/maps/' + self.id + '/debug/get' , {}, function(response) {
+        if(response.status == 1){
+            selectors.debugPre().text(response.debug);
+        } else{
+            var debug = '';
+            $.each(response.errors, function(index, error){
+                debug += error + '\n'
+            });
+            selectors.debugPre().text(debug); 
+        }
     });    
+}
+
+Map.prototype.clearDebug = function(){
+    selectors.debugPre().text('');
+    $.getJSON($API + '/maps/' + this.id + '/debug/reset' , {}, function(response) {}); 
 }
 
 Map.prototype.clearPois = function(){

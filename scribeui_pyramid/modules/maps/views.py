@@ -585,7 +585,7 @@ class APIMap(object):
                 try:
                     MapManager.git_init(git_url)
                 except Exception, e:
-                    response['errors'].append(e)
+                    response['errors'].append(str(e))
 
                 if len(response['errors']) == 0: 
                     map.git_url = git_url
@@ -646,7 +646,7 @@ class APIMap(object):
                 try:
                     MapManager.git_add_remote_url(map.git_url, user, password)
                 except Exception, e:
-                    response['errors'].append(e)
+                    response['errors'].append(str(e))
 
                 if len(response['errors']) == 0:
                     response['logs'] += 'git add .\n'
@@ -737,7 +737,7 @@ class APIMap(object):
                 try:
                     MapManager.git_add_remote_url(map.git_url, user, password)
                 except Exception, e:
-                    response['errors'].append(e)
+                    response['errors'].append(str(e))
 
                 if len(response['errors']) == 0:
                     if method == 'merge':
@@ -891,13 +891,13 @@ class APIMap(object):
                     try:
                         MapManager.git_init(git_url)
                     except Exception, e:
-                        response['errors'].append(e)
+                        response['errors'].append(str(e))
 
                     if len(response['errors']) == 0:
                         try:
                             MapManager.git_add_remote_url(git_url, user, password)
                         except Exception, e:
-                            response['errors'].append(e)
+                            response['errors'].append(str(e))
 
                         if len(response['errors']) ==  0:
                             try:
@@ -1026,6 +1026,78 @@ class APIMap(object):
                 if len(response['errors']) == 0:
                     response['status'] = 1
 
+        else:
+            response['errors'].append('Access denied.')
+
+        return response
+
+
+    @view_config(
+        route_name='maps.debug.get',
+        permission='view',
+        renderer='json',
+        request_method='GET'
+    )
+    def get_map_debug(self):
+        response = {
+            'status': 0,
+            'errors': [],
+            'debug': ''
+            }
+
+        map = Map.by_id(self.matchdict.get('id'))
+        workspace = Workspace.by_id(map.workspace_id)
+
+        if(workspace.name == self.request.userid):
+            workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+            map_directory = workspace_directory + map.name + '/'
+            mapfile_directory = map_directory + 'map/'
+            mapfile = mapfile_directory + map.name + '.map'
+
+            try:
+                debug = MapManager.get_debug_from_mapfile(mapfile, mapfile_directory)
+            except Exception, e:
+                response['errors'].append(str(e)) 
+
+            
+            if len(response['errors']) == 0:
+                response['debug'] = debug
+                response['status'] = 1
+        else:
+            response['errors'].append('Access denied.')
+
+        return response
+
+
+    @view_config(
+        route_name='maps.debug.reset',
+        permission='view',
+        renderer='json',
+        request_method='GET'
+    )
+    def reset_map_debug(self):
+        response = {
+            'status': 0,
+            'errors': []
+            }
+
+        map = Map.by_id(self.matchdict.get('id'))
+        workspace = Workspace.by_id(map.workspace_id)
+
+        if(workspace.name == self.request.userid):
+            workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+            map_directory = workspace_directory + map.name + '/'
+            mapfile_directory = map_directory + 'map/'
+            mapfile = mapfile_directory + map.name + '.map'
+
+            try:
+                MapManager.set_debug_from_mapfile(mapfile, mapfile_directory, '')
+            except Exception, e:
+                response['errors'].append(str(e)) 
+
+            
+            if len(response['errors']) == 0:
+                response['status'] = 1
         else:
             response['errors'].append('Access denied.')
 

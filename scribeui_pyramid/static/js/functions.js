@@ -717,18 +717,14 @@ function registerDebug(){
 }
 
 function clearDebug(){
-    selectors.debugPre().val('');
-
-    $.getJSON($SCRIPT_ROOT + '/_clear_debug', {
-    }, function(data) {
-    });
+    workspace.openedMap.clearDebug();
 }
 
 function displayDebug(){
     if($('.olTileImage').filter(function(){ return this.style && this.style.visibility === 'hidden' }).length > 0){
-    onMapMoveEnd();
+        onMapMoveEnd();
     }else{
-       _workspace.openedMap.getDebug();
+       workspace.openedMap.getDebug();
     }
 }
 

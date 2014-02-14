@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import subprocess
+import codecs
 
 from  werkzeug import url_fix
 
@@ -24,6 +25,10 @@ def routes_api(config):
                      custom_predicates=(int_predicate,))
     config.add_route('maps.clone', '/maps/clone')
     config.add_route('maps.pois.new', '/maps/{id}/pois/new',
+                     custom_predicates=(int_predicate,))
+    config.add_route('maps.debug.get', '/maps/{id}/debug/get',
+                     custom_predicates=(int_predicate,))
+    config.add_route('maps.debug.reset', '/maps/{id}/debug/reset',
                      custom_predicates=(int_predicate,))
 
 def includeme(config):
@@ -79,6 +84,77 @@ class MapManager(object):
             thumbnail_url = None
 
         return (url, thumbnail_url)
+
+
+    @classmethod
+    def get_debug_from_mapfile(cls, mapfile, mapfile_directory):
+        debug = ''
+        file_name = None
+
+        debug_file = cls.get_debug_file(mapfile, mapfile_directory)
+        
+        if debug_file is not None:
+            try:
+                with codecs.open(debug_file, encoding='utf8') as f:
+                    debug = f.read()
+                    f.close()
+            except IOError:
+                raise Exception('An error occured while reading file ' + debug_file)
+        else:
+            raise Exception('No debug file found')
+
+        return debug
+
+
+    @classmethod
+    def set_debug_from_mapfile(cls, mapfile, mapfile_directory, content):
+        file_name = None
+        
+        debug_file = cls.get_debug_file(mapfile, mapfile_directory)
+
+        if debug_file is not None:
+            try:
+                with codecs.open(debug_file, encoding='utf8', mode='w+') as f:
+                    debug = f.write(content)
+                    f.close()
+            except IOError:
+                raise Exception('An error occured while reading file ' + debug_file)
+        else:
+            raise Exception('No debug file found')
+
+
+
+    @staticmethod
+    def get_debug_file(mapfile, mapfile_directory):
+        debug_file = None
+        file_name = None
+
+        try:
+            f = open(mapfile)
+            lines = f.readlines()
+            
+            for line in lines:
+                line = line.strip()
+
+                if line.upper().find('MS_ERRORFILE') != -1:
+                    components = line.split(' ')
+                    print components
+                    file_name = components[len(components) - 1].replace("'", '').replace('"', '')
+                    break
+            f.close();
+        except:
+            pass
+
+
+        if file_name:
+            if re.match('^(?:/[^/]+)*$', file_name) or re.match('^(\w)\:*', file_name):
+                #absolute path
+                debug_file = file_name
+            else:
+                #relative path
+                debug_file = mapfile_directory + file_name
+
+        return debug_file
 
 
     @staticmethod
@@ -153,10 +229,7 @@ class MapManager(object):
             git_full_url = url
 
         cls.git_remove_remote_url()
-        print user
-        print password
-        print git_full_url
-        print '\n\n\n'
+
         try:
             subprocess.check_output(['git remote add origin ' + git_full_url], shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
