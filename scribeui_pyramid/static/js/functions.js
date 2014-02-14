@@ -504,7 +504,7 @@ function openNewGroupDialog(){
             "Create": function() {
                 var name = $("#newgroup-name").val();
                 var group = workspace.openedMap.getGroupByName(name);
-                //VALIDER AUSSI LE FORMAT DU GROUPE ET LA PRÉSENCE DE CARACTÈRES SPÉCIAUX
+                //TODO: VALIDER AUSSI LE FORMAT DU GROUPE ET LA PRÉSENCE DE CARACTÈRES SPÉCIAUX
                 if(group){
                     alert('A group with that name exists already');
                 } else{
@@ -775,7 +775,7 @@ function removeIncludeFromMap(filename, commit){
             break;
         }
     }
-    workspace.openedMap.save();    
+    //workspace.openedMap.save();    
 }
 function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
@@ -797,7 +797,7 @@ function addIncludeToMap(filename, commit){
             break;
         }
     }
-    workspace.openedMap.save();
+    //workspace.openedMap.save();
 }
 
 function displayLineEditor(cm, line, text){

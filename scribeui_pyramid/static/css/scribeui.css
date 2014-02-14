@@ -899,6 +899,12 @@ div.olControlZoom a {
     min-width: 100px;
 }
 
+.chosen-drop {
+    min-width: 100%;
+    width: auto !important;
+    /*border: 1px solid #AAA !important;*/
+}
+
 #group_select_chosen {
     margin-left: -5px;
 }

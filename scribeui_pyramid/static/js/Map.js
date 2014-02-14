@@ -439,6 +439,7 @@ Map.prototype.setGroups = function(callback){
                         removeIncludeFromMap(group.name + '.map', false);
                         addIncludeToMap(group.name + '.map', false);
                     });
+                    self.save();
                 }
             }
         }
