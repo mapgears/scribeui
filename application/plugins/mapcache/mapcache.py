@@ -63,15 +63,18 @@ def clearJob():
 	
 	job = getJob(jobId)
 	
-	if job[0]['status'] == 1: #Cancel clear if job is still in progress 
-		return '[{"result": "Error", "message","Job is in progress, please stop before clearing"}]'
-	else:	
-		g.db.execute('DELETE FROM jobs WHERE id=?',[job[0]['id']])
-		g.db.commit()
-		#TODO handle db errors
-		return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was cleared.", "jobid":"'+str(job[0]['id'])+'"}]'
-	
-	return "Clear"
+	if job:
+		if job[0]['status'] == 1: #Cancel clear if job is still in progress 
+			return '[{"result": "Error", "message","Job is in progress, please stop before clearing"}]'
+		else:	
+			g.db.execute('DELETE FROM jobs WHERE id=?',[job[0]['id']])
+			g.db.commit()
+			#TODO handle db errors
+			return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was cleared.", "jobid":"'+str(job[0]['id'])+'"}]'
+		
+		return "Clear"
+	else:
+		return "Job missing. Was it cleared already?"
 
 #Stop job in progress
 @plugin.route('/stopjob', methods=['GET'])
@@ -83,24 +86,28 @@ def stopJob():
 	
 	job = getJob(jobId)
 	
-	warning = False	
-	if job[0]['status'] == 1: 
-		g.pManager.stopProcess(job[0]['id'], False)
-		g.db.execute('UPDATE jobs SET status=2 WHERE id=? and status=1',[job[0]['id']])
-		g.db.commit()
-		job = getJob(jobId)
-		if job[0]['status'] == 2: 
-			#TODO handle db errors
-			return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was stopped.", "jobid":"'+str(job[0]['id'])+'"}]'
-		
-		else: #in the event the job finished already
+	if(job):
+		warning = False	
+		if job[0]['status'] == 1: 
+			g.pManager.stopProcess(job[0]['id'], False)
+			g.db.execute('UPDATE jobs SET status=2 WHERE id=? and status=1',[job[0]['id']])
+			g.db.commit()
+			job = getJob(jobId)
+			if job[0]['status'] == 2: 
+				#TODO handle db errors
+				return '[{"result":"Success", "message":"Job '+str(job[0]['id'])+' for '+job[0]['map_name']+' was stopped.", "jobid":"'+str(job[0]['id'])+'"}]'
+			
+			else: #in the event the job finished already
+				warning = True
+		else:
 			warning = True
-	else:
-		warning = True
 
-	if warning:
-		return '[{"result": "Warning","message":"Job was already finished or stopped","job":'+simplejson.dumps(job)+'}]'
-		
+		if warning:
+			return '[{"result": "Warning","message":"Job was already finished or stopped","job":'+simplejson.dumps(job)+'}]'
+	else:
+		return "Job missing. Was it cleared already?"
+
+
 
 def getJobs(ws):
 	from init import query_db 
