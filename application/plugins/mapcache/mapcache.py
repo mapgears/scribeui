@@ -5,7 +5,7 @@
 
 from flask import Flask, Blueprint, render_template, url_for, current_app, request, g, jsonify
 import simplejson, pprint, sys, os
-from processManager import addProcess, stopProcess
+from processManager import processManager
 
 sys.path.append("../../") # Gives access to init.py functions
 
@@ -21,7 +21,9 @@ def getCssFiles():
 @plugin.route('/startjob', methods=['GET'])
 def startJob():
 	from init import get_map_id # Cannot be imported at beginning of file because of circular import
-	
+	if not hasattr(g, "pManager"):
+		g.pManager = processManager()
+		
 	workspaceName = request.args.get("ws",'')
 	mapName = request.args.get("map",'')
 	jobTitle = request.args.get("title",'')
@@ -36,7 +38,8 @@ def startJob():
 		curdir = os.path.realpath(__file__)
 		last = curdir.find("application")
 		projectdir = curdir[:last] + "application/workspaces/"+workspaceName+"/"+mapName
-		addProcess(job[0], projectdir)
+		pprint.pprint(g.pManager)
+		g.pManager.addProcess(job[0], projectdir)
 		return simplejson.dumps(job)
 	else:
 		return "ERROR: "+mapName+" map is unavailable or does not exist"
@@ -73,13 +76,16 @@ def clearJob():
 #Stop job in progress
 @plugin.route('/stopjob', methods=['GET'])
 def stopJob():
+	if not hasattr(g, "pManager"):
+		g.pManager = processManager()
+		
 	jobId = request.args.get("job",'')
 	
 	job = getJob(jobId)
 	
 	warning = False	
 	if job[0]['status'] == 1: 
-		stopProcess(job[0]['id'])
+		g.pManager.stopProcess(job[0]['id'], False)
 		g.db.execute('UPDATE jobs SET status=2 WHERE id=? and status=1',[job[0]['id']])
 		g.db.commit()
 		job = getJob(jobId)

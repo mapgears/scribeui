@@ -76,7 +76,10 @@ jQuery(function() { $(document).ready(function(){
 	mapcache.prototype.openOptionPopup = function(map){
 		if(this.optionsDialog == null){
 			this.optionsDialog = $('<div id="mapcache-options-dialog">'+
-				'<p><label for="mapcache-title">Title:</label><input id="mapcache-title" type="text"/><br/>'+
+				'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
+				'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
+				'<div id="mapcache-zoomlevels-slider"></div></div>'+	
+				'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
 				'</div>')
 			this.optionsDialog.hide();
 			$('.main').append(this.optionsDialog);
@@ -90,14 +93,29 @@ jQuery(function() { $(document).ready(function(){
 			});
 			
 			//Start new job button
-			var startButton = $('<button id="start-new-mapcache-job">Launch job</button>').button().click($.proxy(function(){
-				var mapname = $("#map-description .map-title").text();
-				var map = _workspace.getMapByName(mapname);
-				$.proxy(this.addJob(map), this);
+			var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
+				this.validateOptions();
 			}, this));
+			
 			this.optionsDialog.append(startButton);
-		}
+			$( "#mapcache-zoomlevels-slider" ).slider({
+				range: true,
+				min: 0,
+				max: 20,
+				values: [0, 7],
+				slide: function( event, ui ) {
+					$("#mapcache-zoomlevels").val(ui.values[0]+" - "+ui.values[1]);
+					}
+				});
+			$("#mapcache-zoomlevels").val($("#mapcache-zoomlevels-slider").slider("values", 0)+
+				" - "+$("#mapcache-zoomlevels-slider").slider("values",1));
+			}
 		this.optionsDialog.dialog("open");
+	}
+	mapcache.prototype.validateOptions = function(){
+			var mapname = $("#map-description .map-title").text();
+			var map = _workspace.getMapByName(mapname);
+			$.proxy(this.addJob(map), this);
 	}
 	//Creates a new job and adds it to the list
 	mapcache.prototype.addJob = function(map){
