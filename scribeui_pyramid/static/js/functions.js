@@ -620,6 +620,7 @@ function openGroupOrderDialog(){
         },
         {
             text: "Apply",
+            showText: true,
             'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
                 $(".to-be-deleted").each(function(){
@@ -642,6 +643,7 @@ function openGroupOrderDialog(){
         },
         {
             text: "Cancel",
+            showText: true,
             'class': 'btn-group-last grouporder-btn-right',
             click: function() {
                 $.each(this.newGroups, function(index, name){

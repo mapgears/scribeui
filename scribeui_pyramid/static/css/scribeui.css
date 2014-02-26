@@ -53,10 +53,11 @@ button {
     margin-top: -1px;
     box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
+/*
 pre {
     font-family: courier !important;
 }
-
+*/
 .main {
     height: 100%;
     width: 100%;
@@ -518,6 +519,11 @@ pre {
 	height:100%;
     font-family: Menlo-Regular, sans-serif !important;
 }
+.CodeMirror pre {
+    /*font-size: 1.1em !important;
+    font-family: Menlo-Regular, sans-serif !important;
+    height: 15px;*/
+}
 .cm-variable {
     color: blue !important;
 }
@@ -525,8 +531,6 @@ pre {
 	overflow: visible !important;
 	height:auto;
 }
-
-
 /*=== Data ===*/
 .datacontent {
     padding: 0em !important;

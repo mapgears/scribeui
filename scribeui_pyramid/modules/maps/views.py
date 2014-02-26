@@ -507,7 +507,8 @@ class APIMap(object):
                 for filename in filenames.keys():
                     try:
                         with codecs.open(map_directory + filenames[filename], encoding='utf8', mode='w+') as f:
-                            f.write(data[filename].encode('utf-8'))
+                            ##f.write(data[filename].encode('utf-8'))
+                            f.write(data[filename])
                             f.close()
                     except IOError:
                         response.errors.append("An error occured while saving '" + map_directory + filenames[filename] + "' file.")

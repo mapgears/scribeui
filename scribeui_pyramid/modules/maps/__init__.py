@@ -197,6 +197,7 @@ class MapManager(object):
         gitignoreContent = 'data\n'
         gitignoreContent += 'pdata\n'
         gitignoreContent += 'debugFile.log\n'
+        gitignoreContent += 'map/level*.map\n'
         gitignore.write(gitignoreContent)
 
         return True
