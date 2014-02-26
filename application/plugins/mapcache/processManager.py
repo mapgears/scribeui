@@ -2,6 +2,8 @@ from flask import Flask, request, session, g, current_app
 from subprocess import Popen
 import pprint, time, threading, os, sys, sqlite3, shutil
 
+# Borg pattern, all processManager objects will have the same states
+# meaning they all reference the same processes, lock and thread.
 class Borg:
   _shared_state = {}
   def __init__(self):
@@ -27,20 +29,19 @@ class processManager(Borg):
 					keep = True
 					status = p.poll()
 					pprint.pprint(str(p.jobid)+" "+str(p.pid)+" "+str(status))
+					# If the job is running
 					if status is None:
-						stop = False
+						stop = False # keep the thread alive
 						job = self.pManager.getJob(p.jobid)
 						if job["status"] == 2:
-							#we release the lock because stopjob needs it
 							self.pManager.stopProcess(p.jobid, True)
 							continue;
 					else:
 						if status != 0:
-							status = 2
+							status = 2 
 						try:
 							self.pManager.updateJob(p.jobid, status)
-							#once we have the new status, keeping track of the process is useless
-							keep = False
+							keep = False #once we have the new status, keeping track of the process is useless
 						except OperationalError:
 							#If the database is locked, we force looping again
 							stop = False
@@ -50,7 +51,7 @@ class processManager(Borg):
 				self.pManager.lock.release()
 				if stop:
 					pprint.pprint("-----------")
-					pprint.pprint("No process running, stopping scan.")
+					pprint.pprint("No process running, stopping poll.")
 					break;
 	
 	def __init__(self):

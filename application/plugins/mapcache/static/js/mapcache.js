@@ -12,7 +12,7 @@ jQuery(function() { $(document).ready(function(){
 		this.title = title;
 		this.status = status;
 	}
-	
+	//Called when the plugin is loaded in the main app
 	mapcache.prototype.init = function(){
 		//Adding mapcache button to the map actions div
 		var button = $('<button id="btn_open_mapcache_dialog" style="width:100%">Mapcache</button>').button();
@@ -30,6 +30,8 @@ jQuery(function() { $(document).ready(function(){
 		
 		setInterval($.proxy(this.poke, this), 5000);	
 	}
+	
+	//Opens the job list dialog
     mapcache.prototype.openDialog = function(){
         var mapname = $("#map-description .map-title").text();
 		var map = _workspace.getMapByName(mapname);
@@ -53,7 +55,45 @@ jQuery(function() { $(document).ready(function(){
 			var startButton = $('<button id="start-new-mapcache-job">Start new tiling job for <span id="start-new-mapcache-job-mapname">'+mapname+'</span></button>').button().click($.proxy(function(){
 				var mapname = $("#map-description .map-title").text();
 				var map = _workspace.getMapByName(mapname);
-				$.proxy(this.openOptionPopup(map), this);
+				//No map opened, we open it
+				if(_workspace.openedMap == null){ 
+					openMap();
+					$.proxy(this.openOptionsDialog(map), this);
+				//A map is opened and it's not the selected one
+				}else if(_workspace.openedMap != map){
+					// We warn the user if there are unsaved changes
+					if(!_workspace.openedMap.saved){
+						var message = "<p>"+_workspace.openedMap.name + " is currently opened and have unsaved changes. Do you wish to continue? <br/>Click the Cancel button to go back and save your changes.</p>";
+						var warningDialog = $('<div id="mapcache-warning">'+message+'</div>');
+						warningDialog.dialog({
+							autoOpen: true,
+							resizable: true,
+							modal: true,
+							title: "Warning",
+							buttons: {
+								"Continue without saving": $.proxy(function(){
+									openMap();
+									$.proxy(this.openOptionsDialog(map), this);
+									$('#mapcache-warning').dialog("close");
+									$('#mapcache-warning').remove();
+								}, this),
+								Cancel: function(){
+									$(this).dialog("close");
+									$('#mapcache-warning').remove();
+								}
+							}
+						});
+					// If a map is opened, it's not the one selected but there are no unsaved changes, 
+					// we open the selected one anyway
+					}else{	
+						openMap();
+						$.proxy(this.openOptionsDialog(map), this);
+					}
+				// If there is a map opened and it's the right one, we proceed
+				}else{
+					$.proxy(this.openOptionsDialog(map), this);
+				}
+				
 
 			}, this));
 			this.dialogDiv.append(startButton);
@@ -73,44 +113,76 @@ jQuery(function() { $(document).ready(function(){
 		this.updateJobListTable(map);		
 		this.dialogDiv.dialog("open");
 	} 
-	mapcache.prototype.openOptionPopup = function(map){
-		if(this.optionsDialog == null){
-			this.optionsDialog = $('<div id="mapcache-options-dialog">'+
-				'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
-				'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
-				'<div id="mapcache-zoomlevels-slider"></div></div>'+	
-				'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
-				'</div>')
-			this.optionsDialog.hide();
-			$('.main').append(this.optionsDialog);
-			this.optionsDialog.dialog({
-				autoOpen: false,
-				resizable: true,
-				width: "500px",
-				height: "auto",
-				modal: false,
-				title: "Mapcache job",
-			});
-			
-			//Start new job button
-			var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
-				this.validateOptions();
-			}, this));
-			
-			this.optionsDialog.append(startButton);
-			$( "#mapcache-zoomlevels-slider" ).slider({
-				range: true,
-				min: 0,
-				max: 20,
-				values: [0, 7],
-				slide: function( event, ui ) {
-					$("#mapcache-zoomlevels").val(ui.values[0]+" - "+ui.values[1]);
-					}
-				});
-			$("#mapcache-zoomlevels").val($("#mapcache-zoomlevels-slider").slider("values", 0)+
-				" - "+$("#mapcache-zoomlevels-slider").slider("values",1));
+	//Open the options dialog when clicking on the "Start new tiling job for x"
+	mapcache.prototype.openOptionsDialog = function(map){
+		var mapExtentButton = $('<button id="mapcache-map-extent">Map Extent</button>').button().click($.proxy(function(){
+			$('#mapcache-extent').val(this.getMapExtent());
+		}, this));
+		var currentExtentButton = $('<button id="mapcache-current-extent">Current Extent</button>').button().click($.proxy(function(){
+			$('#mapcache-extent').val(this.getCurrentExtent());
+		},this))
+		
+		this.optionsDialog = $('<div id="mapcache-options-dialog">'+
+			'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
+			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
+			'<div id="mapcache-zoomlevels-slider"></div></div>'+	
+			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
+			'<div class="control-group"><label for="mapcache-cpu">Number of threads: </label><div class="control"><input id="mapcache-cpu" type="text" value="1"/></div></div>'+
+			'<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
+			'</div>');
+		this.optionsDialog.hide();
+		$('.main').append(this.optionsDialog);
+		$('#mapcache-extent').after(currentExtentButton);
+		$('#mapcache-extent').after(mapExtentButton);
+		$('#mapcache-extent').after($('<br/>'));
+		
+		this.optionsDialog.dialog({
+			autoOpen: false,
+			resizable: true,
+			width: "500px",
+			height: "auto",
+			modal: true,
+			title: "Mapcache job", 
+			beforeClose: function(){
+				$(this).dialog('destroy').remove();
 			}
+		});
+		
+		//Start new job button
+		var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
+			this.validateOptions();
+		}, this));
+		
+		this.optionsDialog.append(startButton);
+		$( "#mapcache-zoomlevels-slider" ).slider({
+			range: true,
+			min: 0,
+			max: 20,
+			values: [0, 7],
+			slide: function( event, ui ) {
+				$("#mapcache-zoomlevels").val(ui.values[0]+" - "+ui.values[1]);
+				}
+			});
+		$("#mapcache-zoomlevels").val($("#mapcache-zoomlevels-slider").slider("values", 0)+
+			" - "+$("#mapcache-zoomlevels-slider").slider("values",1));
 		this.optionsDialog.dialog("open");
+	}
+	//Reads the map's extent in the mapEditor
+	mapcache.prototype.getMapExtent = function(){
+		var extentStr = "EXTENT ";
+		if(_workspace.openedMap.type == "Scribe")
+			extentStr = "EXTENT:";
+		for(var i=0; i<mapEditor.lineCount(); i++){
+			if(mapEditor.getLine(i).indexOf(extentStr) !== -1){
+				l = mapEditor.getLine(i);
+				return l.substr(l.indexOf(extentStr)+extentStr.length,l.length)
+			}
+		}
+
+	}
+	// Returns the current extent in the map previewer
+	mapcache.prototype.getCurrentExtent = function(){
+		return _workspace.openedMap.OLMap.getExtent();
 	}
 	mapcache.prototype.validateOptions = function(){
 			var mapname = $("#map-description .map-title").text();
@@ -134,8 +206,9 @@ jQuery(function() { $(document).ready(function(){
 	mapcache.prototype.onWorkspaceOpened = function(){
 		this.getJobs();
 	}
+	//Called in regular intervals to update the function list
+	// Only pokes the server if the job list dialog is opened, and if there is a job in progress
 	mapcache.prototype.poke = function(){
-		console.log('poke');
 		if(this.jobs.length > 1 && this.dialogDiv.dialog("isOpen") == true){
 			var poke = false;
 			for(i in this.jobs){
@@ -146,7 +219,6 @@ jQuery(function() { $(document).ready(function(){
 				}
 			}
 			if(poke){
-				console.log("Actually poke");
 				this.getJobs();
 			}
 			for(i in this.jobs){
@@ -202,6 +274,7 @@ jQuery(function() { $(document).ready(function(){
 			$('#start-new-mapcache-job').after('<div id="no-mapcache-jobs">There is no tiling job running now.</div>');
 		}
 	}
+	// Removes a finished or stopped job
 	mapcache.prototype.clearJob = function(j){
 		$.ajax({
 			url: "http://localhost/ScribeUI/plugins/mapcache/clearjob?job="+j.id,
@@ -223,6 +296,7 @@ jQuery(function() { $(document).ready(function(){
 		}, this);
 
 	}
+	//Stops a running job
 	mapcache.prototype.stopJob = function(job){
 		if($("#mapcache-jobstop-confirmation").length == 0)
 			var confirmDialog = $('<div id="mapcache-jobstop-confirmation"><p>Are you sure you want to stop this job? The job will not be recoverable.</p></div>');
@@ -255,12 +329,14 @@ jQuery(function() { $(document).ready(function(){
 			}
 		});
 	}
+	//Call to update the status of a job
 	mapcache.prototype.updateLine = function(job){
 		var str = $("#jobid"+job.id).html();
 		str = str.replace("In progress",this.printStatus(job.status));
 		$("#jobid"+job.id).html(str);
 		$("#jobid"+job.id+" a").replaceWith(this.printAction(job));
 	}
+	// Returns the string associated with the status int
 	mapcache.prototype.printStatus = function(status){
 		switch(status){
 			case 0:
@@ -274,6 +350,8 @@ jQuery(function() { $(document).ready(function(){
 				break;
 		}
 	}
+	// Returns a link with the appropriate action (clear or stop) for the job
+	// The link also has the appropriate event binded.
 	mapcache.prototype.printAction = function(job){
 		switch(job.status){
 			case 0:
