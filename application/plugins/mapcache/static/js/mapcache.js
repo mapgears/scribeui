@@ -23,7 +23,7 @@ jQuery(function() { $(document).ready(function(){
 		$('#map-actions').append(div);
 		
 		$('#map-description').bind('DOMSubtreeModified', $.proxy(function(e) { 
-			var mapname = $("#map-description .map-title").text();
+			var mapname = this.getMapName();
 			if(mapname != null){
 				var map = _workspace.getMapByName(mapname);
 				this.updateJobListTable(map);
@@ -37,9 +37,20 @@ jQuery(function() { $(document).ready(function(){
 		if(this.mapOpenCallback) this.mapOpenCallback();
 		this.mapOpenCallback = null;
 	}
+	mapcache.prototype.getMapName = function(){
+		var mapname = $("#map-description .map-title").text();
+		if(!mapname){
+			if(_workspace.openedMap == null){
+				return;
+			}else{
+				mapname = _workspace.openedMap.name;
+			}
+		}
+		return mapname;
+	}
 	//Opens the job list dialog
     mapcache.prototype.openDialog = function(){
-        var mapname = $("#map-description .map-title").text();
+        var mapname = this.getMapName();
 		var map = _workspace.getMapByName(mapname);
 		
 		// Creating the dialog if run for the first time
@@ -59,7 +70,7 @@ jQuery(function() { $(document).ready(function(){
 			
 			//Start new job button
 			var startButton = $('<button id="start-new-mapcache-job">Start new tiling job for <span id="start-new-mapcache-job-mapname">'+mapname+'</span></button>').button().click($.proxy(function(){
-				var mapname = $("#map-description .map-title").text();
+				var mapname = this.getMapName();
 				var map = _workspace.getMapByName(mapname);
 				//No map opened, we open it
 				if(_workspace.openedMap == null){ 
@@ -160,7 +171,7 @@ jQuery(function() { $(document).ready(function(){
 			var metatile = $('#mapcache-metatiles').val().trim();
 			var extent = $('#mapcache-extent').val().trim();
 			if(this.validateOptions(jobtitle, zoomLevels, metatile, extent)){
-				var mapname = $("#map-description .map-title").text();
+				var mapname = this.getMapName();
 				var map = _workspace.getMapByName(mapname);
 				
 				$.proxy(this.addJob(map, jobtitle, zoomLevels, metatile, extent), this);

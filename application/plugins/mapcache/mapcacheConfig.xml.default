@@ -8,16 +8,17 @@
       <base><!--SCRIBEUIPATH--></base>
       <symlink_blank/>
    </cache>
-
+   <cache name="mbtiles" type="mbtiles">
+      <dbfile><!--SCRIBEUIPATH-->/mapcache.mbtiles</dbfile>
+   </cache>
    <source name="<!--SCRIBEUITITLE-->" type="mapserver">
       <mapfile><!--SCRIBEUIMAPFILEPATH--></mapfile>
    </source>
    
    <tileset name="default">
       <source><!--SCRIBEUITITLE--></source>
-      <cache>disk</cache>
+      <cache>mbtiles</cache>
       <grid>WGS84</grid>
-      <grid>g</grid>
       <format>PNG</format>
       <metatile>5 5</metatile>
       <metabuffer>10</metabuffer>
