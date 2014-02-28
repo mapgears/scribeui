@@ -70,6 +70,18 @@ class processManager(Borg):
 		# Create mapcache folder if not exist
 		if not os.path.exists(projectdir+"/mapcache"):
 			os.makedirs(projectdir+"/mapcache")
+		
+		#If there is a gitignore file, add the mapcache directory
+		if os.path.exists(projectdir+"/.gitignore"):
+			with open(projectdir+"/.gitignore", "r+") as gitignore:
+				lines = gitignore.readlines()
+				found = False
+				for line in lines:
+					if "mapcache" in line:
+						found = True
+				if not found:	
+					gitignore.writelines("mapcache/*")
+
 		jobdir = projectdir+"/mapcache/job-"+job['title']+str(job['id'])
 		os.makedirs(jobdir)
 		
@@ -83,7 +95,7 @@ class processManager(Borg):
 			outFile.write(line)
 		inFile.close()
 		outFile.close()
-		
+		#start mapcache
 		pprint.pprint("Adding new process")
 		p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
 		p.jobid = job['id']
