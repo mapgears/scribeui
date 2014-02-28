@@ -21,12 +21,14 @@ def getCssFiles():
 @plugin.route('/startjob', methods=['GET'])
 def startJob():
 	from init import get_map_id # Cannot be imported at beginning of file because of circular import
-	if not hasattr(g, "pManager"):
-		g.pManager = processManager()
+	pManager = processManager()
 		
 	workspaceName = request.args.get("ws",'')
 	mapName = request.args.get("map",'')
 	jobTitle = request.args.get("title",'')
+	zoomLevels = request.args.get("zoomlevels",'')
+	metatile = request.args.get("metatile",'')
+	extent = request.args.get("extent",'')
 	mapEntry = get_map_id(mapName, workspaceName)
 	if mapEntry is not None:
 		cur = g.db.execute('INSERT INTO jobs(map, status, title) VALUES(?,?, ?)',[mapEntry, 1, jobTitle])
@@ -38,8 +40,7 @@ def startJob():
 		curdir = os.path.realpath(__file__)
 		last = curdir.find("application")
 		projectdir = curdir[:last] + "application/workspaces/"+workspaceName+"/"+mapName
-		pprint.pprint(g.pManager)
-		g.pManager.addProcess(job[0], projectdir)
+		pManager.addProcess(job[0], projectdir, zoomLevels, metatile, extent)
 		return simplejson.dumps(job)
 	else:
 		return "ERROR: "+mapName+" map is unavailable or does not exist"
@@ -79,8 +80,7 @@ def clearJob():
 #Stop job in progress
 @plugin.route('/stopjob', methods=['GET'])
 def stopJob():
-	if not hasattr(g, "pManager"):
-		g.pManager = processManager()
+	pManager = processManager()
 		
 	jobId = request.args.get("job",'')
 	
@@ -89,7 +89,7 @@ def stopJob():
 	if(job):
 		warning = False	
 		if job[0]['status'] == 1: 
-			g.pManager.stopProcess(job[0]['id'], False)
+			pManager.stopProcess(job[0]['id'], False)
 			g.db.execute('UPDATE jobs SET status=2 WHERE id=? and status=1',[job[0]['id']])
 			g.db.commit()
 			job = getJob(jobId)

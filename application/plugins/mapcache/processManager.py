@@ -63,7 +63,7 @@ class processManager(Borg):
 		if not hasattr(self, "thread"):
 			self.thread = None
 
-	def addProcess(self, job, projectdir):
+	def addProcess(self, job, projectdir, zoomLevels, metatile, extent):
 		pprint.pprint("-----------")
 		path = os.path.realpath(__file__)
 			
@@ -85,7 +85,7 @@ class processManager(Borg):
 		outFile.close()
 		
 		pprint.pprint("Adding new process")
-		p = Popen(["mapcache_seed -c "+projectdir+"/mapcacheConfig.xml -t default -z 1,6 -M 8,8"], shell=True)
+		p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
 		p.jobid = job['id']
 		
 		# Lock the processes list before adding data

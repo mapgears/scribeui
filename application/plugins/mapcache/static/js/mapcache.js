@@ -2,6 +2,7 @@ jQuery(function() { $(document).ready(function(){
     function mapcache(){
 		this.name = "Mapcache Plug-in";
 		this.dialogDiv = null;
+		this.mapOpenCallback = null;
 		this.optionsDialog = null;
 		this.jobs = [];
 	}
@@ -11,6 +12,7 @@ jQuery(function() { $(document).ready(function(){
 		this.id = id;
 		this.title = title;
 		this.status = status;
+		
 	}
 	//Called when the plugin is loaded in the main app
 	mapcache.prototype.init = function(){
@@ -27,10 +29,14 @@ jQuery(function() { $(document).ready(function(){
 				this.updateJobListTable(map);
 			}
 		}, this));
-		
+
 		setInterval($.proxy(this.poke, this), 5000);	
 	}
-	
+	//Called by core's functions.js
+	mapcache.prototype.onMapOpened = function(){
+		if(this.mapOpenCallback) this.mapOpenCallback();
+		this.mapOpenCallback = null;
+	}
 	//Opens the job list dialog
     mapcache.prototype.openDialog = function(){
         var mapname = $("#map-description .map-title").text();
@@ -57,8 +63,8 @@ jQuery(function() { $(document).ready(function(){
 				var map = _workspace.getMapByName(mapname);
 				//No map opened, we open it
 				if(_workspace.openedMap == null){ 
+					this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
 					openMap();
-					$.proxy(this.openOptionsDialog(map), this);
 				//A map is opened and it's not the selected one
 				}else if(_workspace.openedMap != map){
 					// We warn the user if there are unsaved changes
@@ -72,8 +78,8 @@ jQuery(function() { $(document).ready(function(){
 							title: "Warning",
 							buttons: {
 								"Continue without saving": $.proxy(function(){
+									this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
 									openMap();
-									$.proxy(this.openOptionsDialog(map), this);
 									$('#mapcache-warning').dialog("close");
 									$('#mapcache-warning').remove();
 								}, this),
@@ -86,8 +92,8 @@ jQuery(function() { $(document).ready(function(){
 					// If a map is opened, it's not the one selected but there are no unsaved changes, 
 					// we open the selected one anyway
 					}else{	
+						this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
 						openMap();
-						$.proxy(this.openOptionsDialog(map), this);
 					}
 				// If there is a map opened and it's the right one, we proceed
 				}else{
@@ -120,15 +126,14 @@ jQuery(function() { $(document).ready(function(){
 		}, this));
 		var currentExtentButton = $('<button id="mapcache-current-extent">Current Extent</button>').button().click($.proxy(function(){
 			$('#mapcache-extent').val(this.getCurrentExtent());
-		},this))
+		},this));
 		
 		this.optionsDialog = $('<div id="mapcache-options-dialog">'+
 			'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
 			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
-			'<div id="mapcache-zoomlevels-slider"></div></div>'+	
-			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
-			'<div class="control-group"><label for="mapcache-cpu">Number of threads: </label><div class="control"><input id="mapcache-cpu" type="text" value="1"/></div></div>'+
-			'<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
+			'<div id="mapcache-zoomlevels-slider"></div><div id="mapcache-zoomlevels-error"></div></div>'+	
+			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div><div id="mapcache-metatiles-error"></div></div>'+
+			'<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><div id="mapcache-extent-error"></div><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
 			'</div>');
 		this.optionsDialog.hide();
 		$('.main').append(this.optionsDialog);
@@ -150,21 +155,36 @@ jQuery(function() { $(document).ready(function(){
 		
 		//Start new job button
 		var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
-			this.validateOptions();
+			var jobtitle = $('#mapcache-title').val();
+			var zoomLevels = $('#mapcache-zoomlevels').val();
+			var metatile = $('#mapcache-metatiles').val();
+			var extent = $('#mapcache-extent').val();
+			if(this.validateOptions(jobtitle, zoomLevels, metatile, extent)){
+				var mapname = $("#map-description .map-title").text();
+				var map = _workspace.getMapByName(mapname);
+				
+				$.proxy(this.addJob(map, jobtitle, zoomLevels, metatile, extent), this);
+			}
 		}, this));
-		
+		var minScale = 999;
+		var maxScale = -1;
+		for(k in _workspace.openedMap.OLScales){
+			var i = parseInt(k);
+			if(i < minScale) minScale = i;
+			if(i > maxScale) maxScale = i;
+		}
 		this.optionsDialog.append(startButton);
 		$( "#mapcache-zoomlevels-slider" ).slider({
 			range: true,
-			min: 0,
-			max: 20,
+			min: minScale,
+			max: maxScale,
 			values: [0, 7],
 			slide: function( event, ui ) {
-				$("#mapcache-zoomlevels").val(ui.values[0]+" - "+ui.values[1]);
+				$("#mapcache-zoomlevels").val(ui.values[0]+","+ui.values[1]);
 				}
 			});
 		$("#mapcache-zoomlevels").val($("#mapcache-zoomlevels-slider").slider("values", 0)+
-			" - "+$("#mapcache-zoomlevels-slider").slider("values",1));
+			","+$("#mapcache-zoomlevels-slider").slider("values",1));
 		this.optionsDialog.dialog("open");
 	}
 	//Reads the map's extent in the mapEditor
@@ -175,25 +195,34 @@ jQuery(function() { $(document).ready(function(){
 		for(var i=0; i<mapEditor.lineCount(); i++){
 			if(mapEditor.getLine(i).indexOf(extentStr) !== -1){
 				l = mapEditor.getLine(i);
-				return l.substr(l.indexOf(extentStr)+extentStr.length,l.length)
+				return l.substr(l.indexOf(extentStr)+extentStr.length,l.length);
 			}
 		}
-
 	}
 	// Returns the current extent in the map previewer
 	mapcache.prototype.getCurrentExtent = function(){
 		return _workspace.openedMap.OLMap.getExtent();
 	}
-	mapcache.prototype.validateOptions = function(){
-			var mapname = $("#map-description .map-title").text();
-			var map = _workspace.getMapByName(mapname);
-			$.proxy(this.addJob(map), this);
+	mapcache.prototype.validateOptions = function(jobtitle, zoomlevels, metatile, extent){
+		valid = true;
+		if(!zoomlevels.match(/[0-9]+,[0-9]+/)){
+			$('#mapcache-zoomlevels-error').text('Zoom levels must be of the form: x,x where x is a number');
+		}else{
+			$('#mapcache-zoomlevels-error').text('');
+		}
+		
+
+		return valid;
 	}
 	//Creates a new job and adds it to the list
-	mapcache.prototype.addJob = function(map){
-		jobtitle = $('#mapcache-title').val();
+	mapcache.prototype.addJob = function(map, jobtitle, zoomlevels, metatile, extent){
 		$.ajax({
-			url: "http://localhost/ScribeUI/plugins/mapcache/startjob?map="+map.name+"&ws="+_workspace.name+"&title="+jobtitle,
+			url: "http://localhost/ScribeUI/plugins/mapcache/startjob?map="+map.name+
+																	"&ws="+_workspace.name+
+																	"&title="+jobtitle+
+																	"&zoomlevels="+zoomlevels+
+																	"&metatile="+metatile+
+																	"&extent="+extent,
 			context: this,
 			dataType: "json"
 		}).done(function(data){
