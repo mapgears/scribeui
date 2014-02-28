@@ -130,9 +130,9 @@ jQuery(function() { $(document).ready(function(){
 		
 		this.optionsDialog = $('<div id="mapcache-options-dialog">'+
 			'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
-			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
-			'<div id="mapcache-zoomlevels-slider"></div><div id="mapcache-zoomlevels-error"></div></div>'+	
-			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div><div id="mapcache-metatiles-error"></div></div>'+
+			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><div id="mapcache-zoomlevels-error"></div><input id="mapcache-zoomlevels" type="text"/>'+
+			'<div id="mapcache-zoomlevels-slider"></div></div>'+	
+			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><div id="mapcache-metatiles-error"></div><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
 			'<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><div id="mapcache-extent-error"></div><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
 			'</div>');
 		this.optionsDialog.hide();
@@ -155,15 +155,16 @@ jQuery(function() { $(document).ready(function(){
 		
 		//Start new job button
 		var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
-			var jobtitle = $('#mapcache-title').val();
-			var zoomLevels = $('#mapcache-zoomlevels').val();
-			var metatile = $('#mapcache-metatiles').val();
-			var extent = $('#mapcache-extent').val();
+			var jobtitle = $('#mapcache-title').val().trim();
+			var zoomLevels = $('#mapcache-zoomlevels').val().trim();
+			var metatile = $('#mapcache-metatiles').val().trim();
+			var extent = $('#mapcache-extent').val().trim();
 			if(this.validateOptions(jobtitle, zoomLevels, metatile, extent)){
 				var mapname = $("#map-description .map-title").text();
 				var map = _workspace.getMapByName(mapname);
 				
 				$.proxy(this.addJob(map, jobtitle, zoomLevels, metatile, extent), this);
+				$(this.optionsDialog).dialog("close");
 			}
 		}, this));
 		var minScale = 999;
@@ -195,7 +196,7 @@ jQuery(function() { $(document).ready(function(){
 		for(var i=0; i<mapEditor.lineCount(); i++){
 			if(mapEditor.getLine(i).indexOf(extentStr) !== -1){
 				l = mapEditor.getLine(i);
-				return l.substr(l.indexOf(extentStr)+extentStr.length,l.length);
+				return l.substr(l.indexOf(extentStr)+extentStr.length,l.length).trim().replace(/ /g,',');
 			}
 		}
 	}
@@ -205,13 +206,24 @@ jQuery(function() { $(document).ready(function(){
 	}
 	mapcache.prototype.validateOptions = function(jobtitle, zoomlevels, metatile, extent){
 		valid = true;
-		if(!zoomlevels.match(/[0-9]+,[0-9]+/)){
+		if(!zoomlevels || !zoomlevels.match(/^[0-9]+,[0-9]+$/)){
 			$('#mapcache-zoomlevels-error').text('Zoom levels must be of the form: x,x where x is a number');
+			valid = false;
 		}else{
 			$('#mapcache-zoomlevels-error').text('');
 		}
-		
-
+		if(!metatile || !metatile.match(/^[0-9]+,[0-9]+$/)){
+			$('#mapcache-metatiles-error').text('Metatiles must be of the form: x,x where x is a number');
+			valid = false;
+		}else{
+			$('#mapcache-metatiles-error').text('');
+		}
+		if(!extent || !extent.match(/^(-?[0-9.]+,){3}-?[0-9.]+$/)){
+			$('#mapcache-extent-error').text('Invalid extent. It must be four numbers seperated by spaces or comma.');
+			valid = false;
+		}else{
+			$('#mapcache-extent-error').text('');
+		}
 		return valid;
 	}
 	//Creates a new job and adds it to the list
@@ -238,7 +250,7 @@ jQuery(function() { $(document).ready(function(){
 	//Called in regular intervals to update the function list
 	// Only pokes the server if the job list dialog is opened, and if there is a job in progress
 	mapcache.prototype.poke = function(){
-		if(this.jobs.length > 1 && this.dialogDiv.dialog("isOpen") == true){
+		if(this.jobs.length > 1 && this.dialogDiv != null && this.dialogDiv.dialog("isOpen") == true){
 			var poke = false;
 			for(i in this.jobs){
 				// If there is a job in progress, we poke
