@@ -752,7 +752,11 @@ function openSecondaryPanel(value){
     if(value != 'groups'){
         $('.secondary-wrap').show();
         $('#' + value.substr(0, value.length-1) + '-tab').show();
-           editors[value].refresh();
+            //Dirty workaround but it's the only way I found so far
+            //to make the secondary editor display all it's content properly
+            //Both refresh are needed...
+            editors[value].refresh();
+            setTimeout(editors[value].refresh, 1);
     }else{
          $('.secondary-wrap').hide();
     }

@@ -154,7 +154,7 @@ jQuery(function() {
         $.each(editors, function(key, editor){
             //Need to use a timeout for the editors to refresh properly.
             // See http://stackoverflow.com/questions/10575833/codemirror-has-content-but-wont-display-until-keypress
-            setTimeout(editor.refresh, 0)
+            setTimeout(editor.refresh, 1)
         });
     });
 

@@ -160,7 +160,7 @@ Map.prototype.displayGroups = function(silent){
 
         self.selectedGroup = self.getGroupByName(this.value);
 
-        resizeEditors();
+        //resizeEditors();
 
         if(self.selectedGroup){
             editors['groups'].setValue(self.selectedGroup.content);
@@ -169,6 +169,8 @@ Map.prototype.displayGroups = function(silent){
         }
 
         editors['groups'].clearHistory();
+
+        resizeEditors();
         
         e.stopPropagation();
     });
