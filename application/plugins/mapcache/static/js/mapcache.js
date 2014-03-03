@@ -30,7 +30,7 @@ jQuery(function() { $(document).ready(function(){
 			}
 		}, this));
 
-		setInterval($.proxy(this.poke, this), 5000);	
+		setInterval($.proxy(this.poke, this), 30000);	
 	}
 	//Called by core's functions.js
 	mapcache.prototype.onMapOpened = function(){

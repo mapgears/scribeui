@@ -20,7 +20,7 @@ class processManager(Borg):
 				#None	Running
 				#0		Finished nicely	
 				#-n		terminated by signal n
-				time.sleep(1)
+				time.sleep(30)
 				pprint.pprint("-----------")
 				stop = True
 				self.pManager.lock.acquire()
@@ -106,7 +106,6 @@ class processManager(Borg):
 
 		#If thread is finished, start it up
 		if self.thread is None or not self.thread.isAlive():
-			pprint.pprint("Starting thread")
 			self.thread = None
 			self.thread = self.pollProcesses(self)
 			self.thread.start()
