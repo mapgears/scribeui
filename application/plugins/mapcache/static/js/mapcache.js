@@ -303,7 +303,7 @@ jQuery(function() { $(document).ready(function(){
 		$('#start-new-mapcache-job-mapname').text(map.name);
 		if(this.jobs.length != 0){
 			var table = $('<table id="mapcache-jobs-list"><tr>'+
-				'<th>ID</th><th>Title</th><th>Map</th><th>Status</th><th>Action</th></tr>');
+				'<th>ID</th><th>Title</th><th>Map</th><th>Status</th><th>Action</th></tr></table>');
 			for(i in this.jobs){
 				if(this.jobs[i].map == map || showall){
 					nojobs = false;
@@ -318,7 +318,15 @@ jQuery(function() { $(document).ready(function(){
 					table.append(tr);
 				}
 			}
-			if(!nojobs) $('#start-new-mapcache-job').after(table);
+			if(!nojobs){
+				 $('#start-new-mapcache-job').after(table);
+				var refreshLine = $('<p id="mapcache-refresh" style="margin-bottom:10px">Updates every 30s. </p>');
+				var refreshLink = $('<a href="#">Refresh now.</a>');
+				refreshLink.click($.proxy(this.poke, this));
+				refreshLine.append(refreshLink);
+				table.after(refreshLine);
+			}
+
 		}
 		if(nojobs){
 			$('#start-new-mapcache-job').after('<div id="no-mapcache-jobs">There is no tiling job running now.</div>');
@@ -421,6 +429,7 @@ jQuery(function() { $(document).ready(function(){
 	mapcache.prototype.clearJobDialog = function(){
 		$('#no-mapcache-jobs').remove();
 		$('#mapcache-jobs-list').remove();
+		$('#mapcache-refresh').remove();
 	}
     addPlugin(new mapcache());
 })});
