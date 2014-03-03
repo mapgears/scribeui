@@ -11,6 +11,7 @@ create table maps (
   map_name string not null,
   map_type string not null, 
   map_desc string,
+  git_url string,
   ws_id integer not null
 );
 

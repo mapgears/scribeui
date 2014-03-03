@@ -31,11 +31,7 @@ jQuery(function() {
     --------------------------------*/
     var options = {
         lineNumbers: true,
-        mode: {
-            name: "python",
-            version: 2,
-            singleLineStringErrors: false
-        },
+        mode: "scribe",
         indentUnit: 4,
         autofocus: true,
         tabMode: "spaces",
@@ -45,6 +41,18 @@ jQuery(function() {
 		}
     }
 
+    var readmeOptions = {
+        lineNumbers: true,
+        mode: "markdown",
+        indentUnit: 4,
+        autofocus: true,
+        tabMode: "spaces",
+        matchBrackets: true,
+        onChange: function(e){
+            _workspace.openedMap.saved = false;
+        }
+    }
+
     groupEditor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
     mapEditor = CodeMirror.fromTextArea(document.getElementById("map-editor"), options);
     variableEditor = CodeMirror.fromTextArea(document.getElementById("variable-editor"), options);
@@ -52,6 +60,7 @@ jQuery(function() {
     symbolEditor = CodeMirror.fromTextArea(document.getElementById("symbol-editor"), options);
     fontEditor = CodeMirror.fromTextArea(document.getElementById("font-editor"), options);
     projectionEditor = CodeMirror.fromTextArea(document.getElementById("projection-editor"), options);
+    readmeEditor = CodeMirror.fromTextArea(document.getElementById("readme-editor"), readmeOptions);
 	
     /*--------------------------------
       Tabs and buttons
@@ -81,11 +90,11 @@ jQuery(function() {
 	
 	$('#logs').hide();
 
-	$('#editors-container').height($('#editor-tab').height() - 27);
+	$('#editors-container').height($('#editor-tab').height() - 40);
 	$(window).on('resize', function () {
     	$('.main').height( $('body').height()-$('.navbar').height())
         $('#main-tabs').tabs('refresh');
-		$('#editors-container').height($('#editor-tab').height() - 27);
+		$('#editors-container').height($('#editor-tab').height() - 40);
 		resizeEditors();
     });
 
@@ -139,12 +148,30 @@ jQuery(function() {
 	    deleteMap();
     });
 
-    $("#newmap-type").bind('blur', function(){
-	    displayTemplates('templates', $("#newmap-type").val());
-	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());    
+    $('#btn_configure_map').button().click(function(){
+        configureMap();
     });
 
-    $('#btn_commit').button().click( function(){
+    $('#btn_clone_map').button().click(function(){
+        cloneMap();
+    });
+
+    $('#btn_commit_map').button().click(function(){
+        commitMap();
+    });
+
+    $('#btn_pull_map').button().click(function(){
+        pullMap();
+    });
+
+    $("#newmap-type").bind('change', function(){
+	    displayTemplates('templates', $("#newmap-type").val());
+	    displayTemplates($("#newmap-workspace-select").val(), $("#newmap-type").val());  
+    });
+
+    $('#btn_commit').button({
+        icons: { primary: 'ui-icon-disk' }
+    }).click( function(){
 	    _workspace.openedMap.commit();
     });
 
@@ -168,7 +195,7 @@ jQuery(function() {
 	    openGroupOrderWindow();
     });
 	$('#btn-open-logs').button({
-		text:false,
+		/*text:false,*/
 		icons: { primary: 'ui-icon-flag' }	
 	}).click(function(){
 	    $('#logs').toggle();
@@ -192,6 +219,7 @@ jQuery(function() {
 	    symbolEditor.refresh();
 	    fontEditor.refresh();
 	    projectionEditor.refresh();
+        readmeEditor.refresh();
     });
 	$(".secondary-wrap").resizable({
 		handles: 's',
@@ -203,10 +231,14 @@ jQuery(function() {
         displayDataBrowser();
     });
 
-    var typeSelect = $("#newmap-type");
+    var newMapTypeSelect = $("#newmap-type");
+    var cloneMapTypeSelect = $("#git-clone-type");
     for(var i = 0; i < mapTypes.length; i++){
-        typeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
+        newMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
+        cloneMapTypeSelect.append($("<option></option>").attr("value", mapTypes[i]).text(mapTypes[i]));
     }
+
+    $('select').chosen();
 	
 	//Shortcut for commit
 	$("body").keypress(function(e){

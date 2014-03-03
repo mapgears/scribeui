@@ -64,6 +64,7 @@ Workspace.prototype.getMaps = function(callback){
 				maps.push(new Map(map.name, {
 				    "description": map.description,
 				    "url": map.url,
+                    "thumbnail": map.thumbnail,
 				    "workspace": self
 				}));
 		    });
@@ -164,27 +165,44 @@ Workspace.prototype.displayMaps = function(){
     this.clearMaps();
     $("#map-actions button").button("enable");
 
-    var data = ""
-    for(var i = 0; i < this.maps.length; i++){
-	data += '<li class="map-preview"><div class="map-preview-img"></div><span class="map-preview-name">'+this.maps[i].name+'</span></li>';
-    }
     $("#" + this.mapList).empty();
-    $("#" + this.mapList).append(data);
+
+    for(var i = 0; i < this.maps.length; i++){
+        this.displayThumbnail(this.maps[i]);
+    }
     $("#" + this.mapList).selectable({
 		selected: function(e){
-				var map = self.getMapByName($(this).find(".ui-selected").text());
-				map.displayDescription();
+            var li = $(this).find(".ui-selected")
+			var map = self.getMapByName(li.text());
+            if(li.find('.default-preview').length > 0){
+                li.addClass('li-default-thumbnail');
+            }
+			map.displayDescription();
 		}
 	});
     var self = this;
 };
 
+Workspace.prototype.displayThumbnail = function(map){
+    var li = $('<li>').addClass('map-preview');
+    var image = $('<div>').addClass('map-preview-img').appendTo(li);
+    var name = $('<span>').addClass('map-preview-name').text(map.name).appendTo(li);
+    if(map.thumbnail){
+        image.addClass('thumbnail-preview').css('background-image', 'url("' + map.thumbnail + '")');
+    } else{
+        image.addClass('default-preview');
+    }
+    $("#" + this.mapList).append(li);    
+}
+
 Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
 
     for(var i = 0; i < this.pointsOfInterest.length; i++){
-	$("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
-    }   
+	   $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
+    }
+
+    $("#" + this.poiSelect).trigger('chosen:updated');   
 };
 
 Workspace.prototype.display = function(){
