@@ -232,6 +232,7 @@ Workspace.prototype.destroy = function(callback){
             if(callback){
                 callback.call(self);
             }
+            $("#" + self.workspaceSelect).trigger('chosen:updated');
         }else {
             alert(status);
         }

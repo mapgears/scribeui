@@ -53,6 +53,9 @@ button {
     margin-top: -1px;
     box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
+pre {
+    font-family: courier !important;
+}
 
 .main {
     height: 100%;
@@ -205,11 +208,11 @@ button {
 }
 
 .tab-container {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
 }
 
 .tab-container-small {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     border-bottom: 1px solid #AAAAAA !important;
 }
 
@@ -468,10 +471,14 @@ button {
     margin-top: -9px !important;
 }
 /*=== Codemirror ===*/
+@font-face {
+    font-family: "Menlo-Regular";
+    src: url('fonts/Menlo-Regular.ttf') format("truetype");
+}
 .CodeMirror {
-	font-size: 1.2em;
+	font-size: 1.1em;
 	height:100%;
-    font-family: monospace !important;
+    font-family: Menlo-Regular, sans-serif !important;
 }
 .cm-variable {
     color: blue !important;
@@ -635,6 +642,10 @@ button {
     height: 160px;
     width: 300px;
 }
+#edit-line-content {
+    height: 120px;
+    width: 500px;
+}
 
 .invisible{
     display: none;
@@ -720,6 +731,7 @@ div.olControlZoom a {
     width: auto !important;    
     height: auto !important;
     min-width: 200px;
+    overflow: visible !important;
 }
 
 .control-group {
@@ -826,8 +838,15 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
+#git-url, #git-clone-url {
+    width: 300px;
+}
 #git-message {
     width: 400px;
+}
+#git-commit-info {
+    text-align: center;
+    color: red;
 }
 #git-clone-description {
     width: 400px;
@@ -840,8 +859,11 @@ div.olControlZoom a {
 }
 
 .chosen-container {
-    /*width: auto !important;*/
     min-width: 100px;
+}
+
+#group_select_chosen.chosen-container {
+    min-width: 150px;
 }
 
 #group_select_chosen {
@@ -849,8 +871,6 @@ div.olControlZoom a {
 }
 
 #group_select_chosen a{
-    /*border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;*/
     border-radius: 0px !important;
 }
 
@@ -906,5 +926,16 @@ div.olControlZoom a {
 
 #grouporder-form + .ui-dialog-buttonpane .ui-dialog-buttonset {
     float: none !important;
+}
+
+#get-feature-info {
+    max-height: 600px !important;
+    min-width: 200px !important;
+    max-width: 400px !important;
+    overflow: auto;
+}
+
+#get-feature-info pre {
+    padding: 10px;
 }
 

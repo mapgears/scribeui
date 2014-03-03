@@ -18,7 +18,7 @@ function openNewWorkspaceWindow(options){
         autoOpen: false,
         resizable: false,
         width: options.popupWidth,
-        height:options.popupHeight,
+        height: options.popupHeight,
         modal: true,
         buttons: {
             "Create": function() {
@@ -40,8 +40,7 @@ function openNewWorkspaceWindow(options){
             }
         },
         close: function(e) {
-            var inputs = $(this).find('input');
-            $(inputs).val('');
+            $(this).find('input').val('');
         }
     }).dialog("open");
 }
@@ -56,8 +55,8 @@ function deleteWorkspace(options){
             title: "Confirm",
             resizable: false,
             
-            width: options.popupWidth,
-            height:options.popupHeight,
+            //width: options.popupWidth,
+            //height:options.popupHeight,
 
             buttons: [{
                  text: "Yes",
@@ -303,6 +302,8 @@ function exportMap(){
 }
 
 function cloneMap(){
+    $('#git-clone-logs').val('');
+
     $("#clonemap-form").dialog({
         autoOpen: false,
         resizable: false,
@@ -335,7 +336,7 @@ function cloneMap(){
 
                 //$(this).dialog("close");
             },
-            Cancel: function() {
+            Close: function() {
                 $(this).dialog("close");
             }
         },
@@ -376,7 +377,7 @@ function configureMap(){
 
                     $(this).dialog("close");
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -391,12 +392,15 @@ function displayConfiguration(config){
     $("#git-url").val(config.gitURL);
     $("#git-user").val(config.gitUser);
     $("#git-password").val(config.gitPassword);
+    $("#configure-url").val(config.url);
     $("#configure-description").val(config.description);
 }
 
 function commitMap(){
+    $('#git-logs').val('');
+
     var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap && _workspace.openedMap.name != name){
+    if(_workspace.openedMap && _workspace.openedMap.name == name){
         var map = _workspace.openedMap;
     } else{
         var map = _workspace.getMapByName(name);
@@ -420,11 +424,12 @@ function commitMap(){
                         gitUser: gitUser,
                         gitPassword: gitPassword
                     }
-                    map.gitCommit(config, displayCommitLogs);
 
-                    //$(this).dialog("close");
+                    $('#git-logs').val('Processing request. This may take a few seconds.');
+
+                    map.gitCommit(config, displayCommitLogs);
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -438,7 +443,9 @@ function commitMap(){
 
 function pullMap(){
     var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap && _workspace.openedMap.name != name){
+    $('#git-pull-logs').val('');
+
+    if(_workspace.openedMap && _workspace.openedMap.name == name){
         var map = _workspace.openedMap;
     } else{
         var map = _workspace.getMapByName(name);
@@ -463,11 +470,11 @@ function pullMap(){
                         gitPassword: gitPassword
                     }
 
-                    map.gitPull(config, displayPullLogs);
+                    $('#git-pull-logs').val('Processing request. This may take a few seconds.');
 
-                    //$(this).dialog("close");
+                    map.gitPull(config, displayPullLogs);
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
@@ -509,24 +516,16 @@ function createNewGroup(){
                 $(this).dialog("close");
             }
         },
-        close: function() {}
+        close: function() {
+            $(this).find('input').val('');
+        }
     }).dialog("open");
 }
 
-function deleteGroup(options){
-    options = (options) ? options : {};
-    if(options.hasOwnProperty("mapType")){
-        if(options.mapType == "Scribe"){
-            $(".to-be-deleted").each(function(i){
-                var name = $(this).text();
-                _workspace.openedMap.removeGroup(name);
-            });
-        }else if(options.mapType == "Standard"){
-            var name = $("#group-select option:selected").text();
-            var r = confirm("Are you sure you want to remove the group "+name+"?");
-            _workspace.openedMap.removeGroup(name);
-        }
-    }
+function deleteGroup(groups){
+    $.each(groups, function(index, group){
+        _workspace.openedMap.removeGroup(group);
+    });
 }
 function openGroupOrderWindow(){
     _workspace.openedMap.displayGroupsIndex();
@@ -608,9 +607,16 @@ function openGroupOrderWindow(){
             text: "Apply",
             'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
-                _workspace.openedMap.updateGroupOrder();
-                deleteGroup({mapType:_workspace.openedMap.type});
+                var groups = [];
+                $(".to-be-deleted").each(function(){
+                    groups.push($(this).text());
+                });
+                
                 $(this).dialog("close");
+                _workspace.openedMap.updateGroupOrder(function(){
+                    deleteGroup(groups);
+                });
+                
             }
         },
         {
@@ -665,7 +671,9 @@ function addPOI(){
                         $(this).dialog("close");
                     }
                 },
-                close: function() {}
+                close: function() {
+                    $(this).find('input').val('');
+                }
             }).dialog("open");
         }
     } 
@@ -777,7 +785,7 @@ function onMapOpened(){
         $("#btn_change_group_order").show();
     }else if(_workspace.openedMap.type == "Standard"){
         $("#btn_delete_group").show();
-        $("#btn_change_group_order").hide();
+        $("#btn_change_group_order").show();
     }
 
     for(i in plugins){
@@ -801,25 +809,20 @@ function scribeLog(msg){
     $("#" + self.workspace.logTextarea).val(msg);
 }
 
-function removeIncludeFromMap(filename){
+function removeIncludeFromMap(filename, commit){
     for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("layers/"+filename+"'") !== -1){
+        if(mapEditor.getLine(i).indexOf("layers/"+filename) !== -1){
             var line = mapEditor.getLine(i);
             mapEditor.removeLine(i);
-            //Highlight for a short time:
-            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-            mapEditor.setLineClass(i-1, 'background', 'setextent-highlighted-line');
-            setTimeout(function(){
-                mapEditor.setLineClass(i, 'background', '');
-                mapEditor.setLineClass(i-1, 'background', '');
-            }, 3000);
             break;
         }
     }
-    _workspace.openedMap.commit();
+    if(commit == undefined || commit == true){
+        _workspace.openedMap.commit();    
+    }
 
 }
-function addIncludeToMap(filename){
+function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
     lastinc = -1;
     openSecondaryPanel("maps", mapEditor);
@@ -830,16 +833,47 @@ function addIncludeToMap(filename){
             //We add the new file at the end of the include list
             var line = mapEditor.getLine((i-1));
             //TODO detect indentation 
-            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'\n");
+            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
-            mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-            setTimeout(function(){
-                mapEditor.setLineClass(i, 'background', '');
-            }, 3000);
+            //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+            //setTimeout(function(){
+            //    mapEditor.setLineClass(i, 'background', '');
+            //}, 3000);
             break;
         }
     }
-    _workspace.openedMap.commit();
+    if(commit == undefined || commit == true){
+        _workspace.openedMap.commit();
+    }
+}
+
+function displayLineEditor(cm, line, text){
+    $('#edit-line-content').val(text);
+
+    $("#edit-line").dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        buttons: [
+        {
+            text: "Write",
+            'class': 'btn-group-first grouporder-btn-right',
+            click:  function() {
+                cm.setLine(line, $('#edit-line-content').val());
+                $(this).dialog("close");
+            }
+        },
+        {
+            text: "Close",
+            'class': 'btn-group-last grouporder-btn-right',
+            click: function() {
+                $(this).dialog("close");
+            }
+        }],
+        close: function() {
+            $(this).find('textarea').val('');
+        }
+    }).dialog("open");   
 }
 
 /* 

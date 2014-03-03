@@ -66,6 +66,7 @@ Map.prototype.open = function(callback){
             }
 
             self.workspace.openedMap = self;
+            self.previousGroup = null;
             self.displayComponents();
             self.display();
             self.getResultingMapfile();
@@ -110,9 +111,9 @@ Map.prototype.createGroup = function(name){
         }, function(status) {
             if(status == 1){
                 var group = {"name": name, "content": ""}
-                if(self.type == "Standard")
-                    if(group.name.indexOf(".map") == -1)
-                        group.name = group.name+".map";
+                //if(self.type == "Standard")
+                //    if(group.name.indexOf(".map") == -1)
+                //        group.name = group.name+".map";
                 
                 self.groups.push(group);
                 
@@ -124,7 +125,7 @@ Map.prototype.createGroup = function(name){
                 
                 //Include the new group in the map
                 if(self.type == "Standard")
-                    addIncludeToMap(group.name)
+                    addIncludeToMap(group.name + '.map')
             }else{
         alert(status);
         }           
@@ -151,7 +152,7 @@ Map.prototype.removeGroup = function(name){
 
                 //Remove include statement in the map element
                 if(self.type == "Standard")
-                    removeIncludeFromMap(group.name)
+                    removeIncludeFromMap(group.name + '.map')
             }
         });       
     }
@@ -176,11 +177,7 @@ Map.prototype.displayComponents = function(){
     this.displayGroups();
 };
 
-Map.prototype.displayGroups = function(){
-    if (this.type == "Basemaps" || this.type == "Standard"){
-        $("#btn_change_group_order").button("disable");
-    }
-
+Map.prototype.displayGroups = function(silent){
     var groupSelect = $("#" + this.workspace.groupSelect);
     for(var i = 0; i < this.groups.length; i++){
         groupSelect.append($("<option></option>").attr("value", this.groups[i].name).text(this.groups[i].name));
@@ -206,10 +203,15 @@ Map.prototype.displayGroups = function(){
         }
         
         e.stopPropagation();
-    }).trigger("change");
+    })
+    if(!silent){
+        groupSelect.trigger("change");
+        self.previousGroup = groupSelect.val();
+        self.setGroupContent(self.previousGroup, groupEditor.getValue());    
+    }
 
-    self.previousGroup = groupSelect.val();
-    self.setGroupContent(self.previousGroup, groupEditor.getValue());
+    //self.previousGroup = groupSelect.val();
+    //self.setGroupContent(self.previousGroup, groupEditor.getValue());
 }
 
 Map.prototype.displayDescription = function(){
@@ -312,28 +314,28 @@ Map.prototype.display = function(){
         };
 
         var OLMap = new OpenLayers.Map(this.workspace.mapDiv, mapOptions);
-    //Openlayers control to display the current zoom level
-    var currentZoomControl = new OpenLayers.Control();
-    OpenLayers.Util.extend(currentZoomControl, {
-        draw: function(){
-            OpenLayers.Control.prototype.draw.apply(this, arguments);
-                if (!this.element) {
-                    this.element = document.createElement("div");
-                this.div.setAttribute("class","olControlNoSelect");
-                this.div.setAttribute("class","olCurrentZoomLevelControl");
-                    this.div.appendChild(this.element);
-                }
-                this.map.events.register( 'zoomend', this, this.updateZoomLevel);
-                this.updateZoomLevel();
-                return this.div;
-         },
-        updateZoomLevel: function(){
-            var zoomlevel = this.map.getZoom();
-             zoomlevel++;
-            this.element.innerHTML = "Zoom level : "+zoomlevel;
-        }
+        //Openlayers control to display the current zoom level
+        var currentZoomControl = new OpenLayers.Control();
+        OpenLayers.Util.extend(currentZoomControl, {
+            draw: function(){
+                OpenLayers.Control.prototype.draw.apply(this, arguments);
+                    if (!this.element) {
+                        this.element = document.createElement("div");
+                    this.div.setAttribute("class","olControlNoSelect");
+                    this.div.setAttribute("class","olCurrentZoomLevelControl");
+                        this.div.appendChild(this.element);
+                    }
+                    this.map.events.register( 'zoomend', this, this.updateZoomLevel);
+                    this.updateZoomLevel();
+                    return this.div;
+             },
+            updateZoomLevel: function(){
+                var zoomlevel = this.map.getZoom();
+                 zoomlevel++;
+                this.element.innerHTML = "Zoom level : "+zoomlevel;
+            }
 
-    });
+        });
         OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
 
         var WMSLayer = new OpenLayers.Layer.WMS(
@@ -349,6 +351,27 @@ Map.prototype.display = function(){
         );
 
         OLMap.addLayers([WMSLayer]);
+
+        OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+        var getFeatureInfo = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: this.url, 
+            queryVisible: true,
+            infoFormat: 'text/plain',
+            vendorParams: {
+                'FEATURE_COUNT': 100
+            },
+            eventListeners: {
+                getfeatureinfo: function(event) {
+                    if(event.text != ""){
+                        getFeatureInfoDialog.find('pre').html(event.text);
+                        getFeatureInfoDialog.dialog('open');
+                    }
+                }
+            }
+        });
+        OLMap.addControl(getFeatureInfo);
+        getFeatureInfo.activate();
+
         OLMap.zoomToExtent(extent);
         
         this.OLMap = OLMap;
@@ -447,7 +470,7 @@ Map.prototype.lowerGroupIndex = function(name){
     }
 }
 
-Map.prototype.updateGroupOrder = function(){
+Map.prototype.updateGroupOrder = function(callback){
     var self = this;
     var data = [];
     for(var i = 0; i < this.groups.length; i++){
@@ -467,8 +490,21 @@ Map.prototype.updateGroupOrder = function(){
             self.clearGroups();
             self.displayGroups(true);
             $("#" + self.workspace.groupSelect).val(selected);
+            $("#" + self.workspace.groupSelect).trigger('chosen:updated');
             groupEditor.setValue(content);
+
+            if(self.type == 'Standard'){
+                $.each(self.groups, function(index, group){
+                    removeIncludeFromMap(group.name + '.map', false);
+                    addIncludeToMap(group.name + '.map', false);
+                });
+            } 
+
             self.commit();
+
+            if(callback != null){
+                callback.call();    
+            }
         }
     })
 }
@@ -542,11 +578,20 @@ Map.prototype.gitCommit = function(config, callback){
     var self = this;
     config['name'] = this.name;
 
-    $.post($SCRIPT_ROOT + '/_git_commit_map', config, function(response) {
-        callback.call(null, response);
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_commit_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+             callback.call(null, response);
 
-        if(response.status == 'ok'){
-            self.open();   
+            if(response.status == 'ok'){
+                self.open();   
+            }
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
     });
 }
@@ -554,12 +599,21 @@ Map.prototype.gitCommit = function(config, callback){
 Map.prototype.gitPull = function(config, callback){
     var self = this;
     config['name'] = this.name;
-    
-    $.post($SCRIPT_ROOT + '/_git_pull_map', config, function(response) {
-        callback.call(null, response);
 
-        if(response.status == 'ok'){
-            self.open();
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_pull_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+             callback.call(null, response);
+
+            if(response.status == 'ok'){
+                self.open();   
+            }
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
     });
  
@@ -568,18 +622,28 @@ Map.prototype.gitPull = function(config, callback){
 Map.prototype.gitClone = function(config, callback){
     var self = this;
     config['name'] = this.name;
-    $.post($SCRIPT_ROOT + '/_git_clone_map', config, function(response) {
-        if(response.status ==  'ok'){
-            self.workspace.maps.push(self);
-            self.workspace.displayMaps();
-            $("#" + self.workspace.mapActions).hide();
 
-            self.groups = [];
-            self.open(self.commit);
-        } else{
-            self.destroy();
+    $.ajax({
+        url: $SCRIPT_ROOT + '/_git_clone_map',
+        type: "POST",
+        data: config,
+        dataType:"json",
+        success: function(response) {
+            if(response.status ==  'ok'){
+                self.workspace.maps.push(self);
+                self.workspace.displayMaps();
+                $("#" + self.workspace.mapActions).hide();
+
+                self.groups = [];
+                self.open(self.commit);
+            } else{
+                self.destroy();
+            }
+            callback.call(null, response);
+        },
+        error: function(xhr) {
+            $('#git-logs').val('An error occured.');
         }
-        callback.call(null, response);
     });
 }
 
