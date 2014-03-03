@@ -18,14 +18,14 @@
    <tileset name="default">
       <source><!--SCRIBEUITITLE--></source>
       <cache>mbtiles</cache>
-      <grid>WGS84</grid>
+      <grid>GoogleMapsCompatible</grid>
       <format>PNG</format>
       <metatile>5 5</metatile>
       <metabuffer>10</metabuffer>
       <expires>3600</expires>
    </tileset>
 
-   <default_format>JPEG</default_format>
+   <default_format>PNG</default_format>
 
    <service type="wms" enabled="true">
       <full_wms>assemble</full_wms>

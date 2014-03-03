@@ -141,7 +141,7 @@ jQuery(function() { $(document).ready(function(){
 		
 		this.optionsDialog = $('<div id="mapcache-options-dialog">'+
 			'<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
-			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><div id="mapcache-zoomlevels-error"></div><input id="mapcache-zoomlevels" type="text"/>'+
+			'<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><div>GoogleMapsCompatible grid zoom levels</div><div id="mapcache-zoomlevels-error"></div><input id="mapcache-zoomlevels" type="text"/>'+
 			'<div id="mapcache-zoomlevels-slider"></div></div>'+	
 			'<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><div id="mapcache-metatiles-error"></div><input id="mapcache-metatiles" type="text" value="8,8"/></div></div>'+
 			'<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><div id="mapcache-extent-error"></div><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
@@ -178,17 +178,15 @@ jQuery(function() { $(document).ready(function(){
 				$(this.optionsDialog).dialog("close");
 			}
 		}, this));
-		var minScale = 999;
 		var maxScale = -1;
 		for(k in _workspace.openedMap.OLScales){
 			var i = parseInt(k);
-			if(i < minScale) minScale = i;
 			if(i > maxScale) maxScale = i;
 		}
 		this.optionsDialog.append(startButton);
 		$( "#mapcache-zoomlevels-slider" ).slider({
 			range: true,
-			min: minScale,
+			min: 0,
 			max: maxScale,
 			values: [0, 7],
 			slide: function( event, ui ) {
