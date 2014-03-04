@@ -136,12 +136,6 @@ jQuery(function() {
         }
     });
 
-    $("a[href = '#editor-tab']").bind('click', function(){
-        $("div[class='CodeMirror']").show();
-        groupEditor.refresh();
-        variableEditor.refresh();
-    });
-
     $('#btn_new_map').button().click(function(){
         openNewMapWindow();
     });
@@ -223,13 +217,16 @@ jQuery(function() {
     });
 
     $("a[href = '#editor-tab']").bind('click', function(){
-        mapEditor.refresh();
-        variableEditor.refresh();
-        scaleEditor.refresh();
-        symbolEditor.refresh();
-        fontEditor.refresh();
-        projectionEditor.refresh();
-        readmeEditor.refresh();
+        $("div[class='CodeMirror']").show();
+		//Fix for #68
+        setTimeout(mapEditor.refresh(), 0);
+        setTimeout(variableEditor.refresh(), 0);
+        setTimeout(scaleEditor.refresh(), 0);
+        setTimeout(symbolEditor.refresh(), 0);
+        setTimeout(fontEditor.refresh(), 0);
+        setTimeout(projectionEditor.refresh(), 0);
+        setTimeout(readmeEditor.refresh(), 0);
+		setTimeout(groupEditor.refresh(), 0);
     });
     $(".secondary-wrap").resizable({
         handles: 's',
