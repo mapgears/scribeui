@@ -28,8 +28,10 @@ Development
 - In your web browser, access http://localhost:6543/
 
 
-Production
-----------
+Production (WSGI)
+-----------------
+
+- install mod_wsgi on tour apache server. The instructions for doing so can be found here : http://code.google.com/p/modwsgi/wiki/QuickInstallationGuide
 
 - edit the following parameters in production.ini:
 	- sqlalchemy.url
@@ -53,7 +55,7 @@ Production
 - Create a file 'pyramid.wsgi' with the following content:
 
 	from pyramid.paster import get_app, setup_logging
-	ini_path = '/opt/scribeui_pyramid/scribeui_pyramid/production.ini'
+	ini_path = '/path/to/scribeui_pyramid/production.ini'
 	setup_logging(ini_path)
 	application = get_app(ini_path, 'main')
 
@@ -62,10 +64,10 @@ Production
 - Create a file 'scribeui_pyramid' with the following content:
 
 	WSGIDaemonProcess scribeui_pyramid user=www-data group=www-data threads=10 \
-	        python-path=/opt/scribeui_pyramid/scribeui_pyramid/lib/python2.7/site-packages
-	WSGIScriptAlias /scribeui_pyramid /opt/scribeui_pyramid/scribeui_pyramid/pyramid.wsgi
+	        python-path=/path/to/scribeui_pyramid/lib/python2.7/site-packages
+	WSGIScriptAlias /scribeui_pyramid /path/to/scribeui_pyramid/pyramid.wsgi
 
-	<Directory /opt/scribeui_pyramid/scribeui_pyramid>
+	<Directory /path/to/scribeui_pyramid>
 	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
 	        WSGIPassAuthorization On
 	        WSGIProcessGroup scribeui_pyramid
