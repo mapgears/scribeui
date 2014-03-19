@@ -5,6 +5,7 @@ jQuery(function() { $(document).ready(function(){
 		this.mapOpenCallback = null;
 		this.optionsDialog = null;
 		this.jobs = [];
+		this.path = "http://"+window.location.host+window.location.pathname+"/plugins/mapcache/";
 	}
 
 	function job(id, title, map, status){
@@ -238,12 +239,12 @@ jQuery(function() { $(document).ready(function(){
 	//Creates a new job and adds it to the list
 	mapcache.prototype.addJob = function(map, jobtitle, zoomlevels, metatile, extent){
 		$.ajax({
-			url: "http://localhost/ScribeUI/plugins/mapcache/startjob?map="+map.name+
-																	"&ws="+_workspace.name+
-																	"&title="+jobtitle+
-																	"&zoomlevels="+zoomlevels+
-																	"&metatile="+metatile+
-																	"&extent="+extent,
+			url: this.path+"startjob?map="+map.name+
+									"&ws="+_workspace.name+
+									"&title="+jobtitle+
+									"&zoomlevels="+zoomlevels+
+									"&metatile="+metatile+
+									"&extent="+extent,
 			context: this,
 			dataType: "json"
 		}).done(function(data){
@@ -281,7 +282,7 @@ jQuery(function() { $(document).ready(function(){
 	//Get the job list from the backend
 	mapcache.prototype.getJobs = function(callback){
 		$.ajax({
-			url: "http://localhost/ScribeUI/plugins/mapcache/getjobs?ws="+_workspace.name,
+			url: this.path+"getjobs?ws="+_workspace.name,
 			context: this,
 			dataType: "json"
 		}).done(function(data){
@@ -335,7 +336,7 @@ jQuery(function() { $(document).ready(function(){
 	// Removes a finished or stopped job
 	mapcache.prototype.clearJob = function(j){
 		$.ajax({
-			url: "http://localhost/ScribeUI/plugins/mapcache/clearjob?job="+j.id,
+			url: this.path+"clearjob?job="+j.id,
 			context: this,
 			dataType: "json"
 		}).success(function(data){
@@ -367,7 +368,7 @@ jQuery(function() { $(document).ready(function(){
 				"Stop job": $.proxy(function() {
 					$("#mapcache-jobstop-confirmation").dialog( "close" );
 					$.ajax({
-						url: "http://localhost/ScribeUI/plugins/mapcache/stopjob?job="+job.id,
+						url:  this.path+"stopjob?job="+job.id,
 						context: this,
 						dataType: "json"
 					}).success(function(data){
