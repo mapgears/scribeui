@@ -51,6 +51,7 @@ jQuery(function() { $(document).ready(function(){
 	}
 	//Opens the job list dialog
     mapcache.prototype.openDialog = function(){
+		this.getJobs();
         var mapname = this.getMapName();
 		var map = _workspace.getMapByName(mapname);
 		
@@ -260,7 +261,7 @@ jQuery(function() { $(document).ready(function(){
 	//Called in regular intervals to update the function list
 	// Only pokes the server if the job list dialog is opened, and if there is a job in progress
 	mapcache.prototype.poke = function(){
-		if(this.jobs.length > 1 && this.dialogDiv != null && this.dialogDiv.dialog("isOpen") == true){
+		if(this.jobs.length > 0 && this.dialogDiv != null && this.dialogDiv.dialog("isOpen") == true){
 			var poke = false;
 			for(i in this.jobs){
 				// If there is a job in progress, we poke
