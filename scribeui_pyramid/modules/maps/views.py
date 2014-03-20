@@ -583,6 +583,11 @@ class APIMap(object):
             os.chdir(map_directory)
 
             hasGitConfig = os.path.isfile(map_directory + '.git/config')
+            if hasGitConfig:
+                try:
+                    subprocess.call(['rm', '.gitignore'])
+                except IOError:
+                    pass
 
             if (git_url != map.git_url) or (git_url is not None and git_url == map.git_url and not hasGitConfig):   
                 try:
@@ -739,6 +744,8 @@ class APIMap(object):
 
                 workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
                 map_directory = workspaces_directory + self.request.userid + '/' + map.name + '/'
+                mapfile_directory = map_directory + 'map/'
+                mapfile = mapfile_directory + map.name + '.map'
                 os.chdir(map_directory)
 
                 try:
@@ -805,6 +812,16 @@ class APIMap(object):
                             response['logs'] += e.output
                     
                     if len(response['errors']) == 0:
+                        try:
+                            subprocess.check_output(['rm ' + mapfile_directory + 'level*.map'], shell=True, stderr=subprocess.STDOUT)
+                        except subprocess.CalledProcessError as e:
+                            pass
+
+                        try:
+                            subprocess.check_output(['mv ' + mapfile_directory + '*.map ' + mapfile], shell=True, stderr=subprocess.STDOUT)
+                        except subprocess.CalledProcessError as e:
+                            pass
+
                         response['status'] = 1
 
                 MapManager.git_remove_remote_url()
