@@ -510,7 +510,8 @@ Map.prototype.configure = function(config){
         if(response.status == 1){
             self.description = config.description;
             self.git_url = config.git_url;
-            self.displayDescription();    
+            self.displayDescription();
+            selectors.configureLogs().val(response.logs);    
         }
     });
 }

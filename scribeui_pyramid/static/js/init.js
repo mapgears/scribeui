@@ -23,6 +23,7 @@ jQuery(function() {
         gitCloneLogs: function(){ return $('#git-clone-logs') },
         gitCommitLogs: function(){ return $('#git-logs') },
         gitPullLogs: function(){ return $('#git-pull-logs') },
+        configureLogs: function(){ return $('#configure-logs') },
         dataBrowser: function(){ return $('#data-tab') },
         poiSelect: function() { return $('#poi-select') },
         poiActions: function() { return $('.poi-container') }

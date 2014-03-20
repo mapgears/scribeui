@@ -199,6 +199,7 @@ class MapManager(object):
         gitignoreContent += 'debugFile.log\n'
         gitignoreContent += 'map/level*.map\n'
         gitignore.write(gitignoreContent)
+        gitignore.close();
 
         return True
 

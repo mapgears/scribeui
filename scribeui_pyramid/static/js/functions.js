@@ -384,8 +384,6 @@ function configureMap(){
                     }
 
                     map.configure(config);
-
-                    $(this).dialog("close");
                 },
                 Close: function() {
                     $(this).dialog("close");

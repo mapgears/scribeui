@@ -299,6 +299,12 @@
         <div class="dialog-content">
             <form>
                 <div class="control-group">
+                    <label for="configure-url">Map URL</label>
+                    <div class="control">
+                        <input type="text" id="configure-url" readonly />
+                    </div>
+                </div>
+                <div class="control-group">
                     <label for="git-url">Git URL</label>
                     <div class="control">
                         <input type="text" name="git-url" id="git-url" />
@@ -307,13 +313,13 @@
                 <div class="control-group">
                     <label for="configure-description">Description</label>
                     <div class="control">
-                        <textarea id="configure-description" class="newmap-description"></textarea>
+                        <textarea id="configure-description" class="git-logs"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label for="configure-url">Map URL</label>
+                    <label for="configure-logs">Logs</label>
                     <div class="control">
-                        <textarea id="configure-url" class="newmap-description" disabled></textarea>
+                        <textarea id="configure-logs" class="git-logs" disabled></textarea>
                     </div>
                 </div>
             </form>

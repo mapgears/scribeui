@@ -582,13 +582,18 @@ class APIMap(object):
             map_directory = workspaces_directory + self.request.userid + '/' + map.name + '/'
             os.chdir(map_directory)
 
-            if git_url != map.git_url:
+            hasGitConfig = os.path.isfile(map_directory + '.git/config')
+
+            if (git_url != map.git_url) or (git_url is not None and git_url == map.git_url and not hasGitConfig):   
                 try:
                     MapManager.git_init(git_url)
                 except Exception, e:
                     response['errors'].append(str(e))
+                    response['logs'] += str(e) + '\n'
 
-                if len(response['errors']) == 0: 
+                if len(response['errors']) == 0:
+                    if map.git_url and hasGitConfig:
+                        response['logs'] += 'Another git config file was detected and has been overwritten.\n' 
                     map.git_url = git_url
                   
             if description:
@@ -598,6 +603,7 @@ class APIMap(object):
             
             if len(response['errors']) == 0:
                 response['status'] = 1
+                response['logs'] += 'Configuration successful.\n'
         else:
             response['errors'].append('Access denied.')
 

@@ -51,9 +51,6 @@ class Workspace(Base, BaseMixin):
             .first()
 
         if workspace:
-            print workspace.password
-            print password
-            print '\n\n'
             if workspace.password and password and Workspace.check_password(workspace.password, password):
                 return workspace
             elif not workspace.password and not password:

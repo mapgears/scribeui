@@ -879,7 +879,10 @@ div.olControlZoom a {
 }
 
 #git-url, #git-clone-url {
-    width: 300px;
+    width: 400px;
+}
+#configure-url {
+    width: 400px;
 }
 #git-message {
     width: 400px;
