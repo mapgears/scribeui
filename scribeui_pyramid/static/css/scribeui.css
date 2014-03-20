@@ -393,6 +393,9 @@ pre {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+#map-description{
+    margin-top: 5px;
+}
 #map-description p{
     padding: 5px;
 }
