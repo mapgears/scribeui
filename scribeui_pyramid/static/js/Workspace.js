@@ -31,7 +31,7 @@ function Workspace(name, options){
 
     this.pointsOfInterest = [];
     this.openedMap = null;
-}
+};
 
 Workspace.prototype.open = function(){
     this.getMaps();
@@ -45,7 +45,7 @@ Workspace.prototype.createMap = function(data){
             self.open();
         }
     });
-}
+};
 
 Workspace.prototype.cloneMap = function(data){
     var self = this;
@@ -56,7 +56,7 @@ Workspace.prototype.cloneMap = function(data){
             self.open();    
         }
     });
-}
+};
 
 Workspace.prototype.deleteMap = function(map, callback){
     var self = this;
@@ -72,7 +72,7 @@ Workspace.prototype.deleteMap = function(map, callback){
             self.open();
         }
     });   
-}
+};
  
 Workspace.prototype.create = function(){
     var self = this;
@@ -159,7 +159,7 @@ Workspace.prototype.getPointsOfInterest = function(callback){
         }
     }    
     });
-}
+};
 
 Workspace.prototype.getPointOfInterestByName = function(name){
     for(var i = 0; i < this.pointsOfInterest.length; i++){
@@ -192,7 +192,7 @@ Workspace.prototype.addPointOfInterest = function(name){
     });
     self.pointsOfInterest.push(poi);
     this.displayPointsOfInterest();
-}
+};
 
 Workspace.prototype.displayMaps = function(maps){
     var self = this;
@@ -233,7 +233,7 @@ Workspace.prototype.displayThumbnail = function(map){
         image.addClass('default-preview');
     }
     selectors.mapsList().append(li);    
-}
+};
 
 Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
@@ -249,7 +249,7 @@ Workspace.prototype.display = function(){
     var select = $("#" + this.workspaceSelect);
     select.append($("<option></option>").attr("value", this.name).text(this.name));
     select.val(this.name);
-}
+};
 
 Workspace.prototype.close = function(){
     if(this.openedMap){
@@ -277,17 +277,14 @@ Workspace.prototype.destroy = function(callback){
             alert(status);
         }
     });   
-}
+};
 
 Workspace.prototype.clearMaps = function(){
     this.selectedMap = null;
     selectors.mapDescription().html('');
     selectors.mapActions().find('button').button('disable');
-}
+};
 
 Workspace.prototype.clearPointsOfInterest = function(){
      $("#" + this.poiSelect).find("option").remove();
-}
-
-
-
+};

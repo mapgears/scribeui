@@ -56,10 +56,6 @@ db_version:
 db_data: ev.db
 	bin/load_ev_data $(EV_INI)
 
-.PHONY: db_muni
-db_muni: ev.db
-	bin/load_ev_muni $(EV_INI)
-
 .PHONY: db_reset
 db_reset: stop
 	bin/alembic  -c $(EV_INI) downgrade base
