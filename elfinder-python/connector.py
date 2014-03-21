@@ -18,7 +18,7 @@ opts = {
 	## other options
 	'debug': True,
        'uploadMaxSize': '1G',
-	# 'fileURL': False,  # download files using connector, no direct urls to files
+	'fileURL': False,  # download files using connector, no direct urls to files
 	# 'dirSize': True,
 	# 'dotFiles': True,
 	# 'perms': {
