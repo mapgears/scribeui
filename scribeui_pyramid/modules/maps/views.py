@@ -370,9 +370,10 @@ class APIMap(object):
         if(workspace.name == self.request.userid):
             try:
                 groups = self.request.POST.get('groups')
-                groups = groups.split(',')
+                if groups and groups != '':
+                    groups = groups.split(',')
             except KeyError as e:
-                response['errors'].append('Groups are required.')
+                pass
 
             try:
                 new_groups = self.request.POST.get('new_groups')
@@ -386,53 +387,53 @@ class APIMap(object):
             except KeyError as e:
                 pass
 
-            if len(response['errors']) == 0:
+            if isinstance(groups, list) and len(groups) > 0:
                 for group in groups:
                     if not MapManager.is_valid_name(group):
                         response['errors'].append('Name is not valid.')
 
-                if len(response['errors']) == 0:    
-                    workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
-                    map_directory = workspace_directory + map.name + '/'
+            if len(response['errors']) == 0:    
+                workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+                map_directory = workspace_directory + map.name + '/'
 
-                    if map.type == 'Scribe':
-                        groups_directory = map_directory + 'editor/groups/'
-                        prefix = 'groups/'
-                        suffix = '.layer'
-                    else:
-                        groups_directory = map_directory + 'map/layers/'
-                        prefix = ''
-                        suffix = '.map'
+                if map.type == 'Scribe':
+                    groups_directory = map_directory + 'editor/groups/'
+                    prefix = 'groups/'
+                    suffix = '.layer'
+                else:
+                    groups_directory = map_directory + 'map/layers/'
+                    prefix = ''
+                    suffix = '.map'
+
+                if len(response['errors']) == 0:
+                    groups_config = "ORDER {\n"
+                    for index, group in enumerate(groups):
+                        group_path = prefix + group + suffix
+                        groups_config += ' ' + str(index + 1) + ': ' + group_path + '\n'
+                    groups_config += "}"
+
+                    try:
+                        with codecs.open(map_directory + 'config', encoding='utf8', mode='w+') as f:
+                            f.write(groups_config)
+                            f.close()
+                    except IOError as e:
+                        response['errors'].append("Groups config file not found.")
 
                     if len(response['errors']) == 0:
-                        groups_config = "ORDER {\n"
-                        for index, group in enumerate(groups):
-                            group_path = prefix + group + suffix
-                            groups_config += ' ' + str(index + 1) + ': ' + group_path + '\n'
-                        groups_config += "}"
+                        for group in removed_groups:
+                            try:
+                                subprocess.call(['rm', groups_directory + group + suffix])
+                            except IOError:
+                                response['errors'].append("An error occured while removing a group file.")
 
-                        try:
-                            with codecs.open(map_directory + 'config', encoding='utf8', mode='w+') as f:
-                                f.write(groups_config)
-                                f.close()
-                        except IOError as e:
-                            response['errors'].append("Groups config file not found.")
+                        for group in new_groups:
+                            try:
+                                file(groups_directory + group + suffix, 'w+')
+                            except IOError:
+                                response['errors'].append("An error occured while creating a new group file.")
 
                         if len(response['errors']) == 0:
-                            for group in removed_groups:
-                                try:
-                                    subprocess.call(['rm', groups_directory + group + suffix])
-                                except IOError:
-                                    response['errors'].append("An error occured while removing a group file.")
-
-                            for group in new_groups:
-                                try:
-                                    file(groups_directory + group + suffix, 'w+')
-                                except IOError:
-                                    response['errors'].append("An error occured while creating a new group file.")
-
-                            if len(response['errors']) == 0:
-                                response['status'] = 1
+                            response['status'] = 1
         else:
             response['errors'].append('Access denied.')
 

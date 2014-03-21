@@ -177,7 +177,9 @@ Map.prototype.displayGroups = function(silent){
 
     if(!silent || changeSelected){
         selectors.groupSelect().trigger("change");
-        self.selectedGroup['content'] = editors['groups'].getValue();    
+        if(self.selectedGroup){
+            self.selectedGroup['content'] = editors['groups'].getValue();
+        }    
     }
 }
 
@@ -198,7 +200,9 @@ Map.prototype.displayDescription = function(){
 };
 
 Map.prototype.updateComponents = function(){
-    this.selectedGroup['content'] = editors['groups'].getValue();
+    if(this.selectedGroup){
+        this.selectedGroup['content'] = editors['groups'].getValue();    
+    }
     this.map = editors['maps'].getValue();
     this.scales = editors['scales'].getValue();
     this.variables = editors['variables'].getValue();
@@ -419,10 +423,6 @@ Map.prototype.lowerGroupIndex = function(name){
 Map.prototype.setGroups = function(callback){
     var self = this;
 
-    $.each(self.removedGroups, function(index, name){
-        self.removeGroup(name);
-    });
-
     $.post($API + '/maps/' + this.id + '/groups/update', {
             removed_groups: this.removedGroups.join(),
             new_groups: this.newGroups.join(),
@@ -430,6 +430,10 @@ Map.prototype.setGroups = function(callback){
         }, 
         function(response) {
             if(response.status == 1){
+                $.each(self.removedGroups, function(index, name){
+                    self.removeGroup(name);
+                });
+
                 self.clearGroups();
                 self.displayGroups(true);
                 

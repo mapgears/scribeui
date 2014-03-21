@@ -784,6 +784,9 @@ function removeIncludeFromMap(filename, commit){
 function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
     lastinc = -1;
+
+    //BUG: WE SHOULD SET THE EDITOR SELECT TO THE MAP OPTION
+    //ALSO, THIS FUNCTION IS CALLED FOR EVERY GROUP EVEN IF IT HAS ALREADY BEEN ADDED TO THE MAPFILE
     openSecondaryPanel("maps",  editors['maps']);
     for(var i=0; i <  editors['maps'].lineCount(); i++){
         if( editors['maps'].getLine(i).indexOf("INCLUDE") !== -1){

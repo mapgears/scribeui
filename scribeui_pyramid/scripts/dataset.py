@@ -14,7 +14,7 @@ class MapData(DataSet):
         name = u'default'
         description = u'Default map'
         type = u'Scribe'
-        extent = '-8197285.4456571,5695806.3467685,-8184591.9930116,5705655.9111164'
+        extent = '-20405648.939901,-17712669.979681,20314497.045109,19408951.476421'
         projection = 'EPSG:900913'
         workspace_id = 1
 
@@ -22,6 +22,14 @@ class MapData(DataSet):
         name = u'standard'
         description = u'Standard map'
         type = u'Standard'
-        extent = '-8197285.4456571,5695806.3467685,-8184591.9930116,5705655.9111164'
+        extent = '-20405648.939901,-17712669.979681,20314497.045109,19408951.476421'
+        projection = 'EPSG:900913'
+        workspace_id = 1
+
+    class wms:
+        name = u'WMS'
+        description = u'WMS viewer template'
+        type = u'Standard'
+        extent = '-20405648.939901,-17712669.979681,20314497.045109,19408951.476421'
         projection = 'EPSG:900913'
         workspace_id = 1
