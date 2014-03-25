@@ -45,14 +45,14 @@ jQuery(function() { $(document).ready(function(){
         
         // Creating the dialog if run for the first time
         if(this.dialogDiv == null){
-            this.dialogDiv = $('<div id="mapcache-dialog"></div>')
+            this.dialogDiv = $('<div id="mapcache-dialog" class="scribe-dialog"></div>')
             this.dialogDiv.hide();
             $('.main').append(this.dialogDiv);
             this.dialogDiv.dialog({
                 autoOpen: false,
                 resizable: true,
-                width: "500px",
-                height: "auto",
+                /*width: "500px",
+                height: "auto",*/
                 modal: false,
                 title: "Mapcache job",
                 beforeClose: $.proxy(this.closeDialog, this)
@@ -122,31 +122,122 @@ jQuery(function() { $(document).ready(function(){
     } 
     //Open the options dialog when clicking on the "Start new tiling job for x"
     mapcache.prototype.openOptionsDialog = function(map){
-        var mapExtentButton = $('<button id="mapcache-map-extent">Map Extent</button>').button().click($.proxy(function(){
+        /*var mapExtentButton = $('<button id="mapcache-map-extent">Map Extent</button>').button().click($.proxy(function(){
             $('#mapcache-extent').val(this.getMapExtent());
         }, this));
         var currentExtentButton = $('<button id="mapcache-current-extent">Current Extent</button>').button().click($.proxy(function(){
             $('#mapcache-extent').val(this.getCurrentExtent());
-        },this));
+        },this));*/
+
+        var radios = '' +
+            '<div class="control-group horizontal">' +
+                '<label>Map Extent</label>' +
+                '<div class="control">' +
+                    '<input type="radio" name="radio-extent" value="map" selected>' +
+                '</div>' +
+                '<label>Current Extent</label>' +
+                '<div class="control">' +
+                    '<input type="radio" name="radio-extent" value="current">' +
+                '</div>' +
+                '<label>Shapefile</label>' +
+                '<div class="control">' +
+                    '<input type="radio" name="radio-extent" value="shapefile">' +
+                '</div>' +
+                '<label>Database</label>' +
+                '<div class="control">' +
+                    '<input type="radio" name="radio-extent" value="database">' +
+                '</div>' +
+            '</div>';
         
-        this.optionsDialog = $('<div id="mapcache-options-dialog">'+
-            '<div class="control-group"><label for="mapcache-title">Title: </label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
-            '<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels: </label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
+        this.optionsDialog = $('<div id="mapcache-options-dialog" class="scribe-dialog">'+
+            '<div class="control-group"><label for="mapcache-title">Title</label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
+            '<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels</label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
             '<div id="mapcache-zoomlevels-slider"></div><div id="mapcache-zoomlevels-error"></div></div></div>'+    
-            '<div class="control-group"><label for="mapcache-metatiles">Metatile Size: </label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div><div id="mapcache-metatiles-error"></div></div>'+
-            '<div class="control-group"><label for="mapcache-extent">Extent: </label><div class="control"><div id="mapcache-extent-error"></div><p><input id="mapcache-extent" type="text" value=""/></div></p></div>'+
+            '<div class="control-group"><label for="mapcache-metatiles">Metatile Size</label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div><div id="mapcache-metatiles-error"></div></div>'+
+            radios + 
+            '<div style="display:none" id="connection-extent-container">' +
+                '<div class="control-group horizontal"><label for="extent-database-type">Database type</label><div class="control"><input id="extent-database-type" type="text" value="PostGIS" readonly/></div>' +
+                '<label for="extent-host">Host</label><div class="control"><input id="extent-host" type="text" value=""/></div></div>' +
+                '<div class="control-group horizontal"><label for="extent-port">Port</label><div class="control"><input id="extent-port" type="text" value="5432"/></div>' +
+                '<label for="extent-name">Name</label><div class="control"><input id="extent-name" type="text" value=""/></div></div>' +
+                '<div class="control-group horizontal"><label for="extent-user">User</label><div class="control"><input id="extent-user" type="text" value=""/></div>' +
+                '<label for="extent-password">Password</label><div class="control"><input id="extent-password" type="password" value=""/></div></div>' +
+                '<div class="control-group"><label for="extent-query">Query</label><div class="control"><textarea id="extent-query" type="text" value="" class="long"/></textarea></div></div>' +
+            '</div>' +
+            '<div class="control-group" id="mapcache-extent-container"><label for="mapcache-extent"></label><div class="control"><div id="mapcache-extent-error"></div>' +
+            '<input id="mapcache-extent" type="text" value="" class="long"/>' +
+            '<div id="shapefile-extent" style="display:none"></div>' + 
+            //'<input id="shapefile-extent" type="file" value="" class="long" style="display:none"/>' +
+            '</div></div>'+
             '</div>');
         this.optionsDialog.hide();
         $('.main').append(this.optionsDialog);
-        $('#mapcache-extent').after(currentExtentButton);
+
+        var elf = $('#shapefile-extent').elfinder({
+        url: '/cgi-bin/elfinder-python/connector-' + workspace.name + '-' + workspace.selectedMap.name + '.py',
+            transport : new elFinderSupportVer1(),
+            cssClass: 'shapefile-extent-manager',
+            resizable: false,
+            defaultView: 'list',
+            commands: ['reload', 'rm','sort', 'upload', 'extract', 'view'],
+            handlers: {
+                select: function(event, elfinderInstance){
+                    var selected = event.data.selected;
+
+                    if(selected.length > 0){
+                        $('#mapcache-extent').val(elfinderInstance.file(selected[0]).url);    
+                    }
+                }
+            }
+        }).elfinder('instance');
+
+        //$('.main').trigger('resize');
+
+        $('input[type="radio"][value="map"]').on('click', $.proxy(function(){
+            $('#shapefile-extent').hide();
+            $('#connection-extent-container').hide();
+            $('#connection-extent-container').find('input, textarea').prop('disabled', true);
+            
+            $('#mapcache-extent-container').show();
+            $('#mapcache-extent').val(this.getMapExtent());
+        },this)).trigger('click');
+
+        $('input[type="radio"][value="current"]').on('click', $.proxy(function(){
+            $('#shapefile-extent').hide();
+            $('#connection-extent-container').hide();
+            $('#connection-extent-container').find('input, textarea').prop('disabled', true);
+            
+            $('#mapcache-extent-container').show();
+            $('#mapcache-extent').val(this.getCurrentExtent());
+        }, this));
+
+        $('input[type="radio"][value="shapefile"]').on('click', $.proxy(function(){
+            $('#connection-extent-container').hide();
+            $('#connection-extent-container').find('input, textarea').prop('disabled', true);
+
+            $('#mapcache-extent-container').show();
+            $('#mapcache-extent').val(null);
+            $('#shapefile-extent').show();
+        }, this));
+
+        $('input[type="radio"][value="database"]').on('click', $.proxy(function(){
+            $('#shapefile-extent').hide();
+            $('#mapcache-extent-container').hide();
+            $('#mapcache-extent').val(null);
+
+            $('#connection-extent-container').find('input, textarea').prop('disabled', false);
+            $('#connection-extent-container').show();
+        }, this));
+        
+        /*$('#mapcache-extent').after(currentExtentButton);
         $('#mapcache-extent').after(mapExtentButton);
-        $('#mapcache-extent').after($('<br/>'));
+        $('#mapcache-extent').after($('<br/>'));*/
         
         this.optionsDialog.dialog({
             autoOpen: false,
             resizable: true,
-            width: "500px",
-            height: "auto",
+            /*width: "500px",
+            height: "auto",*/
             modal: true,
             title: "Mapcache job", 
             beforeClose: function(){
@@ -156,15 +247,32 @@ jQuery(function() { $(document).ready(function(){
         
         //Start new job button
         var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
-            var jobtitle = $('#mapcache-title').val();
-            var zoomLevels = $('#mapcache-zoomlevels').val();
-            var metatile = $('#mapcache-metatiles').val();
-            var extent = $('#mapcache-extent').val();
-            if(this.validateOptions(jobtitle, zoomLevels, metatile, extent)){
-                var mapname = $("#map-description .map-title").text();
-                var map = workspace.getMapByName(mapname);
+            var data = {
+                map: workspace.openedMap.id,
+                title: $('#mapcache-title').val(),
+                zoomlevels: $('#mapcache-zoomlevels').val(),
+                metatile: $('#mapcache-metatiles').val(),
+            }
+
+            var radio = $('#mapcache-options-dialog input[name="radio-extent"]:radio:checked');
+            if(radio.val() == 'database'){
+                data['type'] = $('#extent-database-type').val();
+                data['dbhost'] = $('#extent-host').val();
+                data['dbport'] = $('#extent-port').val();
+                data['dbname'] = $('#extent-name').val();
+                data['dbuser'] = $('#extent-user').val();
+                data['dbpassword'] = $('#extent-password').val();
+                data['dbquery'] = $('#extent-query').val();
+            } else{
+                data['type'] = 'string';
+                data['extent'] = $('#mapcache-extent').val();    
+            }
+            
+            if(this.validateOptions(data)){
+                //var mapname = $("#map-description .map-title").text();
+                //var map = workspace.getMapByName(mapname);
                 
-                $.proxy(this.addJob(map, jobtitle, zoomLevels, metatile, extent), this);
+                $.proxy(this.addJob(data), this);
             }
         }, this));
         var minScale = 999;
@@ -204,32 +312,31 @@ jQuery(function() { $(document).ready(function(){
     mapcache.prototype.getCurrentExtent = function(){
         return workspace.openedMap.OLMap.getExtent();
     }
-    mapcache.prototype.validateOptions = function(jobtitle, zoomlevels, metatile, extent){
+    mapcache.prototype.validateOptions = function(options){
+        //TODO: AJOUTER DES VALIDATIONS ENTRE AUTRE SUR LES CHAMPS QUI NE DOIVENT PAS ÊTRE VIDES 
         valid = true;
-        if(!zoomlevels.match(/[0-9]+,[0-9]+/)){
+        if(!options['zoomlevels'].match(/[0-9]+,[0-9]+/)){
             $('#mapcache-zoomlevels-error').text('Zoom levels must be of the form: x,x where x is a number');
+            valid = false;
         }else{
             $('#mapcache-zoomlevels-error').text('');
         }
         
-
         return valid;
     }
     //Creates a new job and adds it to the list
-    mapcache.prototype.addJob = function(map, jobtitle, zoomlevels, metatile, extent){
-        $.ajax({
-            url: $API + "/mapcache/startjob?map="+map.id+
-                                            "&title="+jobtitle+
-                                            "&zoomlevels="+zoomlevels+
-                                            "&metatile="+metatile+
-                                            "&extent="+extent,
-            context: this,
-            dataType: "json"
-        }).done(function(data){
-            var j = new job(data.job.id, data.job.title, map, data.job.status);
-            this.jobs.push(j);
-            this.updateJobListTable(map);        
-        });
+    mapcache.prototype.addJob = function(data){
+        var self = this;
+
+        $.post($API + "/mapcache/startjob", data, 
+            function(response) {
+                if(response.status == 1){
+                    var j = new job(response.job.id, response.job.title, map, response.job.status);
+                    self.jobs.push(j);
+                    self.updateJobListTable(map);
+                }
+            }
+        );
     }
     //Catch the workspace's finished and running jobs and put them in the local queue
     mapcache.prototype.onWorkspaceOpened = function(){

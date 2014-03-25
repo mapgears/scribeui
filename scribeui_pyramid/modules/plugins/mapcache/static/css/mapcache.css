@@ -15,7 +15,19 @@
 #mapcache-jobs-list th{
 	font-weight:bold;
 }
-#no-mapcache-jobs{
+#no-mapcache-jobs {
 	margin-top:10px;
 	margin-bottom:10px;
+}
+.shapefile-extent-manager {
+	margin-top: 5px;
+	height: 200px !important;
+	width: 540px !important;
+	position: inherit;
+}
+.shapefile-extent-manager .elfinder-navbar{
+	width: 110px;
+}
+#extent-query, #mapcache-extent {
+	width: 542px;
 }

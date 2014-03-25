@@ -51,7 +51,7 @@ class APIMapcache(object):
         route_name='mapcache.startjob',
         permission='view',
         renderer='json',
-        request_method='GET'
+        request_method='POST'
     )
     def startJob(self):
         response = {
@@ -60,70 +60,147 @@ class APIMapcache(object):
             'job': {}
             }
 
+        extent = None
+        dbconfig = None
+        
         try:
-            mapID = self.request.GET.get('map')
+            mapID = self.request.POST.get('map')
+            if mapID == '':
+                response['errors'].append('An map ID is required.')
         except KeyError as e:
             response['errors'].append('A map ID is required.')
 
         try:
-            title = self.request.GET.get('title')
+            title = self.request.POST.get('title')
+            if title == '':
+                response['errors'].append('A job title is required.')
         except KeyError as e:
             response['errors'].append('A job title is required.')
 
         try:
-            zoomLevels = self.request.GET.get('zoomlevels')
+            zoomLevels = self.request.POST.get('zoomlevels')
+            if zoomLevels == '':
+                response['errors'].append('Zoom levels are required.')
         except KeyError as e:
             response['errors'].append('Zoom levels are required.')
 
         try:
-            metatile = self.request.GET.get('metatile')
+            metatile = self.request.POST.get('metatile')
+            if metatile == '':
+                response['errors'].append('Metatiles size is required.')
         except KeyError as e:
             response['errors'].append('Metatiles size is required.')
 
         try:
-            extent = self.request.GET.get('extent')
+            extent_type = self.request.POST.get('type')
+            if extent_type == '':
+                response['errors'].append('Extent type is required.')
         except KeyError as e:
-            response['errors'].append('An extent is required.')
+            response['errors'].append('Extent type is required.')
 
         if len(response['errors']) == 0:
-            try:
-                map = Map.by_id(mapID)
-            except NoResultFound, e:
-                response['errors'].append('This map is unavailable or does not exist.')
+            if extent_type == 'string':
+                try:
+                    extent = self.request.POST.get('extent')
+                    if extent == '':
+                        response['errors'].append('An extent is required.')
+                except KeyError as e:
+                    response['errors'].append('An extent is required.')
+            else:
+                try:
+                    dbhost = self.request.POST.get('dbhost')
+                    if dbhost == '':
+                        response['errors'].append('Host name is required.')
+                except KeyError as e:
+                    response['errors'].append('Host name is required.')
 
-            if len(response['errors']) == 0:
-                workspace = Workspace.by_id(map.workspace_id)
-                if(workspace.name == self.request.userid):
-                    workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
-                    map_directory = workspaces_directory + self.request.userid + '/' + map.name + '/'
-                    mapfile = map_directory + 'map/' + map.name + '.map' 
+                try:
+                    dbport = self.request.POST.get('dbport')
+                    if dbport == '':
+                        response['errors'].append('Database port is required.')
+                except KeyError as e:
+                    response['errors'].append('Database port is required.')
 
-                    kwargs = {
-                        'title': title,
-                        'status': 1,
-                        'map_id': mapID
+                try:
+                    dbname = self.request.POST.get('dbname')
+                    if dbname == '':
+                        response['errors'].append('Database name is required.')
+                except KeyError as e:
+                    response['errors'].append('Database name is required.')
+
+                try:
+                    dbuser = self.request.POST.get('dbuser')
+                    if dbuser == '':
+                        response['errors'].append('Database user is required.')
+                except KeyError as e:
+                    response['errors'].append('Database user is required.')
+
+                try:
+                    dbpassword = self.request.POST.get('dbpassword')
+                    if dbpassword == '':
+                        dbpassword = None
+                except KeyError as e:
+                    dbpassword = None
+
+                try:
+                    dbquery = self.request.POST.get('dbquery')
+                    if dbquery == '':
+                        response['errors'].append('A query is required.')
+                except KeyError as e:
+                    response['errors'].append('A query is required.')
+
+                if len(response['errors']) == 0:
+                    dbconfig = {
+                        'type': extent_type,
+                        'host': dbhost,
+                        'port': dbport,
+                        'name': dbname,
+                        'user': dbuser,
+                        'password': dbpassword,
+                        'query': dbquery    
                     }
-
-                    job = Job(**kwargs)
-
-                    try:
-                        DBSession.add(job)
-                        #used to get the job id
-                        DBSession.flush()
-                    except exc.SQLAlchemyError as e:
-                        response['errors'].append(e)
-
-                       
-                    if len(response['errors']) == 0:
-                        pManager = processManager()
-                        pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, extent)
-
-                        kwargs['id'] = job.id
-                        response['job'] = kwargs
-                        response['status'] = 1
-                else:
-                    response['errors'].append('Access denied.')
                 
+
+            if len(response['errors']) == 0:               
+                try:
+                    map = Map.by_id(mapID)
+                except NoResultFound, e:
+                    response['errors'].append('This map is unavailable or does not exist.')
+
+                if len(response['errors']) == 0:
+                    workspace = Workspace.by_id(map.workspace_id)
+                    if(workspace.name == self.request.userid):
+                        workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
+                        map_directory = workspaces_directory + self.request.userid + '/' + map.name + '/'
+                        mapfile = map_directory + 'map/' + map.name + '.map' 
+
+                        kwargs = {
+                            'title': title,
+                            'status': 1,
+                            'map_id': mapID
+                        }
+
+                        job = Job(**kwargs)
+
+                        try:
+                            DBSession.add(job)
+                            #used to get the job id
+                            DBSession.flush()
+                        except exc.SQLAlchemyError as e:
+                            response['errors'].append(e)
+
+                           
+                        if len(response['errors']) == 0:
+
+                            pManager = processManager()
+                            pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, extent=extent, dbconfig=dbconfig)
+
+                            kwargs['id'] = job.id
+                            response['job'] = kwargs
+                            response['status'] = 1
+                    else:
+                        response['errors'].append('Access denied.')
+             
         return response
 
 

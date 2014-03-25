@@ -69,7 +69,7 @@ class processManager(Borg):
         if not hasattr(self, "thread"):
             self.thread = None
 
-    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, extent):
+    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, extent=None, dbconfig=None):
     	projectdir = projectdir.rstrip('/')
 
         pprint.pprint("-----------")
@@ -106,7 +106,27 @@ class processManager(Borg):
         outFile.close()
 
         pprint.pprint("Adding new process")
-        p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
+
+        if extent:
+            if extent[0] == '/' and extent[-4:] == '.shp' and os.path.isfile(extent):
+                p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-d", extent], shell=False)
+            else:
+                p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e", extent], shell=False)
+
+        elif dbconfig:
+            #TODO: ADD SUPPORT FOR OTHER DATABASE TYPE
+            #ALSO, THIS CODE COULD PROBABLY BE PLACED IN A FUNCTION SOMEWHERE ELSE 
+            if dbconfig['type'].lower() == 'postgis':
+                connection_string = 'PG:dbname=' + dbconfig['name'] + ' host=' + dbconfig['host'] + ' port=' + dbconfig['port'] + ' user=' + dbconfig['user'];
+                if dbconfig['password']:
+                    connection_string += ' password=' + dbconfig['password'] 
+            else:
+                connection_string = ''
+
+            query_string = dbconfig['query'].rstrip(';')
+
+            p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-d", connection_string, '-s', query_string], shell=False)
+
         p.jobid = job.id
         
         # Lock the processes list before adding data

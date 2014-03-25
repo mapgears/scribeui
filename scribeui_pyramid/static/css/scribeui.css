@@ -206,7 +206,7 @@ pre {
 .elfinder-workzone{
 	font-size:1.2em;
 }
-.file-manager {
+#data-tab .file-manager {
     position: absolute !important;
     left: 0 !important;
     right: 0 !important;
@@ -881,13 +881,8 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
-#git-url, #git-clone-url {
-    width: 400px;
-}
-#configure-url {
-    width: 400px;
-}
-#git-message {
+input.long,
+textarea.long {
     width: 400px;
 }
 #git-commit-info {
@@ -949,6 +944,15 @@ div.olControlZoom a {
 
 .control-group .chosen-container {
     width: 200px !important;
+}
+
+.control-group input[type="text"],
+.control-group input[type="password"] {
+    margin-top: 4px;
+}
+
+.control-group input[type="radio"] {
+    margin-top: 5px;
 }
 
 .btn-group-first {
@@ -1053,4 +1057,9 @@ div.olControlZoom a {
 
 .login table td{
     padding: 5px;
+}
+
+.horizontal .control {
+    float: left;
+    margin-left: 20px;
 }

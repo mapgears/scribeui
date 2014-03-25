@@ -862,6 +862,9 @@ class APIMap(object):
             response['errors'].append('A git URL is required.')
 
         if len(response['errors']) == 0:
+            if not MapManager.is_valid_name(name):
+                    response['errors'].append('Name is not valid.')
+                    
             if git_url == '':
                response['errors'].append('A valid git URL is required.')
                 
