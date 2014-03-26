@@ -3,7 +3,6 @@
 #    1 - In progress
 #    2 - Stopped (error)
 
-#from flask import Flask, Blueprint, render_template, url_for, current_app, request, g, jsonify
 import logging
 import transaction
 
@@ -21,13 +20,13 @@ log = logging.getLogger(__name__)
 #import simplejson, pprint, sys, os
 import pprint, sys, os
 
-from .processManager import processManager
+from ..processManager import processManager
 
 from .. import DBSession
 from .. import Map
 from .. import Workspace
 
-from .models import Job
+from ..models import Job
 
 #sys.path.append("../../") # Gives access to init.py functions
 
@@ -125,8 +124,6 @@ class APIMapcache(object):
                     response['errors'].append('Access denied.')
                 
         return response
-
-
     @view_config(
         route_name='mapcache.getjobs',
         permission='view',
