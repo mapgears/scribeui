@@ -2,6 +2,7 @@ jQuery(function() { $(document).ready(function(){
     function mapcache(){
         this.name = "Mapcache Plug-in";
         this.dialogDiv = null;
+        this.createDatabaseConfigDiv = null;
         this.mapOpenCallback = null;
         this.optionsDialog = null;
         this.jobs = [];
@@ -64,7 +65,8 @@ jQuery(function() { $(document).ready(function(){
                 var map = workspace.getMapByName(mapname);
                 //No map opened, we open it
                 if(workspace.openedMap == null){ 
-                    this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                    //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                    this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
                     openMap();
                 //A map is opened and it's not the selected one
                 }else if(workspace.openedMap != map){
@@ -79,7 +81,8 @@ jQuery(function() { $(document).ready(function(){
                             title: "Warning",
                             buttons: {
                                 "Continue without saving": $.proxy(function(){
-                                    this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                                    //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                                    this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
                                     openMap();
                                     $('#mapcache-warning').dialog("close");
                                     $('#mapcache-warning').remove();
@@ -93,12 +96,14 @@ jQuery(function() { $(document).ready(function(){
                     // If a map is opened, it's not the one selected but there are no unsaved changes, 
                     // we open the selected one anyway
                     }else{    
-                        this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                        //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                        this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
                         openMap();
                     }
                 // If there is a map opened and it's the right one, we proceed
                 }else{
-                    $.proxy(this.openOptionsDialog(map), this);
+                    //$.proxy(this.openOptionsDialog(map), this);
+                    $.proxy(this.getMapData(map), this);
                 }
                 
 
@@ -122,12 +127,12 @@ jQuery(function() { $(document).ready(function(){
     } 
     //Open the options dialog when clicking on the "Start new tiling job for x"
     mapcache.prototype.openOptionsDialog = function(map){
-        /*var mapExtentButton = $('<button id="mapcache-map-extent">Map Extent</button>').button().click($.proxy(function(){
-            $('#mapcache-extent').val(this.getMapExtent());
-        }, this));
-        var currentExtentButton = $('<button id="mapcache-current-extent">Current Extent</button>').button().click($.proxy(function(){
-            $('#mapcache-extent').val(this.getCurrentExtent());
-        },this));*/
+        var self = this;
+
+        var grids = '';
+        $.each(map.grids, function(index, grid){
+            grids += '<option value="' + grid + '">' + grid + '</option>';
+        });
 
         var radios = '' +
             '<div class="control-group horizontal">' +
@@ -148,14 +153,34 @@ jQuery(function() { $(document).ready(function(){
                     '<input type="radio" name="radio-extent" value="database">' +
                 '</div>' +
             '</div>';
+
+        var databaseConfigs= '<option></option>';
+        $.each(workspace.databaseConfigs, function(index, config){
+            databaseConfigs += '<option value="' + config + '">' + config + '</option>';
+        });
         
         this.optionsDialog = $('<div id="mapcache-options-dialog" class="scribe-dialog">'+
             '<div class="control-group"><label for="mapcache-title">Title</label><div class="control"><input id="mapcache-title" type="text"/></div></div>'+
             '<div class="control-group"><label for="mapcache-zoomlevels">Zoom levels</label><div class="control"><input id="mapcache-zoomlevels" type="text"/>'+
             '<div id="mapcache-zoomlevels-slider"></div><div id="mapcache-zoomlevels-error"></div></div></div>'+    
             '<div class="control-group"><label for="mapcache-metatiles">Metatile Size</label><div class="control"><input id="mapcache-metatiles" type="text" value="8,8"/></div><div id="mapcache-metatiles-error"></div></div>'+
+            '<div class="control-group"><label for="mapcache-grid">Grid</label><div class="control">' +
+            '<select id="mapcache-grid">' + 
+            grids +
+            '</select>' +
+            '</div><div id="mapcache-grid-error"></div></div>'+
             radios + 
             '<div style="display:none" id="connection-extent-container">' +
+                '<div id="extent-database-config" class="control-group horizontal">' +
+                '<div class="control">' +
+                '<select>' + 
+                databaseConfigs +
+                '</select>' +
+                '</div>' +
+                '<button id="extent-new-database-config" class="btn-group-first">New</button>' +
+                '<button id="extent-delete-database-config" class="btn-group-middle">Delete</button>' +
+                '<button id="extent-save-database-config" class="btn-group-last">Save</button>' +
+                '</div>' +
                 '<div class="control-group horizontal"><label for="extent-database-type">Database type</label><div class="control"><input id="extent-database-type" type="text" value="PostGIS" readonly/></div>' +
                 '<label for="extent-host">Host</label><div class="control"><input id="extent-host" type="text" value=""/></div></div>' +
                 '<div class="control-group horizontal"><label for="extent-port">Port</label><div class="control"><input id="extent-port" type="text" value="5432"/></div>' +
@@ -172,6 +197,25 @@ jQuery(function() { $(document).ready(function(){
             '</div>');
         this.optionsDialog.hide();
         $('.main').append(this.optionsDialog);
+
+        $('#mapcache-options-dialog select').chosen();
+        $('#extent-database-config button').button();
+
+        $('#extent-new-database-config').on('click', function(){
+            self.openDatabaseConfigDialog();
+        });
+
+        $('#extent-delete-database-config').on('click', function(){
+            self.deleteDatabaseConfig();
+        });
+
+        $('#extent-save-database-config').on('click', function(){
+            self.saveDatabaseConfig();
+        });
+
+        $('#extent-database-config select').on('change', function(){
+            self.getDatabaseConfig();
+        });
 
         var elf = $('#shapefile-extent').elfinder({
         url: '/cgi-bin/elfinder-python/connector-' + workspace.name + '-' + workspace.selectedMap.name + '.py',
@@ -252,6 +296,7 @@ jQuery(function() { $(document).ready(function(){
                 title: $('#mapcache-title').val(),
                 zoomlevels: $('#mapcache-zoomlevels').val(),
                 metatile: $('#mapcache-metatiles').val(),
+                grid: $('#mapcache-grid option:selected').val()
             }
 
             var radio = $('#mapcache-options-dialog input[name="radio-extent"]:radio:checked');
@@ -341,6 +386,7 @@ jQuery(function() { $(document).ready(function(){
     //Catch the workspace's finished and running jobs and put them in the local queue
     mapcache.prototype.onWorkspaceOpened = function(){
         this.getJobs();
+        this.getDatabaseConfigs();
     }
     //Called in regular intervals to update the function list
     // Only pokes the server if the job list dialog is opened, and if there is a job in progress
@@ -506,5 +552,151 @@ jQuery(function() { $(document).ready(function(){
         $('#no-mapcache-jobs').remove();
         $('#mapcache-jobs-list').remove();
     }
+
+    mapcache.prototype.openDatabaseConfigDialog = function(config){
+        if(this.createDatabaseConfigDiv == null){
+            this.createDatabaseConfigDiv = $('' +
+            '<div id="create-database-config-form" title="New config" style="display:none" class="scribe-dialog">' +
+                '<form>' +
+                    '<div class="control-group">' +
+                        '<label for="database-config-name">Name</label>' +
+                        '<div class="control">' +
+                            '<input type="text" name="name"/>' +
+                        '</div>' +
+                    '</div>' +
+                '</form>' +
+            '</div>');
+
+            this.createDatabaseConfigDiv.hide();
+            $('main').append(this.createDatabaseConfigDiv);
+
+            this.createDatabaseConfigDiv.dialog({
+                autoOpen: false,
+                resizable: false,
+                modal: false,
+                buttons: {
+                    "Create": function() {
+                        var name = $(this).find('input[name="name"]').val();
+                        if(name && name != ''){
+                            //TODO` VALIDER QU'IL N'EXISTE PAS DE CONFIG AVEC LE MÊME NOM LE WORKSPACE
+                            var option = $('<option>')
+                                .val(name)
+                                .text(name)
+                                .prop('selected', true);
+
+                            $('#extent-database-config select').append(option).trigger('chosen:updated');
+                            $(this).dialog('close');    
+                        }
+                    },
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                close: function() {
+                    $(this).find('input').val(null);
+                }
+            }).dialog("open");
+        } else{
+            this.createDatabaseConfigDiv.dialog('open');    
+        }
+    
+    }
+
+    mapcache.prototype.saveDatabaseConfig = function(){
+        var config = {
+            name: $('#extent-database-config select option:selected').val(),
+            ws: workspace.name,
+            dbtype: $('#extent-database-type').val(),
+            dbhost: $('#extent-host').val(),
+            dbport: $('#extent-port').val(),
+            dbname: $('#extent-name').val(),
+            dbuser: $('#extent-user').val(),
+            dbquery: $('#extent-query').val()
+        };
+        
+        $.post($API + "/mapcache/database/config/save", config, 
+            function(response) {
+                if(response.status == 1){
+                    console.log(response);
+                }
+            }
+        );
+    }
+
+    mapcache.prototype.getDatabaseConfig = function(){
+        var config = {
+            name: $('#extent-database-config select option:selected').val(),
+            ws: workspace.name
+        };
+        
+        $.get($API + "/mapcache/database/config/get", config, 
+            function(response) {
+                if(response.status == 1){
+                    $('#extent-database-type').val(response.config.dbtype);
+                    $('#extent-host').val(response.config.dbhost);
+                    $('#extent-port').val(response.config.dbport);
+                    $('#extent-name').val(response.config.dbname);
+                    $('#extent-user').val(response.config.dbuser);
+                    $('#extent-query').val(response.config.dbquery);
+                }
+            }
+        );
+    }
+
+    mapcache.prototype.getDatabaseConfigs = function(){
+        var data = {
+            ws: workspace.name
+        };
+        
+        $.get($API + "/workspaces/mapcache/database/config/get", data, 
+            function(response) {
+                if(response.status == 1){
+                    workspace.databaseConfigs = response.configs;
+                }
+            }
+        );
+    }
+
+    mapcache.prototype.deleteDatabaseConfig = function(){
+        var name = $('#extent-database-config select option:selected').val();
+        var config = {
+            ws: workspace.name,
+            name: name
+        };
+        
+        $.post($API + "/mapcache/database/config/delete", config, 
+            function(response) {
+                if(response.status == 1){
+                    $('#extent-database-config select').find('option[value="' + name + '"]').remove();
+                    $('#extent-database-config select').trigger('chosen:updated');
+                    $('#extent-database-type').val('PostGIS');
+                    $('#extent-host').val(null);
+                    $('#extent-port').val(5432);
+                    $('#extent-name').val(null);
+                    $('#extent-user').val(null);
+                    $('#extent-password').val(null);
+                    $('#extent-query').val(null);
+                }
+            }
+        );
+    }
+
+    mapcache.prototype.getMapData = function(map){
+        var self = this;
+        var data = {
+            map: workspace.openedMap.id
+        };
+        
+        $.get($API + "/mapcache/grids/get", data, 
+            function(response) {
+                if(response.status == 1){
+                    map['grids'] = response.grids;
+                    $.proxy(self.openOptionsDialog(map), self);
+                }
+            }
+        );
+    }
+
     addPlugin(new mapcache());
+
 })});

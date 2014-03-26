@@ -844,6 +844,10 @@ div.olControlZoom a {
 #maps-list .map-preview-name{
     display: block;
     padding-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* this works with IE, Safari and Chrome */
+    white-space: nowrap;
+    -moz-binding: url('/ellipsis.xml#ellipsis'); /* this is a Firefox hack */
 }
 #maps-list .map-preview.ui-selected.li-default-thumbnail{
     background-color: #F6F6F6;
@@ -960,10 +964,18 @@ textarea.long {
     border-bottom-right-radius: 0px !important;
 }
 
+.btn-group-middle {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    margin-left: -5px;
+}
+
 .btn-group-last {
     border-top-left-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
-    margin-left: -5px !important;
+    margin-left: -5px;
 }
 
 .grouporder-btnset-right {

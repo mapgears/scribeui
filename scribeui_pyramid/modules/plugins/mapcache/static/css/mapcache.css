@@ -31,3 +31,19 @@
 #extent-query, #mapcache-extent {
 	width: 542px;
 }
+#extent-database-config {
+	margin-left: 160px;
+}
+#extent-database-config .chosen-container a{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+#extent-new-database-config {
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+	margin-left: -1px;
+}
+#extent-save-database-config,
+#extent-delete-database-config {
+	margin-left: -1px;
+}
