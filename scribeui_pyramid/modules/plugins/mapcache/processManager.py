@@ -95,7 +95,7 @@ class processManager(Borg):
         	os.makedirs(jobdir)
 
         inFile = open(path + "/mapcacheConfig.xml.default")
-        outFile = open(projectdir+"/mapcacheConfig.xml","w")
+        outFile = open(jobdir+"/mapcacheConfig.xml","w")
         replacements = {'<!--SCRIBEUIPATH-->':jobdir, '<!--SCRIBEUITITLE-->':"job-"+job.title+str(job.id), '<!--SCRIBEUIMAPFILEPATH-->':mapfile}
 
         for line in inFile:
@@ -106,7 +106,7 @@ class processManager(Borg):
         outFile.close()
 
         pprint.pprint("Adding new process")
-        p = Popen(["mapcache_seed", "-c", projectdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
+        p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
         p.jobid = job.id
         
         # Lock the processes list before adding data
