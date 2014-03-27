@@ -10,6 +10,7 @@ def routes_plugins(config):
     config.add_route('mapcache.stopjob', '/mapcache/stopjob')
     config.add_route('mapcache.clearjob', '/mapcache/clearjob')
     config.add_route('mapcache.getLayers', '/mapcache/getlayers')
+    config.add_route('mapcache.tiles', '/mapcache/tiles')
     
 
 def includeme(config):
