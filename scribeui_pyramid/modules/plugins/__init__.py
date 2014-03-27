@@ -16,8 +16,8 @@ def includeme(config):
 def getJsFiles(request):
     return [
         request.static_url('scribeui_pyramid:static/setextent/static/js/setExtent.js'),
-        request.static_url('scribeui_pyramid:static/mapcache/static/js/mapcache.js'),
-        request.static_url('scribeui_pyramid:static/mapcache/static/js/mapcacheViewer.js')     
+        request.static_url('scribeui_pyramid:static/mapcache/static/js/mapcacheViewer.js'),
+        request.static_url('scribeui_pyramid:static/mapcache/static/js/mapcache.js')
     ]
 
 #Specify here any CSS files you wish to be included in the index page.

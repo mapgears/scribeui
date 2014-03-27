@@ -5,6 +5,7 @@ jQuery(function() { $(document).ready(function(){
 		this.mapOpenCallback = null;
 		this.optionsDialog = null;
 		this.jobs = [];
+		this.mapcacheViewer = null;
 	}
 
 	function job(id, title, map, status){
@@ -29,11 +30,14 @@ jQuery(function() { $(document).ready(function(){
 				this.updateJobListTable(map);
 			}
 		}, this));
-
+		
 		setInterval($.proxy(this.poke, this), 30000);	
+		
+		this.mapcacheViewer = new mapcacheViewerManager(this);
 	}
 	//Called by core's functions.js
 	mapcache.prototype.onMapOpened = function(){
+		this.mapcacheViewer.onMapOpened();
 		if(this.mapOpenCallback) this.mapOpenCallback();
 		this.mapOpenCallback = null;
 	}
