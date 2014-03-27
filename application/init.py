@@ -1273,6 +1273,11 @@ def get_config():
 #===============================  
 #       Git commit map
 #===============================
+
+def git_parse_password(message):
+    message = re.sub('(https?://[^:]+):[^@]+@',r'\1:****@',message)
+    return message
+
 @app.route('/_git_commit_map', methods=['POST'])
 def git_commit_map():
     response = {'status': 'error'}
@@ -1329,10 +1334,10 @@ def git_commit_map():
                     output += 'git push origin master\n'
                     output += '---------------------------------------------------\n'
                     try:
-                        output += subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT)
+                        output += git_parse_password(subprocess.check_output(['git push origin master'], shell=True, stderr=subprocess.STDOUT))
                     except subprocess.CalledProcessError as e:
                         errors.append(e.output)
-                        output += e.output
+                        output += git_parse_password(e.output)
                     
                     if len(errors) == 0:
                         response['status'] = 'ok'
