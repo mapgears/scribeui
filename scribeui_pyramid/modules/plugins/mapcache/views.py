@@ -204,9 +204,10 @@ class APIMapcache(object):
 
                            
                         if len(response['errors']) == 0:
+                            job_directory = self.request.registry.settings.get('mapcache.output.directory', '')
 
                             pManager = processManager()
-                            pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, grid, extent=extent, dbconfig=dbconfig)
+                            pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, grid, extent=extent, dbconfig=dbconfig, jobdir=job_directory)
 
                             kwargs['id'] = job.id
                             response['job'] = kwargs
@@ -648,10 +649,10 @@ class APIMapcache(object):
             workspace = Workspace.by_id(map.workspace_id)
 
             if(workspace.name == self.request.userid):
-                workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
-                map_directory = workspaces_directory + self.request.userid + '/' + map.name + '/'
-                config_file = map_directory + 'mapcacheConfig.xml'
-                codecs.open(config_file, encoding='utf8', mode='a')
+                current_directory = os.path.dirname(os.path.abspath(__file__)) + '/'
+                config_file = current_directory + 'mapcacheConfig.xml.default'
+                codecs.open(config_file, encoding='utf8', mode='r')
+
                 try:
                     with codecs.open(config_file, encoding='utf8') as f:
                         config = f.read()

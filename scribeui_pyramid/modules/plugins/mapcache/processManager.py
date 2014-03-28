@@ -69,7 +69,7 @@ class processManager(Borg):
         if not hasattr(self, "thread"):
             self.thread = None
 
-    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, grid, extent=None, dbconfig=None):
+    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, grid, extent=None, dbconfig=None, jobdir=None):
         projectdir = projectdir.rstrip('/')
 
         pprint.pprint("-----------")
@@ -90,7 +90,10 @@ class processManager(Borg):
                 if not found:   
                     gitignore.writelines("mapcache/*")
 
-        jobdir = projectdir+"/mapcache/job-"+job.title+str(job.id)
+        if not jobdir:
+            jobdir = projectdir+"/mapcache/job-"+job.title+str(job.id)
+        else:
+            jobdir = jobdir.rstrip('/') + '/' + job.title
         if not os.path.exists(jobdir):
             os.makedirs(jobdir)
 
@@ -112,8 +115,6 @@ class processManager(Borg):
                 p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", extent], shell=False)
             else:
                 p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-e", extent], shell=False)
-                print "mapcache_seed -c " + jobdir + "/mapcacheConfig.xml -t default -z " + zoomLevels + " -M " + metatile + " -g " + grid + " -e " + extent
-                print '\n\n'
 
         elif dbconfig:
             #TODO: ADD SUPPORT FOR OTHER DATABASE TYPE

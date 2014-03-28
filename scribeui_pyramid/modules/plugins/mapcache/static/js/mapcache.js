@@ -165,7 +165,6 @@ jQuery(function() { $(document).ready(function(){
             '</div>';
 
         var databaseConfigs= '<option></option>';
-        console.log(workspace.databaseConfigs);
         $.each(workspace.databaseConfigs, function(index, config){
             databaseConfigs += '<option value="' + config + '">' + config + '</option>';
         });
@@ -203,7 +202,6 @@ jQuery(function() { $(document).ready(function(){
             '<div class="control-group" id="mapcache-extent-container"><label for="mapcache-extent"></label><div class="control"><div id="mapcache-extent-error"></div>' +
             '<input id="mapcache-extent" type="text" value="" class="long"/>' +
             '<div id="shapefile-extent" style="display:none"></div>' + 
-            //'<input id="shapefile-extent" type="file" value="" class="long" style="display:none"/>' +
             '</div></div>'+
             '</div>');
         this.optionsDialog.hide();
@@ -229,7 +227,7 @@ jQuery(function() { $(document).ready(function(){
         });
 
         var elf = $('#shapefile-extent').elfinder({
-        url: '/cgi-bin/elfinder-python/connector-' + workspace.name + '-' + workspace.selectedMap.name + '.py',
+        	url: '/cgi-bin/elfinder-python/connector-' + workspace.name + '-' + workspace.selectedMap.name + '.py',
             transport : new elFinderSupportVer1(),
             cssClass: 'shapefile-extent-manager',
             resizable: false,
@@ -284,15 +282,9 @@ jQuery(function() { $(document).ready(function(){
             $('#connection-extent-container').show();
         }, this));
         
-        /*$('#mapcache-extent').after(currentExtentButton);
-        $('#mapcache-extent').after(mapExtentButton);
-        $('#mapcache-extent').after($('<br/>'));*/
-        
         this.optionsDialog.dialog({
             autoOpen: false,
             resizable: true,
-            /*width: "500px",
-            height: "auto",*/
             modal: true,
             title: "Mapcache job", 
             beforeClose: function(){
@@ -325,9 +317,6 @@ jQuery(function() { $(document).ready(function(){
             }
             
             if(this.validateOptions(data)){
-                //var mapname = $("#map-description .map-title").text();
-                //var map = workspace.getMapByName(mapname);
-                
                 $.proxy(this.addJob(data), this);
             }
         }, this));

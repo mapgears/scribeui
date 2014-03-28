@@ -12,7 +12,7 @@
    
    <tileset name="default">
       <source><!--SCRIBEUITITLE--></source>
-      <cache>mbtiles</cache>
+      <cache>disk</cache>
       <grid>GoogleMapsCustom</grid>
       <format>PNG</format>
       <metatile>5 5</metatile>
