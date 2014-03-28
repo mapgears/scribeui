@@ -34,7 +34,7 @@ class APIMapcacheViewer(object):
         response = {
             'status': 0,
             'errors': [],
-            'jobs': []
+            'layers': []
             }
         try:
             mapID = self.request.GET.get('map')
@@ -65,9 +65,9 @@ class APIMapcacheViewer(object):
             for path in paths:
                 for root, dirnames, filenames in os.walk(path):
                     for filename in fnmatch.filter(filenames, 'mapcacheConfig.xml'):
-                        matches.append(os.path.join(root, filename))
+                        matches.append(os.path.split(root)[1])
                         break
-            
+            response['layers'] = matches
         else:
            response['errors'].append('Access denied.')
 

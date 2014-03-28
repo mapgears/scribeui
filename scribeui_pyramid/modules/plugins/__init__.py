@@ -24,5 +24,6 @@ def getJsFiles(request):
 def getCssFiles(request):
     return [
         request.static_url('scribeui_pyramid:static/setextent/static/css/setextent.css'),
-        request.static_url('scribeui_pyramid:static/mapcache/static/css/mapcache.css')    
+        request.static_url('scribeui_pyramid:static/mapcache/static/css/mapcache.css'),
+        request.static_url('scribeui_pyramid:static/mapcache/static/css/mapcacheViewer.css')    
     ]
