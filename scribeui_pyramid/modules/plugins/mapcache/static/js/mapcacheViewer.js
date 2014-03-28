@@ -4,26 +4,29 @@
 
 	Note: This is not an independant plugin, meaning it relies on the main mapcache plugin for events and initialisation. 
 */
-function mapcacheViewerManager(plugin){
-	this.name = "Mapcache Plug-in Viewer Component";
-	this.mapcachePlugin = plugin;
-}
-mapcacheViewerManager.prototype.onMapOpened = function(){
-	// Add a viewer if it doesn't exist:
-	if(typeof(workspace.openedMap.mapcacheViewer) == "undefined")
-		workspace.openedMap.mapcacheViewer = new mapcacheViewer(workspace.openedMap);
-	for(i in workspace.maps){
-		if(typeof(workspace.maps[i].mapcacheViewer) != "undefined")
-			workspace.maps[i].mapcacheViewer.deactivate();
-	}
-	workspace.openedMap.mapcacheViewer.activate();
-};
 function mapcacheViewer(map){
 	this.layers = [];
 	this.map = map;
 	this.active = false;
 	this.layerSwitcher = new OpenLayers.Control.LayerSwitcher();
 }
+mapcacheViewerManager = function(plugin){
+	this.name = "Viewer manager"
+	this.plugin = plugin;
+}
+mapcacheViewerManager.prototype.onMapOpened = function(){
+	// Add a viewer to the map if it doesn't have one
+	if(typeof(workspace.openedMap.mapcacheViewer) == "undefined")
+		workspace.openedMap.mapcacheViewer = new mapcacheViewer(workspace.openedMap);
+	//Disable all other layerswitchers
+	for(i in workspace.maps){
+		if(typeof(workspace.maps[i].mapcacheViewer) != "undefined")
+			workspace.maps[i].mapcacheViewer.deactivate();
+	}
+    //Activate this one
+	workspace.openedMap.mapcacheViewer.activate();
+};
+
 mapcacheViewer.prototype.updateLayers = function(){
 	$.ajax({
             url: $API + "/mapcache/getlayers?map="+this.map.id,
@@ -31,12 +34,13 @@ mapcacheViewer.prototype.updateLayers = function(){
             dataType: "json"
         }).done(function(data){
 			if(data.errors.length == 0){
+                origin = new OpenLayers.LonLat(workspace.openedMap.OLMap.layers[0].maxExtent.bottom, workspace.openedMap.OLMap.layers[0].maxExtent.left);
 				for(i in data.layers){
 					// Create the layers
 					var layer = new OpenLayers.Layer.TMS(
-						data.layers[i], // name for display in LayerSwitcher
-						$API + "/mapcache/tiles?map="+this.map.id+"&job="+data.layers[i], // service endpoint
-						{layername: data.layers[i], type: "png"} // required properties
+						data.layernames[i], // name for display in LayerSwitcher
+						$API + "/mapcache/tiles?map="+this.map.id+"&job="+data.layers[i]+"&request=", 
+						{layername: data.layernames[i], type: "png", tileOrigin:origin} 
 					);
 					layer.setVisibility(false); /* Hidden by default */
 					this.layers.push(layer);

@@ -16,8 +16,8 @@
    <tileset name="default">
       <source><!--SCRIBEUITITLE--></source>
       <cache>disk</cache>
-      <grid>WGS84</grid>
       <grid>g</grid>
+      <grid>WGS84</grid>
       <format>PNG</format>
       <metatile>5 5</metatile>
       <metabuffer>10</metabuffer>

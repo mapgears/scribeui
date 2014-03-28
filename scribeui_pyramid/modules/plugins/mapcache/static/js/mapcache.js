@@ -5,7 +5,7 @@ jQuery(function() { $(document).ready(function(){
 		this.mapOpenCallback = null;
 		this.optionsDialog = null;
 		this.jobs = [];
-		this.mapcacheViewer = null;
+		this.mapcacheViewerManager = null;
 	}
 
 	function job(id, title, map, status){
@@ -32,12 +32,11 @@ jQuery(function() { $(document).ready(function(){
 		}, this));
 		
 		setInterval($.proxy(this.poke, this), 30000);	
-		
-		this.mapcacheViewer = new mapcacheViewerManager(this);
+        this.mapcacheViewerManager = new mapcacheViewerManager(this);
 	}
 	//Called by core's functions.js
 	mapcache.prototype.onMapOpened = function(){
-		this.mapcacheViewer.onMapOpened();
+		this.mapcacheViewerManager.onMapOpened();
 		if(this.mapOpenCallback) this.mapOpenCallback();
 		this.mapOpenCallback = null;
 	}
@@ -254,6 +253,7 @@ jQuery(function() { $(document).ready(function(){
             this.jobs.push(j);
             this.updateJobListTable(map);        
         });
+        map.OLMap.mapcacheViewer.updateLayers();
     }
 	//Catch the workspace's finished and running jobs and put them in the local queue
 	mapcache.prototype.onWorkspaceOpened = function(){
