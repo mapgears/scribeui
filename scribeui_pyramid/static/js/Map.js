@@ -127,12 +127,7 @@ Map.prototype.displayComponents = function(){
         editor.clearHistory();
     });
 
-    $.each(plugins, function(index, plugin){
-        if(plugin.onMapOpened){
-            plugin.onMapOpened();
-        }
-    });
-
+    
     selectors.editorToolbar().find('button').button('enable');
     selectors.poiActions().find('button').button('enable');
 
@@ -344,6 +339,12 @@ Map.prototype.display = function(){
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
+		$.each(plugins, function(index, plugin){
+			if(plugin.onMapOpened){
+				plugin.onMapOpened();
+			}
+		});
+
     }
 }
 
