@@ -206,7 +206,7 @@ pre {
 .elfinder-workzone{
 	font-size:1.2em;
 }
-.file-manager {
+#data-tab .file-manager {
     position: absolute !important;
     left: 0 !important;
     right: 0 !important;
@@ -844,6 +844,10 @@ div.olControlZoom a {
 #maps-list .map-preview-name{
     display: block;
     padding-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* this works with IE, Safari and Chrome */
+    white-space: nowrap;
+    -moz-binding: url('/ellipsis.xml#ellipsis'); /* this is a Firefox hack */
 }
 #maps-list .map-preview.ui-selected.li-default-thumbnail{
     background-color: #F6F6F6;
@@ -881,13 +885,8 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
-#git-url, #git-clone-url {
-    width: 400px;
-}
-#configure-url {
-    width: 400px;
-}
-#git-message {
+input.long,
+textarea.long {
     width: 400px;
 }
 #git-commit-info {
@@ -951,15 +950,32 @@ div.olControlZoom a {
     width: 200px !important;
 }
 
+.control-group input[type="text"],
+.control-group input[type="password"] {
+    margin-top: 4px;
+}
+
+.control-group input[type="radio"] {
+    margin-top: 5px;
+}
+
 .btn-group-first {
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
 }
 
+.btn-group-middle {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    margin-left: -5px;
+}
+
 .btn-group-last {
     border-top-left-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
-    margin-left: -5px !important;
+    margin-left: -5px;
 }
 
 .grouporder-btnset-right {
@@ -1053,4 +1069,9 @@ div.olControlZoom a {
 
 .login table td{
     padding: 5px;
+}
+
+.horizontal .control {
+    float: left;
+    margin-left: 20px;
 }

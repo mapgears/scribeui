@@ -69,8 +69,8 @@ class processManager(Borg):
         if not hasattr(self, "thread"):
             self.thread = None
 
-    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, extent):
-    	projectdir = projectdir.rstrip('/')
+    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, grid, extent=None, dbconfig=None):
+        projectdir = projectdir.rstrip('/')
 
         pprint.pprint("-----------")
         path = os.path.dirname(os.path.abspath(__file__))
@@ -92,7 +92,7 @@ class processManager(Borg):
 
         jobdir = projectdir+"/mapcache/job-"+job.title+str(job.id)
         if not os.path.exists(jobdir):
-        	os.makedirs(jobdir)
+            os.makedirs(jobdir)
 
         inFile = open(path + "/mapcacheConfig.xml.default")
         outFile = open(jobdir+"/mapcacheConfig.xml","w")
@@ -106,7 +106,29 @@ class processManager(Borg):
         outFile.close()
 
         pprint.pprint("Adding new process")
-        p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-e",extent], shell=False)
+
+        if extent:
+            if extent[0] == '/' and extent[-4:] == '.shp' and os.path.isfile(extent):
+                p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", extent], shell=False)
+            else:
+                p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-e", extent], shell=False)
+                print "mapcache_seed -c " + jobdir + "/mapcacheConfig.xml -t default -z " + zoomLevels + " -M " + metatile + " -g " + grid + " -e " + extent
+                print '\n\n'
+
+        elif dbconfig:
+            #TODO: ADD SUPPORT FOR OTHER DATABASE TYPE
+            #ALSO, THIS CODE COULD PROBABLY BE PLACED IN A FUNCTION SOMEWHERE ELSE 
+            if dbconfig['type'].lower() == 'postgis':
+                connection_string = 'PG:dbname=' + dbconfig['name'] + ' host=' + dbconfig['host'] + ' port=' + dbconfig['port'] + ' user=' + dbconfig['user'];
+                if dbconfig['password']:
+                    connection_string += ' password=' + dbconfig['password'] 
+            else:
+                connection_string = ''
+
+            query_string = dbconfig['query'].rstrip(';')
+
+            p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", connection_string, '-s', query_string], shell=False)
+
         p.jobid = job.id
         
         # Lock the processes list before adding data
@@ -137,13 +159,13 @@ class processManager(Borg):
         return
 
     def updateJob(self, jobid, status):
-    	try:
+        try:
             job = Job.by_id(jobid)
         except NoResultFound as e:
             print "Error %s:" % e.args[0]
             raise Exception(e.args[0])
 
-    	try:
+        try:
             job.status = status
             transaction.commit()
         except exc.SQLAlchemyError as e:

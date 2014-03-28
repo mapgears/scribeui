@@ -127,6 +127,15 @@ Workspace.prototype.getMapByName = function(name){
     return null;
 };
 
+Workspace.prototype.getMapByID = function(id){
+    for(var i = 0; i < this.maps.length; i++){
+        if(this.maps[i].id == id){
+            return this.maps[i];
+        }
+    }
+    return null;
+};
+
 Workspace.prototype.getMapIndexByName = function(name){
     for(var i = 0; i < this.maps.length; i++){
         if(this.maps[i].name == name){
