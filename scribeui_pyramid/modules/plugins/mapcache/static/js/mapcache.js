@@ -166,7 +166,7 @@ jQuery(function() { $(document).ready(function(){
 
         var databaseConfigs= '<option></option>';
         $.each(workspace.databaseConfigs, function(index, config){
-            databaseConfigs += '<option value="' + config + '">' + config + '</option>';
+            databaseConfigs += '<option value="' + config.name + '">' + config.name + '</option>';
         });
 
         this.optionsDialog = $('<div id="mapcache-options-dialog" class="scribe-dialog">'+
@@ -223,7 +223,10 @@ jQuery(function() { $(document).ready(function(){
         });
 
         $('#extent-database-config select').on('change', function(){
-            self.getDatabaseConfig();
+            var config = self.getDatabaseConfigByName($(this).find('option:selected').val());
+            if(config){
+                self.setDatabaseConfig(config);    
+            }
         });
 
         var elf = $('#shapefile-extent').elfinder({
@@ -604,7 +607,8 @@ jQuery(function() { $(document).ready(function(){
                     "Create": function() {
                         var name = $(this).find('input[name="name"]').val();
                         if(name && name != ''){
-                            //TODO` VALIDER QU'IL N'EXISTE PAS DE CONFIG AVEC LE MÊME NOM LE WORKSPACE
+                            //TODO` VALIDER QU'IL N'EXISTE PAS DE CONFIG AVEC LE MÊME NOM DANS LE WORKSPACE
+
                             var option = $('<option>')
                                 .val(name)
                                 .text(name)
@@ -643,30 +647,54 @@ jQuery(function() { $(document).ready(function(){
         $.post($API + "/mapcache/database/config/save", config, 
             function(response) {
                 if(response.status == 1){
-                    console.log(response);
+                    workspace.databaseConfigs.push(config);
                 }
             }
         );
     }
 
-    mapcache.prototype.getDatabaseConfig = function(){
-        var config = {
-            name: $('#extent-database-config select option:selected').val(),
-            ws: workspace.name
-        };
-        
-        $.get($API + "/mapcache/database/config/get", config, 
-            function(response) {
-                if(response.status == 1){
-                    $('#extent-database-type').val(response.config.dbtype);
-                    $('#extent-host').val(response.config.dbhost);
-                    $('#extent-port').val(response.config.dbport);
-                    $('#extent-name').val(response.config.dbname);
-                    $('#extent-user').val(response.config.dbuser);
-                    $('#extent-query').val(response.config.dbquery);
+    mapcache.prototype.getDatabaseConfigByName = function(name){
+        var config = null;
+        if(workspace.databaseConfigs){
+            for(var i = 0; i < workspace.databaseConfigs.length; i++){
+                if(workspace.databaseConfigs[i]['name'] == name){
+                    config = workspace.databaseConfigs[i];
+                    break
                 }
             }
-        );
+        }
+
+        return config;
+    }
+
+    mapcache.prototype.getDatabaseConfigIndexByName = function(name){
+        var index = null;
+        if(workspace.databaseConfigs){
+            for(var i = 0; i < workspace.databaseConfigs.length; i++){
+                if(workspace.databaseConfigs[i]['name'] == name){
+                    index = i;
+                    break
+                }
+            }
+        }
+
+        return index;
+    }
+
+    mapcache.prototype.removeDatabaseConfig = function(name){
+        var index = this.getDatabaseConfigIndexByName(name);
+        if(index !== null){
+            workspace.databaseConfigs.splice(index, 1);    
+        }
+    }
+
+    mapcache.prototype.setDatabaseConfig = function(config){
+        $('#extent-database-type').val(config.dbtype);
+        $('#extent-host').val(config.dbhost);
+        $('#extent-port').val(config.dbport);
+        $('#extent-name').val(config.dbname);
+        $('#extent-user').val(config.dbuser);
+        $('#extent-query').val(config.dbquery);
     }
 
     mapcache.prototype.getDatabaseConfigs = function(){
@@ -684,13 +712,14 @@ jQuery(function() { $(document).ready(function(){
     }
 
     mapcache.prototype.deleteDatabaseConfig = function(){
+        var self = this;
         var name = $('#extent-database-config select option:selected').val();
-        var config = {
+        var data = {
             ws: workspace.name,
             name: name
         };
         
-        $.post($API + "/mapcache/database/config/delete", config, 
+        $.post($API + "/mapcache/database/config/delete", data, 
             function(response) {
                 if(response.status == 1){
                     $('#extent-database-config select').find('option[value="' + name + '"]').remove();
@@ -702,6 +731,8 @@ jQuery(function() { $(document).ready(function(){
                     $('#extent-user').val(null);
                     $('#extent-password').val(null);
                     $('#extent-query').val(null);
+
+                    self.removeDatabaseConfig(name);
                 }
             }
         );

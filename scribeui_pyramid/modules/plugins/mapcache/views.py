@@ -466,71 +466,6 @@ class APIMapcache(object):
 
 
     @view_config(
-        route_name='mapcache.database.config.get',
-        permission='view',
-        renderer='json',
-        request_method='GET'
-    )
-    def get_config(self):
-        response = {
-            'status': 0,
-            'errors': [],
-            'config': {}
-            }
-
-        try:
-            ws_name = self.request.GET.get('ws')
-            if ws_name == '':
-                response['errors'].append('A workspace name is required.')
-        except KeyError as e:
-            response['errors'].append('A workspace name is required.')
-
-        try:
-            name = self.request.GET.get('name')
-            if name == '':
-                response['errors'].append('Config name is required.')
-        except KeyError as e:
-            response['errors'].append('Config name is required.')
-
-        if len(response['errors']) == 0:
-            workspace = Workspace.by_name(ws_name)
-            if(workspace.name == self.request.userid):
-                dbconfig_query = DBSession.query(
-                    DatabaseConfig.name,
-                    DatabaseConfig.type,
-                    DatabaseConfig.host,
-                    DatabaseConfig.port,
-                    DatabaseConfig.database_name,
-                    DatabaseConfig.user,
-                    DatabaseConfig.query
-                    ).filter(
-                    DatabaseConfig.name == name, 
-                    DatabaseConfig.workspace_id == workspace.id
-                )
-
-                try:
-                    dbconfig = dbconfig_query.one()
-                except NoResultFound, e:
-                    response['errors'].append("The database configuration you requested was not found.")
-
-                if len(response['errors']) == 0:
-                    response['config'] = {
-                        'name': dbconfig[0],
-                        'dbtype': dbconfig[1],
-                        'dbhost': dbconfig[2],
-                        'dbport': dbconfig[3],
-                        'dbname': dbconfig[4],
-                        'dbuser': dbconfig[5],
-                        'dbquery': dbconfig[6]
-                    }
-                    response['status'] = 1
-            else:
-                response['errors'].append('Access denied.')
-
-        return response
-
-
-    @view_config(
         route_name='mapcache.database.config.delete',
         permission='view',
         renderer='json',
@@ -608,15 +543,33 @@ class APIMapcache(object):
             if(workspace.name == self.request.userid):
                 dbconfig_query = DBSession.query(
                     DatabaseConfig.name,
+                    DatabaseConfig.type,
+                    DatabaseConfig.host,
+                    DatabaseConfig.port,
+                    DatabaseConfig.database_name,
+                    DatabaseConfig.user,
+                    DatabaseConfig.query
                     ).filter(
                     DatabaseConfig.workspace_id == workspace.id
                 )
-
-                dbconfigs = dbconfig_query.all()
+                
+                try:
+                    dbconfigs = dbconfig_query.all()
+                except NoResultFound, e:
+                    response['errors'].append("The database configuration you requested was not found.")
 
                 if len(response['errors']) == 0:
                     for dbconfig in dbconfigs:
-                        response['configs'].append(dbconfig[0])
+                        response['configs'].append({
+                            'name': dbconfig[0],
+                            'dbtype': dbconfig[1],
+                            'dbhost': dbconfig[2],
+                            'dbport': dbconfig[3],
+                            'dbname': dbconfig[4],
+                            'dbuser': dbconfig[5],
+                            'dbquery': dbconfig[6]
+                        })
+
                     response['status'] = 1
             else:
                 response['errors'].append('Access denied.')
