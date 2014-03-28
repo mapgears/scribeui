@@ -376,6 +376,7 @@ jQuery(function() { $(document).ready(function(){
         $.post($API + "/mapcache/startjob", data, 
             function(response) {
                 if(response.status == 1){
+                    var map = workspace.getMapByID(response.job.map_id);
                     var j = new job(response.job.id, response.job.title, map, response.job.status);
                     self.jobs.push(j);
                     self.updateJobListTable(map);
