@@ -93,7 +93,7 @@ class processManager(Borg):
         if not jobdir:
             jobdir = projectdir+"/mapcache/job-"+job.title+str(job.id)
         else:
-            jobdir = jobdir.rstrip('/') + '/' + job.title
+            jobdir = jobdir.rstrip('/') + '/' + job.title+str(job.id)
         if not os.path.exists(jobdir):
             os.makedirs(jobdir)
 
