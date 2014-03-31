@@ -303,11 +303,12 @@ jQuery(function() { $(document).ready(function(){
         
         //Start new job button
         var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
+		
             var data = {
                 map: workspace.openedMap.id,
                 title: $('#mapcache-title').val(),
                 zoomlevels: $('#mapcache-zoomlevels').val(),
-                metatile: $('#mapcache-metatiles').val(),
+				metatile: $('#mapcache-metatiles').val(),
                 grid: $('#mapcache-grid option:selected').val()
             }
 
@@ -374,6 +375,13 @@ jQuery(function() { $(document).ready(function(){
             valid = false;
         }else{
             $('#mapcache-zoomlevels-error').text('');
+			zoomlevels = options['zoomlevels'].split(",");
+			low = parseInt(zoomlevels[0]);
+			high = parseInt(zoomlevels[1]);
+			low--;
+			high--;
+			options['zoomlevels'] = String(low)+","+String(high);
+			
         }
 
         if(!options['metatile'] || !options['metatile'].match(/^[0-9]+,[0-9]+$/)){
