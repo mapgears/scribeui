@@ -21,8 +21,8 @@
 }
 .shapefile-extent-manager {
 	margin-top: 5px;
-	height: 200px !important;
-	width: 540px !important;
+	/*height: 200px !important;
+	width: 540px !important;*/
 	position: inherit;
 }
 .shapefile-extent-manager .elfinder-navbar{
@@ -46,4 +46,7 @@
 #extent-save-database-config,
 #extent-delete-database-config {
 	margin-left: -1px;
+}
+#mapcache-dialog button {
+	width: 100%;
 }

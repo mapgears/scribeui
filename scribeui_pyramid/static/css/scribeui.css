@@ -194,11 +194,11 @@ pre {
 .elfinder-navbar {
    height: 100% !important;
 }
-
+/*
 .elfinder-cwd-wrapper {
    height: 100% !important;
 }
-
+*/
 .elfinder-statusbar {
     border-radius: 0px !important;
 }

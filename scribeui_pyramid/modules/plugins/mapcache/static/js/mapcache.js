@@ -1,6 +1,6 @@
 jQuery(function() { $(document).ready(function(){
     function mapcache(){
-        this.name = "Mapcache Plug-in";
+        this.name = "MapCache Plug-in";
         this.dialogDiv = null;
         this.createDatabaseConfigDiv = null;
         this.mapOpenCallback = null;
@@ -21,15 +21,14 @@ jQuery(function() { $(document).ready(function(){
         this.getDatabaseConfigs();
 
         //Adding mapcache button to the map actions div
-        var button = $('<button id="btn_open_mapcache_dialog" style="width:100%">Mapcache</button>').button();
+        var button = $('<button id="btn_open_mapcache_dialog" style="width:100%">MapCache</button>').button();
         button.on('click', $.proxy(this.openDialog, this));
         var div = $('<div></div>').append(button);
         $('#map-actions').append(div);
         
         $('#map-description').bind('DOMSubtreeModified', $.proxy(function(e) { 
-            var mapname = this.getMapName();
-            if(mapname != null){
-                var map = workspace.getMapByName(mapname);
+            var map = workspace.selectedMap;
+            if(map != null){
                 this.updateJobListTable(map);
             }
         }, this));
@@ -41,22 +40,10 @@ jQuery(function() { $(document).ready(function(){
         if(this.mapOpenCallback) this.mapOpenCallback();
         this.mapOpenCallback = null;
     }
-    mapcache.prototype.getMapName = function(){
-        var mapname = $("#map-description .map-title").text();
-        if(!mapname){
-            if(workspace.openedMap == null){
-                return;
-            }else{
-                mapname = workspace.openedMap.name;
-            }
-        }
-        return mapname;
-    }
     //Opens the job list dialog
     mapcache.prototype.openDialog = function(){
         // Creating the dialog if run for the first time
-        var mapname = this.getMapName();
-        var map = workspace.getMapByName(mapname);
+        var map = workspace.selectedMap
         
         // Creating the dialog if run for the first time
         if(this.dialogDiv == null){
@@ -67,51 +54,50 @@ jQuery(function() { $(document).ready(function(){
                 autoOpen: false,
                 resizable: true,
                 modal: false,
-                title: "Mapcache job",
+                title: "MapCache Job",
                 beforeClose: $.proxy(this.closeDialog, this)
             });
-            
+
             //Start new job button
-            var startButton = $('<button id="start-new-mapcache-job">Start new tiling job for <span id="start-new-mapcache-job-mapname">'+mapname+'</span></button>').button().click($.proxy(function(){
-                var mapname = $("#map-description .map-title").text();
-                var map = workspace.getMapByName(mapname);
-                //No map opened, we open it
-                if(workspace.openedMap == null){ 
+            var startButton = $('<button id="start-new-mapcache-job">Start new tiling job</button>').button().click($.proxy(function(){
+            var map = workspace.selectedMap;
+            //No map opened, we open it
+            if(workspace.openedMap == null){ 
+                //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
+                openMap();
+            //A map is opened and it's not the selected one
+            }else if(workspace.openedMap != map){
+                // We warn the user if there are unsaved changes
+                if(!workspace.openedMap.saved){
+                    var message = "<p>"+workspace.openedMap.name + " is currently opened and have unsaved changes. Do you wish to continue? <br/>Click the Cancel button to go back and save your changes.</p>";
+                    var warningDialog = $('<div id="mapcache-warning">'+message+'</div>');
+                    warningDialog.dialog({
+                        autoOpen: true,
+                        resizable: true,
+                        modal: true,
+                        title: "Warning",
+                        buttons: {
+                            "Continue without saving": $.proxy(function(){
+                                //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
+                                this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
+                                openMap();
+                                $('#mapcache-warning').dialog("close");
+                                $('#mapcache-warning').remove();
+                            }, this),
+                            Cancel: function(){
+                                $(this).dialog("close");
+                                $('#mapcache-warning').remove();
+                            }
+                        }
+                    });
+                // If a map is opened, it's not the one selected but there are no unsaved changes, 
+                // we open the selected one anyway
+                }else{    
                     //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
                     this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
                     openMap();
-                //A map is opened and it's not the selected one
-                }else if(workspace.openedMap != map){
-                    // We warn the user if there are unsaved changes
-                    if(!workspace.openedMap.saved){
-                        var message = "<p>"+workspace.openedMap.name + " is currently opened and have unsaved changes. Do you wish to continue? <br/>Click the Cancel button to go back and save your changes.</p>";
-                        var warningDialog = $('<div id="mapcache-warning">'+message+'</div>');
-                        warningDialog.dialog({
-                            autoOpen: true,
-                            resizable: true,
-                            modal: true,
-                            title: "Warning",
-                            buttons: {
-                                "Continue without saving": $.proxy(function(){
-                                    //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
-                                    this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
-                                    openMap();
-                                    $('#mapcache-warning').dialog("close");
-                                    $('#mapcache-warning').remove();
-                                }, this),
-                                Cancel: function(){
-                                    $(this).dialog("close");
-                                    $('#mapcache-warning').remove();
-                                }
-                            }
-                        });
-                    // If a map is opened, it's not the one selected but there are no unsaved changes, 
-                    // we open the selected one anyway
-                    }else{    
-                        //this.mapOpenCallback = function() { $.proxy(this.openOptionsDialog(map), this); };
-                        this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
-                        openMap();
-                    }
+                }
                 // If there is a map opened and it's the right one, we proceed
                 }else{
                     //$.proxy(this.openOptionsDialog(map), this);
@@ -123,8 +109,7 @@ jQuery(function() { $(document).ready(function(){
                 
             //Show all jobs button
             var allButton = $('<button id="show-all-mapcache-jobs">Show jobs from all maps</button>').button().click($.proxy(function(){
-                var mapname = $("#map-description .map-title").text();
-                var map = workspace.getMapByName(mapname);
+                var map = workspace.selectedMap;
                 this.updateJobListTable(map, true);
             }, this));
             this.dialogDiv.append(allButton);
@@ -235,6 +220,8 @@ jQuery(function() { $(document).ready(function(){
             cssClass: 'shapefile-extent-manager',
             resizable: false,
             defaultView: 'list',
+            width: 540,
+            height: 200,
             commands: ['reload', 'rm','sort', 'upload', 'extract', 'view'],
             handlers: {
                 select: function(event, elfinderInstance){
@@ -246,8 +233,6 @@ jQuery(function() { $(document).ready(function(){
                 }
             }
         }).elfinder('instance');
-
-        //$('.main').trigger('resize');
 
         $('input[type="radio"][value="map"]').on('click', $.proxy(function(){
             $('#shapefile-extent').hide();
@@ -289,7 +274,7 @@ jQuery(function() { $(document).ready(function(){
             autoOpen: false,
             resizable: true,
             modal: true,
-            title: "Mapcache job", 
+            title: "MapCache", 
             beforeClose: function(){
                 $(this).dialog('destroy').remove();
             }
@@ -451,7 +436,8 @@ jQuery(function() { $(document).ready(function(){
         var nojobs = true;
         if(typeof(showall)==='undefined') showall = false;
         this.clearJobDialog();
-        $('#start-new-mapcache-job-mapname').text(map.name);
+        //$('#start-new-mapcache-job-mapname').text(map.name);
+        this.dialogDiv.dialog('option', 'title', 'MapCache - ' + map.name);
         if(this.jobs.length != 0){
             var table = $('<table id="mapcache-jobs-list"><tr>'+
                 '<th>ID</th><th>Title</th><th>Map</th><th>Status</th><th>Action</th></tr></table>');
