@@ -350,6 +350,12 @@ Map.prototype.display = function(){
 }
 
 Map.prototype.close = function(){
+	$.each(plugins, function(index, plugin){
+		if(plugin.onMapClosed){
+			plugin.onMapClosed();
+		}
+	});
+
     if(this.OLMap){
         this.OLMap.destroy();
     }

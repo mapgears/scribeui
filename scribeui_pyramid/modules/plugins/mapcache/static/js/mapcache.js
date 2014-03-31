@@ -40,6 +40,9 @@ jQuery(function() { $(document).ready(function(){
 		if(this.mapOpenCallback) this.mapOpenCallback();
 		this.mapOpenCallback = null;
 	}
+	mapcache.prototype.onMapClosed = function(){
+		this.mapcacheViewerManager.onMapClosed();
+	}
 	mapcache.prototype.getMapName = function(){
 		var mapname = $("#map-description .map-title").text();
 		if(!mapname){

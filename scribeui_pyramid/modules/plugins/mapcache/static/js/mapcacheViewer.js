@@ -15,17 +15,16 @@ mapcacheViewerManager = function(plugin){
 	this.plugin = plugin;
 }
 mapcacheViewerManager.prototype.onMapOpened = function(){
-	// Add a viewer to the map if it doesn't have one
-	if(typeof(workspace.openedMap.mapcacheViewer) == "undefined")
-		workspace.openedMap.mapcacheViewer = new mapcacheViewer(workspace.openedMap);
-	//Disable all other layerswitchers
+	workspace.openedMap.mapcacheViewer = new mapcacheViewer(workspace.openedMap);
+	workspace.openedMap.mapcacheViewer.activate();
+};
+mapcacheViewerManager.prototype.onMapClosed = function(){
+	//Disable all layerswitchers
 	for(i in workspace.maps){
 		if(typeof(workspace.maps[i].mapcacheViewer) != "undefined")
 			workspace.maps[i].mapcacheViewer.deactivate();
 	}
-    //Activate this one
-	workspace.openedMap.mapcacheViewer.activate();
-};
+}
 
 mapcacheViewer.prototype.updateLayers = function(){
 	$.ajax({
@@ -52,7 +51,7 @@ mapcacheViewer.prototype.updateLayers = function(){
 }
 mapcacheViewer.prototype.destroyLayers = function(){
 	for(i in this.layers){
-		this.map.OLMap.emoveLayer(this.layers[i]);
+		this.map.OLMap.removeLayer(this.layers[i]);
 	}
 }
 mapcacheViewer.prototype.addLayers = function(){
@@ -62,9 +61,9 @@ mapcacheViewer.prototype.addLayers = function(){
 }
 mapcacheViewer.prototype.activate = function(){
 	this.active = true;
-	this.updateLayers();
 	this.map.OLMap.addControl(this.layerSwitcher);
 	this.layerSwitcher.activate();
+	this.updateLayers();
 }
 
 mapcacheViewer.prototype.deactivate = function(){
