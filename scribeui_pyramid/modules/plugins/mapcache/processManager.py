@@ -69,7 +69,8 @@ class processManager(Borg):
         if not hasattr(self, "thread"):
             self.thread = None
 
-    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, grid, extent=None, dbconfig=None, jobdir=None):
+    def addProcess(self, job, projectdir, mapfile, zoomLevels, metatile, grid, 
+            extent=None, dbconfig=None, jobdir=None, mapserver_url='http://localhost/cgi-bin/mapserv'):
         projectdir = projectdir.rstrip('/')
 
         pprint.pprint("-----------")
@@ -99,7 +100,12 @@ class processManager(Borg):
 
         inFile = open(path + "/mapcacheConfig.xml.default")
         outFile = open(jobdir+"/mapcacheConfig.xml","w")
-        replacements = {'<!--SCRIBEUIPATH-->':jobdir, '<!--SCRIBEUITITLE-->':"job-"+job.title+str(job.id), '<!--SCRIBEUIMAPFILEPATH-->':mapfile}
+        replacements = {
+            '<!--SCRIBEUIPATH-->':jobdir, 
+            '<!--SCRIBEUITITLE-->':"job-"+job.title+str(job.id), 
+            '<!--SCRIBEUIMAPFILEPATH-->':mapfile,
+            '<!--SCRIBEUIMAPSERVER-->':mapserver_url
+        }
 
         for line in inFile:
             for src, target in replacements.iteritems():

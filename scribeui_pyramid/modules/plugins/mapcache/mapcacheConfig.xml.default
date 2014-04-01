@@ -11,7 +11,7 @@
 
    <source name="<!--SCRIBEUITITLE-->" type="wms">
       <http>
-         <url>http://localhost/cgi-bin/mapserv?</url>
+         <url><!--SCRIBEUIMAPSERVER--></url>
       </http>
       <getmap>
          <params>

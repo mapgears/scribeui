@@ -204,9 +204,11 @@ class APIMapcache(object):
                            
                         if len(response['errors']) == 0:
                             job_directory = self.request.registry.settings.get('mapcache.output.directory', '')
+                            mapserver_url = self.request.registry.settings.get('mapserver.url', '') + '?'
 
                             pManager = processManager()
-                            pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, grid, extent=extent, dbconfig=dbconfig, jobdir=job_directory)
+                            pManager.addProcess(job, map_directory, mapfile, zoomLevels, metatile, grid, 
+                                extent=extent, dbconfig=dbconfig, jobdir=job_directory, mapserver_url=mapserver_url)
 
                             kwargs['id'] = job.id
                             response['job'] = kwargs
