@@ -1,11 +1,29 @@
-#map .olControlLayerSwitcher{
-	top:75px;
-}
 #map .olControlLayerSwitcher .layersDiv{
 	background-color:#f6f6f6;
 	background-color:rgba(255,255,255,0.75);
+	border-radius: 4px;
+	
+	-webkit-box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.4);
+	-moz-box-shadow:    0px 0px 0px 3px rgba(255, 255, 255, 0.4);
+	box-shadow:         0px 0px 0px 3px rgba(255, 255, 255, 0.4);
 }
-#map #OpenLayers_Control_MinimizeDiv{
-	background-color: #00008B;
+.olControlLayerSwitcher {
+	border-radius: 4px 4px 4px 4px;
+	left: 40px;
+	top: 62px !important;
+	
+}
+.olControlLayerSwitcher .maximizeDiv,
+.olControlLayerSwitcher .minimizeDiv {
+	top: -45px !important;
+	left: 0;
+	background: none repeat scroll 0 0 rgba(20, 20, 20, 0.5);
+	border-radius: 4px 4px 4px 4px;
+	padding: 2px;
+	height: 32px !important;
+	width: 32px !important;
 
+	-webkit-box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.4);
+	-moz-box-shadow:    0px 0px 0px 3px rgba(255, 255, 255, 0.4);
+	box-shadow:         0px 0px 0px 3px rgba(255, 255, 255, 0.4);
 }
