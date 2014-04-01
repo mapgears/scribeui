@@ -66,7 +66,7 @@ pre {
 .navbar {
     position: relative;
 
-    border-bottom: 2px solid #1c8d61;
+    border-bottom: 1px solid #1c8d61;
     margin-top: 0px;
 
     width: 100%;
@@ -741,11 +741,13 @@ div.olControlZoom a {
     margin-right:16px;
 }
 #groups-ol .ui-selecting { 
-	color:#007BD1;
+	/*color:#007BD1;*/
+    color: #1C8D61;
 }
 #groups-ol .ui-selected { 
 	background-color:#fff;
-	color:#007BD1;
+	/*color:#007BD1;*/
+    color: #1C8D61;
 }
 #groups-ol { 
 	list-style-type: none; 
