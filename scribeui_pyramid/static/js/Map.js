@@ -127,12 +127,7 @@ Map.prototype.displayComponents = function(){
         editor.clearHistory();
     });
 
-    $.each(plugins, function(index, plugin){
-        if(plugin.onMapOpened){
-            plugin.onMapOpened();
-        }
-    });
-
+    
     selectors.editorToolbar().find('button').button('enable');
     selectors.poiActions().find('button').button('enable');
 
@@ -314,7 +309,8 @@ Map.prototype.display = function(){
                 format: "image/png"
             }, {
                 singleTile: true,
-                projection: projection
+                projection: projection, 
+				resolutions: [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508]
             }
         );
 
@@ -344,10 +340,22 @@ Map.prototype.display = function(){
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
+		$.each(plugins, function(index, plugin){
+			if(plugin.onMapOpened){
+				plugin.onMapOpened();
+			}
+		});
+
     }
 }
 
 Map.prototype.close = function(){
+	$.each(plugins, function(index, plugin){
+		if(plugin.onMapClosed){
+			plugin.onMapClosed();
+		}
+	});
+
     if(this.OLMap){
         this.OLMap.destroy();
     }

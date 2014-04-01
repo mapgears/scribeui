@@ -3,43 +3,61 @@ jQuery(function() { $(document).ready(function(){
         this.name = "MapCache Plug-in";
         this.dialogDiv = null;
         this.createDatabaseConfigDiv = null;
-        this.mapOpenCallback = null;
-        this.optionsDialog = null;
-        this.jobs = [];
-    }
-
-    function job(id, title, map, status){
-        this.map = map;    
-        this.id = id;
-        this.title = title;
-        this.status = status;
-        
-    }
-    //Called when the plugin is loaded in the main app
-    mapcache.prototype.init = function(){
-    	this.getJobs();
+		this.mapOpenCallback = null;
+		this.optionsDialog = null;
+		this.jobs = [];
+		this.mapcacheViewerManager = null;
+	}
+ 
+	function job(id, title, map, status){
+		this.map = map;	
+		this.id = id;
+		this.title = title;
+		this.status = status;
+	}
+  	//Called when the plugin is loaded in the main app
+	mapcache.prototype.init = function(){
+		this.getJobs();
         this.getDatabaseConfigs();
 
-        //Adding mapcache button to the map actions div
-        var button = $('<button id="btn_open_mapcache_dialog" style="width:100%">MapCache</button>').button();
-        button.on('click', $.proxy(this.openDialog, this));
-        var div = $('<div></div>').append(button);
-        $('#map-actions').append(div);
-        
-        $('#map-description').bind('DOMSubtreeModified', $.proxy(function(e) { 
-            var map = workspace.selectedMap;
-            if(map != null){
-                this.updateJobListTable(map);
-            }
-        }, this));
+		//Adding mapcache button to the map actions div
+		var button = $('<button id="btn_open_mapcache_dialog" style="width:100%">Mapcache</button>').button();
+		button.on('click', $.proxy(this.openDialog, this));
+		var div = $('<div></div>').append(button);
+		$('#map-actions').append(div);
+		
+		$('#map-description').bind('DOMSubtreeModified', $.proxy(function(e) { 
+			var mapname = this.getMapName();
+			if(mapname != null){
+				var map = workspace.getMapByName(mapname);
+				this.updateJobListTable(map);
+			}
+		}, this));
+		
+		setInterval($.proxy(this.poke, this), 30000);	
+        this.mapcacheViewerManager = new mapcacheViewerManager(this);
+	}
+	//Called by core's functions.js
+	mapcache.prototype.onMapOpened = function(){
+		this.mapcacheViewerManager.onMapOpened();
+		if(this.mapOpenCallback) this.mapOpenCallback();
+		this.mapOpenCallback = null;
+	}
+	mapcache.prototype.onMapClosed = function(){
+		this.mapcacheViewerManager.onMapClosed();
+	}
+	mapcache.prototype.getMapName = function(){
+		var mapname = $("#map-description .map-title").text();
+		if(!mapname){
+			if(workspace.openedMap == null){
+				return;
+			}else{
+				mapname = workspace.openedMap.name;
+			}
+		}
+		return mapname;
+	}
 
-        setInterval($.proxy(this.poke, this), 30000);    
-    }
-    //Called by core's functions.js
-    mapcache.prototype.onMapOpened = function(){
-        if(this.mapOpenCallback) this.mapOpenCallback();
-        this.mapOpenCallback = null;
-    }
     //Opens the job list dialog
     mapcache.prototype.openDialog = function(){
         // Creating the dialog if run for the first time
@@ -416,7 +434,42 @@ jQuery(function() { $(document).ready(function(){
             context: this,
             dataType: "json"
         }).done(function(data){
-            this.jobs = [];
+            var j = new job(data.job.id, data.job.title, map, data.job.status);
+            this.jobs.push(j);
+            this.updateJobListTable(map);        
+        });
+        map.OLMap.mapcacheViewer.updateLayers();
+    }
+	//Catch the workspace's finished and running jobs and put them in the local queue
+	mapcache.prototype.onWorkspaceOpened = function(){
+		this.getJobs();
+	}
+	//Called in regular intervals to update the function list
+	// Only pokes the server if the job list dialog is opened, and if there is a job in progress
+	mapcache.prototype.poke = function(){
+		if(this.jobs.length > 0 && this.dialogDiv != null && this.dialogDiv.dialog("isOpen") == true){
+			var poke = false;
+			for(i in this.jobs){
+				// If there is a job in progress, we poke
+				if(this.jobs[i].status == 1){
+					poke = true;
+					break;
+				}
+			}
+			if(poke){
+				this.getJobs();
+			}
+			
+		}
+	}
+	//Get the job list from the backend
+	mapcache.prototype.getJobs = function(callback){
+		$.ajax({
+			url: $API+"/mapcache/getjobs?ws="+workspace.name,
+			context: this,
+			dataType: "json"
+		}).done(function(data){
+			this.jobs = [];
             for(i in data.jobs){
                 var j = new job(data.jobs[i].id, data.jobs[i].title, workspace.getMapByName(data.jobs[i].map_name), data.jobs[i].status);
                 this.jobs.push(j);

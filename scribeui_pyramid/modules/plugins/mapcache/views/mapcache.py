@@ -3,7 +3,6 @@
 #    1 - In progress
 #    2 - Stopped (error)
 
-#from flask import Flask, Blueprint, render_template, url_for, current_app, request, g, jsonify
 import logging
 import transaction
 import codecs
@@ -24,13 +23,13 @@ log = logging.getLogger(__name__)
 #import simplejson, pprint, sys, os
 import pprint, sys, os
 
-from .processManager import processManager
+from ..processManager import processManager
 
 from .. import DBSession
 from .. import Map
 from .. import Workspace
 
-from .models import (
+from ..models import (
     Job,
     DatabaseConfig
 )
@@ -216,8 +215,6 @@ class APIMapcache(object):
                         response['errors'].append('Access denied.')
              
         return response
-
-
     @view_config(
         route_name='mapcache.getjobs',
         permission='view',
@@ -602,7 +599,7 @@ class APIMapcache(object):
             workspace = Workspace.by_id(map.workspace_id)
 
             if(workspace.name == self.request.userid):
-                current_directory = os.path.dirname(os.path.abspath(__file__)) + '/'
+                current_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
                 config_file = current_directory + 'mapcacheConfig.xml.default'
                 codecs.open(config_file, encoding='utf8', mode='r')
 
