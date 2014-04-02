@@ -5,7 +5,7 @@ OSM google style is a template for ScribeUI that gives a google inspired style t
 
 Requirements
 ------
-*   ScribeUI version X.X with all the demo data installed
+*   ScribeUI with all the demo data installed
 *   PostgreSQL/PostGIS
 *   OSM data to import
 
