@@ -1,0 +1,59 @@
+
+LAYER {
+        2-20 {
+        NAME: 'admin_fr'
+        TYPE: POLYGON
+        @connection
+        @layerconfig
+        DATA {
+                2-20:  "geometry from (select geometry,osm_id, name as name,admin_level from osm_admin ) as foo using unique osm_id using srid=3857"
+                }
+        LABELITEM: "name"
+        CLASSITEM: "admin_level"
+            
+        
+        
+       CLASS {
+            EXPRESSION:('[admin_level]' != '4')
+            STYLE {
+                OUTLINECOLOR: 200 200 200
+                SIZE {
+                    1-3: 0.3
+                    5-20: 0.9
+                }
+                
+                PATTERN {{
+                    5.0 5.0
+                }}
+            }
+			
+		
+        }
+     }
+}
+    
+LAYER{
+    NAME: 'admin_fr_border'
+    TYPE: POLYGON
+    @connection
+    @layerconfig
+    DATA {
+       1-20:  "geometry from (select geometry,osm_id, name as name,admin_level from osm_admin ) as foo using unique osm_id using srid=3857"
+    }
+    LABELITEM: "name"
+    CLASSITEM: "admin_level"
+    CLASS {
+       EXPRESSION: '4'
+     
+       STYLE{
+          OUTLINECOLOR: 100 100 100
+          SIZE {
+             1-3: 0.3
+             5-20: 0.1
+          }
+         
+       }
+    }
+          
+                  
+}

@@ -1,0 +1,89 @@
+
+LAYER {
+	 6-20 {
+        NAME: 'waterarea'
+        TYPE: POLYGON
+        @connection
+        @layerconfig
+        DATA {
+	6-10: "geometry from (select geometry,osm_id ,name,type from osm_waterareas_gen1) as foo using unique osm_id using srid=3857"
+	11-20: "geometry from (select geometry,osm_id ,name,type from osm_waterareas) as foo using unique osm_id using srid=3857"
+		}    	
+    	LABELITEM: 'name'
+        CLASSITEM: 'type'
+        CLASS {
+	          EXPRESSION: "riverbank"
+              STYLE {
+	 	           COLOR: @waterarea_clr
+                   12-20 { 
+			            OUTLINECOLOR: @waterarea_clr
+			       }		
+              }
+	    }
+    	CLASS {
+	          STYLE {
+	                COLOR: @waterarea_clr	
+		            12-20 { 
+                          OUTLINECOLOR: @waterarea_clr
+		            }			
+	           }
+               LABEL {
+	               9-20 {
+			           @labelconfig_waterareas
+		           }
+	           }
+	     }  
+     }
+}
+
+LAYER {
+	10-20 {
+        NAME: 'waterways'
+        TYPE: LINE
+        @connection
+        @layerconfig
+        DATA {
+            10-14: "geometry from (select geometry, osm_id, type, name from osm_waterways where type = 'river') as foo using unique osm_id using srid=3857"
+	        15-20: "geometry from (select geometry, osm_id, type, name from osm_waterways) as foo using unique osm_id using srid=3857"
+		}
+    	CLASSITEM: 'type'
+        LABELITEM: 'name'
+        CLASS {
+			EXPRESSION: ('[TYPE]' = 'river')
+            STYLE {
+				COLOR: @waterways_clr
+ 				WIDTH: @waterways_width
+			}
+        	LABEL {
+                10-20 {
+					@labelconfig_waterways
+                    
+                }
+			}
+		}    
+   		CLASS {
+            EXPRESSION: ('[TYPE]' = 'stream')
+            STYLE {
+                COLOR: @waterways_clr
+                WIDTH: @waterways_width
+            }
+            LABEL {
+                15-20 {
+                @labelconfig_waterways
+                }
+            }
+        }
+     	CLASS {
+            EXPRESSION: ('[TYPE]' = 'canal')
+            STYLE {
+                COLOR: @waterways_clr
+                WIDTH: @waterways_width
+            }
+            LABEL {
+                15-20 {
+                    @labelconfig_waterways
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,34 @@
+/*
+LAYER{
+    NAME: 'golf'
+    TYPE: POLYGON
+    @layerconfig
+    DATA: '../../golfcourse.shp'
+        
+    LABELITEM: 'name'
+        
+        CLASS{
+            STYLE{
+             COLOR: 0 0 255
+            }
+        }
+    
+    CLASS {
+           
+            STYLE {
+            	COLOR: @golf_course_clr
+            }
+        	LABEL {
+                13-18 {
+					@labelconfig_park_golf_nature    	
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: 'golf'
+                        SIZE: 16
+					}
+                }
+			}
+        }
+}
+*/

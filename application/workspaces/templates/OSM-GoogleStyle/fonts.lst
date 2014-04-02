@@ -1,0 +1,6 @@
+sc fonts/DejaVuSansCondensed.ttf
+scb fonts/DejaVuSansCondensed-Bold.ttf
+ar fonts/arial.ttf
+arb fonts/arialbd.ttf
+sco fonts/DejaVuSansCondensed-Oblique.ttf
+icon fonts/FontAwesome.otf
