@@ -9,7 +9,7 @@ Requirements
 *   PostgreSQL/PostGIS
 *   OSM data to import
 
-You can get the lattest release of ScribeUI [here](https://github.com/mapgears/scribeui).
+You can get the latest release of ScribeUI [here](https://github.com/mapgears/scribeui).
 
 You can install PostgreSQL and PostGIS using aptitude:
 
