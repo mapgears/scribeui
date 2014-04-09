@@ -9,7 +9,9 @@ Requirements
 *   PostgreSQL/PostGIS
 *   OSM data to import
 
-You can get the latest release of ScribeUI [here](https://github.com/mapgears/scribeui).
+You can get the latest release of ScribeUI [here](https://github.com/mapgears/scribeui). To be sure all the demo data are downloaded and installed, you should run this command from the ScribeUI folder:
+
+    sudo make load-demo-data
 
 You can install PostgreSQL and PostGIS using aptitude:
 
@@ -72,9 +74,9 @@ Install imposm:
 
 ####Load data using imposm
 
-    cd ~/osm-demo/
+    cd ~/osm-data/
     imposm --proj=EPSG:3857 --read rhode_island.osm.bz2
-    imposm --proj=EPSG:3857 --write --database osm --host localhost --user osm
+    imposm --proj=EPSG:3857 --write --database osm --host localhost --user osm --table-prefix osm_
     (... if prompted for db password, the default is osm)
     imposm  --optimize -d osm
 
