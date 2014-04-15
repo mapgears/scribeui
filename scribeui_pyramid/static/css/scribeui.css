@@ -27,9 +27,10 @@ select {
     padding: 1px 0px 0px 1px;
     width:200px;
 }
-input {
+input[type="text"],
+input[type="password"] {
     border-radius: 4px;
-	width:200px;
+    width:200px;
 }
 label {
     font-size: 1.2em;
