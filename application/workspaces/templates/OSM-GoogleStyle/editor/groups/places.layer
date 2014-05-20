@@ -1,0 +1,235 @@
+LAYER{
+  TYPE: POINT
+  NAME: "places"
+  DEBUG: 5
+  @layerconfig
+  @connection
+  DATA{
+      1-3: "geometry from (select * from osm_places where type in ('country','continent') and name is not NULL order by population asc nulls first) as foo using unique osm_id using srid=3857"
+          
+      4-8: "geometry from (select * from osm_places where type in ('country','continent','city') and name is not NULL order by population asc nulls first) as foo using unique osm_id using srid=3857"
+          
+      9-11: "geometry from (select * from osm_places where type in ('city','town','village') and name is not NULL order by population asc nulls first) as foo using unique osm_id using srid=3857"
+          
+      12-13: "geometry from (select * from osm_places where type in ('city','town','village') and name is not NULL order by population asc nulls first) as foo using unique osm_id using srid=3857"
+          
+      14-20: "geometry from (select * from osm_places where name is not NULL order by population asc nulls first) as foo using unique osm_id using srid=3857"
+  }
+    
+ LABELITEM: 'name'
+ CLASSITEM: 'type'
+ /*    
+ CLUSTER{
+    MAXDISTANCE:20
+    REGION:"ellipse"
+    GROUP:('[type]'='city')     
+ }
+    
+ CLUSTER{
+    MAXDISTANCE:10
+    REGION:"ellipse"
+    GROUP:('[type]'='town')     
+ }
+   
+*/
+ 0{
+   CLASS{
+    EXPRESSION: ('[capital]'='1')
+    
+    LABEL{
+      FONT: @capital_font
+      TYPE: TRUETYPE
+      SIZE: @capital_lbl_size
+      ENCODING: "utf-8"
+      COLOR: @capital_lbl_clr
+      OUTLINECOLOR: @capital_lbl_ol_clr
+      OUTLINEWIDTH: @capital_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      BUFFER: 10
+      PARTIALS: FALSE
+      POSITION: auto
+      10-20{
+          STYLE{
+             SIZE: @capital_size
+             SYMBOL: "citycircle"
+             COLOR: @capital_clr
+             OUTLINECOLOR: @capital_ol_clr
+          }
+          STYLE{
+              SIZE: @capital_fg_size
+   	          SYMBOL: "citycircle"
+              COLOR: @capital_fg_clr   
+          }
+      }
+    }
+   }
+ }
+ 
+ 1-3{
+  CLASS{
+   EXPRESSION: 'continents'    
+   
+   LABEL{
+      FONT: @continent_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @continent_lbl_size
+      COLOR: @continent_lbl_clr
+      OUTLINECOLOR: @continent_lbl_ol_clr
+      OUTLINEWIDTH: @continent_lbl_ol_width
+      BUFFER: 4
+      PARTIALS: FALSE
+      POSITION: cc
+   }
+  }
+ }
+    
+ 3-8{
+  CLASS{
+   EXPRESSION: 'country'
+   
+   LABEL{
+      FONT: @country_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @country_lbl_size
+      COLOR: @country_lbl_clr
+      OUTLINECOLOR: @country_lbl_ol_clr
+      OUTLINEWIDTH: @country_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      BUFFER: 4
+      PARTIALS: FALSE
+      POSITION: cc
+   }
+  }
+ }
+    
+ 6-17{
+  CLASS{
+   EXPRESSION: 'city'
+       
+   LABEL{
+      FONT: @city_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @city_lbl_size
+      COLOR: @city_lbl_clr
+      OUTLINECOLOR: @city_lbl_ol_clr
+      OUTLINEWIDTH: @city_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      BUFFER: 7
+      PARTIALS: FALSE
+      POSITION: auto
+      PRIORITY: 10
+   }
+   8-10{
+    STYLE{
+       SIZE: @city_size
+       SYMBOL: "citycircle"
+       COLOR: @city_clr
+       OUTLINECOLOR: @city_ol_clr    
+    }
+   }
+  }
+ }
+ 
+ 9-20{   
+  CLASS{
+   EXPRESSION: 'town'
+       
+   LABEL{
+      FONT: @town_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @town_lbl_size
+      COLOR: @town_lbl_clr
+      OUTLINECOLOR: @town_lbl_ol_clr
+      OUTLINEWIDTH: @town_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      PARTIALS: FALSE
+      POSITION: AUTO
+      BUFFER: 4
+      POSITION: auto
+      PRIORITY: 8
+   }
+   12-13{   
+    STYLE{
+       SIZE: @town_size
+       SYMBOL: "citycircle"
+       COLOR: @town_clr
+       OUTLINECOLOR: @town_ol_clr  
+    }
+   }
+  }
+ }
+    
+ 8-20{
+  CLASS{
+   EXPRESSION: 'village'
+       
+   LABEL{
+      FONT: @village_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @village_lbl_size
+      COLOR: @village_lbl_clr
+      OUTLINECOLOR: @village_lbl_ol_clr
+      OUTLINEWIDTH: @village_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      PARTIALS: FALSE
+      BUFFER: 4
+      POSITION: AUTO
+      PRIORITY: 7
+   }
+   12-15{
+    STYLE{
+       SYMBOL: "citycircle"
+       COLOR: @village_clr
+       OUTLINECOLOR: @village_ol_clr
+       SIZE: @village_size
+    }
+   }
+  }
+ }
+    
+ 9-20{
+  CLASS{
+   EXPRESSION: /suburb|hamlet|locality/
+       
+   LABEL{
+      FONT: @hamlet_font
+      TYPE: TRUETYPE
+      ENCODING: "utf-8"
+      SIZE: @hamlet_lbl_size
+      COLOR: @hamlet_lbl_clr
+      OUTLINECOLOR: @hamlet_lbl_ol_clr
+      OUTLINEWIDTH: @hamlet_lbl_ol_width
+      WRAP: ' '
+      MAXLENGTH: 8
+      ALIGN: CENTER
+      BUFFER: 4
+      PARTIALS: FALSE
+      POSITION: AUTO 
+      PRIORITY: 7
+   }
+  0{
+    STYLE{
+       SIZE: @hamlet_size
+       SYMBOL: "citycircle"
+       COLOR: @hamlet_clr
+       OUTLINECOLOR: @hamlet_ol_clr  
+    }
+   }
+  }
+ }
+}

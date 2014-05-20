@@ -1,0 +1,1351 @@
+##Railways
+LAYER {
+	11-20 {
+        NAME: 'railways'
+        TYPE: LINE
+        @connection
+        @layerconfig
+		DATA {
+			1-6: "geometry from (select geometry, osm_id, tunnel from osm_roads_gen0 where type='rail') as foo using unique osm_id using srid=3857"
+            7-12: "geometry from (select geometry, osm_id, tunnel from osm_roads_gen1 where type='rail') as foo using unique osm_id using srid=3857"
+            13-20: "geometry from (select geometry, osm_id, tunnel from osm_roads where type='rail') as foo using unique osm_id using srid=3857"
+		}
+		CLASS {
+            EXPRESSION: ("[tunnel]"= '0')
+            STYLE {
+                WIDTH {
+					1-10: 0.5
+                    11-20: 1
+				}
+                COLOR {
+					1-14: '#C0C0C0'
+                    15-20: '#C0C0C0'
+				}
+            	LINECAP: BUTT
+            }
+            14-20 {
+			STYLE {
+                WIDTH {
+					1-10: 0.5
+                    11-20: 5
+				}
+                COLOR {
+					1-14: '#777777'
+                    15-20: '#777777'
+				}
+                PATTERN {{
+					1 30
+				}}
+            	LINECAP: BUTT
+            }
+        	}
+        }
+    	CLASS {
+        	STYLE {
+                WIDTH {
+					1-10: 0.5
+                    11-20: 1
+				}
+                COLOR {
+					1-14: '#777777'
+                    15-20: '#777777'
+				}
+            	OPACITY: @tunnel_opacity
+            	LINECAP: BUTT
+            }
+    		14-20 {
+			STYLE {
+                WIDTH {
+					1-10: 0.5
+                    11-20: 5
+				}
+                COLOR {
+					1-14: '#777777'
+                    15-20: '#777777'
+				}
+                PATTERN {{
+					1 30
+				}}
+            	LINECAP: BUTT
+            }}
+        }
+    }
+}
+##Roads
+LAYER {
+	5-20 {
+        NAME: 'roads'
+        TYPE: LINE
+        @connection
+        @layerconfig
+		DATA {
+	1-6: "geometry from (select osm_id,geometry,name,ref,type  from osm_roads_gen1 where type in ('motorway', 'trunk') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+        7: "geometry from (select osm_id,geometry,name,ref,type from osm_roads_gen1 where type in ('motorway', 'trunk', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"            
+        8: "geometry from (select osm_id,geometry,name,ref,type  from osm_roads_gen1 where type in ('motorway', 'trunk', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+	9: "geometry from (select osm_id,geometry,name,ref,type  from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street', 'unclassified',  'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+	10: "geometry from (select osm_id,geometry,name,ref,type from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street', 'unclassified', 'track', 'footway', 'pedestrian') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+	11-13: "geometry from (select osm_id,geometry,name, tunnel, ref,type from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'secondary', 'tertiary', 'residential', 'road', 'living_street', 'unclassified','track', 'footway', 'pedestrian', 'ferry') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+	14-20: "geometry from (select oneway, osm_id,geometry,name,ref,type,tunnel,bridge from osm_roads where type in ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link', 'residential', 'road', 'living_street', 'unclassified', 'track', 'footway', 'pedestrian', 'service', 'ferry') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+		}
+    	LABELITEM: 'name'
+        CLASSITEM: 'type'
+        ##Bridges
+        CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and "[type]" = "motorway_link")
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @motorway_links_width 
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.5
+                    LINECAP: BUTT
+                    COLOR: @motorway_links_clr 
+				}
+                STYLE{
+                    WIDTH: @motorway_links_width 
+                    COLOR: @motorway_links_clr
+				}
+			}
+		}
+
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and "[type]" = "motorway")
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @motorway_width 
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 1
+                    LINECAP: BUTT
+                    COLOR: @motorway_clr
+				}
+            	STYLE{
+                    WIDTH: @motorway_width 
+                    COLOR: @motorway_clr
+				}            
+				LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @motorway_lbl_priority
+ 						SIZE: @motorway_lbl_size
+                        COLOR: @motorway_lbl_clr
+                        OUTLINECOLOR: @motorway_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and "[type]" = "trunk_link")
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @trunk_links_width
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.4
+                    LINECAP: BUTT
+                    COLOR: @trunk_links_clr
+				}
+           	    STYLE {
+					WIDTH: @trunk_links_width
+                    COLOR: @trunk_links_clr
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and "[type]" = "trunk")
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @trunk_width 
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.8
+                    LINECAP: BUTT
+                    COLOR: @trunk_clr
+				}
+                STYLE {
+					WIDTH: @trunk_width 
+                    COLOR: @trunk_clr
+				}
+                LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @trunk_lbl_size
+                        COLOR: @trunk_lbl_clr
+                        OUTLINECOLOR: @trunk_clr
+					}	
+                }
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and ("[type]" = "primary" or "[type]" = "primary_link"))
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @primary_width 
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.8
+                    LINECAP: BUTT
+                    COLOR: @primary_clr
+				}
+                STYLE {
+					WIDTH: @primary_width 
+                    COLOR: @primary_clr
+				}
+                LABEL {
+                       11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @primary_lbl_size
+                        COLOR: @primary_lbl_clr
+                        OUTLINECOLOR: @primary_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and ("[type]" = "secondary" or "[type]" = "secondary_link"))
+                STYLE{
+                }
+				STYLE {
+					WIDTH: @secondary_width
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.8
+                    LINECAP: BUTT
+                    COLOR: @secondary_clr
+				}
+                STYLE {
+					WIDTH: @secondary_width
+                    COLOR: @secondary_clr
+				}
+                LABEL {
+					13-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @secondary_lbl_size
+                        COLOR: @secondary_lbl_clr
+                        OUTLINECOLOR: @secondary_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and ("[type]" = "tertiary" or "[type]" = "tertiary_link"))
+                STYLE{
+                }
+            	STYLE{
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 0.8
+					WIDTH: @tertiary_width
+                    LINECAP: BUTT
+                    COLOR: @tertiary_clr 
+                }
+                STYLE{
+                    OUTLINECOLOR: 136 136 136
+                    COLOR: @tertiary_clr 
+                }
+                LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @tertiary_lbl_size
+                        COLOR: @tertiary_lbl_clr
+                        OUTLINECOLOR: @tertiary_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and ("[type]" = "unclassified" or "[type]" = "residential" or "[type]" = "service" or "[type]" = "road" or "[type]" = "living_street"))
+                STYLE{
+                }
+				STYLE {
+					WIDTH: @other_width
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 1
+                    LINECAP: BUTT
+                    COLOR: @other_clr
+			    }
+				STYLE {
+					WIDTH: @other_width
+                    COLOR: @other_clr
+				}
+            	LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @other_lbl_size
+                        COLOR: @other_lbl_clr
+                        OUTLINECOLOR: @other_clr
+                        FONT: 'ar'
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[bridge]"="1" and "[type]" = "pedestrian")
+                STYLE{
+                }
+                STYLE {
+					WIDTH: @pedestrian_width
+                    OUTLINECOLOR: 136 136 136
+                    OUTLINEWIDTH: 1
+                    LINECAP: BUTT
+                    COLOR: @pedestrian_clr
+				}
+                STYLE {
+					WIDTH: @pedestrian_width
+                    COLOR: @pedestrian_clr
+				}
+                LABEL {
+					16-20 {
+                    	@labelconfig_minorroads
+ 						SIZE: @pedestrian_lbl_size
+                    	COLOR: @pedestrian_lbl_clr
+                    	OUTLINECOLOR: @pedestrian_clr
+					}	
+				}
+			}
+		}
+      ##Tunnel
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[tunnel]"="1" and "[type]" = "motorway_link")
+                STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @motorway_ol_clr
+                    OFFSET{
+ 						1-15: 2 -99
+						16: 3.5 -99
+                        17-20: 4.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @motorway_ol_clr
+                    OFFSET{
+ 						1-15: -2 -99
+						16: -3.5 -99
+                        17-20: -4.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				} 
+                STYLE {
+					WIDTH: @motorway_links_width 
+                    COLOR: @motorway_links_clr
+ 					OPACITY: @tunnel_opacity
+				}
+			}
+		}
+    	CLASS {
+			13-20 {
+				EXPRESSION: ("[tunnel]"="1" and "[type]" = "motorway")
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @motorway_ol_clr
+                    OFFSET{
+                        1-14: 2 -99
+ 						15: 3 -99
+						16-20: 8 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @motorway_ol_clr
+                    OFFSET{
+                        1-14: -2 -99
+ 						15: -3 -99
+						16-20: -8 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}            
+				STYLE {
+					WIDTH: @motorway_width 
+                    COLOR: @motorway_clr
+                    OPACITY: 30
+				}
+                LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @motorway_lbl_priority
+ 						SIZE: @motorway_lbl_size
+                        COLOR: @motorway_lbl_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[tunnel]"="1" and "[type]" = "trunk_link")
+               STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @trunk_ol_clr
+                    OFFSET{
+ 						1-15: 2 -99
+						16: 3.5 -99
+                        17-20: 4.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @trunk_ol_clr
+                    OFFSET{
+ 						1-15: -2 -99
+						16: -3.5 -99
+                        17-20: -4.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				} 
+                STYLE {
+					WIDTH: @trunk_links_width
+                    COLOR: @trunk_links_clr
+                    OPACITY: @tunnel_opacity
+				}
+			}
+		}
+    	CLASS {
+			13-20 {
+				EXPRESSION: ("[tunnel]"="1" and "[type]" = "trunk")
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @trunk_ol_clr
+                    OFFSET{
+                        1-14: 2 -99
+ 						15: 2.5 -99
+						16-20: 7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @trunk_ol_clr
+                    OFFSET{
+                        1-14: -2 -99
+ 						15: -2.5 -99
+						16-20: -7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				} 
+                STYLE {
+					WIDTH: @trunk_width 
+                    COLOR: @trunk_clr
+                    OPACITY: @tunnel_opacity
+				}
+                LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @trunk_lbl_size
+                        COLOR: @trunk_lbl_clr
+					}	
+                }
+			}
+		}
+    	CLASS {
+			13-17 {
+				EXPRESSION: ("[tunnel]"="1" and ("[type]" = "primary" or "[type]" = "primary_link"))
+				STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @primary_ol_clr
+                    OFFSET{
+						1-14: 2 -99
+ 						15: 4 -99
+						16: 6 -99
+                        17-20: 7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @primary_ol_clr
+                    OFFSET{
+                        1-14: -2 -99
+ 						15: -4 -99
+						16: -6 -99
+                        17-20: -7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}  
+				STYLE {
+					WIDTH: @primary_width 
+                    COLOR: @primary_clr
+                    OPACITY: @tunnel_opacity
+				}
+                LABEL {
+                       11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @primary_lbl_size
+                        COLOR: @primary_lbl_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			13-20 {
+				EXPRESSION: ("[tunnel]"="1" and ("[type]" = "secondary" or "[type]" = "secondary_link"))
+				STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @secondary_ol_clr
+                    OFFSET{
+                        1-14: 2 -99                       
+ 						15: 3 -99
+						16: 5.5 -99
+                        17-20: 6.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH {
+						1-14: 0.2
+  						15-20: 0.5
+					}
+                    OUTLINECOLOR: @secondary_ol_clr
+                    OFFSET{
+                        1-14: -2 -99
+ 						15: -3 -99
+						16: -5.5 -99
+                        17-20: -6.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}  
+				STYLE {
+					WIDTH: @secondary_width
+                    COLOR: @secondary_clr
+                    OPACITY: @tunnel_opacity
+				}
+                LABEL {
+				   13-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @secondary_lbl_size
+                        COLOR: @secondary_lbl_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[tunnel]"="1" and ("[type]" = "tertiary" or "[type]" = "tertiary_link"))			
+				STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @tertiary_ol_clr
+                    OFFSET{
+ 						1-15: 4 -99
+						16: 6 -99
+                        17-20: 7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @tertiary_ol_clr
+                    OFFSET{
+ 						1-15: -4 -99
+						16: -6 -99
+                        17-20: -7 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}  
+				STYLE {
+					WIDTH: @tertiary_width
+                    COLOR: @tertiary_clr
+                    OPACITY: @tunnel_opacity
+				}
+                LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @tertiary_lbl_size
+                        COLOR: @tertiary_lbl_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+			15-20 {
+				EXPRESSION: ("[tunnel]"="1" and ("[type]" = "unclassified" or "[type]" = "residential" or "[type]" = "service" or "[type]" = "road" or "[type]" = "living_street"))
+				STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @other_ol_clr
+                    OFFSET{
+ 						1-15: 2.5 -99
+						16: 5 -99
+                        17-20: 5.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}
+                STYLE {
+					OUTLINEWIDTH: 0.5 
+                    OUTLINECOLOR: @other_ol_clr
+                    OFFSET{
+ 						1-15: -2.5 -99
+						16: -5 -99
+                        17-20: -5.5 -99
+                     }
+                	PATTERN {{
+						1 4
+                	}}
+				}  
+				STYLE {
+					WIDTH: @other_width
+                    COLOR: @other_clr
+                    OPACITY: @tunnel_opacity
+				}
+                LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @other_lbl_size
+                        COLOR: @other_lbl_clr
+					}	
+				}
+			}
+		}
+	##Roads + oneways
+    	CLASS {
+			10-20 {
+				EXPRESSION: "motorway_link"
+                STYLE {
+                    10-20 {
+                    	OUTLINEWIDTH: @motorway_ol_width
+                    	OUTLINECOLOR: @motorway_ol_clr
+                    }
+					WIDTH: @motorway_links_width                     
+                    COLOR: @motorway_links_clr 
+				}
+			}
+		}
+    	CLASS {
+            7-20 {
+				EXPRESSION: "motorway"
+            	TEXT: ("[name]")
+            	STYLE {
+            		9-20 {
+                   		OUTLINEWIDTH: @motorway_ol_width
+                    	OUTLINECOLOR: @motorway_ol_clr
+                        LINECAP: BUTT
+                	}
+					WIDTH: @motorway_width                     
+                	COLOR: @motorway_clr 
+				}
+            	LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @motorway_lbl_priority
+ 						SIZE: @motorway_lbl_size
+                        COLOR: @motorway_lbl_clr
+                        OUTLINECOLOR: @motorway_lbl_ol_clr
+					}	
+				}
+        	}
+		}
+    	CLASS {
+			10-20 {
+				EXPRESSION: "trunk_link"
+                STYLE {
+                    10-20 {
+                    	OUTLINEWIDTH: @trunk_ol_width
+                    	OUTLINECOLOR: @trunk_ol_clr
+                    }
+					WIDTH: @trunk_links_width                     
+                    COLOR: @trunk_links_clr 
+				}
+			}
+		}
+    	CLASS {
+            7-20 {
+				EXPRESSION {
+                    6: ("[type]" = "trunk")
+					7-20: ("[type]" = "trunk")
+            	}
+            	TEXT: ("[name]")
+            	STYLE {
+            		6-20 {
+                   		OUTLINEWIDTH: @trunk_ol_width
+                    	OUTLINECOLOR: @trunk_ol_clr
+                	}
+					WIDTH: @trunk_width                     
+                	COLOR: @trunk_clr 
+				}
+            	LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @trunk_lbl_size
+                        COLOR: @trunk_lbl_clr
+                        OUTLINECOLOR: @trunk_lbl_ol_clr
+					}	
+                }
+        	}
+		}
+     	CLASS {
+          9-20 {
+				EXPRESSION {
+                    7-8: ("[type]" = "primary")
+					9-20: /primary|primary_link/
+            	}
+				TEXT: ("[name]")
+            	STYLE {
+            		1-20 {
+                   		OUTLINEWIDTH: @primary_ol_width
+                    	OUTLINECOLOR: @primary_ol_clr
+                	}
+					WIDTH: @primary_width                     
+                	COLOR: @primary_clr 
+				}
+            	LABEL {
+                       11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @primary_lbl_size
+                        COLOR: @primary_lbl_clr
+                        OUTLINECOLOR: @primary_lbl_ol_clr
+					}	
+				}
+        	}
+		}
+        16-20 {
+			CLASS {
+				EXPRESSION: ("[oneway]" = "-1" and ("[type]" = "secondary"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @secondary_ol_width
+                    	OUTLINECOLOR: @secondary_ol_clr
+                    }
+					WIDTH: @secondary_width                     
+                    COLOR: @secondary_clr 
+				}
+				STYLE {
+					@oneway_from
+				}
+            	LABEL {
+					13-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @secondary_lbl_size
+                        COLOR: @secondary_lbl_clr
+                        OUTLINECOLOR: @secondary_clr
+					}	
+				}
+			}
+			CLASS {
+				EXPRESSION: ("[oneway]" = "1" and ("[type]" = "secondary"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @secondary_ol_width
+                    	OUTLINECOLOR: @secondary_ol_clr
+                    }
+					WIDTH: @secondary_width                     
+                    COLOR: @secondary_clr 
+				}
+				STYLE {
+					@oneway_to
+				}
+            	LABEL {
+					13-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @secondary_lbl_size
+                        COLOR: @secondary_lbl_clr
+                        OUTLINECOLOR: @secondary_clr
+					}	
+				}
+			}
+    	}
+        10-20 {
+			CLASS {
+				EXPRESSION: ("[type]" = "secondary" OR "[type]" = "secondary_link")
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @secondary_ol_width
+                    	OUTLINECOLOR: @secondary_ol_clr
+                    }
+					WIDTH: @secondary_width                     
+                    COLOR: @secondary_clr 
+				}
+            	LABEL {
+					11-20 {
+                        @labelconfig_mainroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @secondary_lbl_size
+                        COLOR: @secondary_lbl_clr
+                        OUTLINECOLOR: @secondary_clr
+					}	
+				}
+			}
+		}
+        16-20 {
+			CLASS {
+				EXPRESSION: ("[oneway]" = "-1" and ("[type]" = "tertiary"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @tertiary_ol_width
+                    	OUTLINECOLOR: @tertiary_ol_clr
+                    }
+					WIDTH: @tertiary_width                     
+                    COLOR: @tertiary_clr 
+				}
+				STYLE {
+					@oneway_from
+				}
+            	LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @tertiary_lbl_size
+                        COLOR: @tertiary_lbl_clr
+                        OUTLINECOLOR: @tertiary_clr
+					}	
+				}
+			}
+			CLASS {
+				EXPRESSION: ("[oneway]" = "1" and ("[type]" = "tertiary"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @tertiary_ol_width
+                    	OUTLINECOLOR: @tertiary_ol_clr
+                    }
+					WIDTH: @tertiary_width                     
+                    COLOR: @tertiary_clr 
+				}
+				STYLE {
+					@oneway_to
+				}
+            	LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @tertiary_lbl_size
+                        COLOR: @tertiary_lbl_clr
+                        OUTLINECOLOR: @tertiary_clr
+					}	
+				}
+			}
+        }
+        10-20 {
+			CLASS {
+				EXPRESSION: ("[type]" = "tertiary" OR "[type]" = "tertiary_link")
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @tertiary_ol_width
+                    	OUTLINECOLOR: @tertiary_ol_clr
+                    }
+					WIDTH: @tertiary_width                     
+                    COLOR: @tertiary_clr 
+				}
+            	LABEL {
+					14-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @tertiary_lbl_size
+                        COLOR: @tertiary_lbl_clr
+                        OUTLINECOLOR: @tertiary_clr
+					}	
+				}
+			}
+		}
+        16-20 {
+			CLASS {
+				EXPRESSION: ("[oneway]" = "-1" and ("[type]" = "unclassified" or "[type]" = "residential" or "[type]" = "service" or "[type]" = "road" or "[type]" = "living_street"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @other_ol_width
+                    	OUTLINECOLOR: @other_ol_clr
+                    }
+					WIDTH: @other_width                     
+                    COLOR: @other_clr 
+				}
+				STYLE {
+					@oneway_from
+				}
+            	LABEL {
+					16-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @other_lbl_size
+                        COLOR: @other_lbl_clr
+                        OUTLINECOLOR: @other_clr
+					}	
+				}
+			}
+			CLASS {
+				EXPRESSION: ("[oneway]" = "1" and ("[type]" = "unclassified" or "[type]" = "residential" or "[type]" = "service" or "[type]" = "road" or "[type]" = "living_street"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @other_ol_width
+                    	OUTLINECOLOR: @other_ol_clr
+                    }
+					WIDTH: @other_width                     
+                    COLOR: @other_clr 
+				}
+				STYLE {
+					@oneway_to
+				}
+            	LABEL {
+					15-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @other_lbl_size
+                        COLOR: @other_lbl_clr
+                        OUTLINECOLOR: @other_clr
+					}	
+				}
+			}
+        }
+        11-20 {
+			CLASS {
+				EXPRESSION: (("[type]" = "unclassified" or "[type]" = "residential" or "[type]" = "service" or "[type]" = "road" or "[type]" = "living_street"))
+                TEXT: ("[name]")
+                STYLE {
+                    1-20 {
+                    	OUTLINEWIDTH: @other_ol_width
+                    	OUTLINECOLOR: @other_ol_clr
+                    }
+					WIDTH: @other_width                     
+                    COLOR: @other_clr 
+				}
+            	LABEL {
+					15-20 {
+                        @labelconfig_minorroads
+                        PRIORITY: @roads_lbl_priority
+ 						SIZE: @other_lbl_size
+                        COLOR: @other_lbl_clr
+                        OUTLINECOLOR: @other_clr
+					}	
+				}
+			}
+		}
+    	CLASS {
+            13-20 {
+				EXPRESSION: ("[type]" = 'track')
+            	TEXT: ("[name]")
+            	STYLE {
+            		1-20 {
+                   		OUTLINEWIDTH: @track_ol_width
+                    	OUTLINECOLOR: @track_ol_clr
+                	}
+                	PATTERN {
+						1-15 {{
+							2 2
+                        }}
+                    	16-20 {{
+							2 3
+						}}
+					}
+					WIDTH: @track_width                     
+                	COLOR: @track_clr 
+				}
+           		LABEL {
+					16-20 {
+                    	@labelconfig_minorroads
+ 						SIZE: @track_lbl_size
+                    	COLOR: @track_lbl_clr
+                    	OUTLINECOLOR: @track_clr
+						FONT: 'ar'
+					}	
+				}
+        	}
+		}
+    	CLASS {
+            13-20 {
+				EXPRESSION: 'footway'
+            	STYLE {
+					WIDTH {
+						1-13: 0.5
+                    	  14: 0.7
+                       15-20: 1
+                    }
+                	COLOR: 200 200 200
+				}
+        	}
+		}
+    	CLASS {
+            13-20 {
+				EXPRESSION: ("[type]" = 'pedestrian')
+            	TEXT: ("[name]")
+            	STYLE {
+            		1-20 {
+                   		OUTLINEWIDTH: @pedestrian_ol_width
+                    	OUTLINECOLOR: @pedestrian_ol_clr
+                	}
+					WIDTH: @pedestrian_width                     
+                	COLOR: @pedestrian_clr 
+				}
+            	LABEL {
+					16-20 {
+                    	@labelconfig_minorroads
+ 						SIZE: @pedestrian_lbl_size
+                    	COLOR: @pedestrian_lbl_clr
+                    	OUTLINECOLOR: @pedestrian_clr
+					}	
+				}
+        	}
+		}
+        CLASS {
+            11-20 {
+                EXPRESSION: ("[type]" = 'ferry')
+            	TEXT: ("[name]")
+            	STYLE {
+					WIDTH { 
+                    	1-13: 0.6
+                        14-20: 0.8
+                    }
+                	COLOR: 180 180 180
+                    PATTERN {{
+						6 3
+					}}
+				}
+            	LABEL {
+					11-20 {
+                    	@labelconfig_waterways
+                        COLOR: 180 180 180
+                        OUTLINECOLOR: '#E5E5E5'
+					}	
+				}
+        	}
+		}
+    }
+  }
+
+##Shields
+
+LAYER {
+ 	7-20 {
+     	NAME: 'shields'
+        TYPE: ANNOTATION
+        @connection
+        @layerconfig
+         DATA {
+        	1-7: "geometry from (select osm_id,geometry,name, ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads_gen0 where type = 'motorway' order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857" 
+		    8-20: "geometry from (select osm_id,geometry,name, ref,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[1] as shield_class,(regexp_matches(ref, '([a-z,A-Z]+)? ?([0-9]+)[^;]*', 'g'))[2] as shield_no,type,tunnel,bridge from osm_roads where type in ('motorway', 'trunk', 'primary') order by z_order asc, st_length(geometry) asc) as foo using unique osm_id using srid=3857"
+		}
+        FILTER: (length('[shield_no]') != 0)
+        LABELITEM: 'shield_no'
+        CLASSITEM: 'shield_class'
+        
+        CLASS{
+            EXPRESSION: "I"
+            
+            LABEL{
+                @labelconfig_shields
+                COLOR: @interstate_shield_lbl_clr
+                SIZE: @interstate_shield_lbl_size
+                STYLE{
+                    SYMBOL: @interstate_shield_symbol
+                    SIZE: @interstate_shield_size
+                }
+        	}
+    
+        }
+        
+        8-20 {
+            CLASS{
+                EXPRESSION: "US"
+                    
+                LABEL{
+                    @labelconfig_shields
+                    COLOR: @ushwy_shield_lbl_clr
+                    SIZE: @ushwy_shield_lbl_size
+                    STYLE{
+                        SYMBOL: @ushwy_shield_symbol
+                        SIZE: @ushwy_shield_size
+                    }
+                }
+            }
+        }
+        
+        13-20 {
+            CLASS{
+                EXPRESSION: "SR"
+                
+                LABEL{
+                    @labelconfig_shields
+                    COLOR: @secondary_shield_lbl_clr
+                    SIZE: @secondary_shield_lbl_size
+                    STYLE{
+                        SYMBOL: @secondary_shield_symbol
+                        SIZE: @secondary_shield_size
+                    }
+                }
+            }
+        }
+    
+	}
+}
+
+
+##Aeroways
+LAYER {
+	11-20 {
+        NAME: 'aeroways'
+        TYPE: LINE
+        @connection
+        @layerconfig
+        DATA: 'geometry from (select geometry, osm_id, type from osm_aeroways) as foo using unique osm_id using srid=3857'
+		CLASSITEM: 'type'
+        CLASS {
+			EXPRESSION: 'runway'
+            STYLE {
+				COLOR: 180 180 180
+                WIDTH {
+					1-11: 1
+                    12: 2
+                    13: 4
+                    14: 9
+                    15: 15
+                    16: 30
+                    17-20: 40
+				}
+            	LINECAP: BUTT
+                LINEJOIN: MITER
+			}
+        	STYLE {
+                COLOR: 80 80 80
+               	WIDTH {
+					1-15: 0
+                    16-20: 1
+				}
+				PATTERN {{
+					2 2
+				}}
+            	LINECAP: BUTT
+			}
+        	
+		}
+    	CLASS {
+			EXPRESSION: 'taxiway'
+            STYLE {
+				COLOR: 180 180 180
+                WIDTH {
+					1-10: 0
+                    11-12: 0.5
+                    13: 1
+                    14: 2
+                    15: 4
+                    16: 8
+                    17-20: 12
+				}
+			}
+		}
+	}
+}
+
+7-20{
+    LAYER {
+            NAME: 'public_transport'
+            TYPE: ANNOTATION
+            @layerconfig
+            @connection
+            DATA {
+                1-15: "geometry from (select ref, geometry, osm_id, type, name from osm_transport_points where type in ('aerodrome', 'station', 'motorway_junction')) as foo using unique osm_id using srid=3857"
+                16-20: "geometry from (select ref, geometry, osm_id, type, name from osm_transport_points where type in ('bus_stop', 'station', 'motorway_junction', 'subway_entrance', 'terminal', 'tram_stop', 'aerodrome', 'helipad')) as foo using unique osm_id using srid=3857"
+            }
+            LABELITEM: 'name'
+            CLASSITEM: 'type'
+            
+            CLASS {
+                EXPRESSION: 'bus_stop'
+                TEXT: ' '
+                LABEL {
+                    @labelconfig_public_transport
+                    STYLE {
+                        COLOR: 255 255 255
+                        OUTLINECOLOR: 0 111 239
+                        WIDTH: 0.5
+                        SIZE: @public_transport_symbol_size
+                        SYMBOL: @public_transport_symbol
+                    }
+                    STYLE {
+                        COLOR: 0 111 239
+                        SIZE: @public_transport_lbl_size
+                        SYMBOL: 'bussymbol'
+                    }
+                }
+            }
+            
+            CLASS {
+                EXPRESSION: 'subway_entrance'
+                TEXT: ' '
+                LABEL {
+                    @labelconfig_public_transport
+                    STYLE {
+                        COLOR: 0 111 239
+                        OUTLINECOLOR: 255 255 255
+                        WIDTH: 0.5
+                        SIZE: @public_transport_symbol_size
+                        SYMBOL: @public_transport_symbol
+                    }
+                    STYLE {
+                        COLOR: 255 255 255
+                        SIZE: @public_transport_lbl_size
+                        SYMBOL: 'metrosymbol'
+                    }
+                }
+            }
+           
+            CLASS {
+                EXPRESSION: 'tram_stop'
+                TEXT: ' '
+                LABEL {
+                    @labelconfig_public_transport
+                    STYLE {
+                        COLOR: 0 111 239
+                        OUTLINECOLOR: 255 255 255
+                        WIDTH: 0.5
+                        SIZE: @public_transport_symbol_size
+                        SYMBOL: @public_transport_symbol
+                    }
+                    STYLE {
+                        COLOR: 255 255 255
+                        SIZE: @public_transport_lbl_size
+                        SYMBOL: 'tramwaysymbol'
+                    }
+                }
+            }
+           
+            CLASS {
+                EXPRESSION: ('[type]' = 'station')
+                1-14 {
+                    TEXT: ' '
+                }
+                LABEL {
+                    @labelconfig_landusage
+                    COLOR: '#3B5C79'
+                    POSITION: UC
+                    PRIORITY: 10
+                    STYLE {
+                        COLOR: 255 255 255
+                        OUTLINECOLOR: 0 111 239
+                        WIDTH: 0.5
+                        SIZE: @public_transport_symbol_size
+                        SYMBOL: @public_transport_symbol
+                    }
+                    STYLE {
+                        COLOR: 0 111 239
+                        SIZE: @public_transport_lbl_size
+                        SYMBOL: 'stationsymbol'
+                    }
+                }
+            }
+            
+            CLASS {
+                EXPRESSION: ('[type]'='aerodrome' AND length('[name]') = 0)
+                LABEL {
+                    10-20 {
+                        @labelconfig_landusage
+                        COLOR: '#3F3931'
+                        PRIORITY: 3
+                        BUFFER: 5
+                        POSITION: LC
+                        OFFSET: @transport_offset
+                        STYLE {
+                            GEOMTRANSFORM: 'labelpnt'
+                            OFFSET: @transport_offset
+                            SYMBOL: 'aeroport'
+                            COLOR: '#3F3931'
+                            SIZE: 20
+                        }
+                    }
+                }
+            }
+            
+            CLASS {
+                EXPRESSION: 'helipad'
+                TEXT: 'H'
+                LABEL {
+                    1-20 {
+                        @labelconfig
+                        FONT: 'sc'
+                        COLOR: 0 111 239
+                        PRIORITY: 10
+                        POSITION: CC
+                        SIZE: 8
+                        STYLE {
+                            GEOMTRANSFORM: 'labelpnt'
+                            SYMBOL: 'transportsquare'
+                            SIZE {
+                                1-16: 13
+                                17-20: 15
+                            }
+                            COLOR: @transport_clr
+                        }
+                    }
+                }
+            }
+            
+        }
+}
+            
+            

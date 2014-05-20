@@ -1,0 +1,274 @@
+SYMBOL
+    name "circle"
+    TYPE ellipse
+    points 1 1 end
+    filled true
+END
+
+SYMBOL
+	NAME "oneway"
+	TYPE truetype
+	FONT scb
+	CHARACTER "→"
+END
+
+##Places
+SYMBOL
+	NAME "transportsquare"
+    TYPE vector
+  	POINTS 
+  	 	0 0
+	 	0 1
+	 	1 1
+	 	1 0
+	 	0 0
+  	END
+  	FILLED true
+END
+
+SYMBOL
+    NAME "citycircle"
+    TYPE ellipse
+    POINTS 1 1 END
+    FILLED TRUE
+END
+
+##Landusage - Buildings
+
+SYMBOL
+	NAME "supermarket"
+	TYPE svg
+	IMAGE "../symbols/supermarket.svg"
+END
+    
+SYMBOL
+	NAME "hospital"
+	TYPE svg
+	IMAGE "../symbols/hospital.svg"
+END
+
+SYMBOL
+	NAME "mall"
+	TYPE svg
+	IMAGE "../symbols/mall.svg"
+END
+
+SYMBOL
+	NAME "pharmacy"
+	TYPE svg
+	IMAGE "../symbols/pharmacy.svg"
+END
+
+SYMBOL
+	NAME "fastfood"
+	TYPE svg
+	IMAGE "../symbols/fastfood.svg"
+END
+
+SYMBOL
+	NAME "restaurant"
+	TYPE svg
+	IMAGE "../symbols/food.svg"
+END
+
+SYMBOL
+	NAME "pub"
+	TYPE svg
+	IMAGE "../symbols/pub.svg"
+END
+
+
+SYMBOL
+	NAME "bar"
+	TYPE svg
+	IMAGE "../symbols/bar.svg"
+END
+
+SYMBOL
+	NAME "cafe"
+	TYPE svg
+	IMAGE "../symbols/cafe.svg"
+END
+
+SYMBOL
+	NAME "fuel"
+	TYPE svg
+	IMAGE "../symbols/gas.svg"
+END
+
+SYMBOL
+	NAME "bank"
+	TYPE svg
+	IMAGE "../symbols/bank.svg"
+END
+
+SYMBOL
+	NAME "hotel"
+	TYPE svg
+	IMAGE "../symbols/hotel.svg"
+END
+
+SYMBOL
+	NAME "golf"
+	TYPE svg
+	IMAGE "../symbols/golf.svg"
+END
+
+SYMBOL
+	NAME "university"
+	TYPE svg
+	IMAGE "../symbols/university.svg"
+END
+
+SYMBOL
+	NAME "school"
+	TYPE svg
+	IMAGE "../symbols/school.svg"
+END
+    
+SYMBOL
+	NAME "plane"
+	TYPE svg
+	IMAGE "../symbols/transport_airport.svg"
+END
+    
+## Landusage
+SYMBOL
+   NAME "park"
+   TYPE TRUETYPE
+   FILLED true
+   FONT "icon"
+   ANTIALIAS false
+   CHARACTER "&#61836;"
+END 
+
+SYMBOL
+   NAME "aeroport"
+   TYPE TRUETYPE
+   FILLED true
+   FONT "icon"
+   ANTIALIAS false
+   CHARACTER "&#61554;"
+END     
+    
+## transport    
+
+SYMBOL
+  	NAME "bussymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER 'B'
+END
+
+SYMBOL
+  	NAME "metrosymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER 'M'
+END
+
+SYMBOL
+  	NAME "tramwaysymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER 'T'
+END
+
+    
+SYMBOL
+  	NAME "stationsymbol"
+  	TYPE truetype
+  	FONT sc
+  	CHARACTER 'S'
+END
+    
+SYMBOL
+	NAME "us-secondary-shield"
+    TYPE vector
+  	POINTS 
+  	    -0.3  -0.5
+	 	 0.3  -0.5 
+         0.60 -0.40
+         0.75 -0.10
+         0.75  0.10
+         0.60  0.40
+	 	 0.3   0.5 
+        -0.3   0.5 
+        -0.60  0.40
+        -0.75  0.10
+        -0.75 -0.10
+        -0.60 -0.40
+        -0.3  -0.5 
+  	END
+  	FILLED true
+END
+
+SYMBOL
+	NAME "us-secondary-shield-wide"
+    TYPE vector
+  	POINTS 
+  	    -0.5  -0.5
+	 	 0.5  -0.5 
+         0.80 -0.40
+         0.95 -0.10
+         0.95  0.10
+         0.80  0.40
+	 	 0.5   0.5 
+        -0.5   0.5 
+        -0.80  0.40
+        -0.95  0.10
+        -0.95 -0.10
+        -0.80 -0.40
+        -0.5  -0.5 
+  	END
+  	FILLED true
+END
+
+SYMBOL
+	NAME "us-secondary-shield-xwide"
+    TYPE vector
+  	POINTS 
+  	    -0.8  -0.5
+	 	 0.8  -0.5 
+         1.1 -0.40
+         1.25 -0.10
+         1.25  0.10
+         1.1  0.40
+	 	 0.8   0.5 
+        -0.8   0.5 
+        -1.1  0.40
+        -1.25  0.10
+        -1.25 -0.10
+        -1.1 -0.40
+        -0.8  -0.5 
+  	END
+  	FILLED true
+END
+
+SYMBOL
+	NAME "can-shield"
+    TYPE vector
+  	POINTS 
+  	 	0 -0.2
+	 	0 0.8
+        0.6 1
+	 	1.2 0.8
+	 	1.2 -0.2
+	 	0 -0.2
+  	END
+  	FILLED true
+END
+
+SYMBOL
+	NAME "can-shield-wide"
+    TYPE vector
+  	POINTS 
+  	 	0 -0.2
+	 	0 0.8
+        0.8 1
+	 	1.6 0.8
+	 	1.6 -0.2
+	 	0 -0.2
+  	END
+  	FILLED true
+END    

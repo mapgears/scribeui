@@ -1,0 +1,404 @@
+LAYER {
+        NAME: 'landusage'
+        TYPE: POLYGON
+        @layerconfig
+        @connection
+		DATA {
+			1-3: "geometry from (select geometry ,osm_id, type, name  from osm_landusages_gen0 where type in ('forest', 'residential') order by area desc) as foo using unique osm_id using srid=3857"
+            4-9: "geometry from (select geometry ,osm_id, type, name from osm_landusages_gen1 where type in ('forest', 'industrial','commercial','residential','park', 'nature_reserve')  order by area desc) as foo using unique osm_id using srid=3857"
+			10-20: "geometry from (select geometry ,osm_id, type, name from osm_landusages where type in ('forest', 'wood', 'pedestrian','cemetery','industrial','commercial','residential','park','golf_course','parking','stadium','sports_center','pitch', 'nature_reserve', 'apron', 'helipad', 'aerodrome', 'university', 'school', 'college', 'hospital', 'meadow', 'playground','recreation_ground','village_green') order by area desc) as foo using unique osm_id using srid=3857"
+		}
+    
+    	CLASSITEM: 'type'
+        LABELITEM: 'name'
+            
+       
+        CLASS {
+            EXPRESSION: ('[type]' = 'forest' AND length('[name]') = 0 )
+            STYLE {
+            	COLOR: @greenland_clr
+            }
+        }
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'forest' AND length('[name]') > 0 )
+            STYLE {
+            	COLOR: @greenland_clr               
+            }
+        	LABEL {
+                8-20 {
+					@labelconfig_park_golf_nature                    
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: 'park'
+                        COLOR: @dark_green_lbl
+                        SIZE: 10
+					}
+                }
+			}     
+        }
+    
+    
+        CLASS {
+            EXPRESSION: /wood|forest/
+            STYLE {
+            	COLOR: @greenland_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @dark_green_lbl
+                	PRIORITY: 1
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: 'residential'
+            STYLE {
+            	COLOR: @residential_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @residential_clr_lbl
+                	PRIORITY: 1
+                }
+			}
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: 'pedestrian'
+            STYLE {
+                1-20 {
+					OUTLINEWIDTH: @pedestrian_ol_width
+                    OUTLINECOLOR: @pedestrian_ol_clr
+
+				}
+            	COLOR: @pedestrian_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @pedestrian_clr_lbl
+                	PRIORITY: 1
+                }
+			}
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: 'industrial'
+            STYLE {
+            	COLOR: @industrial_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @industrial_clr_lbl
+                	PRIORITY: 2
+                }
+			}
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: 'commercial'
+            STYLE {
+            	COLOR: @commercial_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @commercial_clr_lbl
+                	PRIORITY: 2
+                }
+			}
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: 'cemetery'
+            STYLE {
+            	COLOR: @cemetery_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: @cemetery_clr_lbl
+                	PRIORITY: 2
+                }
+			}
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'park' AND length('[name]') = 0)
+            STYLE {
+            	COLOR:  @greenland_clr
+            }
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'park' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @greenland_clr
+            }
+        	LABEL {
+                6-20 {
+					@labelconfig_park_golf_nature                    
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: 'park'
+                        COLOR: @dark_green_lbl
+                        SIZE: 10
+					}
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'golf_course' AND length('[name]') = 0)
+            STYLE {
+            	COLOR: @golf_course_clr
+            }
+        }
+    
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'golf_course' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @golf_course_clr 
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_park_golf_nature    	
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        OFFSET: @park_golf_nature_offset
+                        SYMBOL: 'golf'
+                        SIZE: 16
+					}
+                }
+			}
+        }
+  
+    
+    	CLASS {
+            EXPRESSION: ('[type]' = 'nature_reserve' AND length('[name]') = 0)
+            STYLE {
+            	COLOR: @nature_reserve_clr
+                OPACITY: 40
+            }
+        }
+    
+    	
+    	CLASS {
+            EXPRESSION: ('[type]' = 'nature_reserve' AND length('[name]') > 0)
+            STYLE {
+            	COLOR: @nature_reserve_clr
+                OPACITY: 40
+            }
+        	LABEL {
+                6-20 {
+					@labelconfig_park_golf_nature                    
+                }
+			}
+        }
+       
+    
+    	CLASS {
+            EXPRESSION: 'hospital'
+            STYLE {
+            	COLOR: @hospital_clr
+            }
+        	LABEL {
+                15-20 {
+                    EXPRESSION: (length('[name]') > 0) 
+					@labelconfig_buildings
+                    POSITION: LC
+                	COLOR: '#564A3D'
+                	PRIORITY: 3
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        SYMBOL: 'hospital'
+                        SIZE: 18
+					}
+                }
+			}
+        }
+    
+        CLASS {
+            EXPRESSION: /university/
+            STYLE {
+            	COLOR: @university_clr
+            }
+        	LABEL {
+                14-20 {
+                    EXPRESSION: (length('[name]') > 0)
+					@labelconfig_buildings
+                    POSITION: LC
+                	COLOR: '#564A3D'
+                	PRIORITY: 3
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        SYMBOL: 'university'
+                        SIZE: 18
+					}
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: /college/
+            STYLE {
+            	COLOR: @college_clr
+            }
+        	LABEL {
+                15-20 {
+                    EXPRESSION: (length('[name]') > 0)
+					@labelconfig_buildings
+                    POSITION: LC
+                	COLOR: '#564A3D'
+                	PRIORITY: 3
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        SYMBOL: 'university'
+                        SIZE: 18
+					}
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: /school/
+            STYLE {
+            	COLOR: @school_clr
+            }
+        	LABEL {
+                15-20 {
+                    EXPRESSION: (length('[name]') > 0)
+					@labelconfig_buildings
+                    POSITION: LC
+                	COLOR: '#564A3D'
+                	PRIORITY: 3
+                    STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                        SYMBOL: 'school'
+                        SIZE: 18
+					}
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: /sports_center|stadium|pitch/
+            STYLE {
+            	COLOR: @sports_clr
+            }
+        	LABEL {
+                13-20 {
+					@labelconfig_landusage
+                	COLOR: '#564A3D'
+                	PRIORITY: 1
+                }
+			}
+        }
+    
+    	CLASS {
+            EXPRESSION: 'parking'
+            STYLE {
+            	COLOR: @parking_clr
+            }
+        	TEXT: 'P'
+        	LABEL {
+                15-20 {
+                    MINFEATURESIZE {
+                        15: 40
+                        16: 60
+						17-20: AUTO
+					} 
+                    BUFFER: 5
+					FONT: 'scb'
+                    TYPE: TRUETYPE
+                    SIZE: 9
+                    COLOR: '#675747'
+                    OUTLINECOLOR: 255 255 255
+                    OUTLINEWIDTH: 1
+                    PARTIALS: FALSE
+                	PRIORITY: 1
+                    POSITION: CC
+                }
+			}
+        }
+    
+        CLASS {
+			EXPRESSION: 'aerodrome'
+            STYLE {
+				COLOR: @transport_clr
+			}
+        	LABEL {
+                10-20 {
+                    EXPRESSION: (length('[name]') |= 0)
+					@labelconfig_landusage
+					COLOR: '#3F3931'
+                	PRIORITY: 10
+                	POSITION: LC
+                	OFFSET: @transport_offset
+                	STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                    	OFFSET: @transport_offset
+                    	SYMBOL: 'aeroport'
+                        COLOR: '#3F3931'
+                    	SIZE: 20
+					}
+                }
+			}
+		}
+    
+       CLASS {
+			EXPRESSION: 'apron'
+            STYLE {
+				COLOR: @transport_clr
+            }
+		}
+    
+    	CLASS {
+			EXPRESSION: 'helipad'
+            STYLE {
+				COLOR: @transport_clr
+			}
+        	TEXT: 'H'
+        	LABEL {
+                16-20 {
+					@labelconfig
+                    FONT: 'sc'
+					COLOR: 0 111 239
+                	PRIORITY: 10
+                	POSITION: CC
+                	SIZE: 8
+                	STYLE {
+						GEOMTRANSFORM: 'labelpnt'
+                    	SYMBOL: 'transportsquare'
+                    	SIZE {
+							1-16: 13
+                        	17-20: 15
+						}
+                		COLOR: @transport_clr
+					}
+                }
+			}
+		}
+        ##Catch-all class for developpement only
+        /*
+    	CLASS {
+			STYLE {
+				COLOR: 255 0 0
+			}
+		}*/
+    	
+}

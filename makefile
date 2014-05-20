@@ -52,7 +52,15 @@ load-demo-data:
 
 	test -d ./application/data/naturalEarth/50m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/50m_cultural.zip && unzip -o 50m_cultural.zip -d ./application/data/naturalEarth/50m_cultural/ && rm 50m_cultural.zip)
 
-	test -d ./application/naturalEarth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/50m_physical.zip && unzip -o 50m_physical.zip -d ./application/data/naturalEarth/50m_physical/ && rm 50m_physical.zip)
+	test -d ./application/data/naturalEarth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/50m_physical.zip && unzip -o 50m_physical.zip -d ./application/data/naturalEarth/50m_physical/ && rm 50m_physical.zip)
+
+	mkdir -p ./application/data/osm-data
+
+	test -f ./application/data/osm-data/processed_p.shp || (wget -c http://tile.openstreetmap.org/processed_p.tar.bz2 && tar -C ./application/data/osm-data/ -xjf processed_p.tar.bz2  && rm processed_p.tar.bz2)
+
+	test -f ./application/data/osm-data/shoreline_300.shp || (wget -c http://tile.openstreetmap.org/shoreline_300.tar.bz2 && tar -C ./application/data/osm-data/ -xjf shoreline_300.tar.bz2  && rm shoreline_300.tar.bz2)
+
+	test -f ./application/data/osm-data/TM_WORLD_BORDERS-0.3.shp || (wget -c http://thematicmapping.org/downloads/TM_WORLD_BORDERS-0.3.zip && unzip -o TM_WORLD_BORDERS-0.3.zip -d ./application/data/osm-data/ && rm TM_WORLD_BORDERS-0.3.zip)
 
 load-basescribe-data:
 	mkdir -p ./application/data/naturalEarth
