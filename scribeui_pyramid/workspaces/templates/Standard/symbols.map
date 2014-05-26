@@ -1,6 +1,0 @@
-SYMBOL
-    name "circle"
-    TYPE ellipse
-    points 1 1 end
-    filled true
-END
