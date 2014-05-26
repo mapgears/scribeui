@@ -1,0 +1,20 @@
+LAYER
+	NAME 'wms'
+    GROUP 'default'
+    TYPE RASTER
+    TEMPLATE 'blank.html'
+    
+    CONNECTIONTYPE WMS
+    CONNECTION "url_to_my_wms"
+    METADATA
+      "wms_srs" "EPSG:4326"
+      "wms_name" "layer_name_in_my_wms"
+      "wms_server_version" "1.1.1"
+      "wms_format" "image/png"
+      "wms_include_items" "all"
+    END
+   
+    PROJECTION
+    	'init=epsg:4326'
+    END
+END

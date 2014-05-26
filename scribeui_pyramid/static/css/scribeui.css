@@ -9,7 +9,7 @@ html, body {
     overflow-x: hidden;
     overflow-y: hidden;
 
-    background-color: #efefef;
+    background-color: white;
 
     font-family: Helvetica,Arial,sans-serif !important;
 }
@@ -27,9 +27,10 @@ select {
     padding: 1px 0px 0px 1px;
     width:200px;
 }
-input {
+input[type="text"],
+input[type="password"] {
     border-radius: 4px;
-	width:200px;
+    width:200px;
 }
 label {
     font-size: 1.2em;
@@ -53,10 +54,6 @@ button {
     margin-top: -1px;
     box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-pre {
-    font-family: courier !important;
-}
-
 .main {
     height: 100%;
     width: 100%;
@@ -65,7 +62,7 @@ pre {
 .navbar {
     position: relative;
 
-    border-bottom: 2px solid rgba(82, 168, 236, 0.8);
+    border-bottom: 1px solid #1c8d61;
     margin-top: 0px;
 
     width: 100%;
@@ -82,18 +79,53 @@ pre {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #212121;
     line-height: 1;
- 
-    padding-top: 8px;    
+    display: inline-block;
+    position: absolute;
+    top: 6px;
+    left: 30px;
+    width: 80px;
 }
 .faded{
 	color:#a9a9a9;
 	font-size:0.9em;
 }
 
-.title-left {
-    position: relative;
+.navbar .logo {
     float: left;
-    padding-left: 20px;
+}
+
+.navbar #map-name {
+    float:right;
+    text-align: center;
+    padding: 7px;
+}
+
+.navbar #logout {
+    float:right;
+    height: 30px;
+    min-width: 120px;
+}
+
+.navbar #logout button{
+    border-top-width: 0px !important;
+    border-bottom-width: 0px !important;
+    border-right-width: 0px !important;
+    border-radius: 0px !important;
+    border-color: #1C8D61 !important;
+    height: 30px;
+    width: 100%;
+    font-size: 14px !important;
+}
+
+.ui-menu { 
+    position: absolute; 
+    width: 100px;
+    font-size: 14px; 
+}
+
+.title-left {
+    position: absolute;
+    left: 10px;
 }
 
 .title-right {
@@ -155,11 +187,6 @@ pre {
 .elfinder-navbar {
    height: 100% !important;
 }
-
-.elfinder-cwd-wrapper {
-   height: 100% !important;
-}
-
 .elfinder-statusbar {
     border-radius: 0px !important;
 }
@@ -167,7 +194,7 @@ pre {
 .elfinder-workzone{
 	font-size:1.2em;
 }
-.file-manager {
+#data-tab .file-manager {
     position: absolute !important;
     left: 0 !important;
     right: 0 !important;
@@ -467,7 +494,7 @@ pre {
 	margin-bottom:0;
     margin-right: 0;
 }
-.ui-icon {
+#log-notification .ui-icon {
     margin-top: -9px !important;
 }
 /*=== Codemirror ===*/
@@ -476,8 +503,14 @@ pre {
     src: url('fonts/Menlo-Regular.ttf') format("truetype");
 }
 .CodeMirror {
+	font-size: 1.1em;
 	height:100%;
     font-family: Menlo-Regular, sans-serif !important;
+}
+.CodeMirror pre {
+    /*font-size: 1.1em !important;
+    font-family: Menlo-Regular, sans-serif !important;
+    height: 15px;*/
 }
 .cm-variable {
     color: blue !important;
@@ -487,14 +520,13 @@ pre {
 	height:auto;
 }
 
-
 /*=== Data ===*/
 .datacontent {
     padding: 0em !important;
     overflow-y: auto !important;
     
     position: absolute !important;
-    top: 43px !important;
+    top: 38px !important;
     bottom: 0 !important;
     right: -1px !important;
     left: 0 !important;
@@ -521,6 +553,8 @@ pre {
     background-color: white;
     border-width: 0px !important;
     margin: 0px;
+    overflow: auto;
+    padding: 10px;
 }
 #logs-close-button{
 	float:right;
@@ -588,28 +622,13 @@ pre {
     /*margin-left: 5px;*/
     width: 200px;
 }
-/*
-#group-edition-select{
-    width: 200px;
-}
-*/
 .group-table{
     width: 240px;
 }
 #variables-button{
 	float:right;
 }
-/*
-.workspace-select{
-    margin: 10px;
-    width: 205px;
-}
 
-.workspace-input{
-    margin: 10px;
-    width: 200px;
-}
-*/
 .workspace-button {
     width: 150px;
     float: right;
@@ -631,12 +650,7 @@ pre {
     border-top-right-radius: 0px !important;
     border-top-left-radius: 0px !important; 
 }
-/*
-.button-commit {
-    position: relative;
-    left: 48%;
-}
-*/
+
 .newmap-description{
     height: 160px;
     width: 300px;
@@ -696,19 +710,21 @@ div.olControlZoom a {
     left: 20px;
     margin-right:16px;
 }
-#group-ol .ui-selecting { 
-	color:#007BD1;
+#groups-ol .ui-selecting { 
+	/*color:#007BD1;*/
+    color: #1C8D61;
 }
-#group-ol .ui-selected { 
+#groups-ol .ui-selected { 
 	background-color:#fff;
-	color:#007BD1;
+	/*color:#007BD1;*/
+    color: #1C8D61;
 }
-#group-ol { 
+#groups-ol { 
 	list-style-type: none; 
 	margin: 0; 
 	padding: 0;
 }
-#group-ol li { 
+#groups-ol li { 
 	margin: 3px; 
 	padding: 4px; 
 	cursor:pointer;
@@ -760,13 +776,12 @@ div.olControlZoom a {
     margin-left: 290px;
 }
 
-#map-list{
+#maps-list{
 	min-width:100px;
 	min-height:100px;
-
 }
 
-#map-list .map-preview{
+#maps-list .map-preview{
 	display:block;
 	float:left;
 	width:64px;
@@ -776,45 +791,47 @@ div.olControlZoom a {
     border-radius: 4px;
 	cursor:pointer;
 }
-#map-list .map-preview .map-preview-img{
+#maps-list .map-preview .map-preview-img{
     background-image:url('images/map-preview-placeholder.png');
 	background-size:64px 64px;
 	width: 64px;
 	height: 64px;
 }
 
-#map-list .map-preview .thumbnail-preview{
+#maps-list .map-preview .thumbnail-preview{
     -moz-box-shadow: 2px 2px 2px 0 #AAAAAA;
     -webkit-box-shadow: 2px 2px 2px 0 #AAAAAA;
     -o-box-shadow: 2px 2px 2px 0 #AAAAAA;
     box-shadow: 2px 2px 2px 0 #AAAAAA;
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#AAAAAA, Direction=134, Strength=2);
 }
-#map-list .map-preview.ui-selected .thumbnail-preview{
+#maps-list .map-preview.ui-selected .thumbnail-preview{
     -moz-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
     -webkit-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
     -o-box-shadow: inset 2px 2px 2px 0 #AAAAAA;
     box-shadow: inset 2px 2px 2px 0 #AAAAAA;
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#AAAAAA, Direction=134, Strength=2);
 }
-#map-list .map-preview-name{
+#maps-list .map-preview-name{
     display: block;
     padding-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis; /* this works with IE, Safari and Chrome */
+    white-space: nowrap;
+    -moz-binding: url('/ellipsis.xml#ellipsis'); /* this is a Firefox hack */
 }
-#map-list .map-preview.ui-selected.li-default-thumbnail{
+#maps-list .map-preview.ui-selected.li-default-thumbnail{
     background-color: #F6F6F6;
     border: 1px solid #DDDDDD;
     color: #444444;
 }
 
-#group-ol .to-be-deleted{
+#groups-ol .to-be-deleted{
 	color:#AFAFAF;
 	text-decoration:line-through;
 }
 
 .log-button-container{
-    /*margin-top: 2px;
-    padding: 2px 4px 0px 4px;*/
 	float:right;
 }
 #log-notification{
@@ -837,10 +854,8 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
-#git-url, #git-clone-url {
-    width: 300px;
-}
-#git-message {
+input.long,
+textarea.long {
     width: 400px;
 }
 #git-commit-info {
@@ -861,8 +876,9 @@ div.olControlZoom a {
     min-width: 100px;
 }
 
-#group_select_chosen.chosen-container {
-    min-width: 150px;
+.chosen-drop {
+    min-width: 100%;
+    width: auto !important;
 }
 
 #group_select_chosen {
@@ -873,7 +889,7 @@ div.olControlZoom a {
     border-radius: 0px !important;
 }
 
-#group_edition_select_chosen a{
+#editor_select_chosen a{
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
 }
@@ -899,15 +915,32 @@ div.olControlZoom a {
     width: 200px !important;
 }
 
+.control-group input[type="text"],
+.control-group input[type="password"] {
+    margin-top: 4px;
+}
+
+.control-group input[type="radio"] {
+    margin-top: 5px;
+}
+
 .btn-group-first {
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
 }
 
+.btn-group-middle {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+    margin-left: -5px;
+}
+
 .btn-group-last {
     border-top-left-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
-    margin-left: -5px !important;
+    margin-left: -5px;
 }
 
 .grouporder-btnset-right {
@@ -938,3 +971,72 @@ div.olControlZoom a {
     padding: 10px;
 }
 
+.login {
+    margin-left: auto;
+    margin-right: auto;
+    width: 384px;
+    height: 300px;
+    margin-top: 50px;
+}
+
+.login .logo {
+    margin: auto;
+    display: block;
+    position: relative;
+    z-index: 1000;
+}
+
+.login .alert {
+    position: relative;
+    top: 150px;    
+    background-color: #FCF8E3;
+    border: 1px solid #FBEED5;
+    border-radius: 4px 4px 4px 4px;
+    color: #C09853;
+    margin-bottom: 20px;
+    padding: 8px 35px 8px 14px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.login h2 {
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.login form {
+    padding: 50px 10px 10px;
+    position: absolute;
+    top: 260px;
+    width: 360px;
+    background-color: #F5F5F5;
+    border: 2px solid #1c8d61;
+    border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+
+.login .control-group {
+    width: 100%;
+}
+
+.login input, .login .chosen-container{
+     display: block;
+     margin : 0 auto;
+}
+
+.login table {
+    width: 100%;
+}
+
+.login table td{
+    padding: 5px;
+}
+
+.horizontal .control {
+    float: left;
+    margin-left: 20px;
+}

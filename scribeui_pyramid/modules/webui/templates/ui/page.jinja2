@@ -1,0 +1,30 @@
+{% if actions %}
+<div class="btn-toolbar page-actions">
+  <div class="btn-group">
+    {% for action in actions %}
+      {% if action.items %}
+          <div class="btn-group">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                {{action.name}}
+                 <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  {% for item in action.items %}
+                      <li role="presentation">
+                          <a href="{{item.url}}" tabindex="-1" role="menuitem">{{item.name}}</a>
+                      </li>
+                  {% endfor %}
+              </ul>
+          </div>
+      {% else %}
+          <a class="btn{{' active' if action.url==request.url else ''}}" href="{{action.url}}">
+            {% if action.icon %}
+              <i class="{{action.icon}}"></i>
+            {% endif %}
+            {{action.name}}
+          </a>
+      {% endif%}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

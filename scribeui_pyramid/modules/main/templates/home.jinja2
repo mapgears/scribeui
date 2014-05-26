@@ -1,0 +1,464 @@
+{% extends main_template %}
+{% block body %}
+
+<script type=text/javascript>
+    $WSNAME = '{{workspace}}';
+</script>
+
+<!-- Header -->
+    <div class="navbar">  
+        <div id="title" class="title-left">
+            <img src="{{logo}}"></img>
+            <div class="title">   
+                <span class="faded">{{version}}</span>
+            </div>
+        </div>
+        
+        <div id="logout">
+            <button id="workspace">{{workspace}}</button>
+            <!--a href="{{logout_url}}">Log Out</a-->
+        </div>
+        <ul>
+            <li><a href="{{logout_url}}">Log Out</a></li>
+        </ul>
+        <div id="map-name"></div>
+        <!--div id="info" class="title title-right"></div-->
+    </div>
+
+<!-- Main -->
+    <div class="main">
+        <div  class="main-left">
+        <div id="main-tabs">
+            <ul class="tabheader">
+                <li class="tab-large"><a href="#manager-tab">Manager</a></li>
+                    <li class="tab-large"><a href="#editor-tab">Editor</a></li>
+                    <li class="tab-large"><a href="#data-tab">Browse</a></li>
+            </ul>
+            <div id="manager-tab" class="tabcontent">
+                <div class="manager-maps">
+                    <span class="separator">Maps</span>
+                    <div class="content">
+                          <div class="maps-content">
+                            <ol id="maps-list"></ol>
+                     </div>
+                 <div class="maps-buttons">
+                     <div class="buttons-container">
+                        <div>
+                            <table class="two-col-actions">
+                                <tr>
+                                    <td align="center">
+                                        <button id="btn_new_map" >New Map</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_clone_map">Clone Map</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="map-description" class="map-description-container"></div>
+                        <div id="map-actions" style="display:none">
+                            <table class="three-col-actions">
+                                <tr>
+                                    <td align="center">
+                                        <button id="btn_open_map">Open Map</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_export_map">Export Map</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_delete_map">Delete Map</button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="three-col-actions">
+                                <tr>
+                                    <td align="center">
+                                        <button id="btn_configure_map">Configure</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_pull_map">Pull</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_commit_map">Push</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                     </div>
+                 </div>
+                 </div>
+            </div>
+            </div>
+            <div id="editor-tab" class="tabcontent">
+                <div id="editor-toolbar" class=" ui-corner-all">
+                    <select id="editor-select">
+                        <option value="groups">Groups</option>
+                        <option value="maps">Map</option>
+                        <option value="scales">Scales</option>
+                        <option value="symbols">Symbols</option>
+                        <option value="fonts">Fonts</option>
+                        <option value="projections">Projections</option>
+                        <option value="variables">Variables</option>
+                        <option value="readmes">Readme</option>
+                    </select>
+
+                    <select id="group-select" class="group-select" class="shadow_select"></select>
+                    <button id="btn_change_group_order" class="group-button btn-group-last">Group Settings</button>
+
+                    <div class="log-button-container">
+                        <span id="log-notification" class="ui-state-error"><span class="ui-icon ui-icon-alert"></span></span>
+                        <button id="btn_commit" class="button-commit btn-group-first" title="Save ( Ctrl+S )">Save</button>
+                        <button id="btn-open-logs" class="group-button btn-group-last">Logs</button>
+                    </div>
+                </div>
+                <div id="editors-container">
+                        <div class="secondary-wrap" style="height:250px">
+                            <div id="secondary-editor">
+                                <div id="map-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="map-editor" class="code-area"></textarea>
+                                </div>
+                                <div id="variable-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="variable-editor" class="code-area"></textarea>
+                                </div>
+                                <div id="scale-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="scale-editor" class="code-area"></textarea>
+                                </div>
+                                <div id="symbol-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="symbol-editor" class="code-area"></textarea>
+                                </div>
+                                <div id="font-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="font-editor" class="code-area"></textarea>
+                                </div>
+                                <div id="projection-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="projection-editor" class="code-area" ></textarea>
+                                </div>
+                                <div id="readme-tab" class="tabcontent-small" style="display:none">
+                                    <textarea id="readme-editor" class="code-area" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-editor">
+                            <textarea id="editor" class="code-area" style="display:none"></textarea>
+                        </div>
+                </div>
+
+            </div>
+            <div id="data-tab" class="datacontent">
+            </div>
+        </div>
+        </div>
+        <div class="main-right">
+            <div id="map" class="map">
+            </div>
+            <div id="logs">
+                <div id="log-tabs">
+                    <ul class="tabheader">
+                        <li class="tab-large"><a href="#log-tab">Logs</a></li>
+                        <li class="tab-large"><a href="#debug-tab">Debug</a></li>
+                        <li class="tab-large"><a href="#mapfile-tab">Result</a></li>
+                        <button id="logs-close-button">Close</button>
+                    </ul>
+
+                    <div id="log-tab" class="tabcontent">
+                        <pre id="txt-logs" class="logs"></pre>
+                    </div>
+                    <div id="debug-tab" class="tabcontent">
+                        <pre id="txt-debug" class="logs"></pre>
+                    </div>
+                    <div id="mapfile-tab" class="tabcontent">
+                        <pre id="txt-result" class="logs"></pre>
+                    </div>
+
+                </div>
+            </div>
+            <div class="tools">
+                <div class="tools-right">
+                    <div class="poi-container">
+                        <select id="poi-select" class="shadow_select"></select>
+                        <button id="btn-zoom-poi" class="btn-group-first btn-group-last" disabled>Go!</button>
+                        <button id="btn-add-poi" class="btn-group-last" disabled>+</button>
+                    </div>
+                </div>
+                <!--div class="tools-left">
+                    <button id="btn_commit" class="button-commit" title="Save ( Ctrl+S )">Save</button>
+                </div-->
+            </div>
+        </div>
+    </div>
+
+
+<!-- Forms and windows -->
+    <div id="createmap-form" title="Create new map" style="display:none" class="scribe-dialog">
+        <div class="dialog-content">
+            <form>
+                <div class="control-group">
+                    <label for="newmap-name">Name</label>
+                    <div class="control">
+                        <input type="text" name="newmap-name" id="newmap-name" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="newmap-type">Type</label>
+                    <div class="control">
+                        <select id="newmap-type" class="newmap-template" class="shadow_select">
+                            <option value="Scribe">Scribe</option>
+                            <option value="Standard">Standard</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="newmap-ws" class="invisible">
+                    <div class="control-group">
+                        <label>Workspace</label>
+                        <div class="control">
+                            <select id="newmap-workspace-select" class="shadow_select"></select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Password</label>
+                        <div class="control">
+                            <input type="password" id="newmap-workspace-password"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="newmap-template">Template</label>
+                    <div class="control">
+                        <select id="newmap-template" class="newmap-template" class="shadow_select"></select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="newmap-description">Description</label>
+                    <div class="control">
+                        <textarea id="newmap-description" class="newmap-description"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="exportmap-form" title="Export map" style="display:none" class="scribe-dialog">
+        <form>
+            <div class="control-group">
+                <label for="exportComponents">Public data</label>
+                <div class="control">
+                    <input type="checkbox" name="exportComponents" value="publicData" checked="true">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="exportComponents">Private data</label>
+                <div class="control">
+                    <input type="checkbox" name="exportComponents" value="privateData" checked="true">
+                </div>
+            </div>
+        </form>
+        <div id="preparingExport" class="hidden">Preparing data...</div>
+    </div>
+
+    <div id="creategroup-form" title="Create new group" style="display:none" class="scribe-dialog">
+        <form>
+            <div class="control-group">
+                <label for="newgroup-name">Name</label>
+                <div class="control">
+                    <input type="text" name="newgroup-name" id="newgroup-name"/>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="grouporder-form" title="Change group order" style="display:none" class="scribe-dialog">
+        <form>
+            <ol id="groups-ol" class="groups-ol">
+            </ol>
+        </form>
+    </div>
+
+    <div id="addpoi-form" title="Add point of interest" style="display:none" class="scribe-dialog">
+        <form>
+            <div class="control-group">
+                <label for="newpoi-name">Name</label>
+                <div class="control">
+                    <input type="text" name="newpoi-name" id="newpoi-name" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="cachemap" title="Cache" style="display:none">
+        <label>Map<br/></label>
+        <select id="selectmap" class="shadow_select dialog-select"></select>
+        <label>Extent<br/></label>
+        <input type="radio" name="extent" value="current"/> Current Extent <br>
+        <input type="radio" name="extent" value="set"/> Set Extent <br>
+        <input type="text" id="maxY" class="extent-input" value="maxY" style="display:none"/> <br>
+        <input type="text" id="minX" class="extent-input" value="minX" style="display:none"/>
+        <input type="text" id="maxX" class="extent-input" value="maxX" style="display:none"/>
+        <input type="text" id="minY" class="extent-input" value="minY" style="display:none"/> <br>
+    </div>
+
+    <div id="configuremap-form" title="Configure map" style="display:none" class="scribe-dialog">
+        <div class="dialog-content">
+            <form>
+                <div class="control-group">
+                    <label for="configure-url">Map URL</label>
+                    <div class="control">
+                        <input type="text" id="configure-url" readonly />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="git-url">Git URL</label>
+                    <div class="control">
+                        <input type="text" name="git-url" id="git-url" class="long"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="configure-description">Description</label>
+                    <div class="control">
+                        <textarea id="configure-description" class="git-logs"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="configure-logs">Logs</label>
+                    <div class="control">
+                        <textarea id="configure-logs" class="git-logs" disabled></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="commitmap-form" title="Commit map" style="display:none" class="scribe-dialog">
+        <div class="dialog-content">
+            <form>
+                <div class="control-group">
+                    <label>Git User</label>
+                    <div class="control">
+                        <input type="text" name="git-commit-user" id="git-commit-user" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git Password</label>
+                    <div class="control">
+                        <input type="password" id="git-commit-password"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="git-message">Message</label>
+                    <div class="control">
+                        <textarea id="git-message" class="long"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Logs</label>
+                    <div class="control">
+                        <textarea id="git-logs" class="git-logs" readonly></textarea>
+                    </div>
+                </div>
+                <div id="git-commit-info">
+                    * Special characters are not supported in the commit message.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="pullmap-form" title="Pull map" style="display:none" class="scribe-dialog">
+        <div class="dialog-content">
+            <form>
+                <div class="control-group wide">
+                    <label for="overwrite">Merge with local changes</label>
+                    <div class="control">
+                        <input type="radio" name="method" value="merge" checked>
+                    </div>
+                </div>
+                <div class="control-group wide">
+                    <label for="stash">Stash/Apply local changes</label>
+                    <div class="control">
+                        <input type="radio" name="method" value="stash">
+                    </div>
+                </div>
+                <div class="control-group wide">
+                    <label for="overwrite">Overwrite local changes</label>
+                    <div class="control">
+                        <input type="radio" name="method" value="overwrite">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git User</label>
+                    <div class="control">
+                        <input type="text" name="git-pull-user" id="git-pull-user" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git Password</label>
+                    <div class="control">
+                        <input type="password" name="git-pull-password" id="git-pull-password"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Logs</label>
+                    <div class="control">
+                        <textarea id="git-pull-logs" class="git-logs" readonly></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="clonemap-form" title="Clone map" style="display:none" class="scribe-dialog">
+        <div class="dialog-content">
+            <form>
+                <div class="control-group">
+                    <label>Name</label>
+                    <div class="control">
+                        <input type="text" name="git-clone-name" id="git-clone-name" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Type</label>
+                    <div class="control">
+                        <select id="git-clone-type" class="newmap-template" class="shadow_select">
+                            <option value="Scribe">Scribe</option>
+                            <option value="Standard">Standard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git URL</label>
+                    <div class="control">
+                        <input type="text" name="git-clone-url" id="git-clone-url" class="long"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git User</label>
+                    <div class="control">
+                        <input type="text" name="git-clone-user" id="git-clone-user" />
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Git Password</label>
+                    <div class="control">
+                        <input type="password" id="git-clone-password"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Description</label>
+                    <div class="control">
+                        <textarea id="git-clone-description" class="newmap-description"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>Logs</label>
+                    <div class="control">
+                        <textarea id="git-clone-logs" class="git-logs" readonly></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-line" style="display:none">
+        <textarea id="edit-line-content" value=""></textarea>
+    </div>
+
+    <div id="get-feature-info" style="display:none"><pre></pre></div>
+
+{% endblock body %}

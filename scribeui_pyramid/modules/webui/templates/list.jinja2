@@ -1,0 +1,35 @@
+{% extends main_template %}
+{% block body %}
+<h2>{{title}}</h2>
+
+<table class="table table-bordered table-striped table-condensed">
+
+    <thead class="uppercase">
+        <tr>
+            {% for attr in attributes %}
+            <th>{{attr.name}}</th>
+            {% endfor %}
+            <th class="list-actions">Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for item in results %}
+        <tr>
+            {% for attr in attributes %}
+            <td>{{getattr(item, attr.attr)}}</td>
+            {% endfor %}
+            <td class="column-actions">
+                <div class="btn-group">
+                    <a class="btn btn-small" href="{{request.route_url(edit_route, id=getattr(item, edit_id_attr))}}">
+                        <i class="icon-pencil"></i> Edit</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+</table>
+{% endblock body %}

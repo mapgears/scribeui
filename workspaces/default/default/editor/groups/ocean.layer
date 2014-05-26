@@ -1,0 +1,17 @@
+LAYER {
+    1-16 {
+        NAME: 'ocean'
+        TYPE: POLYGON
+        @layerconfig
+        DATA {
+            1-5: '110m_physical/ne_110m_ocean'
+            6-10: '50m_physical/ne_50m_ocean'
+            11-16: '10m_physical/ne_10m_ocean'		
+	    }
+        CLASS {
+            STYLE {
+                COLOR: '#C6E2F2'
+            }
+        }
+    }
+}

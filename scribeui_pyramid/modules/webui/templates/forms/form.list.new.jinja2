@@ -1,0 +1,461 @@
+{% block body %}
+
+{% if items %}
+    {% set items = items[0] %}
+    <script>
+        var jsonConfig = '{{dict2json(items.attributes)}}';
+        var attConfig = $.parseJSON(jsonConfig.replace(/&#34;/g, "\"")); 
+    </script>
+    <br>
+
+    <table id="{{items.table_id}}" class="table table-bordered table-striped table-condensed">
+
+        <thead class="uppercase">
+            <tr>
+                {% for attr in items.attributes %}
+                    <th>{{attr.name}}</th>
+                {% endfor %}
+                
+                {% if (items.edit_row == True or items.add_row == True or items.delete_row == True) %}
+                    <th class="list-actions">Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in items.results %}
+                <tr>
+                    {% for attr in items.attributes %}
+                        <td name="{{attr.attr}}" value="{{getattr(item, attr.attr)}}">
+                            {% if getattr(item, attr.attr) == None %}
+                                {{attr.none_value}}
+                            {% else %}
+                                {{getattr(item, attr.attr)}}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                    
+                    {% if (items.edit_row == True or items.add_row == True or items.delete_row == True) %}
+                        <td class="column-actions">
+                            <div class="btn-group">
+                                {% if items.edit_row == True %}
+                                    <a class="btn btn-small edit-row" href="">
+                                        <i class="icon-pencil"></i> Modifier</a>
+                                {% endif %}
+                                {% if items.delete_row == True %}
+                                    <a class="btn btn-small delete-row" href="">
+                                        <i class="icon-remove"></i> Supprimer</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% endif %}                               
+                </tr>
+            {% endfor %}
+            
+            {% if items.add_row == True %}
+                <tr>
+                {% for attr in items.attributes %}
+                    <td name="{{attr.attr}}" value=""></td>
+                {% endfor %}
+                    <td class="column-actions">
+                        <div class="btn-group">
+                            <a class="btn btn-small add-row" href="">
+                                <i class="icon-plus-sign"></i> Ajouter</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+    <script>      
+        var oTable = $('#{{items.table_id}}').dataTable({
+        	sDom: "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+        	"sPaginationType": "bootstrap",
+            bPaginate: false, //{{'true' if items.has_page == True else 'false'}},
+            bSort: {{'true' if items.has_sort == True else 'false'}},
+            bFilter: false, //{{'true' if items.has_search == True else 'false'}}, 
+            oLanguage: fr   
+        });
+
+        {% if (items.edit_row == True or items.add_row == True) %}
+            var editing = false;
+            var form = $('#{{items.table_id}}').parents('form')[0];
+            var hiddenJSON = $(form).find("input[name='{{items.name}}']");
+            
+            function editRow(oTable, nRow, addNewRow){
+                editing = true;
+                $('button[type="submit"]').attr('disabled','disabled');
+                var tds = $('>td', nRow);
+                
+                for(var i = 0; i < tds.length - 1; i++){
+                    var attribute = $(tds[i]).attr('name');
+                    if(attConfig[i].readonly == undefined){
+                        var currentValue = $(tds[i]).attr('value') != '' ? $(tds[i]).attr('value') : null;
+
+                        if(attConfig[i].domain){
+                            var select = $('<select>').attr('class', 'select-inline');
+                            $.each(attConfig[i].domain, function(index, value) {
+                                var option = $('<option>').val(value.value).text(value.label);
+                                if(currentValue != null && currentValue == value.value){
+                                    option.attr('selected', true);
+                                }
+                                select.append(option);
+                            });
+                            $(tds[i]).empty();
+                            $(tds[i]).append(select);
+                        } else if(attConfig[i].multiselect){
+                            var spans = $(tds[i]).find('span');
+                            var selects = [];
+                            var div = $('<div>').attr('class', 'select-group');
+                            $.each(attConfig[i].multiselect, function(index_ms, value_ms) { 
+                                if(spans.length > 0){
+                                    var spanValue = $(spans[index_ms]).attr('value') != '' ? $(spans[index_ms]).attr('value') : null;
+                                }
+                                if(value_ms.domain){
+                                    var select = $('<select>').attr('class', value_ms.class).attr('name', value_ms.attr);
+                                    $.each(value_ms.domain, function(index_d, value_d) {
+                                        var option = $('<option>').val(value_d.value).text(value_d.label);
+                                        if(spanValue != null && spanValue == value_d.value){
+                                            option.attr('selected', true);
+                                        }
+                                        select.append(option);
+                                    });
+                                    selects.push(select);
+                                } else if(value_ms.fctn){
+                                    var input = $('<input>').attr('type', 'text').attr('name', value_ms.attr).attr('readonly', true).attr('class', value_ms.class).val(window[value_ms.fctn].call(null));
+                                    if(spanValue != null){
+                                        input.val(spanValue).text(spanValue);    
+                                    }
+                                    selects.push(input);        
+                                } 
+                                else{
+                                    var input = $('<input>').attr('type', 'text').attr('class', value_ms.class).attr('name', value_ms.attr);
+                                    if(spanValue != null){
+                                        input.val(spanValue).text(spanValue);    
+                                    }
+                                    selects.push(input);    
+                                }
+                            }); 
+                            $(tds[i]).empty();
+                            div.append(selects);
+                            $(tds[i]).append($(div));    
+                        } 
+                        else if(attConfig[i].fctn){
+                            if($(tds[i]).attr('value') == ''){ 
+                                if(typeof(window[attConfig[i].fctn])){
+                                    var value = window[attConfig[i].fctn].call(null, $(tds[i]));
+                                    $(tds[i]).attr('value', value).text(value);
+                                }
+                            }
+                        }
+                        else{
+                            var input = $('<input>').attr('class', 'input-inline').attr('type', 'text');
+                            if(currentValue != null){
+                                input.val(currentValue).text(currentValue);
+                            }
+                            $(tds[i]).empty();
+                            $(tds[i]).append(input);   
+                        }
+                    }  
+                }
+                
+                var a = $("<a>").attr("class", "btn btn-small save-row").attr("name", "save").attr("href", "").html("<i class=\"icon-ok\"></i> OK");                
+                var div = $('<div>').attr('class', 'btn-group').append(a);
+                
+
+                {% if items.delete_row == True %}
+                    var aremove = $("<a>").attr("class", "btn btn-small delete-row").attr("href", "").html("<i class=\"icon-remove\"></i> Supprimer");
+                    div.append(aremove);     
+                    bindDelete(aremove, addNewRow);
+                {% endif %}  
+
+                $(tds[tds.length - 1]).empty(); 
+                $(tds[tds.length - 1]).append(div);
+                
+                bindSave(a, nRow, addNewRow);
+  
+                var j = 0;
+                $.each(attConfig, function(key, value){
+                    if(value.after != undefined){
+                        a.on('click', function(){
+                            window[value.after].call(null, $(tds[j - 1]), nRow);
+                        });
+                    } 
+                    j += 1;   
+                });
+            }
+            
+            function bindSave(selector, nRow, addNewRow){
+                selector.on('click', function(e){
+                    e.preventDefault();
+                    saveRow(oTable, nRow, addNewRow);
+                                    
+                    {% if items.after_save %}
+                        window['{{items.after_save}}'].call(null, nRow)    
+                    {% endif %}  
+                });
+                    
+                return false;   
+            }
+            
+            function saveRow(oTable, nRow, addNewRow){
+                var tds = $('>td', nRow);
+                
+                for(var i = 0; i < tds.length - 1; i++){
+                    if($(tds[i]).find('select').length == 1){
+                        var select = $(tds[i]).find('select');
+                        var value = $(select).find('option:selected').val();
+                        var text = $(select).find('option:selected').text();
+                        
+                        $(tds[i]).empty(); 
+                        $(tds[i]).attr('value', value).text(text);
+                    } else if($(tds[i]).find('select').length > 1 || $(tds[i]).find('input').length > 1){
+                        //var selects = $(tds[i]).find('select');
+                        var div = $(tds[i]).children();
+                        var children = $($(tds[i]).children()[0]).children();
+                        var spans = [];
+                        //for(var j = 0; j < selects.length; j++){
+                        for(var j = 0; j < children.length; j++){
+                            if($(children[j]).find('option').length > 0){
+                                //var select = $(tds[i]).find('select')[j];
+                                var select = children[j];
+                                var value = $(select).find('option:selected').val();
+                                var text = $(select).find('option:selected').text();
+                                var span = $('<span>').attr('value', value).text(text);
+                                spans.push(span);
+                            } else{
+                                var input = children[j];
+                                var value = $(input).val();
+
+                                if(attConfig[i].multiselect[j].prefix != undefined){
+                                    var span = $('<span>').attr('value', value).text(attConfig[i].multiselect[j].prefix + value);
+                                } else{
+                                    var span = $('<span>').attr('value', value).text(value);
+                                } 
+                                spans.push(span);
+                            }
+                        }
+                        $(tds[i]).empty();
+                        $(tds[i]).attr('value', 'multiselect').append(spans); 
+                        //$(tds[i]).attr('value', value).text(text);
+                    } 
+                    else if ($(tds[i]).find('input[type="text"]').length > 0){
+                        var input = $(tds[i]).find('input[type="text"]');
+                        var value = $(input).val();
+                        $(tds[i]).empty();
+                        $(tds[i]).attr('value', value).text(value);  
+                    }       
+                }
+                
+                {% if (items.edit_row == True or items.delete_row == True) %}
+                    var div = $('<div>').attr('class', 'btn-group');
+                    {% if items.edit_row == True  %}
+                        var a = $("<a>").attr("class", "btn btn-small edit-row").attr("href", "").html("<i class=\"icon-pencil\"></i> Modifier");
+                        div.append(a);
+                        bindEdit(a);
+                    {% endif %}
+                    
+                    {% if items.delete_row == True %}
+                        var a = $("<a>").attr("class", "btn btn-small delete-row").attr("href", "").html("<i class=\"icon-remove\"></i> Supprimer");
+                        div.append(a);                        
+                        bindDelete(a);
+                    {% endif %}                            
+                      
+                    $(tds[tds.length - 1]).empty(); 
+                    $(tds[tds.length - 1]).append(div);
+                {% else %}
+                    $(tds[tds.length - 1]).empty();
+                {% endif %}
+               
+                if(addNewRow == true){
+                    addRow(oTable, tds)
+                }
+
+                oTable.fnDraw();
+                editing = false;
+                $('button[type="submit"]').removeAttr('disabled');
+            }
+
+            function addRow(oTable, tds){
+                    var data = [];
+                    
+                    for(var i = 0; i < tds.length - 1; i++){
+                        data.push("");
+                    }
+                   
+                    data.push('<div class="btn-group"><a class="btn btn-small add-row" href=""><i class="icon-plus-sign"></i> Ajouter</a></div>');
+                    oTable.fnAddData(data);
+                    
+                    var tr = $('#{{items.table_id}}'+ ' tbody').find('tr');
+                    var tds = $(tr[tr.length - 1]).find('td');
+                    j = 0;
+                    $.each(attConfig, function(key, value){
+                       $(tds[j]).attr('name', value.attr).attr('value', '');
+                       j += 1; 
+                    });
+                  
+                    bindAdd($('#{{items.table_id}} a.add-row'));
+            }
+            
+            function deleteRow(oTable, nRow){
+                oTable.fnDeleteRow(oTable.fnGetPosition(nRow));    
+            }
+            
+            function bindAdd(selector){
+                selector.on('click', function (e) {                                    
+                    e.preventDefault();
+                    
+                    if(editing == false){
+                        var nRow = $(this).parents('tr')[0];
+                        editRow(oTable, nRow, true);
+                    }
+                    return false;
+                });
+            }
+            
+            function bindEdit(selector){
+                selector.on('click', function (e) {                
+                    e.preventDefault();
+                    
+                    if(editing == false){
+                        var nRow = $(this).parents('tr')[0];
+                        editRow(oTable, nRow, false);
+                    }
+                    return false;
+                });
+            } 
+            
+            function bindDelete(selector, addNewRow){
+                selector.on('click', function (e) {                
+                    e.preventDefault();
+
+                    if(editing == true && selector.siblings().attr('name') == 'save'){
+                        editing = false;
+                        $('button[type="submit"]').removeAttr('disabled');
+                    }
+
+                    var nRow = $(this).parents('tr')[0];
+                    deleteRow(oTable, nRow, false);
+                    
+                    {% if items.after_delete %}
+                        window['{{items.after_delete}}'].call(null, nRow)    
+                    {% endif %}
+
+                    if (addNewRow == true) {
+                        var tds = $('>td', nRow);
+                        addRow(oTable, tds)
+                    }
+
+                    return false;
+                });
+            }
+
+            if($(hiddenJSON).val() && $(hiddenJSON).val() != ""){
+               var oJSON = $.parseJSON($(hiddenJSON).val());               
+
+               for(var i = 0; i < oJSON['{{items.name}}'].length; i++){
+                  var data = [];
+                  
+                  var j = 0;
+                  $.each(oJSON['{{items.name}}'][i], function(key, value){
+                      if(value.length != undefined){
+                          var content = '';
+                          $.each(value, function(index, value_s){
+                              content += '<span value="' + value_s[attConfig[j].multiselect[index].attr].value + '">' + value_s[attConfig[j].multiselect[index].attr].label + '</span>';
+                          });
+                          data.push(content);
+                          j += 1; 
+                      } else{
+                          data.push(value.label);    
+                      }  
+                  });
+                  
+                  {% if (items.edit_row == True and items.delete_row == True) %}
+                      data.push('<div class="btn-group"><a class="btn btn-small edit-row" href=""><i class="icon-pencil"></i> Modifier</a><a class="btn btn-small delete-row" href=""><i class="icon-remove"></i> Supprimer</a></div>');
+                  {% elif (items.edit_row == True and items.delete_row == False) %}    
+                      data.push('<div class="btn-group"><a class="btn btn-small edit-row" href=""><i class="icon-pencil"></i> Modifier</a></div>');
+                  {% elif (items.edit_row == False and items.delete_row == True) %}    
+                      data.push('<div class="btn-group"><a class="btn btn-small delete-row" href=""><i class="remove"></i> Supprimer</a></div>');
+                  {% elif (items.edit_row == False and items.delete_row == False) %}
+                      data.push('');   
+                  {% endif %}
+                  
+                  oTable.fnAddData(data); 
+                  
+                  var tr = $('#{{items.table_id}}'+ ' tbody').find('tr');
+                  var tds = $(tr[tr.length - 1]).find('td');
+                  var j = 0;
+                  $.each(oJSON['{{items.name}}'][i], function(key, value){
+                     if(attConfig[j].multiselect != undefined){
+                        $(tds[j]).attr('name', key).attr('value', 'multiselect');
+                     } else{
+                        $(tds[j]).attr('name', key).attr('value', value.value);
+                     }
+                     j += 1; 
+                  });
+               }
+               
+               oTable.fnSort([[0,'desc']]);
+            };
+            
+            var jsonContent = {'{{items.name}}': []};            
+                     
+            $(form).submit(function(e) {
+                var tr = $('#{{items.table_id}}'+ ' tbody').find('tr');
+                 
+                for(var i = 0; i < tr.length; i++){
+                    var tds = $(tr[i]).find('td');
+                    var data = {};
+                    var nItems = 0;
+                    
+                    for(var j = 0; j < tds.length - 1; j++){
+                        if($(tds[j]).attr('value') != undefined){
+                            var spans = $(tds[j]).find('span');
+                            if(spans.length > 0){                                
+                                data[$(tds[j]).attr('name')] = [];
+                                for(var k = 0; k < spans.length; k++){
+                                    var subData = {};
+                                    subData[attConfig[j].multiselect[k].attr] = {'value': $(spans[k]).attr('value'), 'label': $(spans[k]).text()}
+                                    data[$(tds[j]).attr('name')].push(subData);
+                                    if($(spans[k]).attr('value') != ''){
+                                        nItems += 1;
+                                    }        
+                                }
+                                if(nItems < spans.length){
+                                    nItems = 0;
+                                }
+                            } else{
+                                data[$(tds[j]).attr('name')] = {'value': $(tds[j]).attr('value'), 'label': $(tds[j]).text()};
+                                if($(tds[j]).attr('value') != ''){
+                                    nItems += 1;
+                                }
+                            }
+                        } 
+                    }
+                    if(nItems != 0){
+                        jsonContent['{{items.name}}'].push(data);
+                    } 
+                }
+                $(hiddenJSON).val(JSON.stringify(jsonContent));
+            });
+
+            {% if items.add_row == True %}
+                bindAdd($('#{{items.table_id}} a.add-row'));
+            {% endif %} 
+            
+            {% if items.edit_row == True %}
+                bindEdit($('#{{items.table_id}} a.edit-row'));
+            {% endif %}
+            
+            {% if items.delete_row == True %}
+                bindDelete($('#{{items.table_id}} a.delete-row'));
+            {% endif %}         
+        {% endif %}
+    </script>
+
+{% endif %}
+ 
+{% endblock body %}

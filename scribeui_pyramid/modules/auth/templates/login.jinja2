@@ -1,0 +1,57 @@
+{% extends"scribeui_pyramid:modules/webui/templates/base.jinja2" %}
+{% block master %}
+<div class="container{{layout.fluid_css_class}}">
+    <div class="login">
+        <div class="login-div">
+            <!--h2>{{layout.title}}</h2-->
+            <img class="logo" src="{{logo}}"/>
+            <form id="login-form" class="well form-inline" method="post" action="{{request.route_url('auth.login')}}", enctype="multipart/form-data">
+                <span class="control-group{{' error' if form.name.errors else ''}}">
+                    <select id="name" name="name">
+                        {% for workspace in workspaces %}
+                            <option value="{{workspace[0]}}">{{workspace[0]}}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+                <span class="control-group{{' error' if form.password.errors else ''}}">
+                    {{form.password(class_='input-small', placeholder='Password')}}
+                </span>
+                <table>
+                    <tr>
+                        <td align="center">
+                            <button type="submit" id="btn-open-workspace">Open Workspace</button>
+                        </td>
+                        <td align="center">
+                            <button id="btn-create-workspace">Create workspace</button>
+                        </td>
+                        <td align="center">
+                            <button id="btn-delete-workspace">Delete Workspace</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+
+            {{panel('flash-messages')}}
+        </div>
+    </div>
+</div>
+
+<div class="scribe-dialog" id="createws-form" title="Create new workspace" style="display:none">
+    <div class="dialog-content">
+        <form>
+            <div class="control-group">
+                <label for="newws-name">Name</label>
+                <div class="control">
+                    <input type="text" name="newws-name" id="newws-name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="newws-password">Password</label>
+                <div class="control">
+                    <input type="password" name="newws-password" id="newws-password" value="" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock master %}

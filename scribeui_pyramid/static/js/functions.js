@@ -13,7 +13,7 @@ function displayWorkspaces(select){
     });
 }
 
-function openNewWorkspaceWindow(options){
+function openNewWorkspaceDialog(options){
     $("#createws-form").dialog({
         autoOpen: false,
         resizable: false,
@@ -115,7 +115,7 @@ function openWorkspacePopup(options){
         modal:true,
         buttons:{
             "New Workspace": function(e){ 
-                openNewWorkspaceWindow(options)
+                openNewWorkspaceDialog(options)
             },
             "Open Workspace": function(e){
                     openWorkspace(options)
@@ -143,84 +143,116 @@ function getTemplatesOfType(type){
     });
 }
 
-function openNewMapWindow(){
-    displayTemplates("templates", $("#newmap-type").val());
-    displayTemplates("", $("#newmap-type").val());
+function displayTemplates(templates){
+    selectors.templateSelect().empty();
 
-    $("#createmap-form").dialog({
-        autoOpen: false,
-        resizable: false,
-        width: _workspace.popupWidth,
-        height:_workspace.popupHeight,
-        modal: true,
-        buttons: {
-            "Create": function() {
-                var name = $("#newmap-name").val();
-                var type = $("#newmap-type option:selected").val();
-                var template = $("#newmap-template option:selected").val();
-                var templateLocation = $("#newmap-workspace-select").val();
-                var locationPassword = $("#newmap-workspace-password").val();
-                var description = $("#newmap-description").val();
-
-                var map = new Map(name, {
-                    "type": type,
-                    "description": description,
-                    "workspace": _workspace,
-                    "template": template,
-                    "templateLocation": templateLocation ? templateLocation : "",
-                    "locationPassword": locationPassword ? locationPassword : ""
-                });
-
-                map.create();
-                $(this).dialog("close");
-            },
-            "+": function(){
-                $("#newmap-ws").removeClass("invisible");
-                displayTemplates("templates", $("#newmap-type").val());
-
-                $("#newmap-workspace-select").empty();
-                $("#newmap-workspace-select").append($("<option></option>").attr("value", " ").text(" "));
-                displayWorkspaces("newmap-workspace-select");
-                $("#newmap-workspace-select").unbind('change');
-                $("#newmap-workspace-select").bind('change', function(){
-                    var password = $("#newmap-workspace-password").val();
-                    var workspaceSelect = $("#newmap-workspace-select").val()
-                    displayTemplates("templates", $("#newmap-type").val());
-                    displayTemplates(workspaceSelect, $("#newmap-type").val());  
-                });
-                
-            },
-            Cancel: function() {
-        $("#newmap-workspace-select").empty();
-                $("#newmap-ws").addClass("invisible");
-                $(this).dialog("close");
-            }
-        },
-        close: function() {
-        $("#newmap-workspace-select").empty();
-            $("#newmap-ws").addClass("invisible");
-        }
-    }).dialog("open");
+    $.each(templates, function(index, template){
+        var option = $('<option>').val(template.name).text(template.name);
+        selectors.templateSelect().append(option);
+    });
+    selectors.templateSelect().trigger('chosen:updated');    
 }
 
-function displayTemplates(ws_name, type){
-    $("#newmap-template").empty();
-    $.post($SCRIPT_ROOT + '/_get_templates', {
-        ws_name: ws_name,
-        type: type
-    }, function(templates) {
-        if(templates){
-            for(temp in templates){
-                $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
+function openNewMapDialog(){
+    var type = selectors.newMapTypeSelect().val();
+    getTemplates('default', type, null, function(templates){
+        displayTemplates(templates);
+
+        $("#createmap-form").dialog({
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Create": function() {
+                    var name = selectors.newMapName().val();
+                    var type = selectors.newMapTypeSelect().val();
+                    var template = selectors.templateSelect().val();
+                    var templateWorkspace = selectors.templateWorkspaceSelect().val();
+                    var templateWorkspacePassword = selectors.templateWorkspacePassword().val();
+                    var description = selectors.newMapDescription().val();
+
+                    workspace.createMap({
+                        name: name,
+                        type: type,
+                        description: description,
+                        template: template,
+                        template_workspace: templateWorkspace ? templateWorkspace : 'default',
+                        template_workspace_password: templateWorkspacePassword ? templateWorkspacePassword : ''
+                    });
+
+                    $(this).dialog("close");
+                },
+                "+": function(){
+                    getWorkspaces(function(workspaces){
+                        $("#newmap-ws").removeClass('invisible');
+
+                        selectors.templateWorkspaceSelect().empty();
+                        selectors.templateWorkspaceSelect().unbind('change');
+
+                        $.each(workspaces, function(index, workspace){
+                            var option = $('<option>').val(workspace.name).text(workspace.name);
+                            selectors.templateWorkspaceSelect().append(option);
+                        });
+                        selectors.templateWorkspaceSelect().trigger('chosen:updated');
+
+                        selectors.templateWorkspaceSelect().bind('change', function(){
+                            var templateWorkspace = $(this).val();
+                            var password = selectors.templateWorkspacePassword().val();
+                            var type = selectors.newMapTypeSelect().val()
+
+                            getTemplates(templateWorkspace, type, null, function(templates){
+                                displayTemplates(templates);
+                            }); 
+                        });
+                    });         
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {
+                selectors.templateSelect().empty();
+                selectors.templateWorkspaceSelect().empty();
+                $("#newmap-ws").addClass("invisible");
+                $('input').val('');
+                $('textarea').val('');
             }
-            $("#newmap-template").trigger("chosen:updated");
-        }
+        }).dialog("open");
+
     });
 }
 
+function getTemplates(name, type, password, callback){
+    var data = {
+        name: name,
+        type: type
+    };
+
+    if(password){
+        data['password'] = password;
+    }
+
+    $.post($API + '/workspace/maps', data, function(response) {
+        if(response.status == 1){
+            if(callback){
+                callback.call(null, response.maps);
+            }
+        }
+    });    
+}
+
+function getWorkspaces(callback){
+    $.get($API + '/workspaces/all', {}, function(response) {
+        if(response.status == 1){
+            if(callback){
+                callback.call(null, response.workspaces);
+            }
+        }
+    });    
+}
+
 function openMap(){
-    var name = $("#"+ _workspace.mapList +" .ui-selected").text();
-    var map = _workspace.getMapByName(name);
+    var map = workspace.selectedMap;
     if(map){
         map.open();
     }
@@ -230,26 +262,16 @@ function deleteMap(){
     var msg = 'Are you sure you want to delete this map?';
     var div = $("<div class=\"scribe-dialog\">" + msg + "</div>");
     
-    var name = $("#map-list .ui-selected").text();
+    var name = workspace.selectedMap.name;
+
     if(name != null){
         div.dialog({
             title: "Confirm",
             resizable: false,
-            width: _workspace.popupWidth,
-            height:_workspace.popupHeight,
             buttons: [{
                  text: "Yes",
                  click: function () {
-                    
-                    var map = _workspace.getMapByName(name);
-                    map.workspace = _workspace;
-
-                    if(_workspace.openedMap == map){
-                        map.destroy(map.close);
-                    } else{
-                        map.destroy();
-                    }
-
+                    workspace.deleteMap(workspace.selectedMap);
                     div.dialog("close");
                 }
             },
@@ -274,7 +296,7 @@ function exportMap(){
             height: 200,
             modal: true,
             buttons: {
-                "Export": function() {
+                Export: function() {
                     var checkBoxes = $("input[name='exportComponents']");
                     var components = {};
 
@@ -302,16 +324,14 @@ function exportMap(){
 }
 
 function cloneMap(){
-    $('#git-clone-logs').val('');
+    selectors.gitCloneLogs().val('');
 
     $("#clonemap-form").dialog({
         autoOpen: false,
         resizable: false,
-        width: _workspace.popupWidth,
-        height:_workspace.popupHeight,
         modal: true,
         buttons: {
-            "Clone": function() {
+            Clone: function() {
                 var name = $("#git-clone-name").val();
                 var type = $("#git-clone-type option:selected").val();
                 var description = $("#git-clone-description").val();
@@ -319,22 +339,16 @@ function cloneMap(){
                 var gitUser = $("#git-clone-user").val();
                 var gitPassword = $("#git-clone-password").val();
 
-                var map = new Map(name, {
-                    "type": type,
-                    "description": description,
-                    "workspace": _workspace,
-                    "template": "*Dummy"
+                selectors.gitCloneLogs().val('Processing request. This may take a few seconds.');
+
+                workspace.cloneMap({
+                    name: name,
+                    type: type,
+                    description: description,
+                    git_url: gitURL,
+                    user: gitUser,
+                    password: gitPassword 
                 });
-
-                var config = {
-                    gitURL: gitURL,
-                    gitUser: gitUser,
-                    gitPassword: gitPassword  
-                }
-
-                map.create(config, displayCloneLogs);
-
-                //$(this).dialog("close");
             },
             Close: function() {
                 $(this).dialog("close");
@@ -348,34 +362,28 @@ function cloneMap(){
 }
 
 function configureMap(){
-    var name = $("#map-list .ui-selected").text();
-    var map = _workspace.getMapByName(name);
-    var config = map.getConfiguration(displayConfiguration);
+    var map = workspace.selectedMap;
 
-    if (name){
+    if(map){
+        $("#git-url").val(map.git_url);
+        $("#configure-url").val(map.url);
+        $("#configure-description").val(map.description);
+
         $("#configuremap-form").dialog({
             autoOpen: false,
             resizable: false,
-            width: _workspace.popupWidth,
-            height:_workspace.popupHeight,
             modal: true,
             buttons: {
-                "Save": function() {
+                Save: function() {
                     var gitURL = $("#git-url").val();
-                    var gitUser = $("#git-user").val();
-                    var gitPassword = $("#git-password").val();
                     var description = $("#configure-description").val();
 
                     var config = {
-                        gitURL: gitURL,
-                        gitUser: gitUser,
-                        gitPassword: gitPassword,
+                        git_url: gitURL,
                         description: description    
                     }
 
                     map.configure(config);
-
-                    $(this).dialog("close");
                 },
                 Close: function() {
                     $(this).dialog("close");
@@ -397,37 +405,29 @@ function displayConfiguration(config){
 }
 
 function commitMap(){
-    $('#git-logs').val('');
+    selectors.gitCommitLogs().val('');
 
-    var name = $("#map-list .ui-selected").text();
-    if(_workspace.openedMap && _workspace.openedMap.name == name){
-        var map = _workspace.openedMap;
-    } else{
-        var map = _workspace.getMapByName(name);
-    }
+    var map = workspace.selectedMap;
 
-    if (name){
+    if (map){
         $("#commitmap-form").dialog({
             autoOpen: false,
             resizable: false,
-            width: _workspace.popupWidth,
-            height:_workspace.popupHeight,
             modal: true,
             buttons: {
-                "Commit": function() {
+                Commit: function() {
                     var message = $("#git-message").val();
                     var gitUser = $("#git-commit-user").val();
                     var gitPassword = $("#git-commit-password").val();
-
-                    var config = {
+                    var data = {
                         message: message,
-                        gitUser: gitUser,
-                        gitPassword: gitPassword
+                        user: gitUser,
+                        password: gitPassword
                     }
 
-                    $('#git-logs').val('Processing request. This may take a few seconds.');
+                    selectors.gitCommitLogs().val('Processing request. This may take a few seconds.');
 
-                    map.gitCommit(config, displayCommitLogs);
+                    map.gitCommit(data);
                 },
                 Close: function() {
                     $(this).dialog("close");
@@ -442,37 +442,30 @@ function commitMap(){
 }
 
 function pullMap(){
-    var name = $("#map-list .ui-selected").text();
-    $('#git-pull-logs').val('');
+    selectors.gitPullLogs().val('');
 
-    if(_workspace.openedMap && _workspace.openedMap.name == name){
-        var map = _workspace.openedMap;
-    } else{
-        var map = _workspace.getMapByName(name);
-    }
+    var map = workspace.selectedMap;
 
-    if (name){
+    if (map){
         $("#pullmap-form").dialog({
             autoOpen: false,
             resizable: false,
-            width: _workspace.popupWidth,
-            height:_workspace.popupHeight,
             modal: true,
             buttons: {
                 "Pull": function() {
-                    var changes = $('input[name="changes"]:radio:checked', '#pullmap-form').val();
+                    var method = $('input[name="method"]:radio:checked', '#pullmap-form').val();
                     var gitUser = $("#git-pull-user").val();
                     var gitPassword = $("#git-pull-password").val();
 
-                    var config = {
-                        changes: changes,
-                        gitUser: gitUser,
-                        gitPassword: gitPassword
+                    var data = {
+                        method: method,
+                        user: gitUser,
+                        password: gitPassword
                     }
 
-                    $('#git-pull-logs').val('Processing request. This may take a few seconds.');
+                    selectors.gitPullLogs().val('Processing request. This may take a few seconds.');
 
-                    map.gitPull(config, displayPullLogs);
+                    map.gitPull(data);
                 },
                 Close: function() {
                     $(this).dialog("close");
@@ -480,7 +473,8 @@ function pullMap(){
             },
             close: function() {
                 $(this).find('textarea').val('');
-                $(this).find('input[type="text"]').val('');    
+                $(this).find('input[type="text"]').val('');
+                $(this).find('input[type="password"]').val('');    
             }
         }).dialog("open");
     }
@@ -498,19 +492,30 @@ function displayCloneLogs(e){
 function displayPullLogs(e){
     $("#git-pull-logs").val(e.log);
 }
-function createNewGroup(){
+
+function openNewGroupDialog(){
     $("#creategroup-form").dialog({
         autoOpen: false,
-    resizable: false,
-        width: _workspace.popupWidth,
-        height:_workspace.popupHeight,
+        resizable: false,
         modal: true,
         buttons: {
             "Create": function() {
                 var name = $("#newgroup-name").val();
+                var group = workspace.openedMap.getGroupByName(name);
+                //TODO: VALIDER AUSSI LE FORMAT DU GROUPE ET LA PRÉSENCE DE CARACTÈRES SPÉCIAUX
+                if(group){
+                    alert('A group with that name exists already');
+                } else{
+                    workspace.openedMap.groups.push({name: name, content: ''});
+                    workspace.openedMap.newGroups.push(name);
 
-                _workspace.openedMap.createGroup(name);
-                $(this).dialog("close");
+                    selectors.groupSelect().append($('<option></option>').attr('value', name).text(name));
+                    selectors.groupSelect().trigger('chosen:updated');
+
+                    workspace.openedMap.displayGroupsList();
+
+                    $(this).dialog('close');    
+                }
             },
             Cancel: function() {
                 $(this).dialog("close");
@@ -527,14 +532,15 @@ function deleteGroup(groups){
         _workspace.openedMap.removeGroup(group);
     });
 }
-function openGroupOrderWindow(){
-    _workspace.openedMap.displayGroupsIndex();
+function openGroupOrderDialog(){
+    workspace.openedMap.displayGroupsList();
+    workspace.openedMap.removedGroups = [];
+    workspace.openedMap.newGroups = [];
+    workspace.openedMap.updatedGroups = [];
 
     $("#grouporder-form").dialog({
         autoOpen: false,
         resizable: false,
-        width: _workspace.popupWidth,
-        height:_workspace.popupHeight,
         modal: true,
         buttons: [
         {
@@ -543,7 +549,8 @@ function openGroupOrderWindow(){
             'class': 'btn-group-first',
             icons: { primary: 'ui-icon-plus'},
             click: function(){
-                createNewGroup();
+                var group = selectors.groupsList().find('.ui-selected');
+                openNewGroupDialog();
             }
         },
         {
@@ -552,31 +559,34 @@ function openGroupOrderWindow(){
             'class': 'btn-group-last',
             icons: { primary: 'ui-icon-trash'},
             click: function(){
-                    var group = $("#" + _workspace.groupOl + " .ui-selected");
-                    group.addClass('to-be-deleted');
+                var group = selectors.groupsList().find('.ui-selected');
+                //workspace.openedMap.removedGroups.push(group.text());
+                group.addClass('to-be-deleted');
             }
         },
-
         {
             text: '+',
             showText: false,
             'class': 'btn-group-first',
             icons: { primary: 'ui-icon-carat-1-s'},
             click: function(){
-                var group = $("#" + _workspace.groupOl + " .ui-selected");
-                var bumped = $("#" + _workspace.groupOl + " .ui-selected").next();
+                var group = selectors.groupsList().find('.ui-selected');
+                var bumped = group.next();
                 
                 var groupName = group.text();
                 var bumpedName = bumped.text();
 
                 if(groupName && bumpedName){
-                    _workspace.openedMap.raiseGroupIndex(groupName);
+                    workspace.openedMap.raiseGroupIndex(groupName);
 
                     bumped.text(groupName);
                     group.text(bumpedName);
 
-                    group.removeClass("ui-selected");
-                bumped.addClass("ui-selected");
+                    var bumpedClass = bumped.attr('class');
+                    var groupClass = group.attr('class');
+
+                    group.attr('class', bumpedClass).removeClass("ui-selected");
+                    bumped.attr('class', groupClass).addClass("ui-selected");
                 }
             }
         },
@@ -586,43 +596,54 @@ function openGroupOrderWindow(){
             'class': 'btn-group-last',
             icons: { primary: 'ui-icon-carat-1-n'},
             click: function(){
-                var group = $("#" + _workspace.groupOl + " .ui-selected");
-                var bumped = $("#" + _workspace.groupOl + " .ui-selected").prev();
+                var group = selectors.groupsList().find('.ui-selected');
+                var bumped = group.prev();
                 
                 var groupName = group.text();
                 var bumpedName = bumped.text();
 
                 if(groupName && bumpedName){
-                    _workspace.openedMap.raiseGroupIndex(groupName);
+                    workspace.openedMap.raiseGroupIndex(groupName);
 
                     bumped.text(groupName);
                     group.text(bumpedName);
 
-                    group.removeClass("ui-selected");
-                       bumped.addClass("ui-selected");
+                    var bumpedClass = bumped.attr('class');
+                    var groupClass = group.attr('class');
+
+                    group.attr('class', bumpedClass);
+                    bumped.attr('class', groupClass);
                 }                
             }
         },
         {
             text: "Apply",
+            showText: true,
             'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
-                var groups = [];
                 $(".to-be-deleted").each(function(){
-                    groups.push($(this).text());
+                    workspace.openedMap.removedGroups.push($(this).text());
                 });
+
+                $("#grouporder-form li:not(.to-be-deleted)").each(function(){
+                    workspace.openedMap.updatedGroups.push($(this).text());    
+                })
                 
                 $(this).dialog("close");
-                _workspace.openedMap.updateGroupOrder(function(){
-                    deleteGroup(groups);
-                });
-                
+
+                workspace.openedMap.setGroups();
+
             }
         },
         {
             text: "Cancel",
+            showText: true,
             'class': 'btn-group-last grouporder-btn-right',
             click: function() {
+                $.each(this.newGroups, function(index, name){
+                    workspace.openedMap.removedGroup(name);
+                });
+
                 $(this).dialog("close");
             }
         }],
@@ -635,76 +656,71 @@ function openGroupOrderWindow(){
 }
 
 function displayDataBrowser(){
-    if(_workspace){
-        if(_workspace.openedMap){
-            _workspace.openedMap.openDataBrowser();
+    if(workspace){
+        if(workspace.openedMap){
+            workspace.openedMap.openDataBrowser();
         }
     }
 }
 
 function zoomToPOI(){
-    if(_workspace){
-        if(_workspace.openedMap){
-            var name = $("#" + _workspace.poiSelect).val();
-            var poi = _workspace.getPointOfInterestByName(name);
-            poi.zoomTo();
-        }
+    if(workspace && workspace.openedMap){
+        var name = selectors.poiSelect().val();
+        workspace.openedMap.zoomToPOI(name);
     }    
 }
 
 function addPOI(){
-     if(_workspace){
-        if(_workspace.openedMap){
-            $("#addpoi-form").dialog({
-                autoOpen: false,
+    if(workspace && workspace.openedMap){
+        $("#addpoi-form").dialog({
+            autoOpen: false,
             resizable: false,
-                width: _workspace.popupWidth,
-                height:_workspace.popupHeight,
-                modal: true,
-                buttons: {
-                    "Add": function() {
-                        var name = $("#newpoi-name").val();
-                _workspace.addPointOfInterest(name);
-                        $(this).dialog("close");
-                    },
-                    Cancel: function() {
-                        $(this).dialog("close");
+            modal: true,
+            buttons: {
+                "Add": function() {
+                    var name = $("#newpoi-name").val();
+                    if(workspace.openedMap.getPOIByName(name)){
+                        alert('A poi with that name exists already.');
+                    } else{
+                        workspace.openedMap.addPOI(name);    
                     }
+                    
+                    $(this).dialog("close");
                 },
-                close: function() {
-                    $(this).find('input').val('');
+                Cancel: function() {
+                    $(this).dialog("close");
                 }
-            }).dialog("open");
-        }
-    } 
+            },
+            close: function() {
+                $(this).find('input').val('');
+            }
+        }).dialog("open");
+    }
 }
 
 function unregisterDebug(){
-    if(_workspace.openedMap.OLMap != null){
-        _workspace.openedMap.OLMap.events.unregister('moveend', _workspace.openedMap.OLMap, onMapMoveEnd);
+    if(workspace.openedMap.OLMap != null){
+        workspace.openedMap.OLMap.events.unregister('moveend', workspace.openedMap.OLMap, onMapMoveEnd);
     }
 }
 
 function registerDebug(){
-    if(_workspace.openedMap.OLMap != null){
-         _workspace.openedMap.OLMap.events.on({
-         "moveend": onMapMoveEnd
-         });
+    if(workspace.openedMap.OLMap != null){
+        workspace.openedMap.OLMap.events.on({
+            'moveend': onMapMoveEnd
+        });
      }
 }
 
 function clearDebug(){
-    $('#txt-debug').val("");
-    $.getJSON($SCRIPT_ROOT + '/_clear_debug', {
-    }, function(data) {
-    });
+    workspace.openedMap.clearDebug();
 }
 
 function displayDebug(){
     if($('.olTileImage').filter(function(){ return this.style && this.style.visibility === 'hidden' }).length > 0){
-    onMapMoveEnd();
+        onMapMoveEnd();
     }else{
-       _workspace.openedMap.getDebug();
+       workspace.openedMap.getDebug();
     }
 }
 
@@ -724,13 +740,17 @@ function resizeEditors(){
        var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
        divTwo.css('height', divTwoHeight + 'px');    
 }
-function openSecondaryPanel(value, editor){
+function openSecondaryPanel(value){
     $('#secondary-editor > .tabcontent-small').hide();
     $('.secondary-wrap').hide();
-    if(value != 'x'){
+    if(value != 'groups'){
         $('.secondary-wrap').show();
-        $('#'+value.substr(0, value.length-1)+'-tab').show();
-           editor.refresh();
+        $('#' + value.substr(0, value.length-1) + '-tab').show();
+            //Dirty workaround but it's the only way I found so far
+            //to make the secondary editor display all it's content properly
+            //Both refresh are needed...
+            editors[value].refresh();
+            setTimeout(editors[value].refresh, 1);
     }else{
          $('.secondary-wrap').hide();
     }
@@ -738,56 +758,6 @@ function openSecondaryPanel(value, editor){
 }
 
 function onMapOpened(){
-    $('#group-edition-select').change(function(e){
-        var editor = null;
-        var val = this.value;
-        switch(this.value){
-            case 'map': 
-                editor = mapEditor;
-                val = 'maps';
-                break;
-            case 'scales': 
-                editor = scaleEditor;
-                break;
-            case 'symbols': 
-                editor = symbolEditor;
-                break;
-            case 'fonts': 
-                editor = fontEditor;
-                break;
-            case 'projections': 
-                editor = projectionEditor;
-                break;
-            case 'variables':
-                editor = variableEditor;
-                break;
-            case 'readmes':
-                editor = readmeEditor;
-                break;
-                
-        }
-        openSecondaryPanel(val, editor);
-    });
-    $('#txt-logs').val('');
-    $('#txt-debug').val('');
-
-    //Needed to prevent being able to ctrl-z to previous' map content
-    groupEditor.clearHistory();
-    mapEditor.clearHistory();
-    variableEditor.clearHistory();
-    scaleEditor.clearHistory();
-    fontEditor.clearHistory();
-    projectionEditor.clearHistory();
-    readmeEditor.clearHistory();
-
-    if(_workspace.openedMap.type == "Scribe"){
-        $("#btn_delete_group").hide();
-        $("#btn_change_group_order").show();
-    }else if(_workspace.openedMap.type == "Standard"){
-        $("#btn_delete_group").show();
-        $("#btn_change_group_order").show();
-    }
-
     for(i in plugins){
         if(plugins[i].onMapOpened)
             plugins[i].onMapOpened();
@@ -810,30 +780,28 @@ function scribeLog(msg){
 }
 
 function removeIncludeFromMap(filename, commit){
-    for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("layers/"+filename) !== -1){
-            var line = mapEditor.getLine(i);
-            mapEditor.removeLine(i);
+    for(var i=0; i < editors['maps'].lineCount(); i++){
+        if( editors['maps'].getLine(i).indexOf("layers/" + filename) !== -1){
+            var line =  editors['maps'].getLine(i);
+            editors['maps'].removeLine(i);
             break;
         }
     }
-    if(commit == undefined || commit == true){
-        _workspace.openedMap.commit();    
-    }
-
 }
 function addIncludeToMap(filename, commit){
     //Find the includes in the mapeditor
     lastinc = -1;
-    openSecondaryPanel("maps", mapEditor);
-    for(var i=0; i<mapEditor.lineCount(); i++){
-        if(mapEditor.getLine(i).indexOf("INCLUDE") !== -1){
+    //BUG: WE SHOULD SET THE EDITOR SELECT TO THE MAP OPTION
+    //ALSO, THIS FUNCTION IS CALLED FOR EVERY GROUP EVEN IF IT HAS ALREADY BEEN ADDED TO THE MAPFILE
+    openSecondaryPanel("maps",  editors['maps']);
+    for(var i=0; i <  editors['maps'].lineCount(); i++){
+        if( editors['maps'].getLine(i).indexOf("INCLUDE") !== -1){
             lastinc = i;
         }else if(lastinc > -1){
             //We add the new file at the end of the include list
-            var line = mapEditor.getLine((i-1));
+            var line =  editors['maps'].getLine((i-1));
             //TODO detect indentation 
-            mapEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
+            editors['maps'].setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
             //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
             //setTimeout(function(){
@@ -841,9 +809,6 @@ function addIncludeToMap(filename, commit){
             //}, 3000);
             break;
         }
-    }
-    if(commit == undefined || commit == true){
-        _workspace.openedMap.commit();
     }
 }
 

@@ -1,9 +1,12 @@
 function Workspace(name, options){
     this.name = name;
-    this.password = "";
+    
+    this.maps = [];
+
+    this.selectedMap = null;
 
     if(options){
-	this.password = options.password ? options.password : this.password;
+    this.password = options.password ? options.password : this.password;
         this.workspaceSelect = options.workspaceSelect ? options.workspaceSelect : null;
         this.workspaceManage = options.workspaceManage ? options.workspaceManage : null;
         this.mapList = options.mapList ? options.mapList : null;
@@ -28,13 +31,48 @@ function Workspace(name, options){
 
     this.pointsOfInterest = [];
     this.openedMap = null;
-}
+};
 
 Workspace.prototype.open = function(){
-    this.getMaps(this.displayMaps);
-    this.getPointsOfInterest(this.displayPointsOfInterest);
-	$("#info").text(this.name);
+    this.getMaps();
 	onWorkspaceOpened();
+};
+
+Workspace.prototype.createMap = function(data){
+    var self = this;
+
+    $.post($API + '/maps/new', data, function(response) {
+        if(response.status == 1){
+            self.open();
+        }
+    });
+};
+
+Workspace.prototype.cloneMap = function(data){
+    var self = this;
+
+    $.post($API + '/maps/clone', data, function(response) {
+        selectors.gitCloneLogs().val(response.logs);
+        if(response.status == 1){
+            self.open();    
+        }
+    });
+};
+
+Workspace.prototype.deleteMap = function(map, callback){
+    var self = this;
+
+    $.post($API + '/maps/delete/' + map.id, {}, function(response) {
+        if(response.status == 1){
+            if(self.openedMap && map.name == self.openedMap.name){
+                self.openedMap.close();
+            }
+
+            selectors.mapActions().hide();
+
+            self.open();
+        }
+    });   
 };
  
 Workspace.prototype.create = function(){
@@ -52,54 +90,59 @@ Workspace.prototype.create = function(){
     });   
 };
 
-Workspace.prototype.getMaps = function(callback){
+Workspace.prototype.getMaps = function(){
     var self = this;
-    $.post($SCRIPT_ROOT + '/_open_ws', {
+
+    this.selectedMap = null;
+
+    $.post($API + '/workspace/maps', {
         name: this.name,
-        password: this.password
-    }, function(data) {
-        if(typeof(data) == "object") {
-		    var maps = [];
-		    $.each(data.maps, function(key, map){
-				maps.push(new Map(map.name, {
-				    "description": map.description,
-				    "url": map.url,
-                    "thumbnail": map.thumbnail,
-				    "workspace": self
-				}));
-		    });
+    }, function(response) {
+        if(response.status == 1){
+            self.maps = [];
 
-            for(var i = 0; i < maps.length; i++){
-		        self.maps.push(maps[i]);
-            }
+            $.each(response.maps, function(index, map){
+                var options = $.extend(map, {
+                    workspace: self
+                });
+                self.maps.push(new Map(options));
+            });
 
-		    if(callback){
-				callback.call(self)
-		    }
-			closeWorkspacePopup({"workspaceManage": self.workspaceManage});
-			$('#'+self.workspaceManage+' .workspace-errors').hide();
-        }else {
-			$('#'+self.workspaceManage+' .workspace-errors').show();
-			$('#'+self.workspaceManage+' .workspace-errors .error').html(data);
-		}
+            self.displayMaps(self.maps);
+
+            //closeWorkspacePopup({"workspaceManage": self.workspaceManage});
+            //$('#'+self.workspaceManage+' .workspace-errors').hide();    
+        } /*else {
+            $('#'+self.workspaceManage+' .workspace-errors').show();
+            $('#'+self.workspaceManage+' .workspace-errors .error').html(data);
+        }*/
     });
 };
 
 Workspace.prototype.getMapByName = function(name){
     for(var i = 0; i < this.maps.length; i++){
-	if(this.maps[i].name == name){
-	    return this.maps[i];
-	}
+        if(this.maps[i].name == name){
+            return this.maps[i];
+        }
+    }
+    return null;
+};
+
+Workspace.prototype.getMapByID = function(id){
+    for(var i = 0; i < this.maps.length; i++){
+        if(this.maps[i].id == id){
+            return this.maps[i];
+        }
     }
     return null;
 };
 
 Workspace.prototype.getMapIndexByName = function(name){
     for(var i = 0; i < this.maps.length; i++){
-	if(this.maps[i].name == name){
-	    return i;
-	    break;
-	}
+        if(this.maps[i].name == name){
+            return i;
+            break;
+        }
     }
     return null;
 };
@@ -108,32 +151,32 @@ Workspace.prototype.getPointsOfInterest = function(callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_get_pois', {
     }, function(data) {
-	if (data){
-	    var pois = [];
-	    $.each(data.pois, function(key, poi){
+    if (data){
+        var pois = [];
+        $.each(data.pois, function(key, poi){
                 var oPoi = new POI(poi.name, poi.lon, poi.lat, poi.scale);
                 oPoi["workspace"] = self;
-		pois.push(oPoi);
+        pois.push(oPoi);
                 
-	    });
+        });
             
             for(var i = 0; i < pois.length; i++){
-	        self.pointsOfInterest.push(pois[i]);
+            self.pointsOfInterest.push(pois[i]);
             }
 
-	    if(callback){
-		callback.call(self)
-	    }
-	}	
+        if(callback){
+        callback.call(self)
+        }
+    }    
     });
-}
+};
 
 Workspace.prototype.getPointOfInterestByName = function(name){
     for(var i = 0; i < this.pointsOfInterest.length; i++){
-	if(this.pointsOfInterest[i].name == name){
-	    return this.pointsOfInterest[i];
-	    break;
-	}
+    if(this.pointsOfInterest[i].name == name){
+        return this.pointsOfInterest[i];
+        break;
+    }
     }
     return null;
 };
@@ -155,51 +198,58 @@ Workspace.prototype.addPointOfInterest = function(name){
         lat: lonLat.lat, 
         scale: scale
     }, function(status) {
-	//self.pointsOfInterest.push(poi);
+    //self.pointsOfInterest.push(poi);
     });
     self.pointsOfInterest.push(poi);
     this.displayPointsOfInterest();
-}
+};
 
-Workspace.prototype.displayMaps = function(){
+Workspace.prototype.displayMaps = function(maps){
+    var self = this;
+
     this.clearMaps();
-    $("#map-actions button").button("enable");
 
-    $("#" + this.mapList).empty();
+    selectors.mapActions().find('button').button('enable');
+    selectors.mapsList().empty();
 
-    for(var i = 0; i < this.maps.length; i++){
-        this.displayThumbnail(this.maps[i]);
-    }
-    $("#" + this.mapList).selectable({
-		selected: function(e){
-            var li = $(this).find(".ui-selected")
-			var map = self.getMapByName(li.text());
+    $.each(maps, function(index, map){
+        self.displayThumbnail(map);
+    });
+
+    selectors.mapsList().selectable({
+        selected: function(e){
+            var li = $(this).find(".ui-selected");
+            self.selectedMap = self.getMapByName(li.text());
+
+            if(self.selectedMap){
+                self.selectedMap.displayDescription();    
+            }
+
             if(li.find('.default-preview').length > 0){
                 li.addClass('li-default-thumbnail');
-            }
-			map.displayDescription();
-		}
-	});
-    var self = this;
+            }  
+        }
+    });
 };
 
 Workspace.prototype.displayThumbnail = function(map){
     var li = $('<li>').addClass('map-preview');
     var image = $('<div>').addClass('map-preview-img').appendTo(li);
     var name = $('<span>').addClass('map-preview-name').text(map.name).appendTo(li);
-    if(map.thumbnail){
-        image.addClass('thumbnail-preview').css('background-image', 'url("' + map.thumbnail + '")');
+
+    if(map.thumbnail_url){
+        image.addClass('thumbnail-preview').css('background-image', 'url("' + map.thumbnail_url + '")');
     } else{
         image.addClass('default-preview');
     }
-    $("#" + this.mapList).append(li);    
-}
+    selectors.mapsList().append(li);    
+};
 
 Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
 
     for(var i = 0; i < this.pointsOfInterest.length; i++){
-	   $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
+       $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
     }
 
     $("#" + this.poiSelect).trigger('chosen:updated');   
@@ -209,7 +259,7 @@ Workspace.prototype.display = function(){
     var select = $("#" + this.workspaceSelect);
     select.append($("<option></option>").attr("value", this.name).text(this.name));
     select.val(this.name);
-}
+};
 
 Workspace.prototype.close = function(){
     if(this.openedMap){
@@ -228,7 +278,7 @@ Workspace.prototype.destroy = function(callback){
     }, function(status) {
         if(status == "1") {
             $("#" + self.workspaceSelect + " option[value=" + self.name + "]").remove();
-			$('#'+self.workspacePassword).val('');
+            $('#'+self.workspacePassword).val('');
             if(callback){
                 callback.call(self);
             }
@@ -237,17 +287,14 @@ Workspace.prototype.destroy = function(callback){
             alert(status);
         }
     });   
-}
+};
 
 Workspace.prototype.clearMaps = function(){
-    $("#" + this.mapTable).find("tr").remove();
-    $("#" + this.mapDescription).html("");
-    $(".map-button").button("disable");
-}
+    this.selectedMap = null;
+    selectors.mapDescription().html('');
+    selectors.mapActions().find('button').button('disable');
+};
 
 Workspace.prototype.clearPointsOfInterest = function(){
      $("#" + this.poiSelect).find("option").remove();
-}
-
-
-
+};
