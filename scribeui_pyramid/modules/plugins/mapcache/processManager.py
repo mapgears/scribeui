@@ -38,7 +38,7 @@ class processManager(Borg):
                     if status is None:
                         stop = False # keep the thread alive
                         job = self.pManager.getJob(p.jobid)
-                        if job["status"] == 2:
+                        if job.status == 2:
                             self.pManager.stopProcess(p.jobid, True)
                             continue;
                     else:
@@ -117,8 +117,10 @@ class processManager(Borg):
         if extent:
             if extent[0] == '/' and extent[-4:] == '.shp' and os.path.isfile(extent):
                 p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", extent], shell=False)
+                p.jobid = job.id
             else:
                 p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-e", extent], shell=False)
+                p.jobid = job.id
 
         elif dbconfig:
            #TODO: ADD SUPPORT FOR OTHER DATABASE TYPE
@@ -132,10 +134,10 @@ class processManager(Borg):
 
                 query_string = dbconfig['query'].rstrip(';')
 
-            #start mapcache
-                p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", connection_string, '-s', query_string], shell=False)
+           #start mapcache
+           p = Popen(["mapcache_seed", "-c", jobdir+"/mapcacheConfig.xml", "-t", "default", "-z", zoomLevels, "-M", metatile, "-g", grid, "-d", connection_string, '-s', query_string], shell=False)
 
-                p.jobid = job.id
+           p.jobid = job.id
    
         # Lock the processes list before adding data
         self.lock.acquire()

@@ -532,7 +532,7 @@ jQuery(function() { $(document).ready(function(){
                         dataType: "json"
                     }).success(function(data){
                         for(i in this.jobs){
-                            if(this.jobs[i].id == j.jobid){
+                            if(this.jobs[i].id == job.id){
                                 this.jobs[i].status = 2;
                                 this.updateLine(this.jobs[i]);
                             }
