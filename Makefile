@@ -65,7 +65,7 @@ db_reset: stop
 # DEPS
 
 .PHONY: deps
-deps: dep-install venv dep_requirements
+deps: dep_install venv dep_requirements
 
 
 dep_install:
