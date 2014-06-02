@@ -12,20 +12,21 @@ These instructions are for running a development version of ScribeUI. It is pret
 
     cp development.ini local.ini
 
-Review the following parameters in local.ini, and edit them as needed:
+Review the following parameters in local.ini, and edit them if needed:
+
 	- sqlalchemy.url
 	- workspaces.directory
 	- scribe.python
 	- cgi.directory
 	- mapserver.url
 
-Edit the proxy.cgi file and add your server host to the list of allowed hosts
+Edit the proxy.cgi file and add your server host to the list of allowed hosts if diffenrent from localhost (localhost is already included.)
 
 Copy the proxy.cgi file in your cgi-bin directory
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
-        make
+        sudo make
         sudo make install
 
 This will download and install the required dependencies, setup the differents
@@ -36,12 +37,10 @@ To launch the server at http://localhost:6543/:
         make start
 
 Downloading template data is optional, but recommended for a better 
-experience.  The basicscribe-data option is for a light download: 
+experience. 
 
-        sudo make load-demo-data   ==> (644Mb)
-or
+        sudo make load-demo-data   
 
-        sudo make load-basicscribe-data   ==> (8Mb)
 
 This will download some natural earth data and will help you get started with
 ScribeUI by making templates readily working so you don't start with an empty

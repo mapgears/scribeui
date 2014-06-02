@@ -65,12 +65,14 @@ db_reset: stop
 # DEPS
 
 .PHONY: deps
-deps: 
+deps: dep-install venv dep_requirements
+
+
+dep_install:
 	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev 
 	pip install virtualenv
 
-    venv
-
+dep_requirements:
 	@echo "\n\nSilently installing packages (this will take a while)..."
 	$(PIP_MIR) $(PIP) install -q -r requirements.txt
 
