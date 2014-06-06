@@ -10,7 +10,7 @@ PSERVE := bin/pserve
 EV_INI := local.ini
 
 .PHONY: admin
-admin: deps mv-elfinder
+admin: dep_install  mv-elfinder
 
 .PHONY: clean_all
 clean_all: clean_wd clean_venv
@@ -18,7 +18,7 @@ clean_all: clean_wd clean_venv
 clean_wd:
 	rm -rf data *.egg-info
 
-install: develop ev.db db_up db_data 
+install: deps develop ev.db db_up db_data 
 
 develop: lib/python*/site-packages/ev.egg-link
 lib/python*/site-packages/ev.egg-link:
@@ -65,7 +65,7 @@ db_reset: stop
 # DEPS
 
 .PHONY: deps
-deps: dep_install venv dep_requirements
+deps:  venv dep_requirements
 
 
 dep_install:
