@@ -9,8 +9,8 @@ PSERVE := bin/pserve
 
 EV_INI := local.ini
 
-.PHONY: all
-all: deps develop ev.db db_up db_data mv-elfinder
+.PHONY: admin
+admin: deps mv-elfinder
 
 .PHONY: clean_all
 clean_all: clean_wd clean_venv
@@ -18,7 +18,7 @@ clean_all: clean_wd clean_venv
 clean_wd:
 	rm -rf data *.egg-info
 
-install: all
+install: develop ev.db db_up db_data 
 
 develop: lib/python*/site-packages/ev.egg-link
 lib/python*/site-packages/ev.egg-link:
@@ -105,6 +105,7 @@ restart_app: stop_app start_app
 mv-elfinder:
 	sudo cp -ap elfinder-python /usr/lib/cgi-bin/
 	sudo chown -R www-data /usr/lib/cgi-bin/elfinder-python/
+	sudo cp proxy.cgi /usr/lib/cgi-bin/
 
 venv: bin/python
 bin/python:

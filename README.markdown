@@ -5,6 +5,15 @@ ScribeUI is an application to create mapfiles with many scale levels.
 
 To get the latest **release**, clone this repo and then checkout the latest tag. ``` git describe --abbrev=0 ``` to view the latest tag.
 
+The following instruction installations were tested on ubuntu precise. 
+
+
+**Requirements**
+
+* Mapserver 6.4.1
+* Apache 2.2
+
+
 Development installation
 ------------
 
@@ -27,7 +36,7 @@ Copy the proxy.cgi file in your cgi-bin directory
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
         sudo make
-        sudo make install
+        make install
 
 This will download and install the required dependencies, setup the differents
 configurations files and install them in the proper directories. 
