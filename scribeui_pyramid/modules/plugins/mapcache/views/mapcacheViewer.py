@@ -72,20 +72,19 @@ class APIMapcacheViewer(object):
 
             paths.append(mapcacheDirectory)
             level = 3 #maximum depth for recursive search
-            print(paths)
             for path in paths:
                 some_dir = path.rstrip(os.path.sep)
-                assert os.path.isdir(some_dir)
-                num_sep = some_dir.count(os.path.sep)
-                for root, dirs, filenames in os.walk(some_dir):
-                    num_sep_this = root.count(os.path.sep)
-                    if num_sep + level <= num_sep_this:
-                        del dirs[:]
-                    for filename in fnmatch.filter(filenames, 'mapcacheConfig.xml'):
-                        response['layernames'].append(os.path.split(root)[1])
-                        response['layers'].append(os.path.join(root, filename))
-                        pprint.pprint(os.path.join(root, filename))
-                        break
+                if os.path.isdir(some_dir):
+                    num_sep = some_dir.count(os.path.sep)
+                    for root, dirs, filenames in os.walk(some_dir):
+                        num_sep_this = root.count(os.path.sep)
+                        if num_sep + level <= num_sep_this:
+                            del dirs[:]
+                        for filename in fnmatch.filter(filenames, 'mapcacheConfig.xml'):
+                            response['layernames'].append(os.path.split(root)[1])
+                            response['layers'].append(os.path.join(root, filename))
+                            pprint.pprint(os.path.join(root, filename))
+                            break
         else:
            response['errors'].append('Access denied.')
         return response
@@ -153,7 +152,7 @@ class APIMapcacheViewer(object):
                     tilesPath = os.path.join(tilesPath,grid) 
                     if(os.path.isdir(tilesPath)):
                         requestArgs = tilerequest.split("/")
-                        z = requestArgs[2].zfill(2)
+                        z = str(int(requestArgs[2])+1).zfill(2)
                         x = requestArgs[3].zfill(9)
                         y = requestArgs[4]
                         y = y.replace(".png","")
