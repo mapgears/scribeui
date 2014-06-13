@@ -10,7 +10,7 @@ PSERVE := bin/pserve
 EV_INI := local.ini
 
 .PHONY: admin
-admin: dep_install  mv-elfinder
+admin: dep_install deps mv-elfinder perms
 
 .PHONY: clean_all
 clean_all: clean_wd clean_venv
@@ -69,7 +69,7 @@ deps:  venv dep_requirements
 
 
 dep_install:
-	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev 
+	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev zip
 	pip install virtualenv
 
 dep_requirements:
@@ -106,6 +106,9 @@ mv-elfinder:
 	sudo cp -ap elfinder-python /usr/lib/cgi-bin/
 	sudo chown -R www-data /usr/lib/cgi-bin/elfinder-python/
 	sudo cp proxy.cgi /usr/lib/cgi-bin/
+
+perms:
+	sudo chown -R scribeui_pyramid scribeui.sqlite workspaces
 
 venv: bin/python
 bin/python:

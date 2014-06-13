@@ -6,7 +6,6 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.markdown')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid==1.4',
@@ -44,9 +43,9 @@ testing_extras = tests_require + [
 ]
 
 setup(name='scribeui_pyramid',
-      version='0.0',
+      version='0.7',
       description='Pyramid Base',
-      long_description=README + '\n\n' +  CHANGES,
+      long_description=README,
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pylons",

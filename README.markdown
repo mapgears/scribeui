@@ -12,7 +12,64 @@ The following instruction installations were tested on ubuntu precise.
 
 * Mapserver 6.4.1
 * Apache 2.2
+* Make
 
+Production installation
+------------
+
+You need to install apache2 with mod_wsgi: 
+
+    sudo apt-get install libapache2-mod-wsgi 
+
+**Note** mod_wsgi 3.4 or more is recommended. [How to compile mod_wsgi 3.4 on ubuntu precise](http://scribeui.org/faq.html#wsgi-how)
+
+
+Configuration
+-------------
+
+First, copy the default production settings:
+ 
+    cp production.ini local.ini
+
+Review the following parameters in local.ini, and edit them if needed:
+	- sqlalchemy.url
+	- workspaces.directory
+	- scribe.python
+	- cgi.directory
+	- mapserver.url
+
+Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
+
+You can use the Makefile to automatically setup ScribeUI for you, simply run:
+
+       sudo make
+       make install
+
+
+Create a file 'pyramid.wsgi' with the following content:
+
+	from pyramid.paster import get_app, setup_logging
+	ini_path = '/path/to/scribeui/local.ini'
+	setup_logging(ini_path)
+	application = get_app(ini_path, 'main')
+
+Next step is adding the app to apache, here is an example configuration:
+
+    WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
+	        python-path=/path/to/scribeui/lib/python2.7/site-packages
+	WSGIScriptAlias /scribeui /path/to/scribeui/pyramid.wsgi
+
+	<Directory /path/to/scribeui>
+	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
+	        WSGIPassAuthorization On
+	        WSGIProcessGroup scribeui
+	        Order deny,allow
+	        Allow from all
+	</Directory>
+
+Once apache is restarted, ScribeUI should be available!
+
+    sudo service apache2 restart
 
 Development installation
 ------------
@@ -29,9 +86,7 @@ Review the following parameters in local.ini, and edit them if needed:
 	- cgi.directory
 	- mapserver.url
 
-Edit the proxy.cgi file and add your server host to the list of allowed hosts if diffenrent from localhost (localhost is already included.)
-
-Copy the proxy.cgi file in your cgi-bin directory
+Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
@@ -56,59 +111,4 @@ ScribeUI by making templates readily working so you don't start with an empty
 mapfile. (The template code is still available if you don't download the data,
 but the result will be pink tiles). 
 
-Production installation
-------------
 
-You need to install apache2 with mod_wsgi: 
-
-    sudo apt-get install apache2 libapache2-mod-wsgi 
-
-Configuration
--------------
- 
-Review the following parameters in production.ini, and edit them as needed:
-	- sqlalchemy.url
-	- workspaces.directory
-	- scribe.python
-	- cgi.directory
-	- mapserver.url
-
-Then:
-
-    cp development.ini local.ini
-
-Edit the proxy.cgi file and add your server host to the list of allowed hosts
-
-Copy the proxy.cgi file in your cgi-bin directory
-
-You can use the Makefile to automatically setup ScribeUI for you, simply run:
-
-        make
-        sudo make install
-
-www-data needs to be the owner of the workspace folder, scribeui_pyramid directory and the database:
-
-    sudo chown -r www-data workspaces scribeui.lite scribeui_pyramid
-
-Create a file 'pyramid.wsgi' with the following content:
-
-	from pyramid.paster import get_app, setup_logging
-	ini_path = '/path/to/scribeui_pyramid/production.ini'
-	setup_logging(ini_path)
-	application = get_app(ini_path, 'main')
-
-Next step is adding the app to apache, here is an example configuration:
-
-    WSGIDaemonProcess scribeui_pyramid user=www-data group=www-data threads=10 \
-	        python-path=/path/to/scribeui_pyramid/lib/python2.7/site-packages
-	WSGIScriptAlias /scribeui_pyramid /path/to/scribeui_pyramid/pyramid.wsgi
-
-	<Directory /path/to/scribeui_pyramid>
-	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
-	        WSGIPassAuthorization On
-	        WSGIProcessGroup scribeui_pyramid
-	        Order deny,allow
-	        Allow from all
-	</Directory>
-
-Once apache is restarted, ScribeUI should be available!
