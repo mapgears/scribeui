@@ -27,7 +27,9 @@ You need to install apache2 with mod_wsgi:
 Configuration
 -------------
 
-First, copy the default production settings:
+First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at ```/opt/scribeui```
+
+Then, copy the default production settings:
  
     cp production.ini local.ini
 
@@ -46,20 +48,20 @@ You can use the Makefile to automatically setup ScribeUI for you, simply run:
        make install
 
 
-Create a file 'pyramid.wsgi' with the following content:
+Create a file 'pyramid.wsgi' with the following content, editing the path to your scribeui installation:
 
 	from pyramid.paster import get_app, setup_logging
-	ini_path = '/path/to/scribeui/local.ini'
+	ini_path = '/opt/scribeui/local.ini'
 	setup_logging(ini_path)
 	application = get_app(ini_path, 'main')
 
 Next step is adding the app to apache, here is an example configuration:
 
     WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
-	        python-path=/path/to/scribeui/lib/python2.7/site-packages
-	WSGIScriptAlias /scribeui /path/to/scribeui/pyramid.wsgi
+	        python-path=/opt/scribeui/lib/python2.7/site-packages
+	WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
 
-	<Directory /path/to/scribeui>
+	<Directory /opt/scribeui>
 	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
 	        WSGIPassAuthorization On
 	        WSGIProcessGroup scribeui
@@ -70,6 +72,12 @@ Next step is adding the app to apache, here is an example configuration:
 Once apache is restarted, ScribeUI should be available!
 
     sudo service apache2 restart
+
+Downloading template data is optional, but recommended for a better 
+experience. 
+
+        sudo make load-demo-data   
+
 
 Development installation
 ------------

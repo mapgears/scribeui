@@ -108,7 +108,7 @@ mv-elfinder:
 	sudo cp proxy.cgi /usr/lib/cgi-bin/
 
 perms:
-	sudo chown -R scribeui_pyramid scribeui.sqlite workspaces
+	sudo chown -R www-data scribeui_pyramid scribeui.sqlite workspaces .
 
 venv: bin/python
 bin/python:
