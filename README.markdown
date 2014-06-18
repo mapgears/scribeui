@@ -5,6 +5,8 @@ ScribeUI is an application to create mapfiles with many scale levels.
 
 To get the latest **release**, clone this repo and then checkout the latest tag. ``` git describe --abbrev=0 ``` to view the latest tag.
 
+Migrating from ScribeUI v0.5 to v1.0 is explained at the end of this file.
+
 The following instruction installations were tested on ubuntu precise. 
 
 
@@ -119,4 +121,30 @@ ScribeUI by making templates readily working so you don't start with an empty
 mapfile. (The template code is still available if you don't download the data,
 but the result will be pink tiles). 
 
+Migrating from v0.5 to v1.0
+-----------------------------
+
+Before pulling and installing ScribeUI v1.0, first change all file's permission back to your own user:
+
+    sudo chown -R user .
+
+You may now follow the production installation instructions and install ScribeUI v1.0
+
+Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:
+
+    sudo chown -R user scribeui.sqlite workspaces/
+ 
+Then executre the update script:
+
+    python update.py
+
+Then change the database and workspace folders back to www-data:
+
+    sudo chown -R www-data scribeui.sqlite workspaces/
+
+Your workspaces and maps will then be imported, although passwordless. 
+
+Each map will have to be edited to delete or comment the following line in the map editor:
+
+    CONFIG "MS_ERRORFILE" "../debugFile.log"
 
