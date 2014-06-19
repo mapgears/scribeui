@@ -31,7 +31,7 @@ def copytree(src, dst, symlinks = False, ignore = None):
     else:
       shutil.copy2(s, d)
 
-if True:
+try:
     con = lite.connect('application/db/database.db')
     con.row_factory = lite.Row
     cur = con.cursor()    
@@ -85,9 +85,8 @@ if True:
         con2.close()
     print("Done!")
 
-'''except lite.Error, e:
+except lite.Error, e:
     
     print "Error %s:" % e.args[0]
     sys.exit(1)
 
-'''
