@@ -48,6 +48,7 @@ You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
        sudo make
        make install
+       sudo make perms
 
 
 Create a file 'pyramid.wsgi' with the following content, editing the path to your scribeui installation:
@@ -126,7 +127,7 @@ Migrating from v0.5 to v1.0
 
 Before pulling and installing ScribeUI v1.0, first change all file's permission back to your own user:
 
-    sudo chown -R user .
+    sudo chown -R user application/
 
 You may now follow the production installation instructions and install ScribeUI v1.0
 
