@@ -3,6 +3,8 @@ title: ScribeUI - Plugin Creation Tutorial
 layout: default
 ---
 
+**DEPRECATION NOTICE: The following tutorial is only valid for ScribeUI versions earlier than v1.0. ScribeUI 1.0 plugin tutorial will [be added shortly.](https://github.com/mapgears/scribeui/issues/98)**
+
 #Plugin Creation
 
 Creating plugins in ScribeUI is easy, this page should help understand how to create a new functionnality. 

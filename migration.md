@@ -3,7 +3,39 @@ title: ScribeUI - Getting started with ScribeUI
 layout: default
 ---
 
-#Version Update and Workspace Migration
+Version Update and Workspace Migration
+======================================
+
+v0.5 to v1.0
+------------
+
+Before pulling and installing ScribeUI v1.0, first change all file's permission back to your own user:
+
+    sudo chown -R user application/
+
+You may now follow the production installation instructions and install ScribeUI v1.0
+
+Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:
+
+    sudo chown -R user scribeui.sqlite workspaces/
+ 
+Then executre the update script:
+
+    python update.py
+
+Then change the database and workspace folders back to www-data:
+
+    sudo chown -R www-data scribeui.sqlite workspaces/
+
+Your workspaces and maps will then be imported, although passwordless. 
+
+Each map will have to be edited to delete or comment the following line in the map editor:
+
+    CONFIG "MS_ERRORFILE" "../debugFile.log"
+
+
+v0.1 to v0.2
+------------
 
 These instructions are for users who have ScribeUI **v0.1** installed. If 
 you have a later version and wish to update ScribeUI, just pull the latest

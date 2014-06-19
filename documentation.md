@@ -21,6 +21,6 @@ Most frequent questions and problems
 
 A detailed tutorial on how to create a plugin for ScribeUI.
 
-[Migrating workspaces from v0.1 to a later version](migration.html) 
+[Migrating workspaces to a new version of ScribeUI](migration.html) 
 
-This guide is for those who tried ScribeUI right at the beginning, and now need to update their software. 
+Guide to update your ScribeUI installation and keep your workspaces with you.

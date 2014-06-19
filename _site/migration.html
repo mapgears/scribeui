@@ -41,6 +41,29 @@
     <section id="main-content">
       <h1>Version Update and Workspace Migration</h1>
 
+<h2>v0.5 to v1.0</h2>
+
+<p>Before pulling and installing ScribeUI v1.0, first change all file&#39;s permission back to your own user:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R user application/
+</code></pre></div>
+<p>You may now follow the production installation instructions and install ScribeUI v1.0</p>
+
+<p>Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R user scribeui.sqlite workspaces/
+</code></pre></div>
+<p>Then executre the update script:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">python update.py
+</code></pre></div>
+<p>Then change the database and workspace folders back to www-data:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data scribeui.sqlite workspaces/
+</code></pre></div>
+<p>Your workspaces and maps will then be imported, although passwordless. </p>
+
+<p>Each map will have to be edited to delete or comment the following line in the map editor:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">CONFIG &quot;MS_ERRORFILE&quot; &quot;../debugFile.log&quot;
+</code></pre></div>
+<h2>v0.1 to v0.2</h2>
+
 <p>These instructions are for users who have ScribeUI <strong>v0.1</strong> installed. If 
 you have a later version and wish to update ScribeUI, just pull the latest
 version from github and you&#39;re all good! </p>

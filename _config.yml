@@ -1,2 +1,2 @@
 markdown: redcarpet
-exclude: Gemfile, application, Gemfile.lock, CNAME
+exclude: Gemfile, application, Gemfile.lock, CNAME, lib, share, local

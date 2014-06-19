@@ -17,8 +17,6 @@ layout: default
 
 [How do I install mod\_wsgi 3.4 on ubuntu precise or earlier ?](#wsgi-how)
 
-[Can I install flask with aptitude or easy install instead of pip?](#pip)
-
 [I am on windows, can I install ScribeUI?](#windows)
 
 ### Troubleshooting
@@ -58,10 +56,6 @@ As there is no package ready yet, you will have to compile a version of mod\_wsg
 And you must edit scribeui's apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod\_wsgi version, for example:
 
       LoadModule wsgi_module     /usr/lib/apache2/modules/mod\_wsgi.so
-
-### <a name="pip"></a> Can I install flask with aptitude or easy install instead of pip?
-
-Flask 0.10.1 is the recommended version, and it is the version currently offered by pip, that is why we recommend this method. 
 
 ### <a name="windows"></a> I am on windows, can I install ScribeUI?
 

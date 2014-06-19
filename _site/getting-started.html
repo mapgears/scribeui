@@ -45,79 +45,101 @@
 
 <h2>Installing</h2>
 
-<h2>Requirements</h2>
+<p>The following instruction installations were tested on ubuntu precise. </p>
+
+<p><strong>Requirements</strong></p>
 
 <ul>
-<li>  Apache</li>
-<li>  Python (tested with 2.7.3 only)</li>
-<li>  Mod WSGI</li>
-<li>  Flask</li>
-<li>  MapServer (version 6.0 or higher)</li>
-<li>  Sqlite3</li>
+<li>Mapserver 6.4.1</li>
+<li>Apache 2.2</li>
+<li>Make</li>
 </ul>
 
-<p>You can install them using aptitude and pip:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
-sudo pip install Flask
+<h2>Production installation</h2>
+
+<p>You need to install apache2 with mod_wsgi: </p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install libapache2-mod-wsgi 
 </code></pre></div>
+<p><strong>Note</strong> mod_wsgi 3.4 or more is recommended. <a href="http://scribeui.org/faq.html#wsgi-how">How to compile mod_wsgi 3.4 on ubuntu precise</a></p>
+
 <h2>Configuration</h2>
 
-<ul>
-<li><p>Make a copy of the application/runserver.dist.wsgi file as
-application/runserver.wsgi and edit it. Change the path accordingly.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cp application/runserver.dist.wsgi application/runserver.wsgi
-vim application/runserver.wsgi
-</code></pre></div></li>
-<li><p>Make a copy of the config.dist.py file as config.py and edit it. Change the
-ip variable accordingly.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cp config.dist.py config.py
-vim config.py
-</code></pre></div></li>
-<li><p>To reset the sqlite3 database, open a python shell as admin from the
-the application directory:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cd application
-sudo python
+<p>First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at <code>/opt/scribeui</code></p>
+
+<p>Then, copy the default production settings:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cp production.ini local.ini
 </code></pre></div>
-<p>in the python shell:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">from init import init_db
-init_db()
-</code></pre></div></li>
-<li><p>Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo cp -ap elfinder-python /usr/lib/cgi-bin/
-</code></pre></div></li>
-<li><p>The owner of the the db folder and the workspace folder must be the
-current user or www-data if the application is on a server:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data application/db application/workspaces \
-application/www /usr/lib/cgi-bin/elfinder-python/
-</code></pre></div></li>
-<li><p>Run the makefile to download the data</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">make
-</code></pre></div></li>
-</ul>
+<p>Make sure the mapserver url in local.ini points to your mapserver path:
+    - line 35: mapserver.url</p>
 
-<h2>Apache configuration</h2>
+<p>Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)</p>
 
-<p>In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
-(change the path):</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">#ScribeUI     
+<p>Create a file &#39;pyramid.wsgi&#39; with the following content, editing the path to your scribeui installation:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">from pyramid.paster import get_app, setup_logging
+ini_path = &#39;/opt/scribeui/local.ini&#39;
+setup_logging(ini_path)
+application = get_app(ini_path, &#39;main&#39;)
+</code></pre></div>
+<p>You can use the Makefile to automatically setup ScribeUI for you, simply run:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">   sudo make
+   sudo chown -R youruser .
+   make install
+   sudo make perms
+</code></pre></div>
+<p>Next step is adding the app to apache, here is an example configuration:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
+        python-path=/opt/scribeui/lib/python2.7/site-packages
+WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
 
-WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
-AddType text/html .py
-&lt;Directory /opt/apps/ScribeUI/application/templates&gt;
-  Order deny,allow
-  Allow from all
-&lt;/Directory&gt;
-
-Alias /ScribeUI/download/ &quot;/opt/apps/ScribeUI/application/www/&quot;
-&lt;Directory &quot;/opt/apps/ScribeUI/application/www/&quot;&gt;
-  AllowOverride None
-  Options Indexes FollowSymLinks Multiviews
-  Order allow,deny
-  Allow from all
+&lt;Directory /opt/scribeui&gt;
+        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
+        WSGIPassAuthorization On
+        WSGIProcessGroup scribeui
+        Order deny,allow
+        Allow from all
 &lt;/Directory&gt;
 </code></pre></div>
-<p>Note: if there are segfaults in the apache error logs after adding this config,
-it is fixed by restarting apache.</p>
+<p>Once apache is restarted, ScribeUI should be available!</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo service apache2 restart
+</code></pre></div>
+<p>Downloading template data is optional, but recommended for a better 
+experience: </p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make load-demo-data   
+</code></pre></div>
+<p>If you omit this step, the maps you create from default templates will display pink tiles.</p>
+
+<h2>Development installation</h2>
+
+<p>These instructions are for running a development version of ScribeUI. It is pretty good for a local version of the application. Production installation instructions are available below.</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">cp development.ini local.ini
+</code></pre></div>
+<p>Review the following parameters in local.ini, and edit them if needed:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">- sqlalchemy.url
+- workspaces.directory
+- scribe.python
+- cgi.directory
+- mapserver.url
+</code></pre></div>
+<p>Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)</p>
+
+<p>You can use the Makefile to automatically setup ScribeUI for you, simply run:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make
+    make install
+</code></pre></div>
+<p>This will download and install the required dependencies, setup the differents
+configurations files and install them in the proper directories. </p>
+
+<p>To launch the server at http://localhost:6543/:</p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">    make start
+</code></pre></div>
+<p>Downloading template data is optional, but recommended for a better 
+experience. </p>
+<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make load-demo-data   
+</code></pre></div>
+<p>This will download some natural earth data and will help you get started with
+ScribeUI by making templates readily working so you don&#39;t start with an empty
+mapfile. (The template code is still available if you don&#39;t download the data,
+but the result will be pink tiles). </p>
 
     </section>
   </div>
