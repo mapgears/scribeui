@@ -40,19 +40,21 @@ Make sure the mapserver url in local.ini points to your mapserver path:
 
 Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
 
-You can use the Makefile to automatically setup ScribeUI for you, simply run:
-
-       sudo make
-       make install
-       sudo make perms
-
-
 Create a file 'pyramid.wsgi' with the following content, editing the path to your scribeui installation:
 
 	from pyramid.paster import get_app, setup_logging
 	ini_path = '/opt/scribeui/local.ini'
 	setup_logging(ini_path)
 	application = get_app(ini_path, 'main')
+
+
+You can use the Makefile to automatically setup ScribeUI for you, simply run:
+
+       sudo make
+       sudo chown -R youruser .
+       make install
+       sudo make perms
+
 
 Next step is adding the app to apache, here is an example configuration:
 
