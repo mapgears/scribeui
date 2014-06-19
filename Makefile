@@ -10,7 +10,7 @@ PSERVE := bin/pserve
 EV_INI := local.ini
 
 .PHONY: admin
-admin: dep_install deps mv-elfinder perms
+admin: dep_install deps mv-elfinder 
 
 .PHONY: clean_all
 clean_all: clean_wd clean_venv

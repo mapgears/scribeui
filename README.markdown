@@ -35,12 +35,8 @@ Then, copy the default production settings:
  
     cp production.ini local.ini
 
-Review the following parameters in local.ini, and edit them if needed:
-	- sqlalchemy.url
-	- workspaces.directory
-	- scribe.python
-	- cgi.directory
-	- mapserver.url
+Make sure the mapserver url in local.ini points to your mapserver path:
+	- line 35: mapserver.url
 
 Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
 
@@ -77,9 +73,11 @@ Once apache is restarted, ScribeUI should be available!
     sudo service apache2 restart
 
 Downloading template data is optional, but recommended for a better 
-experience. 
+experience: 
 
         sudo make load-demo-data   
+
+If you omit this step, the maps you create from default templates will display pink tiles.
 
 
 Development installation
