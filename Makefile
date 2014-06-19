@@ -125,33 +125,33 @@ clean_venv:
 load-all-data: load-basescribe-data load-demo-data
 
 load-demo-data:
-	mkdir -p ./application/data/natural_earth
+	mkdir -p ./pdata/natural_earth
 
-	test -d ./application/data/natural_earth/110m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip && unzip -o 110m_cultural.zip -d ./application/data/natural_earth/110m_cultural/ && rm 110m_cultural.zip)
+	test -d ./pdata/natural_earth/110m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/110m_cultural.zip && unzip -o 110m_cultural.zip -d ./pdata/natural_earth/110m_cultural/ && rm 110m_cultural.zip)
 
-	test -d ./application/data/natural_earth/110m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/110m_physical.zip && unzip -o 110m_physical.zip -d ./application/data/natural_earth/110m_physical/ && rm 110m_physical.zip)
+	test -d ./pdata/natural_earth/110m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/110m_physical.zip && unzip -o 110m_physical.zip -d ./pdata/natural_earth/110m_physical/ && rm 110m_physical.zip)
 
-	test -d ./application/data/natural_earth/10m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/10m_cultural.zip && unzip -o 10m_cultural.zip -d ./application/data/natural_earth/10m_cultural/ && rm 10m_cultural.zip)
+	test -d ./pdata/natural_earth/10m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/10m_cultural.zip && unzip -o 10m_cultural.zip -d ./pdata/natural_earth/10m_cultural/ && rm 10m_cultural.zip)
 
-	test -d ./application/data/natural_earth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/10m_physical.zip &&unzip -o 10m_physical.zip -d ./application/data/natural_earth/10m_physical/ && rm 10m_physical.zip)
+	test -d ./pdata/natural_earth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/10m_physical.zip &&unzip -o 10m_physical.zip -d ./pdata/natural_earth/10m_physical/ && rm 10m_physical.zip)
 
-	test -d ./application/data/natural_earth/50m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/50m_cultural.zip && unzip -o 50m_cultural.zip -d ./application/data/natural_earth/50m_cultural/ && rm 50m_cultural.zip)
+	test -d ./pdata/natural_earth/50m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/50m_cultural.zip && unzip -o 50m_cultural.zip -d ./pdata/natural_earth/50m_cultural/ && rm 50m_cultural.zip)
 
-	test -d ./application/data/natural_earth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/50m_physical.zip && unzip -o 50m_physical.zip -d ./application/data/natural_earth/50m_physical/ && rm 50m_physical.zip)
+	test -d ./pdata/natural_earth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/50m_physical.zip && unzip -o 50m_physical.zip -d ./pdata/natural_earth/50m_physical/ && rm 50m_physical.zip)
 
-	mkdir -p ./application/data/osm-data
+	mkdir -p ./pdata/osm-data
 
-	test -f ./application/data/osm-data/processed_p.shp || (wget -c http://tile.openstreetmap.org/processed_p.tar.bz2 && tar -C ./application/data/osm-data/ -xjf processed_p.tar.bz2  && rm processed_p.tar.bz2)
+	test -f ./pdata/osm-data/processed_p.shp || (wget -c http://tile.openstreetmap.org/processed_p.tar.bz2 && tar -C ./pdata/osm-data/ -xjf processed_p.tar.bz2  && rm processed_p.tar.bz2)
 
-	test -f ./application/data/osm-data/shoreline_300.shp || (wget -c http://tile.openstreetmap.org/shoreline_300.tar.bz2 && tar -C ./application/data/osm-data/ -xjf shoreline_300.tar.bz2  && rm shoreline_300.tar.bz2)
+	test -f ./pdata/osm-data/shoreline_300.shp || (wget -c http://tile.openstreetmap.org/shoreline_300.tar.bz2 && tar -C ./pdata/osm-data/ -xjf shoreline_300.tar.bz2  && rm shoreline_300.tar.bz2)
 
-	test -f ./application/data/osm-data/TM_WORLD_BORDERS-0.3.shp || (wget -c http://thematicmapping.org/downloads/TM_WORLD_BORDERS-0.3.zip && unzip -o TM_WORLD_BORDERS-0.3.zip -d ./application/data/osm-data/ && rm TM_WORLD_BORDERS-0.3.zip)
+	test -f ./pdata/osm-data/TM_WORLD_BORDERS-0.3.shp || (wget -c http://thematicmapping.org/downloads/TM_WORLD_BORDERS-0.3.zip && unzip -o TM_WORLD_BORDERS-0.3.zip -d ./pdata/osm-data/ && rm TM_WORLD_BORDERS-0.3.zip)
 
 load-basescribe-data:
-	mkdir -p ./application/data/natural_earth
+	mkdir -p ./pdata/natural_earth
 
-	test -d ./application/data/natural_earth/110m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/ne_110m_land.zip && unzip -o ne_110m_land.zip -d ./application/data/natural_earth/110m_physical/ && rm ne_110m_land.zip)
+	test -d ./pdata/natural_earth/110m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/physical/ne_110m_land.zip && unzip -o ne_110m_land.zip -d ./pdata/natural_earth/110m_physical/ && rm ne_110m_land.zip)
 
-	test -d ./application/data/natural_earth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/ne_50m_land.zip && unzip -o ne_50m_land.zip -d ./application/data/natural_earth/50m_physical/ && rm ne_50m_land.zip)
+	test -d ./pdata/natural_earth/50m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/physical/ne_50m_land.zip && unzip -o ne_50m_land.zip -d ./pdata/natural_earth/50m_physical/ && rm ne_50m_land.zip)
 
-	test -d ./application/data/natural_earth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_land.zip &&unzip -o ne_10m_land.zip -d ./application/data/natural_earth/10m_physical/ && rm ne_10m_land.zip)
+	test -d ./pdata/natural_earth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/ne_10m_land.zip &&unzip -o ne_10m_land.zip -d ./pdata/natural_earth/10m_physical/ && rm ne_10m_land.zip)
