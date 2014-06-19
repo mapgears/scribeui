@@ -1,9 +1,0 @@
-ORDER {
- 1: groups/land.layer 
- 2: groups/land_usage.layer 
- 3: groups/borders.layer 
- 4: groups/water.layer 
- 5: groups/roads.layer 
- 6: groups/places.layer 
- 7: groups/buildings.layer 
-}

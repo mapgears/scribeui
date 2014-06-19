@@ -1,0 +1,352 @@
+{% block body %}
+
+{% if items %}
+
+    {% if items[0].has_datepicker == True %}
+
+        <div class="input-append date pull-left" id="datepickerFrom" data-date="2013-01-01" data-date-format="yyyy-mm-dd">
+            <input class="span2" size="16" type="text" value="2013-01-01" readonly>
+            <span class="add-on"><i class="icon-calendar"></i></span>
+        </div>
+
+        <div class="input-append date" id="datepickerTo" data-date="2013-01-01" data-date-format="yyyy-mm-dd">
+            <input class="span2" size="16" type="text" value="2013-01-01" readonly>
+            <span class="add-on"><i class="icon-calendar"></i></span>
+        </div>
+        
+        <script src="../../../../static/js/datepicker.js"></script>
+        
+    {% endif %}
+
+    <br>
+
+    <table id="{{items[0].table_id}}" class="table table-bordered table-striped table-condensed">
+
+        <thead class="uppercase">
+            <tr>
+                {% for attr in items[0].attributes %}
+                <th>{{attr.name}}</th>
+                {% endfor %}
+                
+                {% if (items[0].edit_row == True or items[0].add_row == True)%}
+                    <th class="list-actions">Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+        
+            {% for item in items[0].results %}
+            <tr>
+                {% if items[0].edit_row == True %}
+                    {% for attr in items[0].attributes %}
+                        <td>
+                            {% if getattr(item, attr.attr) == None %}
+                                {{attr.none_value}}
+                            {% else %}
+                                {{getattr(item, attr.attr)}}
+                            {% endif %}
+                            
+                            {% if attr.domain %}
+                                <select id="{{attr.attr}}" name="{{attr.attr}}" style="display:none;" class="select-inline">
+                                    {% for option in attr.domain %}
+                                        {% if option.value == item[attr.attr] %}
+                                          <option selected="" value="{{option.value}}">{{option.label}}</option>
+                                        {% else %}
+                                            <option value="{{option.value}}">{{option.bale}}</option>
+                                        {% endif %}
+                                    {% endfor %}    
+                                </select>
+                                <input type="hidden" id="attr.attr" name="{{attr.attr}}" value="{{item[attr.attr]}}"> 
+                            {% elif attr.function %}
+                                <input type="hidden" class="calculated-input" id="{{attr.attr}}" name="{{attr.attr}}" value="{{attr.function}}()"  disabled>
+                            {% else %}
+                                <input type="hidden" id="attr.attr" name="{{attr.attr}}" value="{{item[attr.attr]}}">      
+                            {% endif %}
+                            
+                        </td>
+                    {% endfor %}
+                    <td class="column-actions">
+                        <div class="btn-group">
+                            <a class="btn btn-small edit-row" href="">
+                                <i class="icon-pencil"></i> Modifier</a>
+                        </div>
+                    </td>
+                {% else %}
+                    {% for attr in items[0].attributes %}
+                        {% if getattr(item, attr.attr) == None %}
+                            <td>{{attr.none_value}}</td>
+                        {% else %}
+                            <td>{{getattr(item, attr.attr)}}</td>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                               
+            </tr>
+            {% endfor %}
+            
+            {% if items[0].add_row == True %}
+                <tr>
+                {% for attr in items[0].attributes %}
+                    <td>
+                        {% if attr.domain %}
+                        <select id="{{attr.attr}}" name="{{attr.attr}}" style="display:none;" class="select-inline">
+                            {% for option in attr.domain %}
+                                <option value={{option.value}}>{{option.label}}</option>
+                            {% endfor %}    
+                        </select> 
+                        {% elif attr.function %}
+                            <input type="hidden" class="calculated-input" id="{{attr.attr}}" name="{{attr.attr}}" value="{{attr.function}}()"  disabled>      
+                        {% endif %}
+                        <input type="hidden" id="{{attr.attr}}" name="{{attr.attr}}" value=""  disabled>
+                    </td>
+                {% endfor %}
+                    <td class="column-actions">
+                        <div class="btn-group">
+                            <a class="btn btn-small add-row" href="">
+                                <i class="icon-plus-sign"></i> Ajouter</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+    <script>
+        var oTable = $('#{{items[0].table_id}}').dataTable({
+        	sDom: "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+        	"sPaginationType": "bootstrap",
+            bPaginate: {{'true' if items[0].has_page == True else 'false'}},
+            bSort: {{'true' if items[0].has_sort == True else 'false'}},
+            bFilter: {{'true' if items[0].has_search == True else 'false'}},
+            oLanguage: fr    
+        });
+        
+        var beforeSave = {{items[0].before_save if items[0].before_save else 'null'}};
+
+        {% if (items[0].edit_row == True or items[0].add_row == True)%}
+            var editing = false;
+            var name = '{{items[0].name}}';
+            var initialInputs;
+            var table_id = '{{items[0].table_id}}';
+
+            function addRow(){
+                var initialData = [];
+                for(var i = 0; i < initialInputs.length - 1; i++){
+                    initialData.push($(initialInputs[i]).html());
+                }
+                initialData.push('<div class="btn-group"><a class="btn btn-small add-row" href=""><i class="icon-plus-sign"></i> Ajouter</a></div>');                    
+                oTable.fnAddData(initialData);
+                bindAdd($('#' + table_id + ' a.add-row'));    
+            }
+
+            function editRow(oTable, nRow, addNewRow){
+                editing = true;
+                var jqTds = $('>td', nRow);
+                var jqHiddenInputs = $('input[type="hidden"]', nRow);
+                
+                for(var i = 0; i < jqTds.length - 1; i++){
+                    var select = $(jqTds[i]).find('select');
+                    
+                    if(select.length > 0){
+                        $(jqTds[i]).empty();
+                        $(jqTds[i]).append(select);
+                        select.css('display', 'block');    
+                    } else {
+                        var value = $(jqHiddenInputs[i]).val();
+                        if(value.substring(value.length - 2, value.length) == '()' && $(jqHiddenInputs[i]).hasClass('calculated-input')){
+                            var fctn = value.substring(0, value.length - 2);
+                            if(typeof(window[fctn])){
+                                value = window[fctn].call(null, $(jqTds[i]));
+                            }
+                            $(jqHiddenInputs[i]).val(value);
+                            $(jqTds[i]).text(value);    
+                        } else if(!$(jqHiddenInputs[i]).hasClass('calculated-input')){
+                            $(jqTds[i]).empty();
+                            $(jqTds[i]).append('<input class="input-inline" type="text" value="'+ $(jqHiddenInputs[i]).val() +'">');
+                        }
+                    }
+                    $(jqTds[i]).append($(jqHiddenInputs[i]));   
+                }
+                
+                var a = $("<a>").attr("class", "btn btn-small save-row").attr("href", "").html("<i class=\"icon-ok\"></i> Enregistrer");                
+                var div = $('<div>').attr('class', 'btn-group').append(a);
+                
+                $(jqTds[jqTds.length - 1]).empty(); 
+                $(jqTds[jqTds.length - 1]).append(div);
+                
+                bindSave(a, nRow, addNewRow);
+            }
+            
+            function saveRow(oTable, nRow, addNewRow){
+                //var jqInputs = $('input[type="text"]', nRow);
+                var jqHiddenInputs = $('input[type="hidden"]', nRow);
+                var jqTds = $('>td', nRow);
+                
+                for(var i = 0; i < jqTds.length - 1; i++){
+                    if($(jqTds[i]).find('select').length > 0){
+                        var select = $(jqTds[i]).find('select');//.find('option:selected').text();
+                        var value = $(select).find('option:selected').val();
+                        var text = $(select).find('option:selected').text();
+                         
+                        $(jqTds[i]).html(text);
+                        $(select).css('display', 'none');
+                        $(jqTds[i]).append($(jqHiddenInputs[i]).val(value));
+                        $(jqTds[i]).append(select);
+                    } else if ($(jqTds[i]).find('input[type="text"]').length > 0){
+                        var input = $(jqTds[i]).find('input[type="text"]');
+                        $(jqTds[i]).html($(input).val());   
+                        $(jqTds[i]).append($(jqHiddenInputs[i]).val($(input).val()));
+                    }       
+                }
+               
+                var a = $("<a>").attr("class", "btn btn-small edit-row").attr("href", "").html("<i class=\"icon-pencil\"></i> Modifier");                            
+                var div = $('<div>').attr('class', 'btn-group').append(a);
+                  
+                $(jqTds[jqTds.length - 1]).empty(); 
+                $(jqTds[jqTds.length - 1]).append(div);
+                
+                bindEdit(a);
+                
+                if(addNewRow == true){
+                    addRow();     
+                }
+
+                oTable.fnDraw();
+                editing = false;
+            }
+            
+            function bindAdd(selector){
+                selector.on('click', function (e) {                                    
+                    e.preventDefault();
+                    
+                    if(editing == false){
+                        var nRow = $(this).parents('tr')[0];
+                        initialInputs = $('>td', nRow).clone();
+                        editRow(oTable, nRow, true);
+                    }
+                    return false;
+                });
+            }
+            
+            function bindEdit(selector){
+                selector.on('click', function (e) {                
+                    e.preventDefault();
+                    
+                    if(editing == false){
+                        var nRow = $(this).parents('tr')[0];
+                        editRow(oTable, nRow, false);
+                    }
+                    return false;
+                });
+            }
+            
+            function bindSave(selector, nRow, addNewRow){
+                selector.on('click', function(e){
+                    e.preventDefault();
+                    //if(beforeSave != null){
+                        saveRow(oTable, nRow, addNewRow);
+                    //} else{
+                    //    saveRow(oTable, nRow, addNewRow);
+                    //}   
+                });
+                return false;   
+            }
+
+            var form = $('#' + table_id).parents('form')[0];
+            var hiddenJSON = $(form).find('input[name=' + name + ']');
+
+            if($(hiddenJSON).val() && $(hiddenJSON).val() != ""){
+               //initialInputs = $('>td').clone();
+               //Les select box ne fonctionneront pas s'il y a déja des entrées dans la table
+               //Quelque chose doit etre fait ici pour récupérer le contenu initial de la premiere ligne
+               //(celle qui contient les select cachés) puis ajouter un de ces select (avec la bonne valeur sélectionnée)
+               //a chacune des entrées dans la table
+               var json = JSON.parse($(hiddenJSON).val());               
+
+               for(var i = 0; i < json[name].length; i++){
+                  var tData = [];
+                  
+                  $.each(json[name][i], function(key, value){
+                      if(value.domain != null){
+                          var select = '<select id="' + key + '" name="' + key + '" style="display:none;" class="select-inline">';
+                          for(var j = 0; j < value.domain.length; j++){
+                              if(value.domain[j].selected == false){
+                                  select += '<option value="' + value.domain[j].value + '">' + value.domain[j].label + '</option>';
+                              } else{
+                                  var selected = value.domain[j];
+                                  select += '<option selected="" value="' + value.domain[j].value + '">' + value.domain[j].label + '</option>';
+                              }
+                          }
+                          select += '</select>';
+                          select += selected.label + '<input type="hidden" name="' + key + '" value="' + selected.value + '">';
+                          
+                          tData.push(select);
+                      } else if(value.calculated == false){
+                          tData.push(value.value + '<input type="hidden" name="' + key + '" value="' + value.value + '">');
+                      } else{
+                          tData.push(value.value + '<input type="hidden" class="calculated-input" name="' + key + '" value="' + value.value + '">');    
+                      }  
+                  });
+                  tData.push('<div class="btn-group"><a class="btn btn-small edit-row" href=""><i class="icon-pencil"></i> Modifier</a></div>');
+                  oTable.fnAddData(tData); 
+               }
+               
+               //Ce sort permet de mettre la ligne 'ajouter' a la fin de la table. Par contre il serait
+               //peut-etre pertinent d'avoir un osrt custom pour faire la meme chose sans que le reste
+               //des lignes ne soit trié en ordre décroissant.
+               oTable.fnSort([[0,'desc']]);
+            };
+
+            var jsonContent = {};            
+                     
+            $(form).submit(function(e) {
+                var tr = $('#' + table_id + ' tbody').find('tr');
+                jsonContent[name] = [];
+                 
+                for(var i = 0; i < tr.length - 1; i++){
+                    var hiddenInputs = $(tr[i]).find('input[type="hidden"]');
+                    var td = $(tr[i]).find('td');
+                    var data = {};
+                
+                    for(var j = 0; j < hiddenInputs.length; j++){
+                        var content = {};
+                        content['value'] = $(hiddenInputs[j]).val();
+                         
+                        if($(hiddenInputs[j]).hasClass('calculated-input')){
+                            content['calculated'] = true;
+                        } else{
+                            content['calculated'] = false;    
+                        }
+
+                        if($(td[j]).find('select').length > 0){
+                            var domain = [];
+                            var select = $(tr[i]).find('select'); 
+                            var options = $(select).find('option');
+                            for(var k = 0; k < options.length; k++){   
+                                domain.push({'value': $(options[k]).val(), 'selected': options[k].selected, 'label': $(options[k]).text()})   
+                            }
+                            content['domain'] = domain;
+                        } else{
+                            content['domain'] == null;
+                        }
+
+                        data[$(hiddenInputs[j]).attr('name')] = content; 
+                    }
+                    jsonContent[name].push(data);
+                }
+                $(hiddenJSON).val(JSON.stringify(jsonContent));
+            });
+            
+            bindAdd($('#' + table_id + ' a.add-row'));
+
+            bindEdit($('#' + table_id + ' a.edit-row'));           
+        
+        {% endif %}
+    </script>
+
+{% endif %}
+ 
+{% endblock body %}

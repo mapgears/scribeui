@@ -1,0 +1,257 @@
+{% extends main_template %}
+{% block body %}
+<h2>{{title}}</h2>
+
+<br>
+
+<div id="extra-list-content"></div>
+
+<table id="{{table_id}}" class="table table-bordered table-striped table-condensed">
+
+    <thead class="uppercase">
+        <tr>
+            {% for attr in attributes %}
+                {% if attr.hidden == True  %}
+                {% elif attr.type == 'checkbox' %}
+                    <th class="list-checkbox">{{attr.name}}</th>
+                {% else %}
+                    <th>{{attr.name}}</th>
+                {% endif %}
+            {% endfor %}
+            {% if actions == True %}
+                <th class="list-actions">Actions</th>
+            {% endif %}
+
+        </tr>
+    </thead>
+</table>
+
+<div id="modalForm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalFormLabel" aria-hidden="true">
+    <div class="modal-body"></div>
+</div>
+
+<script> 
+    var keepPage = false;
+	fnServerObjectToArray = function ()
+	{ 
+		return function ( sSource, aoData, fnCallback, oSettings) {
+			var per_page;
+			var displayStart;
+			var sEcho;
+			var sortCol;
+			var sortDir;
+			var search;	
+
+			$.each(aoData, function(i, item) {
+				if (item['name'] == 'iDisplayLength') {
+					per_page = item['value'];
+				}else if (item['name'] == 'iDisplayStart') {
+					displayStart = item['value']
+				}else if (item['name'] == 'sEcho') {
+					sEcho = item['value'];
+				}else if (item['name'] == 'iSortCol_0'){
+					i = 0;
+					{% for attr in attributes %}
+                      {% if attr.hidden == True %}
+                        {% else %}
+						if (i == item['value']) { 
+							var value = "{{attr['json_attr']}}";
+							sortCol = value.split('.',1);
+						};
+						i++;
+                        {% endif %}
+					{% endfor %}
+				}else if (item['name'] == 'sSortDir_0'){
+					sortDir = item['value'];
+				}else if (item['name'] == 'sSearch'){
+					search = item['value'];
+				};
+			});
+			
+			aoData = [];
+			if (per_page != '-1') {
+				var page;
+                if (keepPage==false) {
+				    if( displayStart == 0 ){
+					    page = 1;
+				    }else{
+					    page = (displayStart/per_page) + 1;
+				    };
+                } else {
+                    page = $('.dataTables_paginate ul li.active a').text();
+                    keepPage=false;    
+                    oSettings["_iDisplayStart"] = (oSettings["_iDisplayLength"]*(page-1));
+                };
+				aoData.push( { "name": "page", "value": page } );
+				aoData.push( { "name": "per_page", "value": per_page } );
+			}
+			aoData.push( { "name": sortDir+"_by", "value": sortCol } );
+			if (search != '' && search) {
+				aoData.push( { "name": "search", "value": search } );
+			}
+		    $.ajax( {
+		        "dataType": 'json', 
+		        "type": "GET", 
+		        "url": sSource, 
+		        "data": aoData, 
+		        "success": function (json) {
+		        	var jsonMod = {"sEcho": sEcho, "iTotalRecords": json['total_items'], "iTotalDisplayRecords": json['total_items'], "aaData":[]};
+
+		            var a = [];
+		            for ( var i=0, iLen=json['data'].length ; i<iLen ; i++ ) {
+		                var inner = [];
+		                
+		               	{% for attr in attributes %}
+                          {% if attr.hidden == True %}
+                          {% else %}
+		               		if (!json['data'][i].{{attr['json_attr']}} && json['data'][i].{{attr['json_attr']}} != 0) {
+		                		json['data'][i].{{attr['json_attr']}} = "{{attr['none_value']}}";
+		                		
+		                	};
+		                	{% if attr.route %}
+		                		json['data'][i].{{attr['json_attr']}} = "<a href=\""+json['data'][i].{{attr['route']}}+"\">"+json['data'][i].{{attr['json_attr']}}+"</a>";
+		                	{% endif %}
+		               		inner.push( json['data'][i].{{attr['json_attr']}});
+                          {% endif %}
+		               	{% endfor %}
+
+		                if ("{{actions}}" == "True") {
+		                	var id = json['data'][i]['{{edit_id_attr}}'];
+		                	
+		                	if('{{edit_id_attr}}' == 'date'){
+		                	    id = id.replace(/-/g, '/')
+		                	}
+		                	
+		                	{% if modal %}
+	                	        var buttonAction = "<div class=\"btn-group\">" + 
+		                	        "<a value=\"" + id + "\" class=\"btn btn-small\" href=\"{{edit_route}}"+id+"\" data-toggle=\"modal\" data-target=\"#modalForm\">" + 
+		                	        "<i class=\"{{edit_icon if edit_icon else 'icon-pencil'}}\"></i>" +
+		                	        "{{edit_label if edit_label else 'Modifier'}}</a>";
+		                	{% else %}
+	                	        var buttonAction = "<div class=\"btn-group\">" + 
+		                	        "<a class=\"btn btn-small\" href=\"{{edit_route}}"+id+"\">" + 
+		                	        "<i class=\"{{edit_icon if edit_icon else 'icon-pencil'}}\"></i>" +
+		                	        "{{edit_label if edit_label else 'Modifier'}}</a>";
+		   					{% endif %}
+		   					
+		   					{% for button in buttons %}
+		   					    {% if button['route'] %}
+		   					    	var route = "{{button['route']}}"
+		   					    	route = route.replace('#key', id);
+						            buttonAction = buttonAction + "<a value=\"" + id + "\" class=\"btn btn-small\" href=\""+route+"\" name=\"{{button['name'] if button['name'] else ''}}\"><i class=\"{{button['icon'] if button['icon'] else 'icon-tasks'}}\"></i> {{button.label}}</a>";
+						        {% else %}
+							        buttonAction = buttonAction + "<a value=\"" + id + "\" class=\"btn btn-small\" id=\"{{button['name']}}\" name=\"{{button['name'] if button['name'] else ''}}\"><i class=\"{{button['icon'] if button['icon'] else 'icon-tasks'}}\"></i> {{button.label}}</a>";
+							    {% endif %}
+			   				{% endfor %}
+			   				
+                       		buttonAction = buttonAction + "</div>";
+                       		inner.push( buttonAction);
+		                };
+		                a.push( inner );
+		            }
+		            
+		            jsonMod.aaData = a;
+                   
+		            fnCallback(jsonMod);
+		            
+		            {% if table_callback %}
+                        $(function() {
+                        {% for fctn in table_callback%}
+                            {{fctn.name}}('{{fctn.input}}');
+                        {% endfor %}
+                        });
+                    {% endif %}
+		        }
+		    } );
+		    
+		     
+		}
+	}
+    var oListTable = $('#{{table_id}}').dataTable({
+    	"sPaginationType": "bootstrap",
+        "bAutoWidth": false,
+    	"bProcessing": true,
+		"bServerSide": true,
+		"sAjaxSource": "{{source}}",
+		"fnServerData": fnServerObjectToArray(),
+        "bPaginate": {{'true' if has_page == True else 'false'}},
+        "bSort": {{'true' if has_sort == True else 'false'}},
+        "bFilter": {{'true' if has_search == True else 'false'}},
+        "oLanguage": fr,
+        "aoColumnDefs": [
+        {% for attr in attributes %}
+        {% if attr.hidden == True %}
+          {% else %}
+        {
+            "aTargets": [ {{ loop.index - 1 }} ],
+            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                $(nTd).empty();
+                $(nTd).append('<div class=tdDataTable>'+sData+'</div>');
+            }
+        },
+        { "bSortable": {{'false' if attr['sort_target'] == 'false' else 'true'}}, "aTargets": [ {{loop.index - 1 }} ] },
+        {% endif %}
+        {% endfor %}
+        { "bSortable": {{'false' if actions == True else 'true'}}, "aTargets": [ -1 ] },
+        ],
+        "aaSorting": [[ "{{sort_index if sort_index else 0}}", "{{'desc' if sort_dir == 'desc' else 'asc'}}" ]],
+        "aLengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+        "iDisplayLength": {{display_length if display_length else 10}},
+        {% if remove_tools %}
+            "sDom": "<'row'<'span2h'l><'span2h'><f>r>t<'row'<'span6'i><'span6'p>>",
+        {% else %}
+            "sDom": "<'row'<'span2h'T><'span2h'l><f>r>t<'row'<'span6'i><'span6'p>>",
+		{% endif %}
+        "oTableTools": {
+        	"sSwfPath": $(location).attr('protocol')+"//"+$(location).attr('host')+"/static/js/lib/TableTools-2.1.5/media/swf/copy_csv_xls_pdf.swf",
+			"aButtons": [
+				{
+					"sExtends": "print",
+					"sButtonText": 'Imprimer',
+					"bSelectedOnly": "true",
+					"sInfo": "<h6>Aperçu d'impression</h6><p>Utiliser l'outil d'impression de votre navigateur pour imprimer cette table. Presser la touche Échap pour quitter.</p></div>"
+				},
+				{
+					"sExtends":    "collection",
+					"sButtonText": 'Sauvegarder <span class="caret" />',
+					"aButtons":  [
+						{
+							"sExtends": "xls",
+							"sFieldSeperator": ";",
+							{% if (export) %}
+								"mColumns": {{ export }}
+							{% else %}
+								"mColumns": 'sortable'
+							{% endif %}
+						}, 
+						{	
+							"sExtends": "pdf",
+							{% if (export) %}
+								"mColumns": {{ export }}
+							{% else %}
+								"mColumns": 'sortable'
+							{% endif %}
+						} 	
+					],
+					
+				}
+			]
+		}
+    });
+
+	$('.sorting, .sorting_desc, .sorting_asc').on('click', function(e) { 
+         keepPage=true;
+	});
+
+</script>
+
+<script>
+{% if onload %}
+    $(function() {
+    {% for fctn in onload %}
+        {{fctn.name}}('{{fctn.input}}');
+    {% endfor %}
+    });
+{% endif %}
+</script>
+{% endblock body %}

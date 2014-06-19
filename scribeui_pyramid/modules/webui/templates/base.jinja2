@@ -1,0 +1,71 @@
+{% macro css() %}{% endmacro %}
+{% macro js() %}{% endmacro %}
+{% set rid = time %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ScribeUI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/reset.css') }}?v={{rid}}">
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/jquery/css/scribeui/scribeui.css') }}?v={{rid}}">
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/jquery/elfinder/css/elfinder.min.css') }}?v={{rid}}">
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/chosen/chosen.css') }}?v={{rid}}">
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/CodeMirror-2.25/lib/codemirror.css') }}?v={{rid}}" >
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/CodeMirror-2.25/lib/util/dialog.css') }}?v={{rid}}">
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/CodeMirror-2.25/lib/util/simple-hint.css') }}?v={{rid}}"> 
+    <link rel="stylesheet" href="{{ request.static_url('scribeui_pyramid:static/css/scribeui.css') }}?v={{rid}}">    
+ 
+    {% for css in plugins_css %}
+        <link rel="stylesheet" href="{{ css }}"/>
+    {% endfor %}
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/proj4js/lib/proj4js.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/OpenLayers-2.12/OpenLayers.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/jquery/js/jquery-1.7.2.min.js') }}"></script> 
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/jquery/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/jquery/js/jquery.form.js') }}"></script>
+
+    <script src="{{ request.static_url('scribeui_pyramid:static/js/mskeywords.js') }}"></script>
+
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/jquery/elfinder/js/elfinder.min.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/jquery/elfinder/js/proxy/elFinderSupportVer1.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/chosen/chosen.jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/lib/codemirror.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/lib/util/search.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/lib/util/searchcursor.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/lib/util/dialog.js') }}"></script>
+
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/mode/python/python.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/mode/xml/xml.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/mode/markdown/markdown.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/lib/CodeMirror-2.25/mode/scribe/scribe.js') }}"></script>
+
+    <!--script src="{{ request.static_url('scribeui_pyramid:static/js/init.js') }}"></script-->
+    <script src="{{ request.static_url('scribeui_pyramid:static/js/functions.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/js/Workspace.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/js/Map.js') }}"></script>
+    <script src="{{ request.static_url('scribeui_pyramid:static/js/POI.js') }}"></script>
+
+    <script type=text/javascript>
+        $API = "{{ request.route_url('home') + 'api' }}";
+    </script>
+
+    {% for js in plugins_js %}
+        <script src="{{ js }}"></script>
+    {% endfor %}
+
+    {% block master %}{% endblock master %}   
+    
+  </body>
+</html>

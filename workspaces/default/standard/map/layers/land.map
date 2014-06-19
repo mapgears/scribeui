@@ -1,0 +1,21 @@
+LAYER
+    NAME 'land'
+    TYPE POLYGON
+    METADATA 
+        "wms_include_items" "all" 
+    END
+    TEMPLATE 'blank.html'
+    GROUP 'default'
+    STATUS ON
+    PROJECTION
+    	'init=epsg:4326'
+    END
+    PROCESSING 'LABEL_NO_CLIP=ON'
+    PROCESSING 'CLOSE_CONNECTION=DEFER'
+    DATA '50m_physical/ne_50m_land'
+    CLASS
+    	STYLE
+    		COLOR '#EEECDF'
+    	END
+	END
+END

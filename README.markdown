@@ -3,155 +3,149 @@ ScribeUI
 
 ScribeUI is an application to create mapfiles with many scale levels.
 
-To get the latest **release**, clone this repo and then checkout tags/v0.5
+To get the latest **release**, clone this repo and then checkout the latest tag. ``` git describe --abbrev=0 ``` to view the latest tag.
 
-*If you are updating from a previous version, please follow the migration
-instructions at the end of this document before checking out.*
+Migrating from ScribeUI v0.5 to v1.0 is explained at the end of this file.
 
-Automated install using Makefile 
+The following instruction installations were tested on ubuntu precise. 
+
+
+**Requirements**
+
+* Mapserver 6.4.1
+* Apache 2.2
+* Make
+
+Production installation
 ------------
-**Note** Checkout master to have this option available, as it is not yet 
-available in any release.
+
+You need to install apache2 with mod_wsgi: 
+
+    sudo apt-get install libapache2-mod-wsgi 
+
+**Note** mod_wsgi 3.4 or more is recommended. [How to compile mod_wsgi 3.4 on ubuntu precise](http://scribeui.org/faq.html#wsgi-how)
+
+
+Configuration
+-------------
+
+First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at ```/opt/scribeui```
+
+Then, copy the default production settings:
+ 
+    cp production.ini local.ini
+
+Make sure the mapserver url in local.ini points to your mapserver path:
+	- line 35: mapserver.url
+
+Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
+
+Create a file 'pyramid.wsgi' with the following content, editing the path to your scribeui installation:
+
+	from pyramid.paster import get_app, setup_logging
+	ini_path = '/opt/scribeui/local.ini'
+	setup_logging(ini_path)
+	application = get_app(ini_path, 'main')
+
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
-        sudo make download_deps
-        make
-        sudo make install
+       sudo make
+       sudo chown -R youruser .
+       make install
+       sudo make perms
+
+
+Next step is adding the app to apache, here is an example configuration:
+
+    WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
+	        python-path=/opt/scribeui/lib/python2.7/site-packages
+	WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
+
+	<Directory /opt/scribeui>
+	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
+	        WSGIPassAuthorization On
+	        WSGIProcessGroup scribeui
+	        Order deny,allow
+	        Allow from all
+	</Directory>
+
+Once apache is restarted, ScribeUI should be available!
+
+    sudo service apache2 restart
+
+Downloading template data is optional, but recommended for a better 
+experience: 
+
+        sudo make load-demo-data   
+
+If you omit this step, the maps you create from default templates will display pink tiles.
+
+
+Development installation
+------------
+
+These instructions are for running a development version of ScribeUI. It is pretty good for a local version of the application. Production installation instructions are available below.
+
+    cp development.ini local.ini
+
+Review the following parameters in local.ini, and edit them if needed:
+
+	- sqlalchemy.url
+	- workspaces.directory
+	- scribe.python
+	- cgi.directory
+	- mapserver.url
+
+Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
+
+You can use the Makefile to automatically setup ScribeUI for you, simply run:
+
+        sudo make
+        make install
 
 This will download and install the required dependencies, setup the differents
 configurations files and install them in the proper directories. 
 
-NOTE: If you install ScribeUI on your 'localhost' on specific port, you have to modify "./config.py" 
-and specify "127.0.0.1:port" instead of "my_server_name" and restart apache. 
+To launch the server at http://localhost:6543/:
 
-        ip=127.0.0.1:8080
+        make start
 
 Downloading template data is optional, but recommended for a better 
-experience.  The basicscribe-data option is for a light download: 
+experience. 
 
-        sudo make load-demo-data   ==> (644Mb)
-or
+        sudo make load-demo-data   
 
-        sudo make load-basicscribe-data   ==> (8Mb)
 
 This will download some natural earth data and will help you get started with
 ScribeUI by making templates readily working so you don't start with an empty
 mapfile. (The template code is still available if you don't download the data,
 but the result will be pink tiles). 
 
-Manual installation
-------------
+Migrating from v0.5 to v1.0
+-----------------------------
 
-Requirements
-------------
-*   Apache
-*   Python (tested with 2.7.3 only)
-*   Mod WSGI 3.4
-*   Flask 0.10.1
-*   MapServer (version 6.2 or higher)
-*   Sqlite3
+Before pulling and installing ScribeUI v1.0, first change all file's permission back to your own user:
 
-You can install them using aptitude and pip:
+    sudo chown -R user application/
 
-    sudo apt-get install apache2 libapache2-mod-wsgi cgi-mapserver sqlite3
-    sudo pip install Flask
+You may now follow the production installation instructions and install ScribeUI v1.0
 
-Configuration
--------------
- *  Make a copy of the application/runserver.dist.wsgi file as
-    application/runserver.wsgi and edit it. Change the path accordingly.
+Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:
 
-        cp application/runserver.dist.wsgi application/runserver.wsgi
-        vim application/runserver.wsgi
+    sudo chown -R user scribeui.sqlite workspaces/
+ 
+Then executre the update script:
 
- *  Make a copy of the config.dist.py file as config.py and edit it. Change the
-    ip variable accordingly.
+    python update.py
 
-        cp config.dist.py config.py
-        vim config.py
+Then change the database and workspace folders back to www-data:
 
+    sudo chown -R www-data scribeui.sqlite workspaces/
 
- *  To reset the sqlite3 database, open a python shell as admin from the
-    the application directory:
+Your workspaces and maps will then be imported, although passwordless. 
 
-        cd application
-        sudo python
+Each map will have to be edited to delete or comment the following line in the map editor:
 
-    in the python shell:
+    CONFIG "MS_ERRORFILE" "../debugFile.log"
 
-        from init import init_db
-        init_db()
-
- *  Place elfinder-python in your cgi-bin repository (/usr/lib/cgi-bin)
-
-        sudo cp -ap elfinder-python /usr/lib/cgi-bin/
-
- *  The owner of the the db folder and the workspace folder must be the
-    current user or www-data if the application is on a server:
-
-        sudo chown -R www-data application/db application/workspaces \
-        application/www /usr/lib/cgi-bin/elfinder-python/
-
- *  Run the makefile to download the data
-
-        make
-
-
-Apache configuration
---------------------
-In /etc/apache2/sites-enabled/ScribeUI.conf, use the following configuration
-(change the path):
-
-    #ScribeUI     
-    
-    WSGIScriptAlias /ScribeUI /opt/apps/ScribeUI/application/runserver.py
-    AddType text/html .py
-    <Directory /opt/apps/ScribeUI/application/templates>
-      Order deny,allow
-      Allow from all
-    </Directory>
-
-    Alias /ScribeUI/download/ "/opt/apps/ScribeUI/application/www/"
-    <Directory "/opt/apps/ScribeUI/application/www/">
-      AllowOverride None
-      Options Indexes FollowSymLinks Multiviews
-      Order allow,deny
-      Allow from all
-    </Directory>
-
-Note: if there are segfaults in the apache error logs after adding this config,
-it is fixed by restarting apache.
-
-Version Update and Workspace Migration
----------------------------------------
-
-If you are updating your version of ScribeUI from an earlier version to 0.2,
-please follow these instructions:
-
-* Change the owner of the database and workspace folders back to yourself:
-
-        sudo chown -R yourusername application/db application/workspaces 
-
-* Checkout the latest release of ScribeUI
-
-        git checkout tags/v0.5
-
-* Run the update script:
-
-        python application/update.py 
-
-* Change the owner of the database and workspace back to www-data:
-
-        sudo chown -R www-data application/db application/workspaces 
-
-* (optionnal) Restart apache:
-
-        sudo /etc/init.d/apache2 restart
-
-* The first time you edit a map, add the following line to the map element:
-
-        INCLUDE: '../symbols.map' 
-
-If you choose not to restart apache, the new version of ScribeUI might take
-a while to go live because of mod\_wsgi.

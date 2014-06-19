@@ -1,0 +1,33 @@
+MAP
+    CONFIG 'ON_MISSING_DATA' 'IGNORE'
+    ##CONFIG "MS_ERRORFILE" "../debugFile.log"
+    CONFIG 'PROJ_LIB' '../'
+    FONTSET '../fonts.lst'
+    IMAGETYPE png
+    MAXSIZE 4000
+    SIZE 800 800
+    UNITS meters
+    EXTENT -20405648.939901 -17712669.979681 20314497.045109 19408951.476421
+    IMAGECOLOR '#C6E2F2'
+    SHAPEPATH '../pdata/natural_earth/'
+    WEB
+        METADATA
+            "ows_enable_request" "*"
+            "wms_srs" "EPSG:900913 EPSG:4326"
+            "labelcache_map_edge_buffer" "-10"
+            "wms_title" "Natural Earth World WMS"
+        END
+        IMAGEPATH '/tmp/ms_tmp/'
+        IMAGEURL '/ms_tmp/'
+    END
+    DEBUG 5
+    PROJECTION
+        "init=epsg:900913"
+    END
+    
+    INCLUDE '../symbols.map'
+    INCLUDE 'layers/ocean.map'    
+    INCLUDE 'layers/land.map'    
+    INCLUDE 'layers/admin.map'    
+    
+END

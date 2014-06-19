@@ -1,0 +1,11 @@
+{% if tabs %}
+<ul class="nav nav-tabs">
+    {% for item in tabs %}
+    <li class="{{'active' if item.active == True else ''}}">
+        <a href="{{item.url}}">
+            {{item.name}}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
