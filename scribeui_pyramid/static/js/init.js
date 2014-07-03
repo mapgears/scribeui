@@ -1,6 +1,6 @@
 var selectors, workspace, editors, plugins;
 
-jQuery(function() { 
+$(document).ready(function() { 
     selectors = {
         mapDescription: function(){ return $('#map-description') },
         mapActions: function(){ return $('#map-actions') },
@@ -73,16 +73,17 @@ jQuery(function() {
         }
     }
 
-    editors = {
-        groups: CodeMirror.fromTextArea(document.getElementById("editor"), options),
-        maps: CodeMirror.fromTextArea(document.getElementById("map-editor"), options),
-        variables: CodeMirror.fromTextArea(document.getElementById("variable-editor"), options),
-        scales: CodeMirror.fromTextArea(document.getElementById("scale-editor"), options),
-        symbols: CodeMirror.fromTextArea(document.getElementById("symbol-editor"), options),
-        fonts: CodeMirror.fromTextArea(document.getElementById("font-editor"), options),
-        projections: CodeMirror.fromTextArea(document.getElementById("projection-editor"), options),
-        readmes: CodeMirror.fromTextArea(document.getElementById("readme-editor"), readmeOptions)
-    }
+    var editors = [
+        groups: new Editor("editor", "Groups", {position:"main"}, options),
+        maps: new Editor("map-editor", "Map", {position:"secondary"}, options),
+        variables: new Editor("variable-editor", "Variables", {position:"secondary"}, options),
+        scales: new Editor("scale-editor", "Scales", {position:"secondary"}, options),
+        symbols: new Editor("symbol-editor", "Symbols", {position:"secondary"}, options),
+        fonts: new Editor("font-editor", "Fonts", {position:"secondary"}, options),
+        projections: new Editor("projection-editor", "Projections", {position:"secondary"}, options),
+        readmes: new Editor("readme-editor", "ReadMe", {position:"secondary"}, options)
+    ]
+    editors = new EditorManager(editors);
     
     /*--------------------------------
       Tabs and buttons
@@ -151,11 +152,11 @@ jQuery(function() {
 
     $("a[href='#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
-        editors['groups'].focus();
-        $.each(editors, function(key, editor){
+        editors.get('groups').CMEditor.focus();
+        $.each(editors.editors, function(key, editor){
             //Need to use a timeout for the editors to refresh properly.
             // See http://stackoverflow.com/questions/10575833/codemirror-has-content-but-wont-display-until-keypress
-            setTimeout(editor.refresh, 1)
+            setTimeout(editor.CMEditor.refresh, 1)
         });
     });
 
@@ -243,8 +244,8 @@ jQuery(function() {
     });
     $("a[href='#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
-        $.each(editors, function(key, editor){
-            editor.refresh();
+        $.each(editors.editors, function(key, editor){
+            editor.CMEditor.refresh();
         });
     });
     $(".secondary-wrap").resizable({

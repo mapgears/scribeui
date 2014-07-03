@@ -109,13 +109,13 @@ Map.prototype.removeGroup = function(name){
 };
 
 Map.prototype.displayComponents = function(){
-    editors['maps'].setValue(this.map == null ? '' : this.map);
-    editors['scales'].setValue(this.scales == null ? '' : this.scales);
-    editors['variables'].setValue(this.variables == null ? '' : this.variables);
-    editors['symbols'].setValue(this.symbols == null ? '' : this.symbols);
-    editors['fonts'].setValue(this.fonts == null ? '' : this.fonts);
-    editors['projections'].setValue(this.projections == null ? '' : this.projections);
-    editors['readmes'].setValue(this.readme == null ? '' : this.readme);
+    editors.get('maps').CMEditor.setValue(this.map == null ? '' : this.map);
+    editors.get('scales').CMEditor.setValue(this.scales == null ? '' : this.scales);
+    editors.get('variables').CMEditor.setValue(this.variables == null ? '' : this.variables);
+    editors.get('symbols').CMEditor.setValue(this.symbols == null ? '' : this.symbols);
+    editors.get('fonts').CMEditor.setValue(this.fonts == null ? '' : this.fonts);
+    editors.get('projections').CMEditor.setValue(this.projections == null ? '' : this.projections);
+    editors.get('readmes').CMEditor.setValue(this.readme == null ? '' : this.readme);
 
     selectors.editorSelect().change(function(e){
         openSecondaryPanel($(this).val());
@@ -124,7 +124,7 @@ Map.prototype.displayComponents = function(){
     selectors.logs().find('textarea').val('');
 
     $.each(editors, function(key, editor){
-        editor.clearHistory();
+        editor.CMEditor.clearHistory();
     });
 
     
@@ -150,7 +150,7 @@ Map.prototype.displayGroups = function(silent){
 
     selectors.groupSelect().change(function(e){
         if(self.selectedGroup){
-            self.selectedGroup['content'] = editors['groups'].getValue();
+            self.selectedGroup['content'] = editors['groups'].CMEditor.getValue();
         }
 
         self.selectedGroup = self.getGroupByName(this.value);
@@ -158,12 +158,12 @@ Map.prototype.displayGroups = function(silent){
         //resizeEditors();
 
         if(self.selectedGroup){
-            editors['groups'].setValue(self.selectedGroup.content);
+            editors['groups'].CMEditor.setValue(self.selectedGroup.content);
         } else{
-            editors['groups'].setValue("");
+            editors['groups'].CMEditor.setValue("");
         }
 
-        editors['groups'].clearHistory();
+        editors['groups'].CMEditor.clearHistory();
 
         resizeEditors();
         
@@ -173,7 +173,7 @@ Map.prototype.displayGroups = function(silent){
     if(!silent || changeSelected){
         selectors.groupSelect().trigger("change");
         if(self.selectedGroup){
-            self.selectedGroup['content'] = editors['groups'].getValue();
+            self.selectedGroup['content'] = editors['groups'].CMEditor.getValue();
         }    
     }
 }
@@ -196,15 +196,15 @@ Map.prototype.displayDescription = function(){
 
 Map.prototype.updateComponents = function(){
     if(this.selectedGroup){
-        this.selectedGroup['content'] = editors['groups'].getValue();    
+        this.selectedGroup['content'] = editors['groups'].CMEditor.getValue();    
     }
-    this.map = editors['maps'].getValue();
-    this.scales = editors['scales'].getValue();
-    this.variables = editors['variables'].getValue();
-    this.symbols = editors['symbols'].getValue();
-    this.fonts = editors['fonts'].getValue();
-    this.projections = editors['projections'].getValue();
-    this.readme = editors['readmes'].getValue();     
+    this.map = editors['maps'].CMEditor.getValue();
+    this.scales = editors['scales'].CMEditor.getValue();
+    this.variables = editors['variables'].CMEditor.getValue();
+    this.symbols = editors['symbols'].CMEditor.getValue();
+    this.fonts = editors['fonts'].CMEditor.getValue();
+    this.projections = editors['projections'].CMEditor.getValue();
+    this.readme = editors['readmes'].CMEditor.getValue();     
 }
 
 Map.prototype.save = function(){

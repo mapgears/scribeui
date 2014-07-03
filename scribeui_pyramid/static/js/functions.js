@@ -749,8 +749,8 @@ function openSecondaryPanel(value){
             //Dirty workaround but it's the only way I found so far
             //to make the secondary editor display all it's content properly
             //Both refresh are needed...
-            editors[value].refresh();
-            setTimeout(editors[value].refresh, 1);
+            editors.get(value).CMEditor.refresh();
+            setTimeout(editors.get(value).CMEditor.refresh, 1);
     }else{
          $('.secondary-wrap').hide();
     }
@@ -780,10 +780,11 @@ function scribeLog(msg){
 }
 
 function removeIncludeFromMap(filename, commit){
-    for(var i=0; i < editors['maps'].lineCount(); i++){
-        if( editors['maps'].getLine(i).indexOf("layers/" + filename) !== -1){
-            var line =  editors['maps'].getLine(i);
-            editors['maps'].removeLine(i);
+    var mapCMEditor = editors.get('maps').CMEditor;
+    for(var i=0; i < mapCMEditor.lineCount(); i++){
+        if( mapCMEditor.getLine(i).indexOf("layers/" + filename) !== -1){
+            var line =  mapCMEditor.getLine(i);
+			mapCMEditor.removeLine(i);
             break;
         }
     }
@@ -793,15 +794,16 @@ function addIncludeToMap(filename, commit){
     lastinc = -1;
     //BUG: WE SHOULD SET THE EDITOR SELECT TO THE MAP OPTION
     //ALSO, THIS FUNCTION IS CALLED FOR EVERY GROUP EVEN IF IT HAS ALREADY BEEN ADDED TO THE MAPFILE
-    openSecondaryPanel("maps",  editors['maps']);
-    for(var i=0; i <  editors['maps'].lineCount(); i++){
-        if( editors['maps'].getLine(i).indexOf("INCLUDE") !== -1){
+    var mapCMEditor = editors.get('maps').CMEditor;
+    openSecondaryPanel("maps",  mapCMEditor);
+    for(var i=0; i <  mapCMEditor.lineCount(); i++){
+        if( mapCMEditor.getLine(i).indexOf("INCLUDE") !== -1){
             lastinc = i;
         }else if(lastinc > -1){
             //We add the new file at the end of the include list
-            var line =  editors['maps'].getLine((i-1));
+            var line =  mapCMEditor.getLine((i-1));
             //TODO detect indentation 
-            editors['maps'].setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
+            mapCMEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
             //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
             //setTimeout(function(){
