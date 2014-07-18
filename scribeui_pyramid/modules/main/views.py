@@ -43,7 +43,6 @@ class MainView(BaseView):
     )
     def home(self):
         plugins_js = [
-            self.request.static_url('scribeui_pyramid:static/js/init.js')
         ]
         plugins_js += getJsFiles(self.request)
 

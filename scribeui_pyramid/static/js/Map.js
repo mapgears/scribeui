@@ -1,4 +1,4 @@
- function Map(options){
+ ScribeUI.Map = function(options){
     this.id = null;
     this.name = null;
     this.url = null;
@@ -36,7 +36,7 @@
     }
 }
 
-Map.prototype.open = function(callback){
+ScribeUI.Map.prototype.open = function(callback){
     var self = this;
 
     $.post($API + '/maps/open/' + this.id, {}, 
@@ -54,7 +54,7 @@ Map.prototype.open = function(callback){
 
                 var pois = [];
                 $.each(self.pois, function(index, poi){
-                    oPoi = new POI(
+                    oPoi = new ScribeUI.POI(
                         poi.name, 
                         poi.lon, 
                         poi.lat, 
@@ -65,10 +65,10 @@ Map.prototype.open = function(callback){
                     pois.push(oPoi);
 
                     var option = $('<option>').val(poi.name).text(poi.name);
-                    selectors.poiSelect().append(option); 
+                    ScribeUI.UI.poi.select().append(option); 
                 });
                 self.pois = pois;
-                selectors.poiSelect().trigger('chosen:updated');
+                ScribeUI.UI.poi.select().trigger('chosen:updated');
 
                 self.previousGroup = null;
 
@@ -84,7 +84,7 @@ Map.prototype.open = function(callback){
     );
 };
 
-Map.prototype.getGroupByName = function(name){
+ScribeUI.Map.prototype.getGroupByName = function(name){
     for(var i = 0; i < this.groups.length; i++){
         if(this.groups[i].name == name){
             return this.groups[i];
@@ -93,7 +93,7 @@ Map.prototype.getGroupByName = function(name){
     return null;
 };
 
-Map.prototype.getGroupIndexByName = function(name){
+ScribeUI.Map.prototype.getGroupIndexByName = function(name){
     for(var i = 0; i < this.groups.length; i++){
         if(this.groups[i].name == name){
             return i;
@@ -103,38 +103,38 @@ Map.prototype.getGroupIndexByName = function(name){
     return null;
 };
 
-Map.prototype.removeGroup = function(name){
+ScribeUI.Map.prototype.removeGroup = function(name){
     var index = this.getGroupIndexByName(name);
     this.groups.splice(index, 1);
 };
 
-Map.prototype.displayComponents = function(){
-    editors.get('maps').CMEditor.setValue(this.map == null ? '' : this.map);
-    editors.get('scales').CMEditor.setValue(this.scales == null ? '' : this.scales);
-    editors.get('variables').CMEditor.setValue(this.variables == null ? '' : this.variables);
-    editors.get('symbols').CMEditor.setValue(this.symbols == null ? '' : this.symbols);
-    editors.get('fonts').CMEditor.setValue(this.fonts == null ? '' : this.fonts);
-    editors.get('projections').CMEditor.setValue(this.projections == null ? '' : this.projections);
-    editors.get('readmes').CMEditor.setValue(this.readme == null ? '' : this.readme);
+ScribeUI.Map.prototype.displayComponents = function(){
+    ScribeUI.editorManager.get('map').CMEditor.setValue(this.map == null ? '' : this.map);
+    ScribeUI.editorManager.get('scales').CMEditor.setValue(this.scales == null ? '' : this.scales);
+    ScribeUI.editorManager.get('variables').CMEditor.setValue(this.variables == null ? '' : this.variables);
+    ScribeUI.editorManager.get('symbols').CMEditor.setValue(this.symbols == null ? '' : this.symbols);
+    ScribeUI.editorManager.get('fonts').CMEditor.setValue(this.fonts == null ? '' : this.fonts);
+    ScribeUI.editorManager.get('projections').CMEditor.setValue(this.projections == null ? '' : this.projections);
+    ScribeUI.editorManager.get('readme').CMEditor.setValue(this.readme == null ? '' : this.readme);
 
-    selectors.editorSelect().change(function(e){
-        openSecondaryPanel($(this).val());
+    ScribeUI.UI.editor.editorSelect().change(function(e){
+        ScribeUI.UI.openSecondaryPanel(ScribeUI.editorManager.get($(this).val()));
     });
 
-    selectors.logs().find('textarea').val('');
+    ScribeUI.UI.logs.logs().find('textarea').val('');
 
-    $.each(editors, function(key, editor){
+    $.each(ScribeUI.editorManager.editors, function(key, editor){
         editor.CMEditor.clearHistory();
     });
 
     
-    selectors.editorToolbar().find('button').button('enable');
-    selectors.poiActions().find('button').button('enable');
+    ScribeUI.UI.editor.toolbar().find('button').button('enable');
+    ScribeUI.UI.poi.actions().find('button').button('enable');
 
     this.displayGroups();
 };
 
-Map.prototype.displayGroups = function(silent){
+ScribeUI.Map.prototype.displayGroups = function(silent){
     var self = this;
     var changeSelected = true;
 
@@ -144,42 +144,41 @@ Map.prototype.displayGroups = function(silent){
             option.attr('selected', 'selected');
             changeSelected = false; 
         }
-        selectors.groupSelect().append(option);    
+        ScribeUI.UI.editor.groupSelect().append(option);    
     });
-    selectors.groupSelect().trigger("chosen:updated");
+    ScribeUI.UI.editor.groupSelect().trigger("chosen:updated");
 
-    selectors.groupSelect().change(function(e){
+    ScribeUI.UI.editor.groupSelect().change(function(e){
         if(self.selectedGroup){
-            self.selectedGroup['content'] = editors['groups'].CMEditor.getValue();
+            self.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();
         }
 
         self.selectedGroup = self.getGroupByName(this.value);
 
-        //resizeEditors();
-
         if(self.selectedGroup){
-            editors['groups'].CMEditor.setValue(self.selectedGroup.content);
+            ScribeUI.editorManager.get('groups').CMEditor.setValue(self.selectedGroup.content);
         } else{
-            editors['groups'].CMEditor.setValue("");
+            ScribeUI.editorManager.get('groups').CMEditor.setValue("");
         }
 
-        editors['groups'].CMEditor.clearHistory();
+        ScribeUI.editorManager.get('groups').CMEditor.clearHistory();
 
-        resizeEditors();
+        ScribeUI.UI.resizeEditors();
         
         e.stopPropagation();
     });
 
     if(!silent || changeSelected){
-        selectors.groupSelect().trigger("change");
+        ScribeUI.UI.editor.groupSelect().trigger("change");
         if(self.selectedGroup){
-            self.selectedGroup['content'] = editors['groups'].CMEditor.getValue();
+            self.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();
         }    
     }
 }
 
-Map.prototype.displayDescription = function(){
-    selectors.mapDescription().empty();
+ScribeUI.Map.prototype.displayDescription = function(){
+	var mapDescription = ScribeUI.UI.manager.mapDescription();
+    mapDescription.empty();
 
     var image = $('<div>').attr('id', 'map-preview-img-large');
     if(this.thumbnail_url){
@@ -188,26 +187,26 @@ Map.prototype.displayDescription = function(){
         image.addClass('default-preview');
     }
 
-    selectors.mapDescription().append(image);
-    selectors.mapDescription().append("<p class=\"map-title\">" + this.name + "</p>");
-    selectors.mapDescription().append("<p class=\"map-description\">" + this.description + "</p>");
-    selectors.mapActions().show();
+    mapDescription.append(image);
+    mapDescription.append("<p class=\"map-title\">" + this.name + "</p>");
+    mapDescription.append("<p class=\"map-description\">" + this.description + "</p>");
+    ScribeUI.UI.manager.mapActions().show();
 };
 
-Map.prototype.updateComponents = function(){
+ScribeUI.Map.prototype.updateComponents = function(){
     if(this.selectedGroup){
-        this.selectedGroup['content'] = editors['groups'].CMEditor.getValue();    
+        this.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();    
     }
-    this.map = editors['maps'].CMEditor.getValue();
-    this.scales = editors['scales'].CMEditor.getValue();
-    this.variables = editors['variables'].CMEditor.getValue();
-    this.symbols = editors['symbols'].CMEditor.getValue();
-    this.fonts = editors['fonts'].CMEditor.getValue();
-    this.projections = editors['projections'].CMEditor.getValue();
-    this.readme = editors['readmes'].CMEditor.getValue();     
+    this.map = ScribeUI.editorManager.get('map').CMEditor.getValue();
+    this.scales = ScribeUI.editorManager.get('scales').CMEditor.getValue();
+    this.variables = ScribeUI.editorManager.get('variables').CMEditor.getValue();
+    this.symbols = ScribeUI.editorManager.get('symbols').CMEditor.getValue();
+    this.fonts = ScribeUI.editorManager.get('fonts').CMEditor.getValue();
+    this.projections = ScribeUI.editorManager.get('projections').CMEditor.getValue();
+    this.readme = ScribeUI.editorManager.get('readme').CMEditor.getValue();     
 }
 
-Map.prototype.save = function(){
+ScribeUI.Map.prototype.save = function(){
     var self = this;
     this.updateComponents();
 
@@ -230,7 +229,7 @@ Map.prototype.save = function(){
         dataType:"json",
         success: function(response) {
             if(response.status == 1){
-                selectors.logsNotification().hide();
+                ScribeUI.UI.logs.notification().hide();
 
                 if(!self.WMSLayer){
                     self.open();
@@ -240,18 +239,18 @@ Map.prototype.save = function(){
                 
                 self.saved = true;  
             } else{
-                if(!selectors.logs().is(':visible')){
-                    selectors.logsNotification().show('pulsate', 1000);
+                if(!ScribeUI.UI.logs.logs().is(':visible')){
+                    ScribeUI.UI.logs.notification().show('pulsate', 1000);
                 }    
             }
 
-            selectors.mapfilePre().text(response.mapfile);
-            selectors.logsPre().text(response.logs);
+            ScribeUI.UI.editor.mapfilePre().text(response.mapfile);
+            ScribeUI.UI.logs.pre().text(response.logs);
         }
     })
 }
 
-Map.prototype.display = function(){
+ScribeUI.Map.prototype.display = function(){
     var scales = [];
 
     if(this.OLUnits == "meters" || this.OLUnits == null){     
@@ -340,7 +339,7 @@ Map.prototype.display = function(){
         
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
-		$.each(plugins, function(index, plugin){
+		$.each(ScribeUI.plugins, function(index, plugin){
 			if(plugin.onMapOpened){
 				plugin.onMapOpened();
 			}
@@ -349,8 +348,8 @@ Map.prototype.display = function(){
     }
 }
 
-Map.prototype.close = function(){
-	$.each(plugins, function(index, plugin){
+ScribeUI.Map.prototype.close = function(){
+	$.each(ScribeUI.plugins, function(index, plugin){
 		if(plugin.onMapClosed){
 			plugin.onMapClosed();
 		}
@@ -369,44 +368,44 @@ Map.prototype.close = function(){
     this.previousGroup = null;
 }
 
-Map.prototype.clearGroups = function(){
-    selectors.groupSelect().empty();
-    selectors.groupSelect().unbind('change');
+ScribeUI.Map.prototype.clearGroups = function(){
+    ScribeUI.UI.editor.groupSelect().empty();
+    ScribeUI.UI.editor.groupSelect().unbind('change');
 }
 
-Map.prototype.clearComponents = function(){
-    selectors.groupSelect().empty();
-    selectors.groupSelect().trigger('chosen:updated');
+ScribeUI.Map.prototype.clearComponents = function(){
+    ScribeUI.UI.editor.groupSelect().empty();
+    ScribeUI.UI.editor.groupSelect().trigger('chosen:updated');
 
-    $.each(editors, function(key, editor){
-        editor.setValue('');
+    $.each(ScribeUI.editorManager.editors, function(key, editor){
+        editor.CMEditor.setValue('');
     });
 
-    selectors.editorToolbar().find('button').button('disable');
-    selectors.poiActions().find('button').button('disable');
+    ScribeUI.UI.editor.toolbar().find('button').button('disable');
+    ScribeUI.UI.poi.actions().find('button').button('disable');
 };
 
-Map.prototype.displayGroupsList = function(){
+ScribeUI.Map.prototype.displayGroupsList = function(){
     var self = this;
-    selectors.groupsList().find('li').remove();
+    ScribeUI.UI.editor.groupsList().find('li').remove();
 
     $.each(this.groups, function(index, group){
         var li = $('<li>')
             .addClass('ui-state-default')
             .text(group.name)
-            .appendTo(selectors.groupsList());
+            .appendTo(ScribeUI.UI.editor.groupsList());
     });
 
-    selectors.groupsList().selectable();
+    ScribeUI.UI.editor.groupsList().selectable();
 
-    selectors.groupsList().find('li').click(function(e){
-        selectors.groupsList().find('li').removeClass("map-selected");
+    ScribeUI.UI.editor.groupsList().find('li').click(function(e){
+        ScribeUI.UI.editor.groupsList().find('li').removeClass("map-selected");
         $(this).addClass("map-selected");
         e.stopPropagation();
     });
 }
 
-Map.prototype.raiseGroupIndex = function(name){
+ScribeUI.Map.prototype.raiseGroupIndex = function(name){
     var index = this.getGroupIndexByName(name);
     var group = this.getGroupByName(name);
     var bumpedGroup = this.groups[index - 1];
@@ -417,7 +416,7 @@ Map.prototype.raiseGroupIndex = function(name){
     }
 }
 
-Map.prototype.lowerGroupIndex = function(name){
+ScribeUI.Map.prototype.lowerGroupIndex = function(name){
     var index = this.getGroupIndexByName(name);
     var group = this.getGroupByName(name);
     var bumpedGroup = this.groups[index + 1];
@@ -428,7 +427,7 @@ Map.prototype.lowerGroupIndex = function(name){
     }
 }
 
-Map.prototype.setGroups = function(callback){
+ScribeUI.Map.prototype.setGroups = function(callback){
     var self = this;
 
     $.post($API + '/maps/' + this.id + '/groups/update', {
@@ -460,9 +459,9 @@ Map.prototype.setGroups = function(callback){
     );
 }
 
-Map.prototype.openDataBrowser = function(){
+ScribeUI.Map.prototype.openDataBrowser = function(){
     var div = $('<div>').attr('id', "data-browser-child-" + this.name);
-    selectors.dataBrowser().append(div);
+    ScribeUI.UI.dataBrowser().append(div);
 
     div.elfinder({
     url: '/cgi-bin/elfinder-python/connector-' + this.workspace.name + '-' + this.name + '.py',
@@ -476,17 +475,17 @@ Map.prototype.openDataBrowser = function(){
         ]
     }).elfinder('instance');
 
-    selectors.dataBrowser().trigger("resize");
+    ScribeUI.UI.dataBrowser().trigger("resize");
 }
 
-Map.prototype.closeDataBrowser = function(){ 
-    if(selectors.dataBrowser().children().length > 0){
+ScribeUI.Map.prototype.closeDataBrowser = function(){ 
+    if(ScribeUI.UI.dataBrowser().children().length > 0){
         $("#data-browser-child-" + this.name).elfinder('destroy');
         $("#data-browser-child-" + this.name).remove();
     }
 }
 
-Map.prototype.exportSelf = function(publicData, privateData, callback){
+ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     $("#preparingExport").css("visibility","visible");
 
     var self = this;
@@ -515,7 +514,7 @@ Map.prototype.exportSelf = function(publicData, privateData, callback){
     }); 
 }
 
-Map.prototype.configure = function(config){
+ScribeUI.Map.prototype.configure = function(config){
     var self = this;
 
     $.post($API + '/maps/configure/' + this.id, config, function(response) {
@@ -523,58 +522,58 @@ Map.prototype.configure = function(config){
             self.description = config.description;
             self.git_url = config.git_url;
             self.displayDescription();
-            selectors.configureLogs().val(response.logs);    
+            ScribeUI.UI.manager.git.configureLogs().val(response.logs);    
         }
     });
 }
 
-Map.prototype.gitCommit = function(data){
+ScribeUI.Map.prototype.gitCommit = function(data){
     var self = this;
 
     $.post($API + '/maps/commit/' + this.id, data, function(response) {
         if(response.status == 1){
             self.open(); 
         }
-        selectors.gitCommitLogs().val(response.logs);
+        ScribeUI.UI.manager.git.commitLogs().val(response.logs);
     });
 }
 
-Map.prototype.gitPull = function(data){
+ScribeUI.Map.prototype.gitPull = function(data){
     var self = this;
 
     $.post($API + '/maps/pull/' + this.id, data, function(response) {
         if(response.status == 1){
             self.open(); 
         }
-        selectors.gitPullLogs().val(response.logs);
+        ScribeUI.UI.manager.git.pullLogs().val(response.logs);
     });
 }
 
-Map.prototype.getDebug = function(){
+ScribeUI.Map.prototype.getDebug = function(){
     var self = this;
     $.getJSON($API + '/maps/' + self.id + '/debug/get' , {}, function(response) {
         if(response.status == 1){
-            selectors.debugPre().text(response.debug);
+            ScribeUI.UI.logs.debugPre().text(response.debug);
         } else{
             var debug = '';
             $.each(response.errors, function(index, error){
                 debug += error + '\n'
             });
-            selectors.debugPre().text(debug); 
+            ScribeUI.UI.logs.debugPre().text(debug); 
         }
     });    
 }
 
-Map.prototype.clearDebug = function(){
-    selectors.debugPre().text('');
+ScribeUI.Map.prototype.clearDebug = function(){
+    ScribeUI.UI.logs.debugPre().text('');
     $.getJSON($API + '/maps/' + this.id + '/debug/reset' , {}, function(response) {}); 
 }
 
-Map.prototype.clearPois = function(){
-    selectors.poiSelect().empty().trigger('chosen:updated');
+ScribeUI.Map.prototype.clearPois = function(){
+    ScribeUI.UI.poi.select().empty().trigger('chosen:updated');
 }
 
-Map.prototype.getPOIByName = function(name){
+ScribeUI.Map.prototype.getPOIByName = function(name){
     for(var i = 0; i < this.pois.length; i++){
         if(this.pois[i].name == name){
             return this.pois[i];
@@ -584,7 +583,7 @@ Map.prototype.getPOIByName = function(name){
     return null;
 };
 
-Map.prototype.zoomToPOI = function(name){
+ScribeUI.Map.prototype.zoomToPOI = function(name){
     var poi = this.getPOIByName(name);
     if(poi){
         var projection = this.OLMap.getProjection();
@@ -600,7 +599,7 @@ Map.prototype.zoomToPOI = function(name){
     }
 }
 
-Map.prototype.addPOI = function(name){
+ScribeUI.Map.prototype.addPOI = function(name){
     var self = this;
 
     var center = this.OLMap.getCenter();
@@ -616,17 +615,133 @@ Map.prototype.addPOI = function(name){
         projection: 'EPSG:4326'
     }, function(response) {
         if(response.status == 1){
-            var poi = new POI(name, lonLat.lon, lonLat.lat, scale, 'EPSG:4326');
+            var poi = new ScribeUI.POI(name, lonLat.lon, lonLat.lat, scale, 'EPSG:4326');
             poi.map = self;
             self.pois.push(poi);
 
             var option = $('<option>').val(name).text(name);
-            selectors.poiSelect().append(option); 
-            selectors.poiSelect().trigger('chosen:updated');
+            ScribeUI.UI.poi.select().append(option); 
+            ScribeUI.UI.poi.select().trigger('chosen:updated');
         }
 
     });
 }
 
 
+//Static functions:
+ScribeUI.Map.openMap = function(){
+    var map = ScribeUI.workspace.selectedMap;
+    if(map){
+        map.open();
+    }
+}
 
+ScribeUI.Map.deleteMap = function(){
+    var msg = 'Are you sure you want to delete this map?';
+    var div = $("<div class=\"scribe-dialog\">" + msg + "</div>");
+    
+    var name = ScribeUI.workspace.selectedMap.name;
+
+    if(name != null){
+        div.dialog({
+            title: "Confirm",
+            resizable: false,
+            buttons: [{
+                 text: "Yes",
+                 click: function () {
+                    ScribeUI.workspace.deleteMap(ScribeUI.workspace.selectedMap);
+                    div.dialog("close");
+                }
+            },
+            {
+                text: "No",
+                click: function () {
+                    div.dialog("close");
+                }
+            }]
+        });
+    }
+}
+
+ScribeUI.Map.exportMap = function(){
+     var name = $("#map-list .ui-selected").text();
+     if (name){
+         $("#preparingExport").css("visibility","hidden");
+         $("#exportmap-form").dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 300,
+            height: 200,
+            modal: true,
+            buttons: {
+                Export: function() {
+                    var checkBoxes = $("input[name='exportComponents']");
+                    var components = {};
+
+                    $.each(checkBoxes, function() {
+                        if ($(this).attr('checked')){
+                            components[this.value] = 1;    
+                        } else {
+                            components[this.value] = 0;
+                        }
+                    });
+            
+                    var mapToExport = new ScribeUI.Map(name);
+
+                    var self = this;
+                    mapToExport.exportSelf(components["publicData"], components["privateData"], function(){$(self).dialog("close");})
+                    
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {}
+        }).dialog("open");
+    }        
+}
+
+ScribeUI.Map.onMapMoveEnd = function(){
+    setTimeout(function(){ScribeUI.UI.displayDebug()},500);
+}
+
+ScribeUI.Map.onMapOpened = function(){
+    for(i in ScribeUI.plugins){
+        if(plugins[i].onMapOpened)
+            plugins[i].onMapOpened();
+    }
+}
+ScribeUI.Map.removeIncludeFromMap = function(filename, commit){
+    var mapCMEditor = ScribeUI.editorManager.get('map').CMEditor;
+    for(var i=0; i < mapCMEditor.lineCount(); i++){
+        if( mapCMEditor.getLine(i).indexOf("layers/" + filename) !== -1){
+            var line =  mapCMEditor.getLine(i);
+			mapCMEditor.removeLine(i);
+            break;
+        }
+    }
+}
+ScribeUI.Map.addIncludeToMap = function(filename, commit){
+    //Find the includes in the mapeditor
+    lastinc = -1;
+    //BUG: WE SHOULD SET THE EDITOR SELECT TO THE MAP OPTION
+    //ALSO, THIS FUNCTION IS CALLED FOR EVERY GROUP EVEN IF IT HAS ALREADY BEEN ADDED TO THE MAPFILE
+    var mapCMEditor = ScribeUI.editorManager.get('map').CMEditor;
+    ScribeUI.UI.openSecondaryPanel(ScribeUI.editorManager.get("map"));
+    for(var i=0; i <  mapCMEditor.lineCount(); i++){
+        if( mapCMEditor.getLine(i).indexOf("INCLUDE") !== -1){
+            lastinc = i;
+        }else if(lastinc > -1){
+            //We add the new file at the end of the include list
+            var line =  mapCMEditor.getLine((i-1));
+            //TODO detect indentation 
+            mapCMEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
+            //Highlight for a short time:
+            //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+            //setTimeout(function(){
+            //    mapEditor.setLineClass(i, 'background', '');
+            //}, 3000);
+            break;
+        }
+    }
+}

@@ -1,4 +1,4 @@
-function Workspace(name, options){
+ScribeUI.Workspace = function(name, options){
     this.name = name;
     
     this.maps = [];
@@ -6,25 +6,9 @@ function Workspace(name, options){
     this.selectedMap = null;
 
     if(options){
-    this.password = options.password ? options.password : this.password;
-        this.workspaceSelect = options.workspaceSelect ? options.workspaceSelect : null;
+	    this.password = options.password ? options.password : this.password;
         this.workspaceManage = options.workspaceManage ? options.workspaceManage : null;
-        this.mapList = options.mapList ? options.mapList : null;
         this.workspacePassword = options.workspacePassword ? options.workspacePassword : null;
-        this.mapDiv = options.mapDiv ? options.mapDiv : null;
-        this.mapTable = options.mapTable ? options.mapTable : null;
-        this.mapActions = options.mapActions ? options.mapActions : null;
-        this.mapDescription = options.mapDescription ? options.mapDescription : null;
-        this.groupSelect = options.groupSelect ? options.groupSelect : null;
-        this.groupOl = options.groupOl ? options.groupOl : null;
-        this.poiSelect = options.poiSelect ? options.poiSelect : null;
-        this.dataDiv = options.dataDiv ? options.dataDiv : null;
-        this.logTextarea = options.logTextarea ? options.logTextarea : null;
-        this.resultTextarea = options.resultTextarea ? options.resultTextarea : null;
-        this.debugTextarea = options.debugTextarea ? options.debugTextarea : null;
-        this.scaleLevelDiv = options.scaleLevelDiv ? options.scaleLevelDiv : null;
-        this.popupWidth = options.popupWidth ? options.popupWidth : null;
-        this.popupHeight = options.popupHeight ? options.popupHeight : null;
     }
 
     this.maps = []
@@ -33,12 +17,12 @@ function Workspace(name, options){
     this.openedMap = null;
 };
 
-Workspace.prototype.open = function(){
+ScribeUI.Workspace.prototype.open = function(){
     this.getMaps();
-	onWorkspaceOpened();
+	ScribeUI.Workspace.onWorkspaceOpened();
 };
 
-Workspace.prototype.createMap = function(data){
+ScribeUI.Workspace.prototype.createMap = function(data){
     var self = this;
 
     $.post($API + '/maps/new', data, function(response) {
@@ -48,18 +32,18 @@ Workspace.prototype.createMap = function(data){
     });
 };
 
-Workspace.prototype.cloneMap = function(data){
+ScribeUI.Workspace.prototype.cloneMap = function(data){
     var self = this;
 
     $.post($API + '/maps/clone', data, function(response) {
-        selectors.gitCloneLogs().val(response.logs);
+        ScribeUI.UI.manager.git.cloneLogs().val(response.logs);
         if(response.status == 1){
             self.open();    
         }
     });
 };
 
-Workspace.prototype.deleteMap = function(map, callback){
+ScribeUI.Workspace.prototype.deleteMap = function(map, callback){
     var self = this;
 
     $.post($API + '/maps/delete/' + map.id, {}, function(response) {
@@ -68,14 +52,14 @@ Workspace.prototype.deleteMap = function(map, callback){
                 self.openedMap.close();
             }
 
-            selectors.mapActions().hide();
+            ScribeUI.UI.mapActions().hide();
 
             self.open();
         }
     });   
 };
  
-Workspace.prototype.create = function(){
+ScribeUI.Workspace.prototype.create = function(){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_new_ws', {
         name: this.name,
@@ -90,7 +74,7 @@ Workspace.prototype.create = function(){
     });   
 };
 
-Workspace.prototype.getMaps = function(){
+ScribeUI.Workspace.prototype.getMaps = function(){
     var self = this;
 
     this.selectedMap = null;
@@ -105,7 +89,7 @@ Workspace.prototype.getMaps = function(){
                 var options = $.extend(map, {
                     workspace: self
                 });
-                self.maps.push(new Map(options));
+                self.maps.push(new ScribeUI.Map(options));
             });
 
             self.displayMaps(self.maps);
@@ -119,7 +103,7 @@ Workspace.prototype.getMaps = function(){
     });
 };
 
-Workspace.prototype.getMapByName = function(name){
+ScribeUI.Workspace.prototype.getMapByName = function(name){
     for(var i = 0; i < this.maps.length; i++){
         if(this.maps[i].name == name){
             return this.maps[i];
@@ -128,7 +112,7 @@ Workspace.prototype.getMapByName = function(name){
     return null;
 };
 
-Workspace.prototype.getMapByID = function(id){
+ScribeUI.Workspace.prototype.getMapByID = function(id){
     for(var i = 0; i < this.maps.length; i++){
         if(this.maps[i].id == id){
             return this.maps[i];
@@ -137,7 +121,7 @@ Workspace.prototype.getMapByID = function(id){
     return null;
 };
 
-Workspace.prototype.getMapIndexByName = function(name){
+ScribeUI.Workspace.prototype.getMapIndexByName = function(name){
     for(var i = 0; i < this.maps.length; i++){
         if(this.maps[i].name == name){
             return i;
@@ -147,7 +131,7 @@ Workspace.prototype.getMapIndexByName = function(name){
     return null;
 };
 
-Workspace.prototype.getPointsOfInterest = function(callback){
+ScribeUI.Workspace.prototype.getPointsOfInterest = function(callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_get_pois', {
     }, function(data) {
@@ -171,7 +155,7 @@ Workspace.prototype.getPointsOfInterest = function(callback){
     });
 };
 
-Workspace.prototype.getPointOfInterestByName = function(name){
+ScribeUI.Workspace.prototype.getPointOfInterestByName = function(name){
     for(var i = 0; i < this.pointsOfInterest.length; i++){
     if(this.pointsOfInterest[i].name == name){
         return this.pointsOfInterest[i];
@@ -181,7 +165,7 @@ Workspace.prototype.getPointOfInterestByName = function(name){
     return null;
 };
 
-Workspace.prototype.addPointOfInterest = function(name){
+ScribeUI.Workspace.prototype.addPointOfInterest = function(name){
     var self = this;
 
     var center = this.openedMap.OLMap.getCenter();
@@ -204,19 +188,19 @@ Workspace.prototype.addPointOfInterest = function(name){
     this.displayPointsOfInterest();
 };
 
-Workspace.prototype.displayMaps = function(maps){
+ScribeUI.Workspace.prototype.displayMaps = function(maps){
     var self = this;
 
     this.clearMaps();
 
-    selectors.mapActions().find('button').button('enable');
-    selectors.mapsList().empty();
+    ScribeUI.UI.manager.mapActions().find('button').button('enable');
+    ScribeUI.UI.manager.mapsList().empty();
 
     $.each(maps, function(index, map){
         self.displayThumbnail(map);
     });
 
-    selectors.mapsList().selectable({
+    ScribeUI.UI.manager.mapsList().selectable({
         selected: function(e){
             var li = $(this).find(".ui-selected");
             self.selectedMap = self.getMapByName(li.text());
@@ -232,7 +216,7 @@ Workspace.prototype.displayMaps = function(maps){
     });
 };
 
-Workspace.prototype.displayThumbnail = function(map){
+ScribeUI.Workspace.prototype.displayThumbnail = function(map){
     var li = $('<li>').addClass('map-preview');
     var image = $('<div>').addClass('map-preview-img').appendTo(li);
     var name = $('<span>').addClass('map-preview-name').text(map.name).appendTo(li);
@@ -242,10 +226,10 @@ Workspace.prototype.displayThumbnail = function(map){
     } else{
         image.addClass('default-preview');
     }
-    selectors.mapsList().append(li);    
+    ScribeUI.UI.manager.mapsList().append(li);    
 };
 
-Workspace.prototype.displayPointsOfInterest = function(){
+ScribeUI.Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
 
     for(var i = 0; i < this.pointsOfInterest.length; i++){
@@ -255,13 +239,13 @@ Workspace.prototype.displayPointsOfInterest = function(){
     $("#" + this.poiSelect).trigger('chosen:updated');   
 };
 
-Workspace.prototype.display = function(){
+ScribeUI.Workspace.prototype.display = function(){
     var select = $("#" + this.workspaceSelect);
     select.append($("<option></option>").attr("value", this.name).text(this.name));
     select.val(this.name);
 };
 
-Workspace.prototype.close = function(){
+ScribeUI.Workspace.prototype.close = function(){
     if(this.openedMap){
         this.openedMap.close();
     }
@@ -270,7 +254,7 @@ Workspace.prototype.close = function(){
     delete this;
 };
 
-Workspace.prototype.destroy = function(callback){
+ScribeUI.Workspace.prototype.destroy = function(callback){
     var self = this;
     $.post($SCRIPT_ROOT + '/_delete_ws', {
         name: this.name,
@@ -289,12 +273,83 @@ Workspace.prototype.destroy = function(callback){
     });   
 };
 
-Workspace.prototype.clearMaps = function(){
+ScribeUI.Workspace.prototype.clearMaps = function(){
     this.selectedMap = null;
-    selectors.mapDescription().html('');
-    selectors.mapActions().find('button').button('disable');
+    ScribeUI.UI.manager.mapDescription().html('');
+    ScribeUI.UI.manager.mapActions().find('button').button('disable');
 };
 
-Workspace.prototype.clearPointsOfInterest = function(){
+ScribeUI.Workspace.prototype.clearPointsOfInterest = function(){
      $("#" + this.poiSelect).find("option").remove();
 };
+
+// static function
+/*ScribeUI.Workspace.prototype.deleteWorkspace(options){
+    var msg = 'Are you sure you want to delete this workspace?';
+    var div = $("<div>" + msg + "</div>");
+
+    var name = $("#" + options.workspaceSelect).val();
+    if(name != null){
+        div.dialog({
+            title: "Confirm",
+            resizable: false,
+            
+            buttons: [{
+                 text: "Yes",
+                 click: function () {
+                    var name = $("#" + options.workspaceSelect).val();
+                    var password = $("#" + options.workspacePassword).val();
+                    options.password = password;
+
+                    if(_workspace && _workspace.name == name){
+                        _workspace.destroy(_workspace.close);
+                    } else{
+                        var workspace = new ScribeUI.Workspace(name, options);
+                        workspace.destroy();
+                    }
+                    div.dialog("close");
+                 }
+            },
+            {
+                text: "No",
+                click: function () {
+                    div.dialog("close");
+                }
+            }]
+        });
+    }
+}*/
+/*ScribeUI.openWorkspace = function(options){
+    var name = $("#" + options.workspaceSelect).val();
+    var password = $("#" + options.workspacePassword).val();
+    options["password"] = password;
+
+    if(_workspace){
+        _workspace.close();
+    }
+
+    _workspace = new ScribeUI.Workspace(name, options);
+    if(_workspace.open())
+        return true;
+    else return false;
+   
+}*/
+
+
+ScribeUI.Workspace.getWorkspaces = function(callback){
+    $.get($API + '/workspaces/all', {}, function(response) {
+        if(response.status == 1){
+            if(callback){
+                callback.call(null, response.workspaces);
+            }
+        }
+    });    
+}
+
+ScribeUI.Workspace.onWorkspaceOpened = function(){
+    for(i in ScribeUI.plugins){
+        if(ScribeUI.plugins[i].onWorkspaceOpened)
+            ScribeUI.plugins[i].onWorkspaceOpened();
+    }
+}
+

@@ -1,16 +1,28 @@
-function EditorManager(editors){
-	this.editors = [] || editors;
+ScribeUI.EditorManager = function(editors){
+	this.editors = {};
+	if(editors && editors.length > 0){
+		for(i in editors)
+			this.addEditor(editors[i]);
+    }
 }
-EditorManager.prototype.addEditor(editor){
-	this.editors.push(editor);
+// TODO: Add editor to select
+ScribeUI.EditorManager.prototype.addEditor = function(editor){
+	var lowercase = editor.name.toLowerCase();
+    if(this.editors[lowercase]){
+		throw "Editor "+lowercase+" already exists";
+	}else{
+		this.editors[lowercase] = editor;
+	}
+	var option = $('<option value="'+lowercase+'">'+editor.name+'</option>');
+	ScribeUI.UI.editor.editorSelect().append(option);
+    ScribeUI.UI.editor.editorSelect().trigger("chosen:updated");
 }
-EditorManager.prototype.get(editorId){
+ScribeUI.EditorManager.prototype.get = function(editorId){
 	return this.editors[editorId];
 }
-function Editor(id, name, options, CMOptions){
-    this.name = name;
-    this.id = id;
-    this.position = options.position || "secondary";
+ScribeUI.Editor = function(id, name, options, CMOptions){
+	this.name = name;
+	this.id = id;
+	this.position = options.position || "secondary";
 	this.CMEditor =  CodeMirror.fromTextArea(document.getElementById(id), CMOptions);
 }
-

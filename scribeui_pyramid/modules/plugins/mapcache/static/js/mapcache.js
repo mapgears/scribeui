@@ -30,7 +30,7 @@ jQuery(function() { $(document).ready(function(){
         $('#map-description').bind('DOMSubtreeModified', $.proxy(function(e) { 
             var mapname = this.getMapName();
             if(mapname != null){
-                var map = workspace.getMapByName(mapname);
+                var map = ScribeUI.workspace.getMapByName(mapname);
                 this.updateJobListTable(map);
             }
         }, this));
@@ -50,10 +50,10 @@ jQuery(function() { $(document).ready(function(){
     mapcache.prototype.getMapName = function(){
         var mapname = $("#map-description .map-title").text();
         if(!mapname){
-            if(workspace.openedMap == null){
+            if(ScribeUI.workspace.openedMap == null){
                 return;
             }else{
-                mapname = workspace.openedMap.name;
+                mapname = ScribeUI.workspace.openedMap.name;
             }
         }
         return mapname;
@@ -61,7 +61,7 @@ jQuery(function() { $(document).ready(function(){
     //Opens the job list dialog
     mapcache.prototype.openDialog = function(){
         this.getJobs();
-        var map = workspace.selectedMap
+        var map = ScribeUI.workspace.selectedMap
         
         // Creating the dialog if run for the first time
         if(this.dialogDiv == null){
@@ -78,16 +78,16 @@ jQuery(function() { $(document).ready(function(){
 
             //Start new job button
             var startButton = $('<button id="start-new-mapcache-job">Start new tiling job for <span id="start-new-mapcache-job-mapname">'+map.name+'</span></button>').button().click($.proxy(function(){
-            var map = workspace.selectedMap;
+            var map = ScribeUI.workspace.selectedMap;
             //No map opened, we open it
-            if(workspace.openedMap == null){ 
+            if(ScribeUI.workspace.openedMap == null){ 
                 this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
                 openMap();
             //A map is opened and it's not the selected one
-            }else if(workspace.openedMap != map){
+            }else if(ScribeUI.workspace.openedMap != map){
                 // We warn the user if there are unsaved changes
-                if(!workspace.openedMap.saved){
-                    var message = "<p>"+workspace.openedMap.name + " is currently opened and have unsaved changes. Do you wish to continue? <br/>Click the Cancel button to go back and save your changes.</p>";
+                if(!ScribeUI.workspace.openedMap.saved){
+                    var message = "<p>"+ScribeUI.workspace.openedMap.name + " is currently opened and have unsaved changes. Do you wish to continue? <br/>Click the Cancel button to go back and save your changes.</p>";
                     var warningDialog = $('<div id="mapcache-warning">'+message+'</div>');
                     warningDialog.dialog({
                         autoOpen: true,
@@ -124,7 +124,7 @@ jQuery(function() { $(document).ready(function(){
 
             //Show all jobs button
             var allButton = $('<button id="show-all-mapcache-jobs">Show jobs from all maps</button>').button().click($.proxy(function(){
-                var map = workspace.selectedMap;
+                var map = ScribeUI.workspace.selectedMap;
                 this.updateJobListTable(map, true);
             }, this));
             this.dialogDiv.append(allButton);
@@ -165,7 +165,7 @@ jQuery(function() { $(document).ready(function(){
             '</div>';
 
         var databaseConfigs= '<option></option>';
-        $.each(workspace.databaseConfigs, function(index, config){
+        $.each(ScribeUI.workspace.databaseConfigs, function(index, config){
             databaseConfigs += '<option value="' + config.name + '">' + config.name + '</option>';
         });
 
@@ -230,7 +230,7 @@ jQuery(function() { $(document).ready(function(){
         });
 
         var elf = $('#shapefile-extent').elfinder({
-            url: '/cgi-bin/elfinder-python/connector-' + workspace.name + '-' + workspace.selectedMap.name + '.py',
+            url: '/cgi-bin/elfinder-python/connector-' + ScribeUI.workspace.name + '-' + ScribeUI.workspace.selectedMap.name + '.py',
             transport : new elFinderSupportVer1(),
             cssClass: 'shapefile-extent-manager',
             resizable: false,
@@ -299,7 +299,7 @@ jQuery(function() { $(document).ready(function(){
         var startButton = $('<button id="launch-mapcache-job">Launch job</button>').button().click($.proxy(function(){
         
             var data = {
-                map: workspace.openedMap.id,
+                map: ScribeUI.workspace.openedMap.id,
                 title: $('#mapcache-title').val(),
                 zoomlevels: $('#mapcache-zoomlevels').val(),
                 metatile: $('#mapcache-metatiles').val(),
@@ -325,7 +325,7 @@ jQuery(function() { $(document).ready(function(){
             }
         }, this));
         var maxScale = -1;
-        for(k in workspace.openedMap.OLScales){
+        for(k in ScribeUI.workspace.openedMap.OLScales){
             var i = parseInt(k);
             if(i > maxScale) maxScale = i;
         }
@@ -346,7 +346,7 @@ jQuery(function() { $(document).ready(function(){
     //Reads the map's extent in the editors['maps']
     mapcache.prototype.getMapExtent = function(){
         var extentStr = "EXTENT ";
-        if(workspace.openedMap.type == "Scribe")
+        if(ScribeUI.workspace.openedMap.type == "Scribe")
             extentStr = "EXTENT:";
         for(var i=0; i<editors['maps'].lineCount(); i++){
             if(editors['maps'].getLine(i).indexOf(extentStr) !== -1){
@@ -357,7 +357,7 @@ jQuery(function() { $(document).ready(function(){
     }
     // Returns the current extent in the map previewer
     mapcache.prototype.getCurrentExtent = function(){
-        return workspace.openedMap.OLMap.getExtent();
+        return ScribeUI.workspace.openedMap.OLMap.getExtent();
     }
     mapcache.prototype.validateOptions = function(options){
         //TODO: AJOUTER UNE VALIDATION SUR L'EXTENT QUI TIENT COMPTE DES DIFFÉRENTS TYPES D'EXTENT
@@ -400,7 +400,7 @@ jQuery(function() { $(document).ready(function(){
         $.post($API + "/mapcache/startjob", data, 
             function(response) {
                 if(response.status == 1){
-                    var map = workspace.getMapByID(response.job.map_id);
+                    var map = ScribeUI.workspace.getMapByID(response.job.map_id);
                     var j = new job(response.job.id, response.job.title, map, response.job.status);
                     self.jobs.push(j);
                     self.updateJobListTable(map);
@@ -437,13 +437,13 @@ jQuery(function() { $(document).ready(function(){
     //Get the job list from the backend
     mapcache.prototype.getJobs = function(callback){
         $.ajax({
-            url: $API+"/mapcache/getjobs?ws="+workspace.name,
+            url: $API+"/mapcache/getjobs?ws="+ScribeUI.workspace.name,
             context: this,
             dataType: "json"
         }).done(function(data){
             this.jobs = [];
             for(i in data.jobs){
-                var j = new job(data.jobs[i].id, data.jobs[i].title, workspace.getMapByName(data.jobs[i].map_name), data.jobs[i].status);
+                var j = new job(data.jobs[i].id, data.jobs[i].title, ScribeUI.workspace.getMapByName(data.jobs[i].map_name), data.jobs[i].status);
                 this.jobs.push(j);
                 for(i in this.jobs){
                     if($('#jobid'+this.jobs[i].id).length > 0){
@@ -644,7 +644,7 @@ jQuery(function() { $(document).ready(function(){
     mapcache.prototype.saveDatabaseConfig = function(){
         var config = {
             name: $('#extent-database-config select option:selected').val(),
-            ws: workspace.name,
+            ws: ScribeUI.workspace.name,
             dbtype: $('#extent-database-type').val(),
             dbhost: $('#extent-host').val(),
             dbport: $('#extent-port').val(),
@@ -656,7 +656,7 @@ jQuery(function() { $(document).ready(function(){
         $.post($API + "/mapcache/database/config/save", config, 
             function(response) {
                 if(response.status == 1){
-                    workspace.databaseConfigs.push(config);
+                    ScribeUI.workspace.databaseConfigs.push(config);
                 }
             }
         );
@@ -664,10 +664,10 @@ jQuery(function() { $(document).ready(function(){
 
     mapcache.prototype.getDatabaseConfigByName = function(name){
         var config = null;
-        if(workspace.databaseConfigs){
-            for(var i = 0; i < workspace.databaseConfigs.length; i++){
-                if(workspace.databaseConfigs[i]['name'] == name){
-                    config = workspace.databaseConfigs[i];
+        if(ScribeUI.workspace.databaseConfigs){
+            for(var i = 0; i < ScribeUI.workspace.databaseConfigs.length; i++){
+                if(ScribeUI.workspace.databaseConfigs[i]['name'] == name){
+                    config = ScribeUI.workspace.databaseConfigs[i];
                     break
                 }
             }
@@ -678,9 +678,9 @@ jQuery(function() { $(document).ready(function(){
 
     mapcache.prototype.getDatabaseConfigIndexByName = function(name){
         var index = null;
-        if(workspace.databaseConfigs){
-            for(var i = 0; i < workspace.databaseConfigs.length; i++){
-                if(workspace.databaseConfigs[i]['name'] == name){
+        if(ScribeUI.workspace.databaseConfigs){
+            for(var i = 0; i < ScribeUI.workspace.databaseConfigs.length; i++){
+                if(ScribeUI.workspace.databaseConfigs[i]['name'] == name){
                     index = i;
                     break
                 }
@@ -693,7 +693,7 @@ jQuery(function() { $(document).ready(function(){
     mapcache.prototype.removeDatabaseConfig = function(name){
         var index = this.getDatabaseConfigIndexByName(name);
         if(index !== null){
-            workspace.databaseConfigs.splice(index, 1);    
+            ScribeUI.workspace.databaseConfigs.splice(index, 1);    
         }
     }
 
@@ -708,13 +708,13 @@ jQuery(function() { $(document).ready(function(){
 
     mapcache.prototype.getDatabaseConfigs = function(){
         var data = {
-            ws: workspace.name
+            ws: ScribeUI.workspace.name
         };
 
         $.get($API + "/workspaces/mapcache/database/config/get", data, 
             function(response) {
                 if(response.status == 1){
-                    workspace.databaseConfigs = response.configs;
+                    ScribeUI.workspace.databaseConfigs = response.configs;
                 }
             }
         );
@@ -724,7 +724,7 @@ jQuery(function() { $(document).ready(function(){
         var self = this;
         var name = $('#extent-database-config select option:selected').val();
         var data = {
-            ws: workspace.name,
+            ws: ScribeUI.workspace.name,
             name: name
         };
         
@@ -750,7 +750,7 @@ jQuery(function() { $(document).ready(function(){
     mapcache.prototype.getMapData = function(map){
         var self = this;
         var data = {
-            map: workspace.openedMap.id
+            map: ScribeUI.workspace.openedMap.id
         };
         
         $.get($API + "/mapcache/grids/get", data, 
@@ -763,5 +763,5 @@ jQuery(function() { $(document).ready(function(){
         );
     }
 
-    addPlugin(new mapcache());
+    ScribeUI.addPlugin(new mapcache());
 })});

@@ -15,14 +15,14 @@ mapcacheViewerManager = function(plugin){
 	this.plugin = plugin;
 }
 mapcacheViewerManager.prototype.onMapOpened = function(){
-	workspace.openedMap.mapcacheViewer = new mapcacheViewer(workspace.openedMap);
-	workspace.openedMap.mapcacheViewer.activate();
+	ScribeUI.workspace.openedMap.mapcacheViewer = new mapcacheViewer(ScribeUI.workspace.openedMap);
+	ScribeUI.workspace.openedMap.mapcacheViewer.activate();
 };
 mapcacheViewerManager.prototype.onMapClosed = function(){
 	//Disable all layerswitchers
-	for(i in workspace.maps){
-		if(typeof(workspace.maps[i].mapcacheViewer) != "undefined")
-			workspace.maps[i].mapcacheViewer.deactivate();
+	for(i in ScribeUI.workspace.maps){
+		if(typeof(ScribeUI.workspace.maps[i].mapcacheViewer) != "undefined")
+			ScribeUI.workspace.maps[i].mapcacheViewer.deactivate();
 	}
 }
 
@@ -33,7 +33,7 @@ mapcacheViewer.prototype.updateLayers = function(){
             dataType: "json"
         }).done(function(data){
 			if(data.errors.length == 0){
-                origin = new OpenLayers.LonLat(workspace.openedMap.OLMap.layers[0].maxExtent.bottom, workspace.openedMap.OLMap.layers[0].maxExtent.left);
+                origin = new OpenLayers.LonLat(ScribeUI.workspace.openedMap.OLMap.layers[0].maxExtent.bottom, ScribeUI.workspace.openedMap.OLMap.layers[0].maxExtent.left);
 				for(i in data.layers){
 					// Create the layers
 					var layer = new OpenLayers.Layer.TMS(

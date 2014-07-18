@@ -9,7 +9,7 @@ jQuery(function() { $(document).ready(function(){
 	}
 	//This will be called immediatly after the addPlugin function
 	setExtent.prototype.init = function(){
-		addButton("Set Map Extent", "#editor-toolbar",{
+		ScribeUI.UI.addButton("Set Map Extent", "#editor-toolbar",{
 			onclick: $.proxy(this.open,this),	
 			buttonid: 'setMapExtent'
 		});
@@ -19,12 +19,12 @@ jQuery(function() { $(document).ready(function(){
 	setExtent.prototype.open = function(){
 		//Find the extent in the editors['maps']
 		var extentStr = "EXTENT ";
-		if(workspace.openedMap.type == "Scribe")
+		if(ScribeUI.workspace.openedMap.type == "Scribe")
 			extentStr = "EXTENT:";
-		for(var i=0; i < editors['maps'].lineCount(); i++){
-			if(editors['maps'].getLine(i).indexOf(extentStr) !== -1){
+		for(var i=0; i < ScribeUI.editorManager.get('map').CMEditor.lineCount(); i++){
+			if(ScribeUI.editorManager.get('map').CMEditor.getLine(i).indexOf(extentStr) !== -1){
 				//Hightlight line in codemirror
-				editors['maps'].setLineClass(i, 'background', 'setextent-highlighted-line');
+				ScribeUI.editorManager.get('map').CMEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
 				this.extentLineNumer = i;
 				break;
 			}
@@ -34,7 +34,7 @@ jQuery(function() { $(document).ready(function(){
 		
 		//We need a vector layer to draw the box
 		boxLayer = new OpenLayers.Layer.Vector("Box layer");
-		workspace.openedMap.OLMap.addLayer(boxLayer); 
+		ScribeUI.workspace.openedMap.OLMap.addLayer(boxLayer); 
 
 		//Add drawing control to map
 		boxControl = new OpenLayers.Control.DrawFeature(boxLayer,
@@ -51,7 +51,7 @@ jQuery(function() { $(document).ready(function(){
 		boxLayer.events.register('featureadded',this, function(e){
 			$(".ui-dialog-buttonpane button:contains('SetExtent')").button("enable");
 		});
-		workspace.openedMap.OLMap.addControl(boxControl); 
+		ScribeUI.workspace.openedMap.OLMap.addControl(boxControl); 
 		boxControl.activate();
 
 		//Create the dialog
@@ -70,10 +70,10 @@ jQuery(function() { $(document).ready(function(){
 					//Get extent string
 					var ext = boxLayer.features[0].geometry.bounds.toString();
 					ext = ext.replace(/,/g,' ');
-					var lineContent = editors['maps'].getLine(extProxyLineNumber);
+					var lineContent = ScribeUI.editorManager.get('map').CMEditor.getLine(extProxyLineNumber);
 					var newLineContent = lineContent.substr(0, lineContent.indexOf(extentStr)+extentStr.length);
 					newLineContent += ext;
-					editors['maps'].setLine(extProxyLineNumber, newLineContent);
+					ScribeUI.editorManager.get('map').CMEditor.setLine(extProxyLineNumber, newLineContent);
 					
 					$(this).dialog("close");
 				},
@@ -86,7 +86,7 @@ jQuery(function() { $(document).ready(function(){
 		$(".ui-dialog-buttonpane button:contains('SetExtent')").button("disable");
 
 		//Open the map tab if it isn't opened already
-		openSecondaryPanel("maps", editors['maps']);
+		ScribeUI.UI.openSecondaryPanel(ScribeUI.editorManager.get('map'));
 				
 	}
 	
@@ -95,13 +95,13 @@ jQuery(function() { $(document).ready(function(){
 		$('#setMapExtent').button('enable');
 	}
 	setExtent.prototype.closeDialog = function(e, ui){
-		editors['maps'].setLineClass(this.extentLineNumer, 'background', '');
-		workspace.openedMap.OLMap.removeControl(boxControl);
+		ScribeUI.editorManager.get('map').CMEditor.setLineClass(this.extentLineNumer, 'background', '');
+		ScribeUI.workspace.openedMap.OLMap.removeControl(boxControl);
 		boxControl.destroy();
-		workspace.openedMap.OLMap.removeLayer(boxLayer);
+		ScribeUI.workspace.openedMap.OLMap.removeLayer(boxLayer);
 		boxLayer.destroy();
 	}
 
 	//Call this to add your plugin to the application. 
-	addPlugin(new setExtent())
+	ScribeUI.addPlugin(new setExtent())
 })})
