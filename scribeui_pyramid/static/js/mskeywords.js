@@ -1,2 +1,2 @@
 var MSTAGS= ['CLASS', 'FEATURE', 'JOIN', 'LABEL', 'LAYER', 'LEADER', 'LEGEND', 'MAP', 'OUTPUTFORMAT', 'PROJECTION', 'QUERYMAP', 'REFERENCE', 'SCALEBAR', 'STYLE', 'SYMBOL', 'VALIDATION', 'WEB']
-var MSDOC = "http://mapserver.org/en/mapfile/";
+var MSDOC = "http://mapserver.org/mapfile/";
