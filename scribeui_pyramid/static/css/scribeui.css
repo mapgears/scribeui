@@ -300,8 +300,6 @@ button {
 
 .tabcontent-small {
     padding: 0em !important;
-    overflow-y: auto;
-    
     width: 100%;
 
 }
@@ -503,14 +501,9 @@ button {
     src: url('fonts/Menlo-Regular.ttf') format("truetype");
 }
 .CodeMirror {
-	font-size: 1.1em;
+	font-size: 13px;
 	height:100%;
     font-family: Menlo-Regular, sans-serif !important;
-}
-.CodeMirror pre {
-    /*font-size: 1.1em !important;
-    font-family: Menlo-Regular, sans-serif !important;
-    height: 15px;*/
 }
 .cm-variable {
     color: blue !important;
