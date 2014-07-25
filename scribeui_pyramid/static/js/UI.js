@@ -496,21 +496,13 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             click: function(){
                 var group = ScribeUI.UI.editor.groupsList().find('.ui-selected');
                 var bumped = group.next();
-                
-                var groupName = group.text();
-                var bumpedName = bumped.text();
 
-                if(groupName && bumpedName){
-                    ScribeUI.workspace.openedMap.raiseGroupIndex(groupName);
+                if(group.length > 0 && group.length == bumped.length){
+                    $(group.get().reverse()).each(function(i){
+                        ScribeUI.workspace.openedMap.raiseGroupIndex($(this).text());
+                        $(this).insertAfter($(this).next());
+                    });
 
-                    bumped.text(groupName);
-                    group.text(bumpedName);
-
-                    var bumpedClass = bumped.attr('class');
-                    var groupClass = group.attr('class');
-
-                    group.attr('class', bumpedClass).removeClass("ui-selected");
-                    bumped.attr('class', groupClass).addClass("ui-selected");
                 }
             }
         },
@@ -522,22 +514,14 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             click: function(){
                 var group = ScribeUI.UI.editor.groupsList().find('.ui-selected');
                 var bumped = group.prev();
-                
-                var groupName = group.text();
-                var bumpedName = bumped.text();
 
-                if(groupName && bumpedName){
-                    ScribeUI.workspace.openedMap.raiseGroupIndex(groupName);
+                if(group.length > 0 && group.length == bumped.length){
+                    group.each(function(i){
+                        ScribeUI.workspace.openedMap.raiseGroupIndex($(this).text());
+                        $(this).insertBefore($(this).prev());
+                    });
 
-                    bumped.text(groupName);
-                    group.text(bumpedName);
-
-                    var bumpedClass = bumped.attr('class');
-                    var groupClass = group.attr('class');
-
-                    group.attr('class', bumpedClass);
-                    bumped.attr('class', groupClass);
-                }                
+                }
             }
         },
         {
