@@ -52,7 +52,7 @@ ScribeUI.Workspace.prototype.deleteMap = function(map, callback){
                 self.openedMap.close();
             }
 
-            ScribeUI.UI.mapActions().hide();
+            ScribeUI.UI.manager.mapActions().hide();
 
             self.open();
         }
