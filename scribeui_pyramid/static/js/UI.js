@@ -375,7 +375,7 @@ ScribeUI.UI.openNewMapDialog = function(){
                     $(this).dialog("close");
                 },
                 "+": function(){
-                    getWorkspaces(function(workspaces){
+                    ScribeUI.Workspace.getWorkspaces(function(workspaces){
                         $("#newmap-ws").removeClass('invisible');
 
                         ScribeUI.UI.manager.newMap.templateWorkspaceSelect().empty();
