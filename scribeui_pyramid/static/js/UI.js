@@ -62,11 +62,11 @@ ScribeUI.UI.init = function(){
     
     $('#logs').hide();
 
-    $('#editors-container').height($('#editor-tab').height() - 40);
+    $('#editors-container').height($('#editor-tab').height() - this.editor.toolbar().outerHeight());
     $(window).on('resize', function () {
         $('.main').height( $('body').height()-$('.navbar').height())
         $('#main-tabs').tabs('refresh');
-        $('#editors-container').height($('#editor-tab').height() - 40);
+        $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
         ScribeUI.UI.resizeEditors();
     });
 
@@ -99,6 +99,7 @@ ScribeUI.UI.init = function(){
     });
 
     $("a[href='#editor-tab']").bind('click', function(){
+        $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
         $("div[class='CodeMirror']").show();
         ScribeUI.editorManager.get('groups').CMEditor.focus();
         $.each(ScribeUI.editorManager.editors, function(key, editor){

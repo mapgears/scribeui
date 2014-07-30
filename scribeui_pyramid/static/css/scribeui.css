@@ -453,8 +453,7 @@ button {
 #editor-toolbar{
 	background-color:#FCFCFC;
 	border-bottom:solid 1px #f7f7f7;
-	height:32px;
-    padding: 7px 4px 0px 4px;
+    padding: 7px 4px 4px 0px;
 }
 #editor-toolbar select{
 	max-width:200px;
