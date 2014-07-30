@@ -384,7 +384,7 @@ ScribeUI.Map.prototype.findTopLayerName = function(){
                 //Removing the NAME
 				layername = line.substr(strings[i].length, line.length).trim();
 
-				var hadQuotes = 
+				var hadQuotes = false;
 				if(layername.indexOf("'") >= 0 || layername.indexOf('"') >= 0)
 					hadQuotes = true;
 				//Removing extra quotes
