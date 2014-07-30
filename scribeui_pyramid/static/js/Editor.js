@@ -26,3 +26,20 @@ ScribeUI.Editor = function(id, name, options, CMOptions){
 	this.position = options.position || "secondary";
 	this.CMEditor =  CodeMirror.fromTextArea(document.getElementById(id), CMOptions);
 }
+
+ScribeUI.Editor.prototype.searchLine = function(needle){
+	var haystack = this.CMEditor;
+	for(var i=0; i < haystack.lineCount(); i++){
+		var line = haystack.getLine(i);
+		if(line.indexOf(needle) !== -1){
+			lineHandle = haystack.getLineHandle(i);
+
+			//Skip the line if it is commented
+			if(lineHandle.styles.indexOf("comment") >= 0)
+				continue;
+
+			return lineHandle;
+		}
+	}
+    return null;
+}

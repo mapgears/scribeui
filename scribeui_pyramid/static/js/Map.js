@@ -234,6 +234,8 @@ ScribeUI.Map.prototype.save = function(){
                 if(!self.WMSLayer){
                     self.open();
                 } else{
+					//This is needed in case the user changed the map's name
+					self.WMSLayer.mergeNewParams({layers: self.findTopLayerName()});
                     self.WMSLayer.redraw(true);
                 }
                 
@@ -299,12 +301,12 @@ ScribeUI.Map.prototype.display = function(){
 
         });
         OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
-
+		
         var WMSLayer = new OpenLayers.Layer.WMS(
             this.name,
             this.url,
             {
-                layers: "default",
+                layers: this.findTopLayerName(),
                 format: "image/png"
             }, {
                 singleTile: true,
@@ -368,6 +370,36 @@ ScribeUI.Map.prototype.close = function(){
     this.previousGroup = null;
 }
 
+//Find the map's name in the mapeditor
+ScribeUI.Map.prototype.findTopLayerName = function(){
+	var layername = "MS"; //Mapserver's default
+	var lineHandle = ScribeUI.editorManager.get('map').searchLine("NAME");
+
+	if(lineHandle){
+		var line = lineHandle.text.trim();
+
+		strings = ["NAME:", "NAME :","NAME"];
+		for(i in strings){
+			if(line.indexOf(strings[i])>=0){
+                //Removing the NAME
+				layername = line.substr(strings[i].length, line.length).trim();
+
+				var hadQuotes = 
+				if(layername.indexOf("'") >= 0 || layername.indexOf('"') >= 0)
+					hadQuotes = true;
+				//Removing extra quotes
+				layername = layername.replace(/^"*'*/, "")
+				layername = layername.replace(/"*'*$/, "")
+
+				//Scribe numbers all NAMEs, including the map name.
+				if(this.type == "Scribe" && hadQuotes) // ...except the ones that are not in quotes.
+					layername+="1";
+				break;
+			}
+		}
+	}
+	return layername;
+}
 ScribeUI.Map.prototype.clearGroups = function(){
     ScribeUI.UI.editor.groupSelect().empty();
     ScribeUI.UI.editor.groupSelect().unbind('change');
