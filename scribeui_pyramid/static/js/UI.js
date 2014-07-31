@@ -469,17 +469,17 @@ ScribeUI.UI.openGroupOrderDialog = function(){
         modal: true,
         buttons: [
         {
-            text: "+",
+            text: "+", //ADD
             showText: false,
             'class': 'btn-group-first',
             icons: { primary: 'ui-icon-plus'},
             click: function(){
                 var group = ScribeUI.UI.editor.groupsList().find('.ui-selected');
-                openNewGroupDialog();
+                ScribeUI.UI.openNewGroupDialog();
             }
         },
         {
-            text: "Delete",
+            text: "Delete", //DELETE
             showText: false,
             'class': 'btn-group-last',
             icons: { primary: 'ui-icon-trash'},
@@ -490,7 +490,7 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             }
         },
         {
-            text: '+',
+            text: '+', //DOWN
             showText: false,
             'class': 'btn-group-first',
             icons: { primary: 'ui-icon-carat-1-s'},
@@ -500,15 +500,14 @@ ScribeUI.UI.openGroupOrderDialog = function(){
 
                 if(group.length > 0 && group.length == bumped.length){
                     $(group.get().reverse()).each(function(i){
-                        ScribeUI.workspace.openedMap.raiseGroupIndex($(this).text());
+                        ScribeUI.workspace.openedMap.lowerGroupIndex($(this).text());
                         $(this).insertAfter($(this).next());
                     });
-
                 }
             }
         },
         {
-            text: '-',
+            text: '-', //UP
             showText: false,
             'class': 'btn-group-last',
             icons: { primary: 'ui-icon-carat-1-n'},
@@ -526,7 +525,7 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             }
         },
         {
-            text: "Apply",
+            text: "Apply",//APPLY
             showText: true,
             'class': 'btn-group-first grouporder-btn-right',
             click:  function() {
@@ -545,12 +544,12 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             }
         },
         {
-            text: "Cancel",
+            text: "Cancel",//CANCEL
             showText: true,
             'class': 'btn-group-last grouporder-btn-right',
             click: function() {
                 $.each(ScribeUI.workspace.openedMap.newGroups, function(index, name){
-                    ScribeUI.workspace.openedMap.removedGroup(name);
+                    ScribeUI.workspace.openedMap.removeGroup(name);
                 });
 
                 $(this).dialog("close");
