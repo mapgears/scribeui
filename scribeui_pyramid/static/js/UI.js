@@ -98,8 +98,7 @@ ScribeUI.UI.init = function(){
         }
     });
 
-    $("a[href='#editor-tab']").bind('click', function(){
-        $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
+    $("a[href='#editor-tab']").bind('mouseup', function(){
         $("div[class='CodeMirror']").show();
         ScribeUI.editorManager.get('groups').CMEditor.focus();
         $.each(ScribeUI.editorManager.editors, function(key, editor){
@@ -107,6 +106,9 @@ ScribeUI.UI.init = function(){
             // See http://stackoverflow.com/questions/10575833/codemirror-has-content-but-wont-display-until-keypress
             setTimeout(editor.CMEditor.refresh, 1)
         });
+		$('#editor-tab').show();
+        $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
+        ScribeUI.UI.resizeEditors();
     });
 
     $('#btn_new_map').button().click(function(){
@@ -573,13 +575,13 @@ ScribeUI.UI.displayDataBrowser = function(){
 }
 
 ScribeUI.UI.resizeEditors = function(){
-    //$('#editor-tab').css("overflow","hidden");
     if( $('.secondary-wrap').is(':visible'))
         var remainingSpace = $('#editors-container').height() - $('.secondary-wrap').outerHeight();
     else var remainingSpace = $('#editors-container').height();
-       var divTwo = $('.main-editor');
-       var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
-       divTwo.css('height', divTwoHeight + 'px');    
+    var divTwo = $('.main-editor');
+    var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
+    divTwo.css('height', divTwoHeight + 'px');    
+    $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
 }
 ScribeUI.UI.openSecondaryPanel = function(editor){
     $('#secondary-editor > .tabcontent-small').hide();
