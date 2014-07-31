@@ -549,7 +549,7 @@ ScribeUI.UI.openGroupOrderDialog = function(){
             showText: true,
             'class': 'btn-group-last grouporder-btn-right',
             click: function() {
-                $.each(this.newGroups, function(index, name){
+                $.each(ScribeUI.workspace.openedMap.newGroups, function(index, name){
                     ScribeUI.workspace.openedMap.removedGroup(name);
                 });
 
