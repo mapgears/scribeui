@@ -551,6 +551,7 @@ ScribeUI.UI.openGroupOrderDialog = function(){
                 $.each(ScribeUI.workspace.openedMap.newGroups, function(index, name){
                     ScribeUI.workspace.openedMap.removeGroup(name);
                 });
+                ScribeUI.workspace.openedMap.setGroups();
 
                 $(this).dialog("close");
             }
