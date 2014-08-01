@@ -33,14 +33,14 @@ ScribeUI.POI.prototype.findScaleDenom = function(level){
 }
 
 //Static functions:
-function zoomToPOI(){
+ScribeUI.POI.zoomToPOI = function(){
     if(ScribeUI.workspace && ScribeUI.workspace.openedMap){
         var name = ScribeUI.UI.poi.select().val();
         ScribeUI.workspace.openedMap.zoomToPOI(name);
     }    
 }
 
-function addPOI(){
+ScribeUI.POI.addPOI = function(){
     if(ScribeUI.workspace && ScribeUI.workspace.openedMap){
         $("#addpoi-form").dialog({
             autoOpen: false,
@@ -65,5 +65,12 @@ function addPOI(){
                 $(this).find('input').val('');
             }
         }).dialog("open");
+    }
+}
+
+ScribeUI.POI.removePOI = function(){
+    if(ScribeUI.workspace && ScribeUI.workspace.openedMap){
+        var name = ScribeUI.UI.poi.select().val();
+        ScribeUI.workspace.openedMap.removePOI(name);    
     }
 }

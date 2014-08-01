@@ -659,6 +659,21 @@ ScribeUI.Map.prototype.addPOI = function(name){
     });
 }
 
+ScribeUI.Map.prototype.removePOI = function(name){
+    var self = this;
+
+    $.post($API + '/maps/' + this.id + '/pois/delete', {
+        name: name
+    }, function(response) {
+        if(response.status == 1){
+			ScribeUI.UI.poi.select().children("option[value='"+name+"']").remove();
+            ScribeUI.UI.poi.select().trigger('chosen:updated');
+        }
+
+    });
+}
+
+
 
 //Static functions:
 ScribeUI.Map.openMap = function(){

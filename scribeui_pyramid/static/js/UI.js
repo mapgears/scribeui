@@ -184,15 +184,22 @@ ScribeUI.UI.init = function(){
         $('#log-notification').hide();                
     });
     $('#btn-zoom-poi').button().click( function(){
-        zoomToPOI();
+        ScribeUI.POI.zoomToPOI();
     });
 
     $('#btn-add-poi').button({
         text: false,
         icons: { primary: 'ui-icon-plus' }
     }).click( function(){
-        addPOI();
+        ScribeUI.POI.addPOI();
     });
+	$('#btn-remove-poi').button({
+        text: false,
+        icons: { primary: 'ui-icon-minus' }
+    }).click( function(){
+        ScribeUI.POI.removePOI();
+    });
+
     $("a[href='#editor-tab']").bind('click', function(){
         $("div[class='CodeMirror']").show();
         $.each(ScribeUI.editorManager.editors, function(key, editor){

@@ -1059,6 +1059,58 @@ class APIMap(object):
 
         return response
 
+    @view_config(
+        route_name='maps.pois.delete',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def delete_poi(self):
+        response = {
+            'status': 0,
+            'errors': []
+            }
+
+        map = Map.by_id(self.matchdict.get('id'))
+        workspace = Workspace.by_id(map.workspace_id)
+
+        if(workspace.name == self.request.userid):
+            try:
+                name = self.request.POST.get('name')
+            except KeyError as e:
+                response['errors'].append('A name is required.')
+
+            if len(response['errors']) == 0:
+                workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+                map_directory = workspace_directory + map.name + '/'
+                poi_file = map_directory + 'poi'
+
+                try:
+                    output = []
+                    with codecs.open(poi_file, encoding='utf8', mode='r') as f:
+                       for line in f:
+                           if not line.startswith(name+","):
+                                output.append('\n' + line)
+                       f.close()
+                    with codecs.open(poi_file, encoding='utf8', mode='w') as f:
+                        for o in output:
+                            f.write(o)
+                        f.close()
+                     
+                               
+                except IOError:
+                    response['errors'].append("An error occured while opening '" + poi_file + "' file.")
+
+
+                if len(response['errors']) == 0:
+                    response['status'] = 1
+
+        else:
+            response['errors'].append('Access denied.')
+
+        return response
+
+
 
     @view_config(
         route_name='maps.debug.get',
