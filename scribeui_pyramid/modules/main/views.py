@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-import logging
-import imp #For plugins
-import os #Fro plugins
+from scribeui_pyramid.modules import plugins
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from ..app.sqla import DBSession
 from pyramid.httpexceptions import (
     HTTPFound,
     HTTPNotFound
 )
 from pyramid.view import view_config
+
+from pyramid.config import Configurator
 
 from wtforms.validators import ValidationError
 
@@ -23,12 +22,8 @@ from ..app.utils import Bunch
 
 from ..workspaces.models import Workspace
 
-from ..plugins import (
-    getJsFiles,
-    getCssFiles
-    )
+from pyramid.threadlocal import get_current_registry
 
-log = logging.getLogger(__name__)
 
 
 class MainView(BaseView):
@@ -42,12 +37,35 @@ class MainView(BaseView):
         permission='view'
     )
     def home(self):
-        plugins_js = [
-        ]
-        plugins_js += getJsFiles(self.request)
-
+        plugins_js = []
         plugins_css = []
-        plugins_css += getCssFiles(self.request)
+        #config = Configurator(settings=get_current_registry().settings)
+        #plugins = load_plugins()
+        #for name, plugin in plugins.iteritems():
+        #    config.include("..plugins."+name)
+
+        plist = plugins.pluginsList
+        for name in plist:
+            try:
+                plugin = __import__("scribeui_pyramid.modules.plugins."+name, globals(), locals(), ['getIncludedFiles'])
+                includes = plugin.getIncludedFiles()
+                #JS
+                js_files = includes['js']
+                if isinstance(js_files, str):
+                    plugins_js.append(js_files)
+                else:
+                    for js in js_files:
+                        plugins_js.append(js)
+                #CSS
+                css_files = includes['css']
+                if isinstance(css_files, str):
+                    plugins_css.append(css_files)
+                else:
+                    for css in css_files:
+                        plugins_css.append(css)
+            except AttributeError:
+                #If the plugins doesn't have js files to include, ignore it.
+                pass
 
         return {
             'plugins_js': plugins_js,
@@ -58,3 +76,4 @@ class MainView(BaseView):
             'logout_url': self.request.route_url('auth.logout'),
             'version': 'v1.0'
         }
+

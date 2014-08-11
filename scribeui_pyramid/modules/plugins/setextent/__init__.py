@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-def routes_plugins(config):
-	#config.add_route('setextent.test', '/setextent/test')
-	pass
-    
-
 def includeme(config):
-    #config.include(routes_plugins, route_prefix='plugins')
+    config.add_static_view(name='setextent', path='static')
     config.scan('.')
+
+def getIncludedFiles():
+    return {'css':'setextent/css/setextent.css',
+            'js': 'setextent/js/setExtent.js'}
+

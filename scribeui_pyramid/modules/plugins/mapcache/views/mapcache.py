@@ -4,6 +4,8 @@
 #    2 - Stopped (error)
 
 import logging
+from scribeui_pyramid.modules.maps.models import Map
+from scribeui_pyramid.modules.workspaces.models import Workspace
 import transaction
 import codecs
 
@@ -26,8 +28,6 @@ import pprint, sys, os
 from ..processManager import processManager
 
 from .. import DBSession
-from .. import Map
-from .. import Workspace
 
 from ..models import (
     Job,

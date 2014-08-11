@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from .. import DBSession
-from .. import Map
-from .. import Workspace
 from .models import (
     Job,
     DatabaseConfig
 )
+from scribeui_pyramid.modules.app.sqla import DBSession
+
 
 def routes_plugins(config):
     config.add_route('mapcache.startjob', '/mapcache/startjob')
@@ -21,11 +20,15 @@ def routes_plugins(config):
 
 def includeme(config):
     config.scan('.')
+    config.add_static_view(name='mapcache', path='static')
     config.include(routes_plugins, route_prefix='api')
 	
 
-class JobManager(object):
+def getIncludedFiles():
+    return {'css':['mapcache/css/mapcache.css','mapcache/css/mapcacheViewer.css'],
+            'js': ['mapcache/js/mapcache.js', 'mapcache/js/mapcacheViewer.js']}
 
+class JobManager(object):
     @staticmethod
     def createTable():
         engine = DBSession.bind
@@ -34,7 +37,6 @@ class JobManager(object):
 
 
 class DatabaseConfigManager(object):
-
     @staticmethod
     def createTable():
         engine = DBSession.bind

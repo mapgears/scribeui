@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
+from scribeui_pyramid.modules.app.sqla import Base, BaseMixin
+
 import sqlalchemy as sa
 
-from .. import (
-    DBSession,
-    Base,
-    BaseMixin
-)
+import models
+#from . import (
+#    DBSession,
+#    Base,
+#    BaseMixin
+#)
+
 
 class Job(Base, BaseMixin):
     __tablename__ = 'jobs'

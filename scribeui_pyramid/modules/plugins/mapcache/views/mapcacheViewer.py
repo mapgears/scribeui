@@ -1,5 +1,7 @@
 import logging
 import codecs
+from scribeui_pyramid.modules.maps.models import Map
+from scribeui_pyramid.modules.workspaces.models import Workspace
 import transaction
 from BeautifulSoup import BeautifulStoneSoup
 
@@ -18,8 +20,8 @@ log = logging.getLogger(__name__)
 import pprint, sys, os, fnmatch
 
 from .. import DBSession
-from .. import Map
-from .. import Workspace
+
+
 
 from ..models import Job
 class APIMapcacheViewer(object):

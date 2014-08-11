@@ -82,7 +82,7 @@ jQuery(function() { $(document).ready(function(){
             //No map opened, we open it
             if(ScribeUI.workspace.openedMap == null){ 
                 this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
-                openMap();
+                ScribeUI.Map.openMap();
             //A map is opened and it's not the selected one
             }else if(ScribeUI.workspace.openedMap != map){
                 // We warn the user if there are unsaved changes
@@ -97,7 +97,7 @@ jQuery(function() { $(document).ready(function(){
                         buttons: {
                             "Continue without saving": $.proxy(function(){
                                 this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
-                                openMap();
+                                ScribeUI.Map.openMap();
                                 $('#mapcache-warning').dialog("close");
                                 $('#mapcache-warning').remove();
                             }, this),
@@ -111,7 +111,7 @@ jQuery(function() { $(document).ready(function(){
                 // we open the selected one anyway
                 }else{    
                     this.mapOpenCallback = function() { $.proxy(this.getMapData(map), this); };
-                    openMap();
+                    ScribeUI.Map.openMap();
                 }
                 // If there is a map opened and it's the right one, we proceed
                 }else{
@@ -348,9 +348,10 @@ jQuery(function() { $(document).ready(function(){
         var extentStr = "EXTENT ";
         if(ScribeUI.workspace.openedMap.type == "Scribe")
             extentStr = "EXTENT:";
-        for(var i=0; i<editors['maps'].lineCount(); i++){
-            if(editors['maps'].getLine(i).indexOf(extentStr) !== -1){
-                l = editors['maps'].getLine(i);
+        var mapEditor = ScribeUI.editorManager.get("map").CMEditor
+        for(var i=0; i<mapEditor.lineCount(); i++){
+            if(mapEditor.getLine(i).indexOf(extentStr) !== -1){
+                l = mapEditor.getLine(i);
                 return l.substr(l.indexOf(extentStr)+extentStr.length,l.length).trim().replace(/ /g,',');
             }
         }
