@@ -3,59 +3,34 @@ title: ScribeUI - Plugin Creation Tutorial
 layout: default
 ---
 
-**DEPRECATION NOTICE: The following tutorial is only valid for ScribeUI versions earlier than v1.0. ScribeUI 1.0 plugin tutorial will [be added shortly.](https://github.com/mapgears/scribeui/issues/98)**
-
 #Plugin Creation
-
-Creating plugins in ScribeUI is easy, this page should help understand how to create a new functionnality. 
-
-*Plugin creation requires ScribeUI v0.4 or higher.*
 
 ##Getting started
 
-Let's create a small Hello World plugins with a few basic functionalities. 
+Let's create a small Hello World plugin with a few basic functionalities. 
 
-All plugins should have their own individual folder in the application/plugins directory. For our plugin, let's create a directory named HelloWorld. Inside that folder, you must create a file named \__init__.py
+All plugins should have their own individual folder in the scribeui\_pyramid/modules/plugins directory. 
 
-This file will be imported as a module in the ScribeUI application. All the python files you wish to be available in your plugin should be imported in the \__init__.py 
+Plugins are simply python modules that take advantage of Pyramid's [extensibility](http://docs.pylonsproject.org/docs/pyramid/en/latest/narr/extending.html). 
 
-In our case, next to the \__init__.py file, we will create helloworld.py in which all of our code will go. In your \__init__.py, add the following line:
-
-{% highlight python %}
-from helloworld import *
-{% endhighlight %}
-    
-ScribeUI plugins are in fact [Flask Blueprints](http://flask.pocoo.org/docs/blueprints/) loaded dynamically when the application is loaded. As such, helloworld.py need to at least import the following modules: 
+As such, you first need an **\_\_init__.py** file. In that file, you have to create a function named **includeme** that receives a **config** object. To have your models and views included automatically, your includeme function should look like this:
 
 {% highlight python %}
-from flask import Flask, Blueprint, render_template, url_for
+def includeme(config):
+    config.scan('.')
 {% endhighlight %}
 
-Then, for ScribeUI to recognize your plugin, you need the following variable, named plugin:
-
-{% highlight python %}
-plugin = Blueprint('HelloWorld', __name__, static_folder='static', template_folder='templates')
-{% endhighlight %}
-
-The static_folder parameter defines the path relative where all your resources will be located. In that example, all images, javascript or css files are located in the application/plugins/myPlugin/static folder. In the same spirit, all the templates will be located in the application/plugins/myPlugin/templates directory.
-
-*The different values the Blueprint function can accept are more detailed in the [Flask documentation.](http://flask.pocoo.org/docs/blueprints/)*
-
-At this point, application/plugins/HelloWorld directory should look like this: 
-
-    HelloWorld/
-        __init__.py
-        helloworld.py
-        static/
-        templates/
-            
 And at that point, ScribeUI loads your module without any problems. But it doesn't do anything yet. 
 
 ##Adding some new Javascript and CSS to ScribeUI
 
-First, we will create a simple javascript file that opens a jquery-ui dialog saying "Hello, World!"
+If you wish to include static files, adding the following line to the includeme function will add a folder and its subfolder as a route for the application: 
 
-In your static folder, create a js directory, in which you will add a helloworld.js file with the following code:
+{% highlight python %}
+    config.add_static_view(name='hellostatics', path='static')
+{% endhighlight %}
+
+For our example, let's create a simple file with the path scribeui\_pyramid/modules/plugins/static/js/helloworld.js containing a simple jquery-ui dialog as an example:
 
 {% highlight javascript %}
 jQuery(function() { $(document).ready(function(){
@@ -67,96 +42,84 @@ jQuery(function() { $(document).ready(function(){
 })});
 {% endhighlight %}
                                
-This code should be pretty straightforward if you are familiar with JQueryUI.
+This code should be pretty straightforward if you are familiar with jquery-ui.
 
-Next, this javascript file should be included in the scribeui main page. To do that, add the following function to your helloworld.py page:
-
-{% highlight python %}
- def getJsFiles():                       
-    return url_for('HelloWorld.static',filename='js/helloworld.js')
-{% endhighlight %}
-
-If you ever need to get several js files added, do it by returning an array, like this: [url_for(...),url_for(...)]
-
-When you edit a python file, the changes probably won't be picked up by mod_wsgi immediately. To see your changes, you should restart apache.
-
-Now, if you refresh ScribeUI, you should see a dialog popping with your hello world message. 
-
-If you wish to add some CSS, you do it in a similar way to the javascript, but the function to add to your python file is the following: 
+As ScribeUI is mostly a single page app, if you want css and javascript files to be included directly into the home template, you need to add the  files in a function such this:
 
 {% highlight python %}
- def getCssFiles():
-    return url_for('HelloWorld.static',filename='myCssFile.css')
+def getIncludedFiles():
+    return {'css':['hellostatics/css/helloworld.css'], # if you have any css files
+            'js': ['hellostatics/js/helloworld.js']}
 {% endhighlight %}
+
+The css and js values are arrays so that you may add several javascript and css files to ScribeUI. 
+
+And thus, if you restart scribeui ( make restart for the development install, or restarting apache on a production setup), Hello world! should appear in an alert box. 
         
 ## Server-side functions
 
-If you need to execute something server-side, the best way to go is to create a flask page with routing, and calling it with ajax. Flask has some nice advanced functionalities in that regards, for example its jinja2 templating system can be really useful. 
+You can easily add models and views to your plugins. Models should be stored in a **models.py** file, and views in **views.py** (or in a folder named views, the mapcache plugin included with ScribeUI is an example of this)
 
-We are going to edit our hello world plugin by formatting a bit of json with templates and getting it with javascript.
+We are going to edit our hello world plugin by formatting a bit of data with templates and getting it with javascript.
 
-First, let's create a small json file, named helloworlds.json:
+First, let's create a view in **views.py**:
 
-{% highlight json %}
-{
-    "helloworld": [
-        {
-            "language": "English",
-            "message": "Helloworld"
-        },
-        {
-            "language": "French",
-            "message": "Bonjour monde"
-        },
-        {
-            "language": "Spanish",
-            "message": "Hola mundo"
-        }
-    ]
- 
+{% highlight python %}
+from pyramid.view import view_config
+from pyramid.renderers import render_to_response
+
+class HelloWorldView(object):
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(
+        route_name='helloworld',
+        permission='view'
+    )   
+    def helloworld(self):
+        data = [{
+                "language": "English",
+                "message": "Helloworld"
+                },  
+                {   
+                "language": "French",
+                "message": "Bonjour monde"
+                },  
+                {   
+                "language": "Spanish",
+                "message": "Hola mundo"
+                }   
+            ]   
+        return render_to_response('scribeui_pyramid:modules/plugins/HelloWorld/templates/helloworld.jinja2',{"data":data})
 {% endhighlight %}
 
-Now in the templates directory, create this basic template, called helloworld.html:
+This code names a route named helloworld, renders it to a template, passing it some data. [The templates are using jinja2.](http://jinja.pocoo.org/docs/), served by [Pyramid templating](http://docs.pylonsproject.org/projects/pyramid/en/1.0-branch/narr/templates.html)
+
+Let's create a templates directory, with this basic template, called **helloworld.jinja2**:
 
 {% highlight html %}
 <table><tr><th>Language</th><th>Message</th></tr>                     
 {{ "{% for d in data " }}%}                                                    
-    <tr><td>{{ d['language'] }}</td><td>{{ d['message']}}</td></tr>
+    <tr><td>{{ "{{ d['language'] "}} }}</td><td>{{ "{{d['message']"}}}}</td></tr>
 {{ "{% endfor " }}%}                     
-</table>                                               
+</table>              
 {% endhighlight %}
 
-And finally, your python file will look like this:
+Now, we need to add the route to the config. In \_\_init__.py add the following line to the includeme function:
 
 {% highlight python %}
-from flask import Flask, Blueprint, render_template, url_for, current_app
-import simplejson
+def getIncludedFiles():
+   config.add_route('helloworld', '/helloworld')
 
-plugin = Blueprint('HelloWorld', __name__, static_folder='static', template_folder='templates')
-
-def getJsFiles():
-    return url_for('HelloWorld.static',filename='js/helloworld.js')
-
-@plugin.route('/')
-def printHelloWorld():
-    data = simplejson.loads('helloworlds.json')
-    return render_template('helloworld.html', data=data['helloworld'])
 {% endhighlight %}
 
-
-The @plugin.route function indicate the path that the appliation will use to access the function.  The render_template function defines which template to render, along with defining the data variable, which is then available to the template.
-
-You should be able to access this page from your browser after restarting apache, the path should look like this:
-
-    http://localhost/ScribeUI/plugins/HelloWorld/
+After restarting ScribeUI, a table containing the data will be accessible at the /helloworld location. 
     
-And the table should appear. All plugins routes are prefixed with plugins/pluginname.
-
 Now, let's edit our javascript script to show the template in our popup:
 
 {% highlight javascript %}
 jQuery(function() { $(document).ready(function(){
-        $.ajax({url:"plugins/HelloWorld/",success:function(result){
+        $.ajax({url:"helloworld",success:function(result){
                 var helloDialog = $('<div class="hello-world">'+result+'</div>');
                 $('body').append(helloDialog);
                 helloDialog.dialog({
@@ -168,3 +131,8 @@ jQuery(function() { $(document).ready(function(){
 
 And now you should see your popup appear when you launch ScribeUI! 
 
+
+## Useful links
+
+* [Pyramid documentation](http://docs.pylonsproject.org/en/latest/docs/pyramid.html)
+* [Jinja2 Documentation](http://jinja.pocoo.org/docs/)
