@@ -133,6 +133,8 @@ load-demo-data:
 
 	test -d ./pdata/natural_earth/10m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/10m_cultural.zip && unzip -o 10m_cultural.zip -d ./pdata/natural_earth/10m_cultural/ && rm 10m_cultural.zip)
 
+	mv ./pdata/natural_earth/10m_cultural/10m_cultural/* ./pdata/natural_earth/10m_cultural/
+
 	test -d ./pdata/natural_earth/10m_physical/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/physical/10m_physical.zip &&unzip -o 10m_physical.zip -d ./pdata/natural_earth/10m_physical/ && rm 10m_physical.zip)
 
 	test -d ./pdata/natural_earth/50m_cultural/ || (wget -c http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/50m_cultural.zip && unzip -o 50m_cultural.zip -d ./pdata/natural_earth/50m_cultural/ && rm 50m_cultural.zip)
