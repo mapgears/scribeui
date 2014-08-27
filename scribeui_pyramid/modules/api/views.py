@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy.orm.exc import NoResultFound
 
 from pyramid.view import view_config
-import pyramid.httpexceptions as exc
 
-from ..app.sqla import DBSession
-
-from operator import attrgetter
 
 class APIBaseView(object):
     def __init__(self, request):

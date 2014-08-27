@@ -1,11 +1,16 @@
 from subprocess import Popen
-import pprint, time, threading, os, sys, sqlite3, shutil
+import pprint
+import time
+import threading
 
+import os
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import exc
 import transaction
-
 from .models import Job
+
+
+
 
 # Borg pattern, all processManager objects will have the same states
 # meaning they all reference the same processes, lock and thread.

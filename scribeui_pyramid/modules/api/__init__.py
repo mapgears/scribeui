@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from scribeui_pyramid import int_predicate
 
 
 def api(config):

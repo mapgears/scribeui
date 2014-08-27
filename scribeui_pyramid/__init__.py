@@ -5,10 +5,8 @@ from time import time
 
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
-
 from pyramid.config import Configurator
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
-import json
 
 
 def integers_predicate(*segment_names):

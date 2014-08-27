@@ -2,26 +2,12 @@
 import logging
 import subprocess
 
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPNotFound
-)
 from pyramid.view import view_config
-
 from ..app.sqla import DBSession
-
-from ..webui.views import (
-    BaseView,
-    FormView
-)
-from .forms import (
-    NewWorkspaceForm
-)
-
 from .models import Workspace
 from . import WorkspaceManager
-
 from ..maps import MapManager
+
 
 log = logging.getLogger(__name__)
 

@@ -11,9 +11,7 @@ from pyramid.view import (
     forbidden_view_config,
     view_config
 )
-
 from ..app.sqla import DBSession
-
 from ..workspaces.models import Workspace
 from ..webui.views import BaseView
 from .forms import LoginForm

@@ -4,26 +4,21 @@
 #    2 - Stopped (error)
 
 import logging
+
 from scribeui_pyramid.modules.maps.models import Map
 from scribeui_pyramid.modules.workspaces.models import Workspace
 import transaction
 import codecs
-
 from BeautifulSoup import BeautifulSoup
-
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPNotFound
-)
 from pyramid.view import view_config
-
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import exc
+
 
 log = logging.getLogger(__name__)
 
 #import simplejson, pprint, sys, os
-import pprint, sys, os
+import os
 
 from ..processManager import processManager
 

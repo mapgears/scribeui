@@ -2,17 +2,21 @@
 # -*- coding: iso-8859-1 -*-
 
 import json
+import getopt
+import sys
+import traceback
+
 import re
-import getopt, sys, traceback
 import os.path
 import codecs
+
 
 """
 This script parses files with the scribe syntax, transform them
 into a single json file and then into mapfiles. Read the
 README for more information on the scribe syntax.
 
-Author : Charles-Ã‰ric Bourget
+Author : Charles-Éric Bourget
 Updated: 21/06/2013
 """
 

@@ -11,9 +11,7 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy import engine_from_config
 import sqlalchemy as sa
-
 from zope.sqlalchemy import ZopeTransactionExtension
-
 from .interfaces import IDBSession
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))

@@ -2,29 +2,21 @@
 import logging
 import subprocess
 import json
+
 import codecs
 import os
 import transaction
-
 from sqlalchemy import exc
-
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPNotFound
-)
 from pyramid.view import view_config
-
 from ..app.sqla import DBSession
-
 from ..workspaces.models import Workspace
-
 from .models import Map
 from . import MapManager
-
 from .scribe import (
     string2json,
     list2dict
     )
+
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +27,6 @@ class APIMap(object):
         self.request = request
         self.matchdict = request.matchdict
 
-        
     @view_config(
         route_name='maps.new',
         permission='view',

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import re
 import subprocess
+
+import re
 import codecs
-
 from  werkzeug import url_fix
-
 from scribeui_pyramid import int_predicate
+
 
 def routes_api(config):
     config.add_route('maps.new', '/maps/new')

@@ -1,6 +1,5 @@
 Chameleon==2.11
 Jinja2==2.6
-M2Crypto==0.21.1
 Mako==0.7.3
 MarkupSafe==0.15
 PasteDeploy==1.5.0
@@ -12,7 +11,7 @@ WebOb==1.2.3
 alembic==0.4.2
 argparse==1.2.1
 cryptacular==1.4.1
-fixture==1.4
+fixture==1.6
 flake8==2.0
 ipython==0.13.1
 mccabe==0.2

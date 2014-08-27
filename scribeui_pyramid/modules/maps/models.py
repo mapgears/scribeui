@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import sqlalchemy as sa
 
-from sqlalchemy.ext.hybrid import hybrid_property
-
 from ..app.sqla import (
     DBSession,
     Base,

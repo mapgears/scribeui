@@ -4,8 +4,7 @@ import datetime
 from wtforms import (
     IntegerField,
     FloatField,
-    DateTimeField,
-    validators
+    DateTimeField
 )
 
 class IntegerFieldFr(IntegerField):

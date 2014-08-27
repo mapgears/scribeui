@@ -1,8 +1,11 @@
 import imp #For plugins
-import os #For plugins
 import sys
 import traceback
 import logging
+
+import os #For plugins
+
+
 log = logging.getLogger(__name__)
 
 pluginsList = []

@@ -3,7 +3,6 @@ from scribeui_pyramid.modules.app.sqla import Base, BaseMixin
 
 import sqlalchemy as sa
 
-import models
 #from . import (
 #    DBSession,
 #    Base,

@@ -1,29 +1,11 @@
 # -*- coding: utf-8 -*-
 from scribeui_pyramid.modules import plugins
 
-from sqlalchemy.orm.exc import NoResultFound
-
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPNotFound
-)
 from pyramid.view import view_config
 
-from pyramid.config import Configurator
-
-from wtforms.validators import ValidationError
-
 from ..webui.views import (
-    BaseView,
-    FormView
+    BaseView
 )
-
-from ..app.utils import Bunch
-
-from ..workspaces.models import Workspace
-
-from pyramid.threadlocal import get_current_registry
-
 
 
 class MainView(BaseView):

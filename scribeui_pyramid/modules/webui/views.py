@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
+
 import transaction
-
 from wtforms import Form
-
 from ..app import ValidationError
+
 
 log = logging.getLogger(__name__)
 

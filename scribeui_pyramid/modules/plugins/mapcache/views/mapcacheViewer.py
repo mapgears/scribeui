@@ -1,29 +1,19 @@
 import logging
+
 import codecs
 from scribeui_pyramid.modules.maps.models import Map
 from scribeui_pyramid.modules.workspaces.models import Workspace
-import transaction
 from BeautifulSoup import BeautifulStoneSoup
-
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPNotFound
-)
 from pyramid.view import view_config
 from pyramid.response import FileResponse
-
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import exc
+
 
 log = logging.getLogger(__name__)
 
-import pprint, sys, os, fnmatch
-
-from .. import DBSession
+import pprint, os, fnmatch
 
 
-
-from ..models import Job
 class APIMapcacheViewer(object):
     def __init__(self, request):
         self.request = request
