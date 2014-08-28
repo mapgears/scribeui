@@ -13,7 +13,8 @@ ScribeUI.POI = function(name, lon, lat, scale, projection){
 }
 
 ScribeUI.POI.prototype.findScaleLevel = function(denom){
-    diff0 = 999999999;
+    var diff0 = 999999999;
+    var diff;
     for(i in this.map.OLScales){
         diff = Math.abs(this.map.OLScales[i] - denom);
         if(diff < diff0){
@@ -21,11 +22,8 @@ ScribeUI.POI.prototype.findScaleLevel = function(denom){
             var level = i; 
         }
     }
-    //Scribe maps scales start at 1 instead of 0
-    if(typeof(this.map.OLMap.scales[0]) == 'undefined')
-         return level-1;
-     else
-         return level;
+    //Displayed zoom levels are actually one level too high.
+    return level-1;
 }
 
 ScribeUI.POI.prototype.findScaleDenom = function(level){

@@ -257,11 +257,11 @@ ScribeUI.Map.prototype.display = function(){
 
     if(this.OLUnits == "meters" || this.OLUnits == null){     
         for(i in this.OLScales){
-            scales[i] = Math.ceil(parseInt(this.OLScales[i])/10) * 10;
+            scales.push(parseInt(this.OLScales[i]));
         }
     } else if(this.OLUnits == "dd"){
         for(i in this.OLScales){
-            scales[i] = this.OLScales[i];
+            scales.push(this.OLScales[i]);
         }
     }
 
@@ -627,7 +627,7 @@ ScribeUI.Map.prototype.zoomToPOI = function(name){
         }
 
         var level = poi.scale == null ? 10 : poi.findScaleLevel(poi.scale);
-        this.OLMap.setCenter(lonLat, level);
+        this.OLMap.setCenter(lonLat, parseInt(level));
     }
 }
 
