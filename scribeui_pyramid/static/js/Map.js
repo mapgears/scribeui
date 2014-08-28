@@ -668,6 +668,10 @@ ScribeUI.Map.prototype.removePOI = function(name){
         if(response.status == 1){
 			ScribeUI.UI.poi.select().children("option[value='"+name+"']").remove();
             ScribeUI.UI.poi.select().trigger('chosen:updated');
+            for(i in self.pois){
+                if(self.pois[i].name == name)
+                    self.pois.splice(i,  1);
+            }
         }
 
     });
