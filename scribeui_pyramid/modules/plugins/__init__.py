@@ -22,7 +22,7 @@ def includeme(config):
 #===============================
 def load_plugins():
     plugins = {}
-    path = os.path.abspath(os.path.join("scribeui_pyramid", "modules", "plugins"))
+    path = os.path.abspath(os.path.dirname(__file__))
     for filename in os.listdir(path):
         if os.path.isdir(os.path.join(path, filename)) and os.path.isfile(os.path.join(path, filename, '__init__.py')):
             try:
