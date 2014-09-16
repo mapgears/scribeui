@@ -282,69 +282,6 @@ ScribeUI.UI.displayWorkspaces = function(select){
         }
     });
 }
-
-ScribeUI.UI.openNewWorkspaceDialog = function(options){
-    $("#createws-form").dialog({
-        autoOpen: false,
-        resizable: false,
-        width: options.popupWidth,
-        height: options.popupHeight,
-        modal: true,
-        buttons: {
-            "Create": function() {
-                var name = $("#newws-name").val();
-                var password = $("#newws-password").val();
-                options["password"] = password;
-                
-                if(ScribeUI.workspace){
-                    ScribeUI.workspace.close();
-                }
-
-        ScribeUI.workspace = new Workspace(name, options)
-
-        ScribeUI.workspace.create();
-                $(this).dialog("close");
-            },
-            Cancel: function() {
-                $(this).dialog("close");
-            }
-        },
-        close: function(e) {
-            $(this).find('input').val('');
-        }
-    }).dialog("open");
-}
-ScribeUI.UI.openWorkspacePopup = function(options){
-    displayWorkspaces(options.workspaceSelect);
-    var dClass = 'no-close';
-    if(ScribeUI.workspace){
-            dClass = ''; // If there is a workspace opened, we allow closing the window
-    }
-    $('#'+options.workspaceManage).dialog({
-        modal:true,
-        width: options.popupWidth,
-        height:options.popupHeight,
-        resizable: false,
-        dialogClass: dClass,
-        modal:true,
-        buttons:{
-            "New Workspace": function(e){ 
-                openNewWorkspaceDialog(options)
-            },
-            "Open Workspace": function(e){
-                    openWorkspace(options)
-            },
-            "Delete Workspace": function(e){
-                deleteWorkspace(options);
-            }
-        }
-    })
-}
-
-ScribeUI.UI.closeWorkspacePopup = function(options){
-    $('#'+options.workspaceManage).dialog('close');
-}
-
 ScribeUI.UI.displayTemplates = function(templates){
     this.manager.newMap.templateSelect().empty();
 
