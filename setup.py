@@ -43,7 +43,7 @@ testing_extras = tests_require + [
 ]
 
 setup(name='scribeui_pyramid',
-      version='1.2',
+      version='1.3',
       description='Pyramid Base',
       long_description=README,
       classifiers=[
