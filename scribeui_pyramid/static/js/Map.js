@@ -500,6 +500,7 @@ ScribeUI.Map.prototype.openDataBrowser = function(){
         transport : new elFinderSupportVer1(),
         cssClass: 'file-manager',
         resizable: false,
+        height:ScribeUI.UI.dataBrowser().height()-2,
         commands: [
         'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 
         'rename', 'mkdir', 'mkfile', 'copy', 'paste', 'help', 'rm',
@@ -697,6 +698,7 @@ ScribeUI.Map.deleteMap = function(){
         div.dialog({
             title: "Confirm",
             resizable: false,
+            width: "auto",
             buttons: [{
                  text: "Yes",
                  click: function () {
@@ -721,7 +723,7 @@ ScribeUI.Map.exportMap = function(){
          $("#exportmap-form").dialog({
             autoOpen: false,
             resizable: false,
-            width: 300,
+            width: "auto",
             height: 200,
             modal: true,
             buttons: {

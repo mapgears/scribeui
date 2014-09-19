@@ -23,6 +23,7 @@ function openNewWorkspaceDialog(){
         autoOpen: false,
         resizable: false,
         modal: true,
+        width: 'auto',
         buttons: {
             "Create": function() {
                 var name = $("#newws-name").val();

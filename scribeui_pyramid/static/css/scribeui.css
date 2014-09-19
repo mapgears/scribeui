@@ -6,12 +6,11 @@ html, body {
     margin: 0px;
     padding: 0px;
 
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 
     background-color: white;
 
-    font-family: Helvetica,Arial,sans-serif !important;
+    font-family: Helvetica,Arial,sans-serif;
 }
 html{
 	font-size: 62.5%; /* Note: important for all jquery-ui default styles 
@@ -27,43 +26,50 @@ select {
     padding: 1px 0px 0px 1px;
     width:200px;
 }
-input[type="text"],
-input[type="password"] {
-    border-radius: 4px;
-    width:200px;
-}
+
 label {
     font-size: 1.2em;
     font-weight: normal;
     line-height: 20px;
 }
+
+input[type="text"],
+input[type="password"],
 textarea {
+    border-radius: 4px;
+    width:200px;
+    border: solid 1px #AAA;
     padding: 5px;
-    width: 200px;
+    box-shadow: 0 0px 3px rgba(0, 0, 0, 0.1);
 }
+
 input, select, textarea {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-button {
-    font-size: 10px !important;
-    border-radius: 4px !important;
-    border-color: #AAAAAA !important;
+input:focus, select:focus, textarea:focus{
+    border: solid 1px #1c8d61;
+}
+button, .ui-button, 
+button.ui-widget{
+    border-radius: 5px;
+    font-size: 10px;
+    border-color: #AAAAAA;
     height: 25px;
-    margin-top: -1px;
+    padding-top:3px;
     box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-.main {
-    height: 100%;
-    width: 100%;
+
+.ui-widget button.ui-widget{
+    font-size:10px;
+    border-color: #AAAAAA;
 }
 /*=== Header ===*/
 .navbar {
     position: relative;
 
     border-bottom: 1px solid #1c8d61;
-    margin-top: 0px;
 
     width: 100%;
 
@@ -107,14 +113,14 @@ button {
 }
 
 .navbar #logout button{
-    border-top-width: 0px !important;
-    border-bottom-width: 0px !important;
-    border-right-width: 0px !important;
-    border-radius: 0px !important;
-    border-color: #1C8D61 !important;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px;
+    border-color: #1C8D61;
     height: 30px;
     width: 100%;
-    font-size: 14px !important;
+    font-size: 14px;
 }
 
 .ui-menu { 
@@ -181,26 +187,26 @@ button {
 
 /*=== Elfinder ===*/
 .elfinder-toolbar {
-    border-radius: 0px !important;
+    border-radius: 0px;
 }
 
 .elfinder-navbar {
-   height: 100% !important;
+   height: 100%;
 }
 .elfinder-statusbar {
-    border-radius: 0px !important;
+    border-radius: 0px;
 }
 
-.elfinder-workzone{
-	font-size:1.2em;
+.ui-widget .ui-widget.elfinder-ltr{
+	font-size:1.4em;
 }
 #data-tab .file-manager {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    height: auto !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: auto;
 }
 
 /* === Tabs ===*/
@@ -210,12 +216,12 @@ button {
     width: 42%;
     height: 100%;
 
-    border-width: 0px !important;
+    border-width: 0px;
 
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-left-radius: 0px !important;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
 
     position: relative;
 }
@@ -226,12 +232,12 @@ button {
     width: 100%;
     height: 100%;
 
-    border-width: 0px !important;
+    border-width: 0px;
 
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-left-radius: 0px !important;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
 }
 
 .tab-container {
@@ -240,71 +246,67 @@ button {
 
 .tab-container-small {
     /*overflow-x: auto;*/
-    border-bottom: 1px solid #AAAAAA !important;
+    border-bottom: 1px solid #AAAAAA;
 }
 
-.ui-tabs {
-    padding: 0.0em !important;
+.ui-tabs .ui-tabs-panel, .ui-tabs{
+    padding: 0.0em;
 }
 
 .tab-small{
 }
 
 #main-tabs {
-    border-radius: 0px !important;
+    border-radius: 0px;
     border-top-width: 0px;    
 }
 
 .tabheader {
-    border-radius: 0px !important;
+    border-radius: 0px;
 
-    border-left-width: 0px !important;
-    border-top-width: 0px !important;
-    border-right-width: 0px !important;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
    
-    line-height: 1.3 !important;
-    padding-top: 5px !important;
-    padding-left: 5px !important;
+    line-height: 1.3;
+    padding-top: 5px;
+    padding-left: 5px;
 
 }
 
 .tabheader-small {
-    border-radius: 0 !important;
-    border-left-width: 0px !important;
-    border-right-width: 0px !important;
-    border-top-width: 0px !important;
+    border-radius: 0;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
     
-    padding-top: 5px !important;
-    padding-left: 5px !important;
-    line-height: 0.4 !important;
+    padding-top: 5px;
+    padding-left: 5px;
+    line-height: 0.4;
 
-    background-image: none !important;
+    background-image: none;
 }
 
 .tabs-left{
-    border-width: 0px !important;
-    background: none !important;
+    border-width: 0px;
+    background: none;
 }
 
 .tabheader-left{
-    background: none !important;
-    border-width: 0px !important;
+    background: none;
+    border-width: 0px;
 }
 
 .tabcontent {
-    padding: 0em !important;
+    padding: 0em;
     overflow-y: auto;
     width:100%;
-    border-radius: 0px !important;
+    border-radius: 0px;
 }
 
 .tabcontent-small {
-    padding: 0em !important;
+    padding: 0em;
     width: 100%;
-
-}
-#data-tab{
-	font-size:1.1em;
 
 }
 /*=== Manager ===*/
@@ -376,8 +378,8 @@ button {
 	overflow:hidden;
 }
 .maps-buttons button{
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: 3px;
+	margin-bottom: 3px;
 }
 #map-description p{
     padding: 5px;
@@ -400,10 +402,10 @@ button {
 #map-preview-img-large{
 	height:200px;
 	width:200px;
-    /*background-image:url('images/map-preview-placeholder.png');*/
 	background-size:200px 200px;
 
 	margin:auto;
+    margin-top:5px;
 	display:block;
 }
 .default-preview {
@@ -477,7 +479,7 @@ button {
 	height:100%;
 	overflow:hidden;
 	position:relative;
-    margin: 0px auto !important;
+    margin: 0px auto;
 }
 .ui-resizable-s{
 	bottom:0px;
@@ -492,7 +494,7 @@ button {
     margin-right: 0;
 }
 #log-notification .ui-icon {
-    margin-top: -9px !important;
+    margin-top: -9px;
 }
 /*=== Codemirror ===*/
 @font-face {
@@ -502,28 +504,28 @@ button {
 .CodeMirror {
 	font-size: 13px;
 	height:100%;
-    font-family: Menlo-Regular, sans-serif !important;
+    font-family: Menlo-Regular, sans-serif;
 }
 .cm-variable {
-    color: blue !important;
+    color: blue;
 }
 #editors-container .CodeMirror-scroll{
-	overflow: visible !important;
+	overflow: visible;
 	height:auto;
 }
 
 /*=== Data ===*/
 .datacontent {
-    padding: 0em !important;
-    overflow-y: auto !important;
+    padding: 0em;
+    overflow-y: auto;
     
-    position: absolute !important;
-    top: 38px !important;
-    bottom: 0 !important;
-    right: -1px !important;
-    left: 0 !important;
-    border-radius: 0px !important;
-    border-right: 1px solid #DDDDDD !important;
+    position: absolute;
+    top: 38px;
+    bottom: 0;
+    right: -1px;
+    left: 0;
+    border-radius: 0px;
+    border-right: 1px solid #DDDDDD;
 }
 #data-tab div:first-child {
     border-width: 0px;
@@ -543,7 +545,7 @@ button {
 	width:100%;
 	height:100%;
     background-color: white;
-    border-width: 0px !important;
+    border-width: 0px;
     margin: 0px;
     overflow: auto;
     padding: 10px;
@@ -603,8 +605,8 @@ button {
 /*=== Others ===*/
 .group-toolbar {
     position: absolute;
-    border-bottom: 1px solid #AAAAAA !important;
-    border-top: 1px solid #AAAAAA !important;
+    border-bottom: 1px solid #AAAAAA;
+    border-top: 1px solid #AAAAAA;
     height: 31px;
     width: 100%;
     z-index: 15;
@@ -627,20 +629,20 @@ button {
 }
 
 .top-button {
-    border-bottom-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
 
 .middle-button {
-    border-bottom-right-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-left-radius: 0px !important; 
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px; 
 }
 
 .bottom-button {
-    border-top-right-radius: 0px !important;
-    border-top-left-radius: 0px !important; 
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px; 
 }
 
 .newmap-description{
@@ -674,7 +676,7 @@ fieldset input {
 
 /*=== Other ===*/
 div.olControlZoom a {
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5) !important;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .extent-input {
@@ -727,7 +729,7 @@ div.olControlZoom a {
 }
 .ui-dialog{
 	z-index:1100;
-    width:auto !important;
+    width:auto;
 }
 .ui-dialog-title {
     padding: 2px;
@@ -735,10 +737,10 @@ div.olControlZoom a {
 .no-close .ui-dialog-titlebar-close {display: none }
 
 .scribe-dialog {
-    width: auto !important;    
-    height: auto !important;
+    width: auto;    
+    height: auto;
     min-width: 200px;
-    overflow: visible !important;
+    overflow: visible;
 }
 
 .control-group {
@@ -807,6 +809,7 @@ div.olControlZoom a {
 #maps-list .map-preview-name{
     display: block;
     padding-top: 5px;
+    height: 14px;
     overflow: hidden;
     text-overflow: ellipsis; /* this works with IE, Safari and Chrome */
     white-space: nowrap;
@@ -861,7 +864,7 @@ textarea.long {
 .git-logs {
     width: 400px;
     height: 100px;
-    font-size: 10px !important;
+    font-size: 10px;
 }
 
 .chosen-container {
@@ -870,7 +873,7 @@ textarea.long {
 
 .chosen-drop {
     min-width: 100%;
-    width: auto !important;
+    width: auto;
 }
 
 #group_select_chosen {
@@ -878,7 +881,7 @@ textarea.long {
 }
 
 #group_select_chosen a{
-    border-radius: 0px !important;
+    border-radius: 0px;
 }
 
 #editor_select_chosen a{
@@ -900,11 +903,11 @@ textarea.long {
 }
 
 #poi_select_chosen.chosen-container-active a{
-    border-radius: 0px 0px 0px 4px !important;
+    border-radius: 0px 0px 0px 4px;
 }
 
 .control-group .chosen-container {
-    width: 200px !important;
+    width: 200px;
 }
 
 .control-group input[type="text"],
@@ -916,22 +919,22 @@ textarea.long {
     margin-top: 5px;
 }
 
-.btn-group-first {
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
+button.btn-group-first {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
 
-.btn-group-middle {
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
+button.btn-group-middle {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
     margin-left: -5px;
 }
 
-.btn-group-last {
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
+button.btn-group-last {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
     margin-left: -5px;
 }
 
@@ -940,22 +943,18 @@ textarea.long {
 }
 
 .ui-dialog-buttonpane {
-    padding-left: 1em !important;
+    padding-left: 1em;
     float: none;
 }
 
-#grouporder-form {
-    min-width: 300px !important;
-}
-
 #grouporder-form + .ui-dialog-buttonpane .ui-dialog-buttonset {
-    float: none !important;
+    float: none;
 }
 
 #get-feature-info {
-    max-height: 600px !important;
-    min-width: 200px !important;
-    max-width: 400px !important;
+    max-height: 600px;
+    min-width: 200px;
+    max-width: 400px;
     overflow: auto;
 }
 

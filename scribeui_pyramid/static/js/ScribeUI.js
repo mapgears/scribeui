@@ -76,6 +76,7 @@ ScribeUI.cloneMap = function(){
         autoOpen: false,
         resizable: false,
         modal: true,
+        width: 'auto',
         buttons: {
             Clone: function() {
                 var name = $("#git-clone-name").val();
@@ -119,6 +120,7 @@ ScribeUI.configureMap = function(){
             autoOpen: false,
             resizable: false,
             modal: true,
+            width: 'auto',
             buttons: {
                 Save: function() {
                     var gitURL = $("#git-url").val();
@@ -152,6 +154,7 @@ ScribeUI.commitMap = function(){
             autoOpen: false,
             resizable: false,
             modal: true,
+            width: 'auto',
             buttons: {
                 Commit: function() {
                     var message = $("#git-message").val();
@@ -189,6 +192,7 @@ ScribeUI.pullMap = function(){
             autoOpen: false,
             resizable: false,
             modal: true,
+            width: 'auto',
             buttons: {
                 "Pull": function() {
                     var method = $('input[name="method"]:radio:checked', '#pullmap-form').val();

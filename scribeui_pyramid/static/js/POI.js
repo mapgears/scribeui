@@ -44,6 +44,7 @@ ScribeUI.POI.addPOI = function(){
             autoOpen: false,
             resizable: false,
             modal: true,
+            width: 'auto',
             buttons: {
                 "Add": function() {
                     var name = $("#newpoi-name").val();

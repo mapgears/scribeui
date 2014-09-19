@@ -62,7 +62,7 @@ jQuery(function() { $(document).ready(function(){
 			autoOpen: false,
 			resizable: false,
 			height: "130",
-			width: "180",
+			width: "auto",
    		    modal: false,
 			beforeClose: $.proxy(this.closeDialog, this),
    		    buttons: {

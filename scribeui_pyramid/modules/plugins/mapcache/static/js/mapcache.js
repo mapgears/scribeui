@@ -73,6 +73,7 @@ jQuery(function() { $(document).ready(function(){
                 resizable: true,
                 modal: false,
                 title: "MapCache Job",
+                width:"auto",
                 beforeClose: $.proxy(this.closeDialog, this)
             });
 
@@ -93,6 +94,7 @@ jQuery(function() { $(document).ready(function(){
                         autoOpen: true,
                         resizable: true,
                         modal: true,
+                        width:"auto",
                         title: "Warning",
                         buttons: {
                             "Continue without saving": $.proxy(function(){
@@ -289,6 +291,7 @@ jQuery(function() { $(document).ready(function(){
             autoOpen: false,
             resizable: true,
             modal: true,
+            width: "auto", 
             title: "MapCache", 
             beforeClose: function(){
                 $(this).dialog('destroy').remove();
@@ -524,6 +527,7 @@ jQuery(function() { $(document).ready(function(){
             resizable: false,
             height:140,
             modal: true,
+            width: "auto", 
             buttons: {
                 "Stop job": $.proxy(function() {
                     $("#mapcache-jobstop-confirmation").dialog( "close" );
@@ -613,6 +617,7 @@ jQuery(function() { $(document).ready(function(){
                 autoOpen: false,
                 resizable: false,
                 modal: false,
+                width: "auto", 
                 buttons: {
                     "Create": function() {
                         var name = $(this).find('input[name="name"]').val();

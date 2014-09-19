@@ -243,6 +243,7 @@ ScribeUI.UI.init = function(){
     getFeatureInfoDialog = $("#get-feature-info").dialog({
         autoOpen: false,
         resizable: true,
+        width: 'auto',
         modal: true
     });
 
@@ -301,6 +302,7 @@ ScribeUI.UI.openNewMapDialog = function(){
             autoOpen: false,
             resizable: false,
             modal: true,
+            width: 'auto',
             buttons: {
                 "Create": function() {
                     var name = ScribeUI.UI.manager.newMap.name().val();
@@ -374,6 +376,7 @@ ScribeUI.UI.openNewGroupDialog= function(){
         autoOpen: false,
         resizable: false,
         modal: true,
+        width: 'auto',
         buttons: {
             "Create": function() {
                 var name = $("#newgroup-name").val();
@@ -413,6 +416,7 @@ ScribeUI.UI.openGroupOrderDialog = function(){
         autoOpen: false,
         resizable: false,
         modal: true,
+        width: 'auto',
         buttons: [
         {
             text: "+", //ADD
@@ -569,6 +573,7 @@ ScribeUI.UI.displayLineEditor = function(cm, line, text){
         autoOpen: false,
         resizable: false,
         modal: true,
+        width: 'auto',
         buttons: [
         {
             text: "Write",
