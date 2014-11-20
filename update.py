@@ -66,18 +66,18 @@ try:
                         f.write(" "+str(i+1)+": "+groups[i]['group_name']+" \n")
                 f.write("}")
                 #delete groups from database
-                cur2.execute("select * from workspaces where name=?",(m['ws_name'],))
-                ws = cur2.fetchone()
-                if not ws:
-                    print("Adding workspace to the database...")
-                    cur2.execute("insert into workspaces(name) values(?)",(m['ws_name'],))
-                    ws_id = cur2.lastrowid
-                else:
-                    ws_id = ws['id']
-                    
-                print("Adding map to the database...")
-                cur2.execute("insert into maps(name, workspace_id, type) values(?, ?, ?)",(m['map_name'], ws_id, m['map_type'],))
-                con2.commit()
+        cur2.execute("select * from workspaces where name=?",(m['ws_name'],))
+        ws = cur2.fetchone()
+        if not ws:
+            print("Adding workspace to the database...")
+            cur2.execute("insert into workspaces(name) values(?)",(m['ws_name'],))
+            ws_id = cur2.lastrowid
+        else:
+            ws_id = ws['id']
+            
+        print("Adding map to the database...")
+        cur2.execute("insert into maps(name, workspace_id, type) values(?, ?, ?)",(m['map_name'], ws_id, m['map_type'],))
+        con2.commit()
                 
     if con:
         con.close()
