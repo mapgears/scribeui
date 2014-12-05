@@ -49,7 +49,7 @@ try:
         if not os.path.exists(pathMap):
           copytree(pathOldMap, pathMap)
         else:
-          raise "The directory "+pathMap+" already exists"
+          raise Exception("The directory "+pathMap+" already exists")
         cur.execute('select * from groups where map_id=? order by group_index',(m['map_id'],))
         groups = cur.fetchall()
         
