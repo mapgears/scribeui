@@ -11,7 +11,7 @@ WebOb==1.2.3
 alembic==0.4.2
 argparse==1.2.1
 cryptacular==1.4.1
-fixture==1.6
+fixture==1.5
 flake8==2.0
 ipython==0.13.1
 mccabe==0.2
