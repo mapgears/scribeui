@@ -4,7 +4,6 @@ GIT := git
 PY := bin/python
 PIP := bin/pip
 NOSE := bin/nosetests
-PIP_MIR = PIP_FIND_LINKS='http://mypi http://simple.crate.io/'
 PSERVE := bin/pserve
 
 EV_INI := local.ini
@@ -74,7 +73,7 @@ dep_install:
 
 dep_requirements:
 	@echo "\n\nSilently installing packages (this will take a while)..."
-	$(PIP_MIR) $(PIP) install -q -r requirements.txt
+	$(PIP) install -q -r requirements.txt
 
 # Run the application
 
