@@ -2,20 +2,22 @@
 {% block body %}
 
 <script type=text/javascript>
-    $WSNAME = '{{workspace}}';
+    $SETTINGS = {{settingsJSON|safe}}; //safe to remove escape characters
 </script>
 
 <!-- Header -->
-    <div class="navbar">  
+    <div class="navbar">
         <div id="title" class="title-left">
             <img src="{{logo}}"></img>
-            <div class="title">   
+            <div class="title">
                 <span class="faded">{{version}}</span>
             </div>
         </div>
-        
+
         <div id="logout">
-            <button id="workspace">{{workspace}}</button>
+            <button id="workspace">
+                {{settings.wsname}}
+            </button>
             <!--a href="{{logout_url}}">Log Out</a-->
         </div>
         <ul>

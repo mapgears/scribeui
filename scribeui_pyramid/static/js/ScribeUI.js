@@ -9,7 +9,7 @@ jQuery.fn.exists = function(){return this.length>0;}
 
 ScribeUI.addPlugin = function(plugin){
 	this.plugins.push(plugin);
-	plugin.init();	
+	plugin.init();
 }
 
 ScribeUI.getTemplatesOfType = function(type){
@@ -20,7 +20,7 @@ ScribeUI.getTemplatesOfType = function(type){
             for(temp in templates){
                 $("#newmap-template").append($("<option></option>").val(templates[temp]).text(templates[temp]));
             }
-            $('#newmap-template').trigger('chosen:updated'); 
+            $('#newmap-template').trigger('chosen:updated');
         }
     });
 }
@@ -40,7 +40,7 @@ ScribeUI.getTemplates = function(name, type, password, callback){
                 callback.call(null, response.maps);
             }
         }
-    });    
+    });
 }
 // TODO: Maybe the debugging bits should be in their own module?
 ScribeUI.deleteGroup = function(groups){
@@ -94,7 +94,7 @@ ScribeUI.cloneMap = function(){
                     description: description,
                     git_url: gitURL,
                     user: gitUser,
-                    password: gitPassword 
+                    password: gitPassword
                 });
             },
             Close: function() {
@@ -103,7 +103,7 @@ ScribeUI.cloneMap = function(){
         },
         close: function() {
             $(this).find('input').val('');
-            $(this).find('textarea').val('');    
+            $(this).find('textarea').val('');
         }
     }).dialog("open");
 }
@@ -128,7 +128,7 @@ ScribeUI.configureMap = function(){
 
                     var config = {
                         git_url: gitURL,
-                        description: description    
+                        description: description
                     }
 
                     map.configure(config);
@@ -138,7 +138,7 @@ ScribeUI.configureMap = function(){
                 }
             },
             close: function() {
-                $(this).find('input').val('');    
+                $(this).find('input').val('');
             }
         }).dialog("open");
     }
@@ -176,7 +176,7 @@ ScribeUI.commitMap = function(){
             },
             close: function() {
                 $(this).find('input').val('');
-                $(this).find('textarea').val('');    
+                $(this).find('textarea').val('');
             }
         }).dialog("open");
     }
@@ -216,7 +216,7 @@ ScribeUI.pullMap = function(){
             close: function() {
                 $(this).find('textarea').val('');
                 $(this).find('input[type="text"]').val('');
-                $(this).find('input[type="password"]').val('');    
+                $(this).find('input[type="password"]').val('');
             }
         }).dialog("open");
     }
@@ -235,11 +235,11 @@ ScribeUI.displayPullLogs = function(e){
 	$("#git-pull-logs").val(e.log);
 }
 
-$(document).ready(function() { 
-	if(typeof($WSNAME) != "undefined"){
-		ScribeUI.workspace = new ScribeUI.Workspace($WSNAME);
+$(document).ready(function() {
+	if(typeof($SETTINGS) != "undefined"){
+		ScribeUI.workspace = new ScribeUI.Workspace($SETTINGS['wsname']);
 		ScribeUI.workspace.open();
-		
+
 		/*--------------------------------
 		  Init code editors
 		--------------------------------*/

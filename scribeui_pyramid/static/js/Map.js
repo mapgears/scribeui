@@ -39,13 +39,13 @@
 ScribeUI.Map.prototype.open = function(callback){
     var self = this;
 
-    $.post($API + '/maps/open/' + this.id, {}, 
+    $.post($API + '/maps/open/' + this.id, {},
         function(response) {
             if(response.status == 1){
                 if(self.workspace.openedMap){
                     self.workspace.openedMap.close();
                 }
-                
+
                 self.workspace.openedMap = self;
 
                 $.each(response.data, function(key, value){
@@ -55,17 +55,17 @@ ScribeUI.Map.prototype.open = function(callback){
                 var pois = [];
                 $.each(self.pois, function(index, poi){
                     oPoi = new ScribeUI.POI(
-                        poi.name, 
-                        poi.lon, 
-                        poi.lat, 
-                        poi.scale, 
+                        poi.name,
+                        poi.lon,
+                        poi.lat,
+                        poi.scale,
                         poi.projection
                     );
                     oPoi.map = self;
                     pois.push(oPoi);
 
                     var option = $('<option>').val(poi.name).text(poi.name);
-                    ScribeUI.UI.poi.select().append(option); 
+                    ScribeUI.UI.poi.select().append(option);
                 });
                 self.pois = pois;
                 ScribeUI.UI.poi.select().trigger('chosen:updated');
@@ -127,7 +127,7 @@ ScribeUI.Map.prototype.displayComponents = function(){
         editor.CMEditor.clearHistory();
     });
 
-    
+
     ScribeUI.UI.editor.toolbar().find('button').button('enable');
     ScribeUI.UI.poi.actions().find('button').button('enable');
 
@@ -142,9 +142,9 @@ ScribeUI.Map.prototype.displayGroups = function(silent){
         var option = $('<option>').val(group.name).text(group.name);
         if(self.selectedGroup && group.name == self.selectedGroup.name){
             option.attr('selected', 'selected');
-            changeSelected = false; 
+            changeSelected = false;
         }
-        ScribeUI.UI.editor.groupSelect().append(option);    
+        ScribeUI.UI.editor.groupSelect().append(option);
     });
     ScribeUI.UI.editor.groupSelect().trigger("chosen:updated");
 
@@ -164,7 +164,7 @@ ScribeUI.Map.prototype.displayGroups = function(silent){
         ScribeUI.editorManager.get('groups').CMEditor.clearHistory();
 
         ScribeUI.UI.resizeEditors();
-        
+
         e.stopPropagation();
     });
 
@@ -172,7 +172,7 @@ ScribeUI.Map.prototype.displayGroups = function(silent){
         ScribeUI.UI.editor.groupSelect().trigger("change");
         if(self.selectedGroup){
             self.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();
-        }    
+        }
     }
 }
 
@@ -195,7 +195,7 @@ ScribeUI.Map.prototype.displayDescription = function(){
 
 ScribeUI.Map.prototype.updateComponents = function(){
     if(this.selectedGroup){
-        this.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();    
+        this.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();
     }
     this.map = ScribeUI.editorManager.get('map').CMEditor.getValue();
     this.scales = ScribeUI.editorManager.get('scales').CMEditor.getValue();
@@ -203,7 +203,7 @@ ScribeUI.Map.prototype.updateComponents = function(){
     this.symbols = ScribeUI.editorManager.get('symbols').CMEditor.getValue();
     this.fonts = ScribeUI.editorManager.get('fonts').CMEditor.getValue();
     this.projections = ScribeUI.editorManager.get('projections').CMEditor.getValue();
-    this.readme = ScribeUI.editorManager.get('readme').CMEditor.getValue();     
+    this.readme = ScribeUI.editorManager.get('readme').CMEditor.getValue();
 }
 
 ScribeUI.Map.prototype.save = function(){
@@ -238,12 +238,12 @@ ScribeUI.Map.prototype.save = function(){
 					self.WMSLayer.mergeNewParams({layers: self.findTopLayerName()});
                     self.WMSLayer.redraw(true);
                 }
-                
-                self.saved = true;  
+
+                self.saved = true;
             } else{
                 if(!ScribeUI.UI.logs.logs().is(':visible')){
                     ScribeUI.UI.logs.notification().show('pulsate', 1000);
-                }    
+                }
             }
 
             ScribeUI.UI.editor.mapfilePre().text(response.mapfile);
@@ -255,7 +255,7 @@ ScribeUI.Map.prototype.save = function(){
 ScribeUI.Map.prototype.display = function(){
     var scales = [];
 
-    if(this.OLUnits == "meters" || this.OLUnits == null){     
+    if(this.OLUnits == "meters" || this.OLUnits == null){
         for(i in this.OLScales){
             scales.push(parseInt(this.OLScales[i]));
         }
@@ -266,7 +266,7 @@ ScribeUI.Map.prototype.display = function(){
     }
 
     if(this.OLExtent && this.OLProjection){
-        var extent = this.OLExtent.split(" ");    
+        var extent = this.OLExtent.split(" ");
         var projection = new OpenLayers.Projection(this.OLProjection);
 
         var mapOptions = {
@@ -301,7 +301,7 @@ ScribeUI.Map.prototype.display = function(){
 
         });
         OLMap.addControls([new OpenLayers.Control.Scale(), new OpenLayers.Control.MousePosition(), currentZoomControl]);
-		
+
         var WMSLayer = new OpenLayers.Layer.WMS(
             this.name,
             this.url,
@@ -310,16 +310,16 @@ ScribeUI.Map.prototype.display = function(){
                 format: "image/png"
             }, {
                 singleTile: true,
-                projection: projection//, 
+                projection: projection//,
 				//resolutions: [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508]
             }
         );
 
         OLMap.addLayers([WMSLayer]);
 
-        OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+        OpenLayers.ProxyHost = $SETTINGS.cgibin_url + "/mapserv?url=";
         var getFeatureInfo = new OpenLayers.Control.WMSGetFeatureInfo({
-            url: this.url, 
+            url: this.url,
             queryVisible: true,
             infoFormat: 'text/plain',
             vendorParams: {
@@ -338,7 +338,7 @@ ScribeUI.Map.prototype.display = function(){
         getFeatureInfo.activate();
 
         OLMap.zoomToExtent(extent);
-        
+
         this.OLMap = OLMap;
         this.WMSLayer = WMSLayer;
 		$.each(ScribeUI.plugins, function(index, plugin){
@@ -466,7 +466,7 @@ ScribeUI.Map.prototype.setGroups = function(callback){
             removed_groups: this.removedGroups.join(),
             new_groups: this.newGroups.join(),
             groups: this.updatedGroups.join()
-        }, 
+        },
         function(response) {
             if(response.status == 1){
                 $.each(self.removedGroups, function(index, name){
@@ -475,7 +475,7 @@ ScribeUI.Map.prototype.setGroups = function(callback){
 
                 self.clearGroups();
                 self.displayGroups(true);
-                
+
                 if(self.type == 'Standard'){
                     $.each(self.removedGroups, function(index, name){
                         removeIncludeFromMap(name + '.map', false);
@@ -496,13 +496,13 @@ ScribeUI.Map.prototype.openDataBrowser = function(){
     ScribeUI.UI.dataBrowser().append(div);
 
     div.elfinder({
-    url: '/cgi-bin/elfinder-python/connector-' + this.workspace.name + '-' + this.name + '.py',
+    url: $SETTINGS.cgibin_url + '/elfinder-python/connector-' + this.workspace.name + '-' + this.name + '.py',
         transport : new elFinderSupportVer1(),
         cssClass: 'file-manager',
         resizable: false,
         height:ScribeUI.UI.dataBrowser().height()-2,
         commands: [
-        'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile', 
+        'open', 'reload', 'home', 'up', 'back', 'forward', 'getfile',
         'rename', 'mkdir', 'mkfile', 'copy', 'paste', 'help', 'rm',
         'sort', 'tree', 'upload', 'extract', 'archive', 'view'
         ]
@@ -511,7 +511,7 @@ ScribeUI.Map.prototype.openDataBrowser = function(){
     ScribeUI.UI.dataBrowser().trigger("resize");
 }
 
-ScribeUI.Map.prototype.closeDataBrowser = function(){ 
+ScribeUI.Map.prototype.closeDataBrowser = function(){
     if(ScribeUI.UI.dataBrowser().children().length > 0){
         $("#data-browser-child-" + this.name).elfinder('destroy');
         $("#data-browser-child-" + this.name).remove();
@@ -532,19 +532,19 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     }, function(url) {
         $("#preparingExport").css("visibility","hidden");
         if(callback != null){
-            callback.call();    
+            callback.call();
         }
 
         var link = $("<a/>", {
             "id": "export-link",
             "href": url
         }).appendTo("body")
-                           
+
         link.click(function(e) {
             e.preventDefault();  //stop the browser from following
             window.location.href = url;
         }).click();
-    }); 
+    });
 }
 
 ScribeUI.Map.prototype.configure = function(config){
@@ -555,7 +555,7 @@ ScribeUI.Map.prototype.configure = function(config){
             self.description = config.description;
             self.git_url = config.git_url;
             self.displayDescription();
-            ScribeUI.UI.manager.git.configureLogs().val(response.logs);    
+            ScribeUI.UI.manager.git.configureLogs().val(response.logs);
         }
     });
 }
@@ -565,7 +565,7 @@ ScribeUI.Map.prototype.gitCommit = function(data){
 
     $.post($API + '/maps/commit/' + this.id, data, function(response) {
         if(response.status == 1){
-            self.open(); 
+            self.open();
         }
         ScribeUI.UI.manager.git.commitLogs().val(response.logs);
     });
@@ -576,7 +576,7 @@ ScribeUI.Map.prototype.gitPull = function(data){
 
     $.post($API + '/maps/pull/' + this.id, data, function(response) {
         if(response.status == 1){
-            self.open(); 
+            self.open();
         }
         ScribeUI.UI.manager.git.pullLogs().val(response.logs);
     });
@@ -592,14 +592,14 @@ ScribeUI.Map.prototype.getDebug = function(){
             $.each(response.errors, function(index, error){
                 debug += error + '\n'
             });
-            ScribeUI.UI.logs.debugPre().text(debug); 
+            ScribeUI.UI.logs.debugPre().text(debug);
         }
-    });    
+    });
 }
 
 ScribeUI.Map.prototype.clearDebug = function(){
     ScribeUI.UI.logs.debugPre().text('');
-    $.getJSON($API + '/maps/' + this.id + '/debug/reset' , {}, function(response) {}); 
+    $.getJSON($API + '/maps/' + this.id + '/debug/reset' , {}, function(response) {});
 }
 
 ScribeUI.Map.prototype.clearPois = function(){
@@ -642,8 +642,8 @@ ScribeUI.Map.prototype.addPOI = function(name){
 
     $.post($API + '/maps/' + this.id + '/pois/new', {
         name: name,
-        lon: lonLat.lon, 
-        lat: lonLat.lat, 
+        lon: lonLat.lon,
+        lat: lonLat.lat,
         scale: scale,
         projection: 'EPSG:4326'
     }, function(response) {
@@ -653,7 +653,7 @@ ScribeUI.Map.prototype.addPOI = function(name){
             self.pois.push(poi);
 
             var option = $('<option>').val(name).text(name);
-            ScribeUI.UI.poi.select().append(option); 
+            ScribeUI.UI.poi.select().append(option);
             ScribeUI.UI.poi.select().trigger('chosen:updated');
         }
 
@@ -691,7 +691,7 @@ ScribeUI.Map.openMap = function(){
 ScribeUI.Map.deleteMap = function(){
     var msg = 'Are you sure you want to delete this map?';
     var div = $("<div class=\"scribe-dialog\">" + msg + "</div>");
-    
+
     var name = ScribeUI.workspace.selectedMap.name;
 
     if(name != null){
@@ -733,17 +733,17 @@ ScribeUI.Map.exportMap = function(){
 
                     $.each(checkBoxes, function() {
                         if ($(this).attr('checked')){
-                            components[this.value] = 1;    
+                            components[this.value] = 1;
                         } else {
                             components[this.value] = 0;
                         }
                     });
-            
+
                     var mapToExport = new ScribeUI.Map(name);
 
                     var self = this;
                     mapToExport.exportSelf(components["publicData"], components["privateData"], function(){$(self).dialog("close");})
-                    
+
                 },
                 Cancel: function() {
                     $(this).dialog("close");
@@ -751,7 +751,7 @@ ScribeUI.Map.exportMap = function(){
             },
             close: function() {}
         }).dialog("open");
-    }        
+    }
 }
 
 ScribeUI.Map.onMapMoveEnd = function(){
@@ -787,7 +787,7 @@ ScribeUI.Map.addIncludeToMap = function(filename, commit){
         }else if(lastinc > -1){
             //We add the new file at the end of the include list
             var line =  mapCMEditor.getLine((i-1));
-            //TODO detect indentation 
+            //TODO detect indentation
             mapCMEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
             //Highlight for a short time:
             //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');

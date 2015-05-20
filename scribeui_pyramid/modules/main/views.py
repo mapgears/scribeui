@@ -7,6 +7,7 @@ from ..webui.views import (
     BaseView
 )
 
+import json
 
 class MainView(BaseView):
 
@@ -49,11 +50,17 @@ class MainView(BaseView):
                 #If the plugins doesn't have js files to include, ignore it.
                 pass
 
+        settings = {
+            'wsname': self.request.userid ,
+            'cgibin_url': self.request.registry.settings.get('cgi.url', '')
+        }
+
         return {
             'plugins_js': plugins_js,
             'plugins_css': plugins_css,
             'api_url': self.request.route_url('home') + '/api',
-            'workspace': self.request.userid ,
+            'settings': settings,
+            'settingsJSON': json.dumps(settings),
             'logo': self.request.static_url('scribeui_pyramid:static/img/logo_mini.png'),
             'logout_url': self.request.route_url('auth.logout'),
             'version': 'v1.3'
