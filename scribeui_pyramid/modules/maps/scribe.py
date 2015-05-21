@@ -16,7 +16,7 @@ This script parses files with the scribe syntax, transform them
 into a single json file and then into mapfiles. Read the
 README for more information on the scribe syntax.
 
-Author : Charles-�ric Bourget
+Author : Charles-Éric Bourget
 Updated: 21/06/2013
 """
 
@@ -313,15 +313,8 @@ def jsonToMap(content, outputDirectory, mapName, clean):
 
 
 def string2json(string):
-    #Find and replace anything between quotes to protect them from the next check
-    quotes = re.findall(r"['\"].*?['\"]", string)
-    t = re.sub(r"['\"].*?['\"]", "FLAGQUOTE", string)
     #Remove the comments preceded by //
-    t = re.sub(r"//.*", "", t)
-    #Restore the strings between quotes
-    for i in range (0, len(quotes)):
-        quote = quotes[i]
-        t = re.sub(r"FLAGQUOTE",  quote, t, 1)
+    t = re.sub(ur'("(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|(?:[^/\n"\']|/[^/*\n"\'])+|\n)|(/\*  (?:[^*]|\*[^/])*\*/)|(?://(.*)$)$', lambda m: m.group(1), string, flags=re.MULTILINE)
     #Remove the comments between /* and */
     t = re.sub(r"/\*.*?\t*?\*/", "", t, flags=re.DOTALL)
     #Find and replace the comments preceded by ##
