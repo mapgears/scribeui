@@ -216,14 +216,6 @@ ScribeUI.UI.init = function(){
         ScribeUI.UI.displayDataBrowser();
     });
 
-//TODO might be unecessary
-    var newMapTypeSelect = $("#newmap-type");
-    var cloneMapTypeSelect = $("#git-clone-type");
-    for(var i = 0; i < ScribeUI.mapTypes.length; i++){
-        newMapTypeSelect.append($("<option></option>").attr("value", ScribeUI.mapTypes[i]).text(ScribeUI.mapTypes[i]));
-        cloneMapTypeSelect.append($("<option></option>").attr("value", ScribeUI.mapTypes[i]).text(ScribeUI.mapTypes[i]));
-    }
-//END TODO
 
     $('select').chosen();
     
