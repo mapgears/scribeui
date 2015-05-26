@@ -56,7 +56,7 @@ You can use the Makefile to automatically setup ScribeUI for you, simply run:
        sudo make perms
 
 
-Next step is adding the app to apache, here is an example configuration:
+Next step is adding the app to apache, here is an example configuration for Apache 2.2:
 
     WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
 	        python-path=/opt/scribeui/lib/python2.7/site-packages
@@ -68,6 +68,19 @@ Next step is adding the app to apache, here is an example configuration:
 	        WSGIProcessGroup scribeui
 	        Order deny,allow
 	        Allow from all
+	</Directory>
+
+If you use Apache 2.4, the configuration is slightly different:
+
+    WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
+	        python-path=/opt/scribeui/lib/python2.7/site-packages
+	WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
+
+	<Directory /opt/scribeui>
+	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
+	        WSGIPassAuthorization On
+	        WSGIProcessGroup scribeui
+	        Require all granted
 	</Directory>
 
 Once apache is restarted, ScribeUI should be available!
