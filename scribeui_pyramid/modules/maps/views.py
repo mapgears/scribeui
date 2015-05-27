@@ -503,7 +503,7 @@ class APIMap(object):
                             f.write(data[filename])
                             f.close()
                     except IOError:
-                        response.errors.append("An error occured while saving '" + map_directory + filenames[filename] + "' file.")
+                        response['errors'].append("An error occured while saving '" + map_directory + filenames[filename] + "' file.")
 
                 if len(response['errors']) == 0:
                     if map.type == 'Scribe':
