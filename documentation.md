@@ -5,9 +5,13 @@ layout: default
 
 # Docs
 
+[Installing ScribeUI](installation.html)
+
+Install ScribeUI and run it for the first time.
+
 [Getting Started with ScribeUI](getting-started.html) 
 
-Install ScribeUI and run it for the first time. 
+Learn to use ScribeUI. 
 
 [Getting Started with Scribe](scribe-syntax.html) 
 

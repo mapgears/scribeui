@@ -3,125 +3,93 @@ title: ScribeUI - Getting started with ScribeUI
 layout: default
 ---
 
-# Getting Started with ScribeUI
+# Getting started with ScribeUI
 
-First, [download the latest release of ScribeUI on github](https://github.com/mapgears/scribeui).
+- [Before you start](#before-you-start)
+- [Creating your first workspace](#creating-your-first-workspace)
+- [The Manager](#the-manager)
+	- [Creating a map](#creating-a-map)
+- [The Editor](#the-editor)
+- [The File Browser](#the-file-browser)
 
-## Installing
+## Before you start
 
-The following instruction installations were tested on ubuntu precise. 
+If you haven't installed ScribeUI yet, see [this guide](installation.html) first. 
 
+## Creating your first workspace
 
-**Requirements**
+Workspaces could be compared to projects in other development environments. They can contain multiple maps and points of interest. You will need to create one in order to use ScribeUI.
 
-* Mapserver 6.4.1
-* Apache 2.2
-* Make
+To access ScribeUI, open your web browser and go to the address where it is running, which is 127.0.0.1 by default. You should see this on your screen:
 
-Production installation
-------------
+![Workspaces](https://cloud.githubusercontent.com/assets/2997638/7813993/252a37de-038d-11e5-926c-09892fcc037e.png)
 
-You need to install apache2 with mod_wsgi: 
+The _default_ workspace contains the map templates. Its password is "default". It is recommended that you don't change anything in this workspace, unless you want to add templates.
 
-    sudo apt-get install libapache2-mod-wsgi 
+Instead, press on **Create workspace** to create a new workspace. A popup will ask you for a name and a password. Enter the name you want to give to your workspace, a password if you want one, then press **Create**.
 
-**Note** mod_wsgi 3.4 or more is recommended. [How to compile mod_wsgi 3.4 on ubuntu precise](http://scribeui.org/faq.html#wsgi-how)
+You will now see your workspace in the dropdown menu where _default_ was written earlier. To delete the selected workspace, press on **Delete Workspace**. To access it, press on **Open Workspace**.
 
+## The Manager
 
-Configuration
--------------
+After you've logged in to your new workspace, you will see this:
 
-First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at ```/opt/scribeui```
+![Manager](https://cloud.githubusercontent.com/assets/2997638/7815185/ec6cbeb4-0394-11e5-8fc3-254c842396b3.png)
 
-Then, copy the default production settings:
- 
-    cp production.ini local.ini
+This is the **Manager** tab, where you will find and create the maps in your workspace. On the upper left corner of the screen, there are two other tabs, **Editor** and **Browse**. These tabs won't be useful without a map, so they will be described later. On the upper right corner of the screen, there is a dropdown menu with the workspace's name. To return to the login screen, press on your workspace's name then **Logout**. On the bottom right, there is a dropdown menu. This is the **Points of interest** dropdown, which will also be described after we have a map.
 
-Make sure the mapserver url in local.ini points to your mapserver path:
-	- line 35: mapserver.url
+### Creating a map
 
-Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
+Press on the **New Map** button on the left side of the screen to create a map. A popup will open: 
 
-Create a file 'pyramid.wsgi' with the following content, editing the path to your scribeui installation:
+![Creating a new map](https://cloud.githubusercontent.com/assets/2997638/7815407/26e82d02-0396-11e5-8c41-6f718649e208.png)
 
-	from pyramid.paster import get_app, setup_logging
-	ini_path = '/opt/scribeui/local.ini'
-	setup_logging(ini_path)
-	application = get_app(ini_path, 'main')
+The **Name** field is where you enter the map's name. The **Type** dropdown will give you two choices:
+ * **Scribe** will create a map using the Scribe syntax, select this option for the tutorial
+ * **Standard** will use the regular Mapfile syntax
 
+Leave the **Template** field with _default_, and you can add text in the **Description** field if you want.
 
-You can use the Makefile to automatically setup ScribeUI for you, simply run:
+If you press on the **+** button at the bottom of the screen, two more options will appear. **Workspace** lets you select a workspace other than _default_ to select your template from, and password is the **Password** to that workspace if there is one.
 
-       sudo make
-       sudo chown -R youruser .
-       make install
-       sudo make perms
+When you're done, press on the **Create** button to create the map. It will now appear on the left part of the screen. Press on its thumbnail to show a preview and a few options:
 
+![Previewing a map](https://cloud.githubusercontent.com/assets/2997638/7815856/fa0c75a6-0398-11e5-8fca-2cdabd2c56f1.png)
 
-Next step is adding the app to apache, here is an example configuration:
+Under the preview of the map, you will find seven options:
+ * **Open map**: Opens the map in the right side of the screen, allows using the **Editor** and **Browse** tabs
+ * **Export map**: Currently not implemented
+ * **Delete map**: Deletes the map from the workspace
+ * **Configure**: Use this to set a Git URL
+ * **Pull**: Pulls the latest version of the configured project using Git
+ * **Push**: Pushes the project using Git
+ * **Mapcache**: Create tiling jobs
 
-    WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
-	        python-path=/opt/scribeui/lib/python2.7/site-packages
-	WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
+Press on **Open map** to open your new map. You should see a map of the world. On the bottom right of the screen, the **Points of interest** dropdown should now be usable. You can add a shortcut to your current view by pressing the **+** button in the dropdown, and remove the selected point of interest by pressing the **-** button.
 
-	<Directory /opt/scribeui>
-	        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
-	        WSGIPassAuthorization On
-	        WSGIProcessGroup scribeui
-	        Order deny,allow
-	        Allow from all
-	</Directory>
+## The Editor
 
-Once apache is restarted, ScribeUI should be available!
+With your map open, you can now access the **Editor** tab, the second tab located in the upper left corner of your screen. In this interface, you will be able to modify the map:
 
-    sudo service apache2 restart
+![Editor view](https://cloud.githubusercontent.com/assets/2997638/7818924/8c101706-03ac-11e5-890f-d1aab19dbef4.png)
 
-Downloading template data is optional, but recommended for a better 
-experience: 
+On the top left, there are two dropdown menus. In the first one, you have these options:
 
-        sudo make load-demo-data   
+* **Groups**: These are the layers of the map. If selected, the left part of the screen will only show the layer selected in the second dropdown. Otherwise, the layer selected will appear in the bottom left corner of the screen.
+* **Map**: This section is the Map section of a regular Mapfile. If the active map has been set to use the Scribe syntax, the code in the editor will also use that syntax. This is true for every option. 
+* **Variables**: The Scribe variables. This section will be empty if the map wasn't set to use the Scribe syntax since regular mapfiles do not have variables.
+* **Scales**: The numerical values for every scale level.
+* **Symbols**: The symbols definition file.
+* **Fonts**: The fonts to be used with the map.
+* **Projection**: The projection(s) to be used with the map.
+* **ReadMe**: You can fill this file with useful information about the map.
 
-If you omit this step, the maps you create from default templates will display pink tiles.
+The second dropdown contains the layers in the map. The tool button next to it lets you change the order of the layers, as well as add or remove a layer.
 
+## The File Browser
 
-Development installation
-------------
+The third tab in the upper left corner is the **Browse tab**. You can access it when a map is opened:
 
-These instructions are for running a development version of ScribeUI. It is pretty good for a local version of the application. Production installation instructions are available below.
+![Browser](https://cloud.githubusercontent.com/assets/2997638/7819547/7df6805c-03b0-11e5-888c-40903e208d3b.png)
 
-    cp development.ini local.ini
-
-Review the following parameters in local.ini, and edit them if needed:
-
-	- sqlalchemy.url
-	- workspaces.directory
-	- scribe.python
-	- cgi.directory
-	- mapserver.url
-
-Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)
-
-You can use the Makefile to automatically setup ScribeUI for you, simply run:
-
-        sudo make
-        make install
-
-This will download and install the required dependencies, setup the differents
-configurations files and install them in the proper directories. 
-
-To launch the server at http://localhost:6543/:
-
-        make start
-
-Downloading template data is optional, but recommended for a better 
-experience. 
-
-        sudo make load-demo-data   
-
-
-This will download some natural earth data and will help you get started with
-ScribeUI by making templates readily working so you don't start with an empty
-mapfile. (The template code is still available if you don't download the data,
-but the result will be pink tiles). 
-
-
+This viewer is useful to check if any file is missing or to do simple modifications. For more informations on how to use this file browser, see the [elFinder wiki](https://github.com/Studio-42/elFinder/wiki)

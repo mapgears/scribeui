@@ -25,6 +25,7 @@
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
 		<a href="documentation.html">Docs</a> 
+    <a href="http://blog.scribeui.org">Blog</a>
 		<a href="faq.html">FAQ</a> 
 		<a href="about.html">About</a> 
 	</nav>
@@ -39,107 +40,103 @@
 <div id="content-wrapper">
   <div class="inner clearfix">
     <section id="main-content">
-      <h1>Getting Started with ScribeUI</h1>
-
-<p>First, <a href="https://github.com/mapgears/scribeui">download the latest release of ScribeUI on github</a>.</p>
-
-<h2>Installing</h2>
-
-<p>The following instruction installations were tested on ubuntu precise. </p>
-
-<p><strong>Requirements</strong></p>
+      <h1>Getting started with ScribeUI</h1>
 
 <ul>
-<li>Mapserver 6.4.1</li>
-<li>Apache 2.2</li>
-<li>Make</li>
+<li><a href="#before-you-start">Before you start</a></li>
+<li><a href="#creating-your-first-workspace">Creating your first workspace</a></li>
+<li><a href="#the-manager">The Manager</a>
+
+<ul>
+<li><a href="#creating-a-map">Creating a map</a></li>
+</ul></li>
+<li><a href="#the-editor">The Editor</a></li>
+<li><a href="#the-file-browser">The File Browser</a></li>
 </ul>
 
-<h2>Production installation</h2>
+<h2>Before you start</h2>
 
-<p>You need to install apache2 with mod_wsgi: </p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo apt-get install libapache2-mod-wsgi 
-</code></pre></div>
-<p><strong>Note</strong> mod_wsgi 3.4 or more is recommended. <a href="http://scribeui.org/faq.html#wsgi-how">How to compile mod_wsgi 3.4 on ubuntu precise</a></p>
+<p>If you haven&#39;t installed ScribeUI yet, see <a href="installation.html">this guide</a> first. </p>
 
-<h2>Configuration</h2>
+<h2>Creating your first workspace</h2>
 
-<p>First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at <code>/opt/scribeui</code></p>
+<p>Workspaces could be compared to projects in other development environments. They can contain multiple maps and points of interest. You will need to create one in order to use ScribeUI.</p>
 
-<p>Then, copy the default production settings:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cp production.ini local.ini
-</code></pre></div>
-<p>Make sure the mapserver url in local.ini points to your mapserver path:
-    - line 35: mapserver.url</p>
+<p>To access ScribeUI, open your web browser and go to the address where it is running, which is 127.0.0.1 by default. You should see this on your screen:</p>
 
-<p>Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)</p>
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7813993/252a37de-038d-11e5-926c-09892fcc037e.png" alt="Workspaces"></p>
 
-<p>Create a file &#39;pyramid.wsgi&#39; with the following content, editing the path to your scribeui installation:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">from pyramid.paster import get_app, setup_logging
-ini_path = &#39;/opt/scribeui/local.ini&#39;
-setup_logging(ini_path)
-application = get_app(ini_path, &#39;main&#39;)
-</code></pre></div>
-<p>You can use the Makefile to automatically setup ScribeUI for you, simply run:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">   sudo make
-   sudo chown -R youruser .
-   make install
-   sudo make perms
-</code></pre></div>
-<p>Next step is adding the app to apache, here is an example configuration:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">WSGIDaemonProcess scribeui user=www-data group=www-data threads=10 \
-        python-path=/opt/scribeui/lib/python2.7/site-packages
-WSGIScriptAlias /scribeui /opt/scribeui/pyramid.wsgi
+<p>The <em>default</em> workspace contains the map templates. Its password is &quot;default&quot;. It is recommended that you don&#39;t change anything in this workspace, unless you want to add templates.</p>
 
-&lt;Directory /opt/scribeui&gt;
-        WSGIApplicationGroup %{ENV:APPLICATION_GROUP}
-        WSGIPassAuthorization On
-        WSGIProcessGroup scribeui
-        Order deny,allow
-        Allow from all
-&lt;/Directory&gt;
-</code></pre></div>
-<p>Once apache is restarted, ScribeUI should be available!</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo service apache2 restart
-</code></pre></div>
-<p>Downloading template data is optional, but recommended for a better 
-experience: </p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make load-demo-data   
-</code></pre></div>
-<p>If you omit this step, the maps you create from default templates will display pink tiles.</p>
+<p>Instead, press on <strong>Create workspace</strong> to create a new workspace. A popup will ask you for a name and a password. Enter the name you want to give to your workspace, a password if you want one, then press <strong>Create</strong>.</p>
 
-<h2>Development installation</h2>
+<p>You will now see your workspace in the dropdown menu where <em>default</em> was written earlier. To delete the selected workspace, press on <strong>Delete Workspace</strong>. To access it, press on <strong>Open Workspace</strong>.</p>
 
-<p>These instructions are for running a development version of ScribeUI. It is pretty good for a local version of the application. Production installation instructions are available below.</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">cp development.ini local.ini
-</code></pre></div>
-<p>Review the following parameters in local.ini, and edit them if needed:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">- sqlalchemy.url
-- workspaces.directory
-- scribe.python
-- cgi.directory
-- mapserver.url
-</code></pre></div>
-<p>Edit the proxy.cgi file and add your server host to the list of allowed hosts if different from localhost (localhost is already included.)</p>
+<h2>The Manager</h2>
 
-<p>You can use the Makefile to automatically setup ScribeUI for you, simply run:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make
-    make install
-</code></pre></div>
-<p>This will download and install the required dependencies, setup the differents
-configurations files and install them in the proper directories. </p>
+<p>After you&#39;ve logged in to your new workspace, you will see this:</p>
 
-<p>To launch the server at http://localhost:6543/:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">    make start
-</code></pre></div>
-<p>Downloading template data is optional, but recommended for a better 
-experience. </p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">    sudo make load-demo-data   
-</code></pre></div>
-<p>This will download some natural earth data and will help you get started with
-ScribeUI by making templates readily working so you don&#39;t start with an empty
-mapfile. (The template code is still available if you don&#39;t download the data,
-but the result will be pink tiles). </p>
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7815185/ec6cbeb4-0394-11e5-8fc3-254c842396b3.png" alt="Manager"></p>
+
+<p>This is the <strong>Manager</strong> tab, where you will find and create the maps in your workspace. On the upper left corner of the screen, there are two other tabs, <strong>Editor</strong> and <strong>Browse</strong>. These tabs won&#39;t be useful without a map, so they will be described later. On the upper right corner of the screen, there is a dropdown menu with the workspace&#39;s name. To return to the login screen, press on your workspace&#39;s name then <strong>Logout</strong>. On the bottom right, there is a dropdown menu. This is the <strong>Points of interest</strong> dropdown, which will also be described after we have a map.</p>
+
+<h3>Creating a map</h3>
+
+<p>Press on the <strong>New Map</strong> button on the left side of the screen to create a map. A popup will open: </p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7815407/26e82d02-0396-11e5-8c41-6f718649e208.png" alt="Creating a new map"></p>
+
+<p>The <strong>Name</strong> field is where you enter the map&#39;s name. The <strong>Type</strong> dropdown will give you two choices:
+ * <strong>Scribe</strong> will create a map using the Scribe syntax, select this option for the tutorial
+ * <strong>Standard</strong> will use the regular Mapfile syntax</p>
+
+<p>Leave the <strong>Template</strong> field with <em>default</em>, and you can add text in the <strong>Description</strong> field if you want.</p>
+
+<p>If you press on the <strong>+</strong> button at the bottom of the screen, two more options will appear. <strong>Workspace</strong> lets you select a workspace other than <em>default</em> to select your template from, and password is the <strong>Password</strong> to that workspace if there is one.</p>
+
+<p>When you&#39;re done, press on the <strong>Create</strong> button to create the map. It will now appear on the left part of the screen. Press on its thumbnail to show a preview and a few options:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7815856/fa0c75a6-0398-11e5-8fca-2cdabd2c56f1.png" alt="Previewing a map"></p>
+
+<p>Under the preview of the map, you will find seven options:
+ * <strong>Open map</strong>: Opens the map in the right side of the screen, allows using the <strong>Editor</strong> and <strong>Browse</strong> tabs
+ * <strong>Export map</strong>: Currently not implemented
+ * <strong>Delete map</strong>: Deletes the map from the workspace
+ * <strong>Configure</strong>: Use this to set a Git URL
+ * <strong>Pull</strong>: Pulls the latest version of the configured project using Git
+ * <strong>Push</strong>: Pushes the project using Git
+ * <strong>Mapcache</strong>: Create tiling jobs</p>
+
+<p>Press on <strong>Open map</strong> to open your new map. You should see a map of the world. On the bottom right of the screen, the <strong>Points of interest</strong> dropdown should now be usable. You can add a shortcut to your current view by pressing the <strong>+</strong> button in the dropdown, and remove the selected point of interest by pressing the <strong>-</strong> button.</p>
+
+<h2>The Editor</h2>
+
+<p>With your map open, you can now access the <strong>Editor</strong> tab, the second tab located in the upper left corner of your screen. In this interface, you will be able to modify the map:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7818924/8c101706-03ac-11e5-890f-d1aab19dbef4.png" alt="Editor view"></p>
+
+<p>On the top left, there are two dropdown menus. In the first one, you have these options:</p>
+
+<ul>
+<li><strong>Groups</strong>: These are the layers of the map. If selected, the left part of the screen will only show the layer selected in the second dropdown. Otherwise, the layer selected will appear in the bottom left corner of the screen.</li>
+<li><strong>Map</strong>: This section is the Map section of a regular Mapfile. If the active map has been set to use the Scribe syntax, the code in the editor will also use that syntax. This is true for every option. </li>
+<li><strong>Variables</strong>: The Scribe variables. This section will be empty if the map wasn&#39;t set to use the Scribe syntax since regular mapfiles do not have variables.</li>
+<li><strong>Scales</strong>: The numerical values for every scale level.</li>
+<li><strong>Symbols</strong>: The symbols definition file.</li>
+<li><strong>Fonts</strong>: The fonts to be used with the map.</li>
+<li><strong>Projection</strong>: The projection(s) to be used with the map.</li>
+<li><strong>ReadMe</strong>: You can fill this file with useful information about the map.</li>
+</ul>
+
+<p>The second dropdown contains the layers in the map. The tool button next to it lets you change the order of the layers, as well as add or remove a layer.</p>
+
+<h2>The File Browser</h2>
+
+<p>The third tab in the upper left corner is the <strong>Browse tab</strong>. You can access it when a map is opened:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/2997638/7819547/7df6805c-03b0-11e5-888c-40903e208d3b.png" alt="Browser"></p>
+
+<p>This viewer is useful to check if any file is missing or to do simple modifications. For more informations on how to use this file browser, see the <a href="https://github.com/Studio-42/elFinder/wiki">elFinder wiki</a></p>
 
     </section>
   </div>

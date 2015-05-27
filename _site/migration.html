@@ -25,6 +25,7 @@
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
 		<a href="documentation.html">Docs</a> 
+    <a href="http://blog.scribeui.org">Blog</a>
 		<a href="faq.html">FAQ</a> 
 		<a href="about.html">About</a> 
 	</nav>
@@ -44,23 +45,23 @@
 <h2>v0.5 to v1.0</h2>
 
 <p>Before pulling and installing ScribeUI v1.0, first change all file&#39;s permission back to your own user:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R user application/
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chown -R user application/
 </code></pre></div>
 <p>You may now follow the production installation instructions and install ScribeUI v1.0</p>
 
 <p>Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R user scribeui.sqlite workspaces/
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chown -R user scribeui.sqlite workspaces/
 </code></pre></div>
 <p>Then executre the update script:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">python update.py
+<div class="highlight"><pre><code class="language-text" data-lang="text">python update.py
 </code></pre></div>
 <p>Then change the database and workspace folders back to www-data:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data scribeui.sqlite workspaces/
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chown -R www-data scribeui.sqlite workspaces/
 </code></pre></div>
 <p>Your workspaces and maps will then be imported, although passwordless. </p>
 
 <p>Each map will have to be edited to delete or comment the following line in the map editor:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">CONFIG &quot;MS_ERRORFILE&quot; &quot;../debugFile.log&quot;
+<div class="highlight"><pre><code class="language-text" data-lang="text">CONFIG &quot;MS_ERRORFILE&quot; &quot;../debugFile.log&quot;
 </code></pre></div>
 <h2>v0.1 to v0.2</h2>
 
@@ -74,22 +75,22 @@ Just follow these steps:</p>
 
 <ul>
 <li><p>Change the owner of the database and workspace folders back to yourself:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R yourusername application/db application/workspaces 
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chown -R yourusername application/db application/workspaces 
 </code></pre></div></li>
 <li><p>Checkout the latest release of ScribeUI</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">git checkout tags/v0.4
+<div class="highlight"><pre><code class="language-text" data-lang="text">git checkout tags/v0.4
 </code></pre></div></li>
 <li><p>Run the update script:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">python application/update.py 
+<div class="highlight"><pre><code class="language-text" data-lang="text">python application/update.py 
 </code></pre></div></li>
 <li><p>Change the owner of the database and workspace back to www-data:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo chown -R www-data application/db application/workspaces 
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo chown -R www-data application/db application/workspaces 
 </code></pre></div></li>
 <li><p>(optionnal) Restart apache:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">sudo /etc/init.d/apache2 restart
+<div class="highlight"><pre><code class="language-text" data-lang="text">sudo /etc/init.d/apache2 restart
 </code></pre></div></li>
 <li><p>The first time you edit a map, add the following line to the map element:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">INCLUDE: &#39;../symbols.map&#39; 
+<div class="highlight"><pre><code class="language-text" data-lang="text">INCLUDE: &#39;../symbols.map&#39; 
 </code></pre></div></li>
 </ul>
 

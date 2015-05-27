@@ -8,7 +8,7 @@ layout: default
 ScribeUI is a project started by [Mapgears](http://mapgears.com), first as an internal tool, and then as a [Google Summer of Code project](http://www.google-melange.com/gsoc/project/google/gsoc2013/jlapointe/4001) during summer 2013.
 
 
-The project was accepted again for Google Summer of Code during summer 2014.
+The project was accepted again for Google Summer of Code during summers 2014 and 2015.
 
 ## Getting help
 

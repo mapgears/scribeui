@@ -25,6 +25,7 @@
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
 		<a href="documentation.html">Docs</a> 
+    <a href="http://blog.scribeui.org">Blog</a>
 		<a href="faq.html">FAQ</a> 
 		<a href="about.html">About</a> 
 	</nav>
@@ -51,9 +52,8 @@
 
 <p>As such, you first need an <strong>__init__.py</strong> file. In that file, you have to create a function named <strong>includeme</strong> that receives a <strong>config</strong> object. To have your models and views included automatically, your includeme function should look like this:</p>
 
-<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">includeme</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">includeme</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span></code></pre></div>
 
 <p>And at that point, ScribeUI loads your module without any problems. But it doesn&#39;t do anything yet. </p>
 
@@ -61,28 +61,25 @@
 
 <p>If you wish to include static files, adding the following line to the includeme function will add a folder and its subfolder as a route for the application: </p>
 
-<div class="highlight"><pre><code class="python">    <span class="n">config</span><span class="o">.</span><span class="n">add_static_view</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;hellostatics&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">config</span><span class="o">.</span><span class="n">add_static_view</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;hellostatics&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s">&#39;static&#39;</span><span class="p">)</span></code></pre></div>
 
 <p>For our example, let&#39;s create a simple file with the path scribeui_pyramid/modules/plugins/static/js/helloworld.js containing a simple jquery-ui dialog as an example:</p>
 
-<div class="highlight"><pre><code class="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
     <span class="kd">var</span> <span class="nx">helloDialog</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;hello-world&quot;&gt;Hello, World!&lt;/div&gt;&#39;</span><span class="p">);</span>
     <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">helloDialog</span><span class="p">);</span>
     <span class="nx">helloDialog</span><span class="p">.</span><span class="nx">dialog</span><span class="p">({</span>                                              
         <span class="nx">modal</span><span class="o">:</span><span class="kc">false</span>
     <span class="p">}).</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>                                                
-<span class="p">})});</span>
-</code></pre></div>
+<span class="p">})});</span></code></pre></div>
 
 <p>This code should be pretty straightforward if you are familiar with jquery-ui.</p>
 
 <p>As ScribeUI is mostly a single page app, if you want css and javascript files to be included directly into the home template, you need to add the  files in a function such this:</p>
 
-<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">getIncludedFiles</span><span class="p">():</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">getIncludedFiles</span><span class="p">():</span>
     <span class="k">return</span> <span class="p">{</span><span class="s">&#39;css&#39;</span><span class="p">:[</span><span class="s">&#39;hellostatics/css/helloworld.css&#39;</span><span class="p">],</span> <span class="c"># if you have any css files</span>
-            <span class="s">&#39;js&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;hellostatics/js/helloworld.js&#39;</span><span class="p">]}</span>
-</code></pre></div>
+            <span class="s">&#39;js&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;hellostatics/js/helloworld.js&#39;</span><span class="p">]}</span></code></pre></div>
 
 <p>The css and js values are arrays so that you may add several javascript and css files to ScribeUI. </p>
 
@@ -96,7 +93,7 @@
 
 <p>First, let&#39;s create a view in <strong>views.py</strong>:</p>
 
-<div class="highlight"><pre><code class="python"><span class="kn">from</span> <span class="nn">pyramid.view</span> <span class="kn">import</span> <span class="n">view_config</span>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">pyramid.view</span> <span class="kn">import</span> <span class="n">view_config</span>
 <span class="kn">from</span> <span class="nn">pyramid.renderers</span> <span class="kn">import</span> <span class="n">render_to_response</span>
 
 <span class="k">class</span> <span class="nc">HelloWorldView</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -121,31 +118,28 @@
                 <span class="s">&quot;message&quot;</span><span class="p">:</span> <span class="s">&quot;Hola mundo&quot;</span>
                 <span class="p">}</span>   
             <span class="p">]</span>   
-        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;scribeui_pyramid:modules/plugins/HelloWorld/templates/helloworld.jinja2&#39;</span><span class="p">,{</span><span class="s">&quot;data&quot;</span><span class="p">:</span><span class="n">data</span><span class="p">})</span>
-</code></pre></div>
+        <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;scribeui_pyramid:modules/plugins/HelloWorld/templates/helloworld.jinja2&#39;</span><span class="p">,{</span><span class="s">&quot;data&quot;</span><span class="p">:</span><span class="n">data</span><span class="p">})</span></code></pre></div>
 
 <p>This code names a route named helloworld, renders it to a template, passing it some data. <a href="http://jinja.pocoo.org/docs/">The templates are using jinja2.</a>, served by <a href="http://docs.pylonsproject.org/projects/pyramid/en/1.0-branch/narr/templates.html">Pyramid templating</a></p>
 
 <p>Let&#39;s create a templates directory, with this basic template, called <strong>helloworld.jinja2</strong>:</p>
 
-<div class="highlight"><pre><code class="html"><span class="nt">&lt;table&gt;&lt;tr&gt;&lt;th&gt;</span>Language<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Message<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>                     
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;table&gt;&lt;tr&gt;&lt;th&gt;</span>Language<span class="nt">&lt;/th&gt;&lt;th&gt;</span>Message<span class="nt">&lt;/th&gt;&lt;/tr&gt;</span>                     
 {% for d in data %}                                                    
     <span class="nt">&lt;tr&gt;&lt;td&gt;</span>{{ d[&#39;language&#39;]  }}<span class="nt">&lt;/td&gt;&lt;td&gt;</span>{{d[&#39;message&#39;]}}<span class="nt">&lt;/td&gt;&lt;/tr&gt;</span>
 {% endfor %}                     
-<span class="nt">&lt;/table&gt;</span>              
-</code></pre></div>
+<span class="nt">&lt;/table&gt;</span></code></pre></div>
 
 <p>Now, we need to add the route to the config. In __init__.py add the following line to the includeme function:</p>
 
-<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">getIncludedFiles</span><span class="p">():</span>
-   <span class="n">config</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;helloworld&#39;</span><span class="p">,</span> <span class="s">&#39;/helloworld&#39;</span><span class="p">)</span>
-</code></pre></div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">getIncludedFiles</span><span class="p">():</span>
+   <span class="n">config</span><span class="o">.</span><span class="n">add_route</span><span class="p">(</span><span class="s">&#39;helloworld&#39;</span><span class="p">,</span> <span class="s">&#39;/helloworld&#39;</span><span class="p">)</span></code></pre></div>
 
 <p>After restarting ScribeUI, a table containing the data will be accessible at the /helloworld location. </p>
 
 <p>Now, let&#39;s edit our javascript script to show the template in our popup:</p>
 
-<div class="highlight"><pre><code class="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
         <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span><span class="nx">url</span><span class="o">:</span><span class="s2">&quot;helloworld&quot;</span><span class="p">,</span><span class="nx">success</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">){</span>
                 <span class="kd">var</span> <span class="nx">helloDialog</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;hello-world&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">result</span><span class="o">+</span><span class="s1">&#39;&lt;/div&gt;&#39;</span><span class="p">);</span>
                 <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="nx">helloDialog</span><span class="p">);</span>
@@ -153,8 +147,7 @@
                         <span class="nx">modal</span><span class="o">:</span><span class="kc">false</span>
                 <span class="p">}).</span><span class="nx">dialog</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
         <span class="p">}});</span>
-<span class="p">})});</span>
-</code></pre></div>
+<span class="p">})});</span></code></pre></div>
 
 <p>And now you should see your popup appear when you launch ScribeUI! </p>
 

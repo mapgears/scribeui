@@ -25,6 +25,7 @@
 		<a href="index.html" class="active">Home</a> 
 		<a href="getting-started.html">Getting Started</a> 
 		<a href="documentation.html">Docs</a> 
+    <a href="http://blog.scribeui.org">Blog</a>
 		<a href="faq.html">FAQ</a> 
 		<a href="about.html">About</a> 
 	</nav>
@@ -84,12 +85,12 @@
 <h3><a name="wsgi-how"></a> How do I install mod_wsgi 3.4 on ubuntu precise or earlier ?</h3>
 
 <p>As there is no package ready yet, you will have to compile a version of mod_wsgi. It is fairly easy on ubuntu. Uninstall any previous version of mod_wsgi you may have. Make sure you have the python-dev, build-essential and apache2-prefork-dev installed, then <a href="https://code.google.com/p/modwsgi/wiki/DownloadTheSoftware?tm=2">download the source</a> and compiling it is a matter of a few commands: </p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">./configure
+<div class="highlight"><pre><code class="language-text" data-lang="text">./configure
 make
 sudo make install
 </code></pre></div>
 <p>And you must edit scribeui&#39;s apache config file, which should be located at /etc/apache2/sites-enabled/ScribeUI.conf and add the path of your mod_wsgi version, for example:</p>
-<div class="highlight"><pre><code class="text language-text" data-lang="text">  LoadModule wsgi_module     /usr/lib/apache2/modules/mod\_wsgi.so
+<div class="highlight"><pre><code class="language-text" data-lang="text">  LoadModule wsgi_module     /usr/lib/apache2/modules/mod\_wsgi.so
 </code></pre></div>
 <h3><a name="windows"></a> I am on windows, can I install ScribeUI?</h3>
 
