@@ -2,14 +2,11 @@
 # -*- coding: iso-8859-1 -*-
 
 import json
-import getopt
-import sys
-import traceback
-
+import subprocess
 import re
+import getopt, sys, traceback
 import os.path
 import codecs
-
 
 """
 This script parses files with the scribe syntax, transform them
@@ -539,8 +536,15 @@ def list2dict(ls):
             dc[key] = item[key]
     return dc
 
+def debugMapfile(outputDirectory, mapName, level):
+    sub = subprocess.Popen('shp2img -m ' + outputDirectory + mapName + '.map -all_debug ' + str(level) + ' -o ' + outputDirectory + ' debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    logs = 'Mapserver logs (debug level ' + str(level) + ')\n'
+    logs += '------------------------------\n'
+    logs += sub.stderr.read().strip() + sub.stdout.read().strip()
+    print >> sys.stdout, logs
+    return
 
-def main(arg1):
+def main():
     global INDENTATION
     INDENTATION = 4
 
@@ -551,9 +555,10 @@ def main(arg1):
     clean = False
     error = ""
     outputJSONFile = None
+    debugLevel = -1
 
     try:                                
-        opts, args = getopt.getopt(arg1, "i:o:n:cf:t:j:", ["input", "output", "name", "clean", "file","tabulation", "json"])
+        opts, args = getopt.getopt(sys.argv[1:], "i:o:n:cf:t:j:d:", ["input", "output", "name", "clean", "file","tabulation", "json", "debug"])
     except getopt.GetoptError as err:
         print >> sys.stderr, str(err)                      
         sys.exit(2) 
@@ -573,6 +578,8 @@ def main(arg1):
             INDENTATION = int(arg)
         elif opt in ("-j", "--json"):
             outputJSONFile = arg
+        elif opt in ("-d", "--debug"):
+            debugLevel = int(arg)
             
     if os.path.isfile(inputDirectory + "scales"):
         inputScalesFile = codecs.open(inputDirectory + "scales", encoding='utf-8')
@@ -642,9 +649,12 @@ def main(arg1):
             jsonContent = string2json(jsonInput)
             if outputJSONFile is not None:
                 jFile = codecs.open(outputJSONFile, encoding='utf-8', mode="w+")
+                jFile.write(jsonContent.encode('utf-8'))
                 
             try:
                 jsonToMap(jsonContent, outputDirectory, mapName, clean)
+                if debugLevel >= 0 and debugLevel <= 5: #debug using shp2img
+                    debugMapfile(outputDirectory, mapName, debugLevel)
             except ValueError:
                 exc_traceback = sys.exc_info()[2]
                 print >> sys.stderr, "Uncatched syntax error :"
@@ -652,7 +662,8 @@ def main(arg1):
     else:
         print >> sys.stderr, error
         sys.exit(2)
+        
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
     
