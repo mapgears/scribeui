@@ -442,7 +442,8 @@ class APIMap(object):
             'status': 0,
             'errors': [],
             'logs': '',
-            'mapfile': ''
+            'mapfile': '',
+            'debug': ''
             }
 
         map = Map.by_id(self.matchdict.get('id'))
@@ -508,17 +509,19 @@ class APIMap(object):
                 if len(response['errors']) == 0:
                     if map.type == 'Scribe':
                         scribe = self.request.registry.settings.get('scribe.python', '')
-                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d 5', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
                         logs = sub.stdout.read()
                         errors = sub.stderr.read()
 
                         if errors == '':
                             response['logs'] = '**Success**'
+                            response['debug'] = logs
                         else:
                             response['logs'] = '**Errors**\n----------\n' + errors + '\n**Logs**\n----------\n' + logs
                             response['errors'].append('An error occured while running scribe.py')
                     else:
                         response['logs'] = '**Success**'
+                        response['debug'] = logs
 
                     try:
                         with codecs.open(mapfile, encoding='utf8') as f:

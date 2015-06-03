@@ -89,6 +89,10 @@ ScribeUI.UI.init = function(){
          }
     });
 
+    /*
+        Removed by slapointe 2015/06/02
+        Instead, debug will always be shown in the debug tab, no bind required
+        
     $("a[href='#debug-tab']").bind('click', function(){
         if(ScribeUI.workspace != null) {
             if(ScribeUI.workspace.openedMap){
@@ -96,7 +100,7 @@ ScribeUI.UI.init = function(){
                 ScribeUI.registerDebug();
             }
         }
-    });
+    });*/
 
     $("a[href='#editor-tab']").bind('mouseup', function(){
         $("div[class='CodeMirror']").show();
