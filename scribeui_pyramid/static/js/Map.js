@@ -369,6 +369,8 @@ ScribeUI.Map.prototype.close = function(){
     this.clearPois();
     this.workspace.openedMap = null;
     this.previousGroup = null;
+    
+    $("#map-name").text('');
 }
 
 //Find the map's name in the mapeditor
