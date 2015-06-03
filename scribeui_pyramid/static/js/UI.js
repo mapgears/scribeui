@@ -40,8 +40,10 @@ ScribeUI.UI.init = function(){
     $('.main').height( $('body').height()-$('.navbar').height())
     $("#main-tabs").tabs({heightStyle: "fill"});
     this.logs.logs().resizable({
-        handles: 'n',
+        handles: 'n, s',
         alsoResize: '#logs .tabcontent'
+    }).bind('resize', function(){
+        $(this).css("top", "auto");
     });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
