@@ -535,7 +535,7 @@ button.ui-widget{
 #logs {
     background-color: white;
 	position:absolute;
-	bottom:32px;
+	bottom:38px;
 	z-index:999;
 	width:100%;
 	min-height:50px;

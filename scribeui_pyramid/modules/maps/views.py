@@ -521,7 +521,6 @@ class APIMap(object):
                             response['errors'].append('An error occured while running scribe.py')
                     else:
                         response['logs'] = '**Success**'
-                        response['debug'] = logs
 
                     try:
                         with codecs.open(mapfile, encoding='utf8') as f:
