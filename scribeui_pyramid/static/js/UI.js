@@ -309,17 +309,29 @@ ScribeUI.UI.openNewMapDialog = function(){
                     var templateWorkspace = ScribeUI.UI.manager.newMap.templateWorkspaceSelect().val();
                     var templateWorkspacePassword = ScribeUI.UI.manager.newMap.templateWorkspacePassword().val();
                     var description = ScribeUI.UI.manager.newMap.description().val();
+                    
+                    var errors = "";
+                    var alphaNumericRegex = new RegExp("^[a-zA-Z0-9_]*$")
+                    if(name.length == 0) errors += "The 'Name' field is mandatory \n"
+                    else if (!alphaNumericRegex.test(name)) errors += "The 'Name' field must contain only alphanumeric characters (A-z, 0-9, _)"
+                    else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name"
+                    
+                    if(errors.length == 0)
+                    {
+                        var mapData = {
+                            name: name,
+                            type: type,
+                            description: description,
+                            template: template,
+                            template_workspace: templateWorkspace ? templateWorkspace : 'default',
+                            template_workspace_password: templateWorkspacePassword ? templateWorkspacePassword : ''
+                        }
 
-                    ScribeUI.workspace.createMap({
-                        name: name,
-                        type: type,
-                        description: description,
-                        template: template,
-                        template_workspace: templateWorkspace ? templateWorkspace : 'default',
-                        template_workspace_password: templateWorkspacePassword ? templateWorkspacePassword : ''
-                    });
+                        ScribeUI.workspace.createMap(mapData);
 
-                    $(this).dialog("close");
+                        $(this).dialog("close");
+                    }
+                    else alert(errors);
                 },
                 "+": function(){
                     ScribeUI.Workspace.getWorkspaces(function(workspaces){

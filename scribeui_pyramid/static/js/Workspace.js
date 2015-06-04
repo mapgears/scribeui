@@ -29,6 +29,7 @@ ScribeUI.Workspace.prototype.createMap = function(data){
         if(response.status == 1){
             self.open();
         }
+        else alert(response.errors[0]);
     });
 };
 
@@ -352,4 +353,3 @@ ScribeUI.Workspace.onWorkspaceOpened = function(){
             ScribeUI.plugins[i].onWorkspaceOpened();
     }
 }
-
