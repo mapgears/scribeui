@@ -308,13 +308,13 @@ ScribeUI.UI.openNewMapDialog = function(){
                     var template = ScribeUI.UI.manager.newMap.templateSelect().val();
                     var templateWorkspace = ScribeUI.UI.manager.newMap.templateWorkspaceSelect().val();
                     var templateWorkspacePassword = ScribeUI.UI.manager.newMap.templateWorkspacePassword().val();
-                    var description = ScribeUI.UI.manager.newMap.description().val();
+                    var description = $("<div>").text(ScribeUI.UI.manager.newMap.description().val()).html(); //Escape characters
                     
                     var errors = "";
                     var alphaNumericRegex = new RegExp("^[a-zA-Z0-9_]*$")
                     if(name.length == 0) errors += "The 'Name' field is mandatory \n"
-                    else if (!alphaNumericRegex.test(name)) errors += "The 'Name' field must contain only alphanumeric characters (A-z, 0-9, _)"
-                    else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name"
+                    else if (!alphaNumericRegex.test(name)) errors += "The 'Name' field must contain only alphanumeric characters (A-z, 0-9, _)\n"
+                    else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
                     
                     if(errors.length == 0)
                     {

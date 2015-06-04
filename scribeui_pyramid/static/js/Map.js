@@ -370,7 +370,12 @@ ScribeUI.Map.prototype.close = function(){
     this.workspace.openedMap = null;
     this.previousGroup = null;
     
+    //Remove leftover text
     $("#map-name").text('');
+    ScribeUI.UI.editor.mapfilePre().text('');
+    ScribeUI.UI.logs.pre().text('');
+    ScribeUI.UI.logs.debugPre().text('');
+    
 }
 
 //Find the map's name in the mapeditor
