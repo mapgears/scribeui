@@ -108,8 +108,8 @@ ScribeUI.UI.init = function(){
         if(ScribeUI.workspace != null) {
             if(ScribeUI.workspace.openedMap){
                 //Fixes an issue where lines below 101 are invisible
-                setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 10);
-                setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 1000);
+                ScribeUI.UI.editor.mapfilePre().refresh();
+                //setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 1000);
             }
         }
     });
@@ -120,7 +120,7 @@ ScribeUI.UI.init = function(){
         $.each(ScribeUI.editorManager.editors, function(key, editor){
             //Need to use a timeout for the editors to refresh properly.
             // See http://stackoverflow.com/questions/10575833/codemirror-has-content-but-wont-display-until-keypress
-            setTimeout(editor.CMEditor.refresh, 1)
+            editor.CMEditor.refresh()
         });
 		$('#editor-tab').show();
         $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
@@ -561,7 +561,7 @@ ScribeUI.UI.openSecondaryPanel = function(editor){
             //to make the secondary editor display all it's content properly
             //Both refresh are needed...
             editor.CMEditor.refresh();
-            setTimeout(editor.CMEditor.refresh, 1);
+            //setTimeout(editor.CMEditor.refresh, 1);
     }else{
          $('.secondary-wrap').hide();
     }

@@ -293,7 +293,8 @@ $(document).ready(function() {
         //Turn the mapfile output into a codemirror space for error highlighting
         var mapfileOutputOptions = {
             readOnly: true,
-            lineNumbers: true
+            lineNumbers: true,
+            mode: "scribe"
         };
         var mapfileOutputEditor = CodeMirror.fromTextArea(document.getElementById("txt-result"), mapfileOutputOptions);
         $('#txt-result').data('mapfileOutputEditor', mapfileOutputEditor); //Store the editor for later use
