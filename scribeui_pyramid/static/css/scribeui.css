@@ -509,7 +509,7 @@ button.ui-widget{
 .cm-variable {
     color: blue;
 }
-#editors-container .CodeMirror-scroll{
+.CodeMirror-scroll{
 	overflow: visible;
 	height:auto;
 }

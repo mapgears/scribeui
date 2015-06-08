@@ -6,7 +6,7 @@ ScribeUI.UI.init = function(){
 	this.editor.groupSelect= function(){ return $('#group-select') };
 	this.editor.editorSelect= function(){ return $('#editor-select') };
 	this.editor.groupsList= function(){ return $('#groups-ol') };
-	this.editor.mapfilePre= function(){ return $('#txt-result') };
+	this.editor.mapfilePre= function(){ return $('#txt-result').data('mapfileOutputEditor') };
 	this.logs= {};
 	this.logs.logs = function(){ return $('#logs') };
 	this.logs.tabs= function(){ return $("#log-tabs") };
@@ -83,13 +83,13 @@ ScribeUI.UI.init = function(){
         $("div[class='CodeMirror']").hide();
     }); 
 
-    $("a[href='#manager-tab'], a[href='#log-tab'], a[href='#editor-tab'], a[href='#mapfile-tab'], a[href='#help-tab']").bind('click', function(){
+    /*$("a[href='#manager-tab'], a[href='#log-tab'], a[href='#editor-tab'], a[href='#mapfile-tab'], a[href='#help-tab']").bind('click', function(){
          if(ScribeUI.workspace) {
              if(ScribeUI.workspace.openedMap){
                 ScribeUI.unregisterDebug();
              }
          }
-    });
+    });*/
 
     /*
         Removed by slapointe 2015/06/02
@@ -103,6 +103,16 @@ ScribeUI.UI.init = function(){
             }
         }
     });*/
+    
+    $("a[href='#mapfile-tab']").bind('click', function(){
+        if(ScribeUI.workspace != null) {
+            if(ScribeUI.workspace.openedMap){
+                //Fixes an issue where lines below 101 are invisible
+                setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 10);
+                setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 1000);
+            }
+        }
+    });
 
     $("a[href='#editor-tab']").bind('mouseup', function(){
         $("div[class='CodeMirror']").show();

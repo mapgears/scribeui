@@ -522,22 +522,22 @@ class APIMap(object):
                     else:
                         response['logs'] = '**Success**'
 
-                    try:
-                        with codecs.open(mapfile, encoding='utf8') as f:
-                            mapfile_content = f.read()
-                            f.close()
-                    except IOError:
-                        response['errors'].append("An error occured while opening '" + mapfile + "' file.")
-
                     (projection, extent) = MapManager.get_proj_extent_from_mapfile(mapfile)
 
                     map.projection = projection
                     map.extent = extent
                     transaction.commit()
-
+                    
                     if len(response['errors']) == 0:
-                        response['mapfile'] = mapfile_content
                         response['status'] = 1
+                        
+                try:
+                    with codecs.open(mapfile, encoding='utf8') as f:
+                        mapfile_content = f.read()
+                        response['mapfile'] = mapfile_content
+                        f.close()
+                except IOError:
+                    response['errors'].append("An error occured while opening '" + mapfile + "' file.")
         else:
             response['errors'].append('Access denied.')
 

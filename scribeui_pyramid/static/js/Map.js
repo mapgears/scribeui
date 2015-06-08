@@ -246,7 +246,7 @@ ScribeUI.Map.prototype.save = function(){
                 }
             }
 
-            ScribeUI.UI.editor.mapfilePre().text(response.mapfile);
+            ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
             ScribeUI.UI.logs.pre().text(response.logs);
             ScribeUI.UI.logs.debugPre().text(response.debug);
         }
