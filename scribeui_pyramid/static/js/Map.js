@@ -372,7 +372,7 @@ ScribeUI.Map.prototype.close = function(){
     
     //Remove leftover text
     $("#map-name").text('');
-    ScribeUI.UI.editor.mapfilePre().text('');
+    ScribeUI.UI.editor.mapfilePre().setValue('');
     ScribeUI.UI.logs.pre().text('');
     ScribeUI.UI.logs.debugPre().text('');
     
