@@ -24,7 +24,7 @@ jQuery(function() { $(document).ready(function(){
 		for(var i=0; i < ScribeUI.editorManager.get('map').CMEditor.lineCount(); i++){
 			if(ScribeUI.editorManager.get('map').CMEditor.getLine(i).indexOf(extentStr) !== -1){
 				//Hightlight line in codemirror
-				ScribeUI.editorManager.get('map').CMEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
+				ScribeUI.editorManager.get('map').CMEditor.addLineClass(i, 'background', 'setextent-highlighted-line');
 				this.extentLineNumer = i;
 				break;
 			}
@@ -73,7 +73,9 @@ jQuery(function() { $(document).ready(function(){
 					var lineContent = ScribeUI.editorManager.get('map').CMEditor.getLine(extProxyLineNumber);
 					var newLineContent = lineContent.substr(0, lineContent.indexOf(extentStr)+extentStr.length);
 					newLineContent += ext;
-					ScribeUI.editorManager.get('map').CMEditor.setLine(extProxyLineNumber, newLineContent);
+					ScribeUI.editorManager.get('map').CMEditor.replaceRange(newLineContent, 
+						{"line": extProxyLineNumber, "ch": 0}, 
+						{"line": extProxyLineNumber, "ch": lineContent.length - 1});
 					
 					$(this).dialog("close");
 				},
@@ -95,7 +97,7 @@ jQuery(function() { $(document).ready(function(){
 		$('#setMapExtent').button('enable');
 	}
 	setExtent.prototype.closeDialog = function(e, ui){
-		ScribeUI.editorManager.get('map').CMEditor.setLineClass(this.extentLineNumer, 'background', '');
+		ScribeUI.editorManager.get('map').CMEditor.removeLineClass(this.extentLineNumber, 'background', 'setextent-highlighted-line');
 		ScribeUI.workspace.openedMap.OLMap.removeControl(boxControl);
 		boxControl.destroy();
 		ScribeUI.workspace.openedMap.OLMap.removeLayer(boxLayer);
