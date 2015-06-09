@@ -5,7 +5,7 @@ jQuery(function() { $(document).ready(function(){
 		this.boxControl = null;
 		this.boxLayer = null;
 		this.dialogDiv = null;
-		this.extentLineNumer = null;
+		this.extentLineNumber = null;
 	}
 	//This will be called immediatly after the addPlugin function
 	setExtent.prototype.init = function(){
@@ -25,12 +25,12 @@ jQuery(function() { $(document).ready(function(){
 			if(ScribeUI.editorManager.get('map').CMEditor.getLine(i).indexOf(extentStr) !== -1){
 				//Hightlight line in codemirror
 				ScribeUI.editorManager.get('map').CMEditor.addLineClass(i, 'background', 'setextent-highlighted-line');
-				this.extentLineNumer = i;
+				this.extentLineNumber = i;
 				break;
 			}
 		}
-		if(this.extentLineNumer === -1) return "Couldn't find map extent.";
-		var extProxyLineNumber = this.extentLineNumer;
+		if(this.extentLineNumber === -1) return "Couldn't find map extent.";
+		var extProxyLineNumber = this.extentLineNumber;
 		
 		//We need a vector layer to draw the box
 		boxLayer = new OpenLayers.Layer.Vector("Box layer");
