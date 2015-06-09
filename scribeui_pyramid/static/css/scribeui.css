@@ -540,6 +540,7 @@ button.ui-widget{
 	width:100%;
 	min-height:50px;
 	border:none;
+    top: auto !important; /*Override jquery's CSS*/
 }
 .logs{
 	width:100%;

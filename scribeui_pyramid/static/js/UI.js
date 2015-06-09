@@ -40,10 +40,11 @@ ScribeUI.UI.init = function(){
     $('.main').height( $('body').height()-$('.navbar').height())
     $("#main-tabs").tabs({heightStyle: "fill"});
     this.logs.logs().resizable({
-        handles: 'n, s',
+        handles: 'n',
         alsoResize: '#logs .tabcontent'
     }).bind('resize', function(){
-        $(this).css("top", "auto");
+        $(this).css("max-height", $('.main').height() - 40 + 'px'); //Fix for issue #121
+        ScribeUI.UI.editor.mapfilePre().refresh(); //Fix for issue #122
     });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
@@ -82,34 +83,13 @@ ScribeUI.UI.init = function(){
     $("a[href = '#manager-tab'], a[href = '#help-tab']").bind('click', function(){
         $("div[class='CodeMirror']").hide();
     }); 
-
-    /*$("a[href='#manager-tab'], a[href='#log-tab'], a[href='#editor-tab'], a[href='#mapfile-tab'], a[href='#help-tab']").bind('click', function(){
-         if(ScribeUI.workspace) {
-             if(ScribeUI.workspace.openedMap){
-                ScribeUI.unregisterDebug();
-             }
-         }
-    });*/
-
-    /*
-        Removed by slapointe 2015/06/02
-        Instead, debug will always be shown in the debug tab, no bind required
-        
-    $("a[href='#debug-tab']").bind('click', function(){
-        if(ScribeUI.workspace != null) {
-            if(ScribeUI.workspace.openedMap){
-                ScribeUI.clearDebug();
-                ScribeUI.registerDebug();
-            }
-        }
-    });*/
+    
     
     $("a[href='#mapfile-tab']").bind('click', function(){
         if(ScribeUI.workspace != null) {
             if(ScribeUI.workspace.openedMap){
                 //Fixes an issue where lines below 101 are invisible
                 ScribeUI.UI.editor.mapfilePre().refresh();
-                //setTimeout(ScribeUI.UI.editor.mapfilePre().refresh, 1000);
             }
         }
     });
