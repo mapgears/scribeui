@@ -220,7 +220,7 @@ ScribeUI.Map.prototype.save = function(){
         readme: this.readme,
         groups: this.groups
     })
-
+        
     $.ajax({
         url: $API + '/maps/save/' + this.id,
         type: "POST",
@@ -241,16 +241,43 @@ ScribeUI.Map.prototype.save = function(){
 
                 self.saved = true;
             } else{
-                if(!ScribeUI.UI.logs.logs().is(':visible')){
-                    ScribeUI.UI.logs.notification().show('pulsate', 1000);
-                }
+                ScribeUI.UI.logs.notification().show('pulsate', 1000);
             }
 
             ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
             ScribeUI.UI.logs.pre().text(response.logs);
             ScribeUI.UI.logs.debugPre().text(response.debug);
+            self.handleDebug(response.debug);
         }
     })
+}
+
+ScribeUI.Map.prototype.handleDebug = function(debugText)
+{
+    regexError = /(.*\b(error)\b.*)/gi;
+    regexSyntaxError = /\((.[^\(\)]*)\):\(line ([0-9]*)\)/g;
+    error = regexError.exec(debugText);
+    if(error != null)
+    {
+        ScribeUI.UI.logs.pre().text('Errors: \n');
+        ScribeUI.UI.logs.notification().show('pulsate', 1000);
+        
+        while(error != null)
+        {
+            //Log the first error, as it is
+            ScribeUI.UI.logs.pre().append('\n' + error[0] + '\n');
+            
+            //Find line numbers (syntax errors)
+            syntaxError = regexSyntaxError.exec(error[0]);
+            if(syntaxError != null)
+            {
+                ScribeUI.UI.logs.pre().append(syntaxError[1] + ' at line ' + syntaxError[2] + '\n');
+            }
+            
+            //Check for the next one
+            error = regexError.exec(debugText);
+        }
+    }
 }
 
 ScribeUI.Map.prototype.display = function(){
