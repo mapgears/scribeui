@@ -509,10 +509,11 @@ button.ui-widget{
 .cm-variable {
     color: blue;
 }
-/*.CodeMirror-scroll{
-	overflow: visible;
-	height:auto;
-}*/
+.outputError {
+    background-color: #FFFF66;
+    border: 1px solid #FF0000;
+    border-radius: 5px;
+}
 
 /*=== Data ===*/
 .datacontent {

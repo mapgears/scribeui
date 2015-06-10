@@ -566,6 +566,17 @@ ScribeUI.UI.displayDebug = function(){
     }
 }
 
+ScribeUI.UI.displayResultLine = function(line){
+    var tabIndex = $('#tabs a[href="#mapfile-tab"]').parent().index();
+    this.logs.tabs().tabs({active: tabIndex});
+    ScribeUI.UI.editor.mapfilePre().refresh();
+    //Scroll to taken from http://codemirror.977696.n3.nabble.com/Scroll-to-line-td4028275.html
+    var h = ScribeUI.UI.editor.mapfilePre().getScrollInfo().clientHeight;
+    var coords = ScribeUI.UI.editor.mapfilePre().charCoords({line: line, ch: 0}, "local");
+    ScribeUI.UI.editor.mapfilePre().scrollTo(null, (coords.top + coords.bottom - h) / 2);
+    
+}
+
 ScribeUI.UI.displayLineEditor = function(cm, line, text){
     $('#edit-line-content').val(text);
 

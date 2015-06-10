@@ -507,9 +507,10 @@ class APIMap(object):
                         response['errors'].append("An error occured while saving '" + map_directory + filenames[filename] + "' file.")
 
                 if len(response['errors']) == 0:
+                    debug_level = '5'
                     if map.type == 'Scribe':
                         scribe = self.request.registry.settings.get('scribe.python', '')
-                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d 5', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d ' + debug_level, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
                         logs = sub.stdout.read()
                         errors = sub.stderr.read()
 
@@ -520,6 +521,12 @@ class APIMap(object):
                             response['logs'] = '**Errors**\n----------\n' + errors + '\n**Logs**\n----------\n' + logs
                             response['errors'].append('An error occured while running scribe.py')
                     else:
+                        outputDirectory = map_directory + 'map/';
+                        sub = subprocess.Popen('shp2img -m ' + outputDirectory + map.name + '.map -all_debug ' + debug_level + ' -o ' + outputDirectory + 'debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+                        logs = 'Mapserver logs (debug level ' + debug_level + ')\n'
+                        logs += '------------------------------\n'
+                        logs += sub.stderr.read().strip() + sub.stdout.read().strip()
+                        response['debug'] = logs
                         response['logs'] = '**Success**'
 
                     (projection, extent) = MapManager.get_proj_extent_from_mapfile(mapfile)

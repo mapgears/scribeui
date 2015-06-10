@@ -256,26 +256,51 @@ ScribeUI.Map.prototype.handleDebug = function(debugText)
 {
     regexError = /(.*\b(error)\b.*)/gi;
     regexSyntaxError = /\((.[^\(\)]*)\):\(line ([0-9]*)\)/g;
+    var errorArray = [];
     error = regexError.exec(debugText);
-    if(error != null)
+    
+    //Build a list of strings containing 'error', excepted the projection one
+    while(error != null)
+    {
+        if(error[0].indexOf('tolerance condition error') == -1) //Ignore this error
+        {
+            errorArray.push(error[0]);
+        }
+        //Check for the next one
+        error = regexError.exec(debugText);
+    }
+    
+    //Handle the errors if there are any
+    if(errorArray.length > 0)
     {
         ScribeUI.UI.logs.pre().text('Errors: \n');
         ScribeUI.UI.logs.notification().show('pulsate', 1000);
         
-        while(error != null)
+        for(i = 0; i < errorArray.length; i++)
         {
-            //Log the first error, as it is
-            ScribeUI.UI.logs.pre().append('\n' + error[0] + '\n');
-            
             //Find line numbers (syntax errors)
-            syntaxError = regexSyntaxError.exec(error[0]);
+            syntaxError = regexSyntaxError.exec(errorArray[i]);
             if(syntaxError != null)
             {
-                ScribeUI.UI.logs.pre().append(syntaxError[1] + ' at line ' + syntaxError[2] + '\n');
+                var line = parseInt(syntaxError[2]);
+                
+                //Place an error widget in the result area
+                var div = document.createElement("div");
+                div.innerHTML = errorArray[i];
+                div.setAttribute('class', 'outputError');
+                ScribeUI.UI.editor.mapfilePre().addLineWidget(line-1, div);
+                
+                //Log the error with a link
+                var link = $('<a href="javascript:void(0);">' + errorArray[i] + '</a>').click(function(){
+                    ScribeUI.UI.displayResultLine(line);
+                });
+                ScribeUI.UI.logs.pre().append(link);
+                
             }
-            
-            //Check for the next one
-            error = regexError.exec(debugText);
+            else //Log the error without a link
+            {
+                ScribeUI.UI.logs.pre().append('\n' + errorArray[i] + '\n');
+            }
         }
     }
 }
