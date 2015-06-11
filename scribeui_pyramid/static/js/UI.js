@@ -33,6 +33,8 @@ ScribeUI.UI.init = function(){
     this.poi = {};
 	this.poi.select= function() { return $('#poi-select') };
 	this.poi.actions= function() { return $('.poi-container') }
+    
+    this.updateTimeout = null; //For window resize event
 
     /*--------------------------------
       Tabs and buttons
@@ -42,9 +44,17 @@ ScribeUI.UI.init = function(){
     this.logs.logs().resizable({
         handles: 'n',
         alsoResize: '#logs .tabcontent'
-    }).bind('resize', function(){
+    }).bind('resize', function(){        
         $(this).css("max-height", $('.main').height() - 40 + 'px'); //Fix for issue #121
         ScribeUI.UI.editor.mapfilePre().refresh(); //Fix for issue #122
+        
+        //Timeout to not update every millisecond a user is resizing the map 
+        if(this.updateTimeout != null) 
+        {
+            clearTimeout(this.updateTimeout);
+        }
+        this.updateTimeout = setTimeout(function() { ScribeUI.UI.resizeMapViewport(); }, 200);  //Fix for issue #87
+        
     });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
@@ -57,6 +67,7 @@ ScribeUI.UI.init = function(){
             }
         }).click(function(e){
             $('#logs').hide();
+            ScribeUI.UI.resizeMapViewport();
         })
     );
 
@@ -177,7 +188,8 @@ ScribeUI.UI.init = function(){
         icons: { primary: 'ui-icon-flag' }    
     }).click(function(){
         $('#logs').toggle();
-        $('#log-notification').hide();                
+        $('#log-notification').hide();  
+        ScribeUI.UI.resizeMapViewport();
     });
     $('#btn-zoom-poi').button().click( function(){
         ScribeUI.POI.zoomToPOI();
@@ -531,6 +543,21 @@ ScribeUI.UI.resizeEditors = function(){
     divTwo.css('height', divTwoHeight + 'px');    
     $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
 }
+
+ScribeUI.UI.resizeMapViewport = function(){
+    if($('#logs').is(':visible')){
+        $('#map').css("bottom", 30 + $('#logs').height() + "px");  
+    }
+    else {
+        $('#map').css("bottom", 30 + "px");  
+    }            
+    ScribeUI.workspace.openedMap.OLMap.updateSize();
+    
+    //This ugly fix refreshes the viewport size, fixes a bug where the viewport doesn't take its place back after resizing the logs
+    ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='99%'
+    setTimeout(function() { ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='100%'; }, 30); 
+}
+
 ScribeUI.UI.openSecondaryPanel = function(editor){
     $('#secondary-editor > .tabcontent-small').hide();
     $('.secondary-wrap').hide();
