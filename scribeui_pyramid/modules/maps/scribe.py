@@ -248,7 +248,7 @@ def write(string, scales, files, indentation):
             indentation = substractIndentation(indentation, INDENTATION)
         elif re.match(r"^(NAME|MASK)", string, re.IGNORECASE):
             text = string
-            text = re.sub(r"'$", value + "'", text)
+            text = re.sub(r"'$", '_' + value + "'", text)
             text = re.sub(r"\"$", value + "\"", text)
             files[value].write(indentation + text + "\n")
         else:

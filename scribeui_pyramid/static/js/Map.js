@@ -247,23 +247,27 @@ ScribeUI.Map.prototype.save = function(){
             ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
             ScribeUI.UI.logs.pre().text(response.logs);
             ScribeUI.UI.logs.debugPre().text(response.debug);
-            self.handleDebug(response.debug);
+            self.handleDebug(response.debug, response.mapfile);
         }
     })
 }
 
-ScribeUI.Map.prototype.handleDebug = function(debugText)
-{
+/*
+debugText: string, content of the debug tab
+mapfile: string, mapfile version of the map
+
+This function takes the map's debug output, displays the errors and places
+markers in the result tab if possible.
+*/
+ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
     regexError = /(.*\b(error)\b.*)/gi;
     regexSyntaxError = /\((.[^\(\)]*)\):\(line ([0-9]*)\)/g;
     var errorArray = [];
     error = regexError.exec(debugText);
     
     //Build a list of strings containing 'error', excepted the projection one
-    while(error != null)
-    {
-        if(error[0].indexOf('tolerance condition error') == -1) //Ignore this error
-        {
+    while(error != null){
+        if(error[0].indexOf('tolerance condition error') == -1){ //Ignore this error
             errorArray.push(error[0]);
         }
         //Check for the next one
@@ -271,17 +275,14 @@ ScribeUI.Map.prototype.handleDebug = function(debugText)
     }
     
     //Handle the errors if there are any
-    if(errorArray.length > 0)
-    {
+    if(errorArray.length > 0){
         ScribeUI.UI.logs.pre().text('Errors: \n');
         ScribeUI.UI.logs.notification().show('pulsate', 1000);
         
-        for(i = 0; i < errorArray.length; i++)
-        {
+        for(i = 0; i < errorArray.length; i++){
             //Find line numbers (syntax errors)
             syntaxError = regexSyntaxError.exec(errorArray[i]);
-            if(syntaxError != null)
-            {
+            if(syntaxError != null){
                 var line = parseInt(syntaxError[2]);
                 
                 //Place an error widget in the result area
@@ -295,12 +296,60 @@ ScribeUI.Map.prototype.handleDebug = function(debugText)
                     ScribeUI.UI.displayResultLine(line);
                 });
                 ScribeUI.UI.logs.pre().append(link);
+                ScribeUI.UI.logs.pre().append("\n");
                 
+                //Find and place a marker in the scribe mapeditor area
+                this.markError(mapfile, syntaxError[1], syntaxError[2]);
             }
-            else //Log the error without a link
-            {
-                ScribeUI.UI.logs.pre().append('\n' + errorArray[i] + '\n');
+            else{ //Log the error without a link
+                ScribeUI.UI.logs.pre().append(errorArray[i] + '\n');
             }
+        }
+    }
+}
+
+/*
+mapfile: string, mapfile version of the map
+error: string, the unknown identifier in the error
+lineNumber: int, the line where the error is located
+
+This function places markers in the scribe version of the map
+for any errors marked in the result tab
+*/
+ScribeUI.Map.prototype.markError = function(mapfile, error, lineNumber){
+    mapfileArray = mapfile.split('\n');
+    lineNumber--; //Array index starts at 0, lineNumber at 1
+    lineFound = false;
+    while(!lineFound && lineNumber >= 0){
+        line = mapfileArray[lineNumber].trim().toUpperCase();
+        if(line == "MAP"){
+            lineFound = true;
+            ScribeUI.UI.logs.pre().append("Error located in the MAP config\n");
+        }
+        else if(line == "LAYER"){
+            lineFound = true;
+            
+            //Find which layer
+            layerNameFound = false;
+            while(!layerNameFound && lineNumber < mapfileArray.length){
+                line = mapfileArray[lineNumber].trim();
+                lineArray = line.split(' ');
+                if(lineArray[0].toUpperCase() == "NAME"){
+                    layerNameFound = true;
+                    layerName = lineArray[1].replace(/'/g, "");
+                    layerNameArray = layerName.split('_');
+                    layerZoomLevel = layerNameArray[layerNameArray.length - 1];
+                    layerName = layerName.substring(0, layerName.length - layerZoomLevel.length - 1);
+                    ScribeUI.UI.logs.pre().append("Error located in layer " + layerName + " on zoom level " + layerZoomLevel + "\n");
+                    
+                }
+                else {
+                    lineNumber++;
+                }
+            }
+        }
+        else{
+            lineNumber--;
         }
     }
 }
