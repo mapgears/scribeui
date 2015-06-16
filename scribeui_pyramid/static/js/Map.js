@@ -17,6 +17,7 @@
     this.newGroups = [];
     this.updatedGroups = [];
     this.pois = [];
+    this.errorWidgets = [];
 
     if(options){
         this.id = options.id ? options.id : this.id;
@@ -152,9 +153,7 @@ ScribeUI.Map.prototype.displayGroups = function(silent){
         if(self.selectedGroup){
             self.selectedGroup['content'] = ScribeUI.editorManager.get('groups').CMEditor.getValue();
         }
-
         self.selectedGroup = self.getGroupByName(this.value);
-
         if(self.selectedGroup){
             ScribeUI.editorManager.get('groups').CMEditor.setValue(self.selectedGroup.content);
         } else{
@@ -247,6 +246,12 @@ ScribeUI.Map.prototype.save = function(){
             ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
             ScribeUI.UI.logs.pre().text(response.logs);
             ScribeUI.UI.logs.debugPre().text(response.debug);
+
+            for (var i = 0; i < self.errorWidgets.length; ++i)
+            {
+                self.errorWidgets[i].editor.removeLineWidget(self.errorWidgets[i].widget);
+            }
+
             self.handleDebug(response.debug, response.mapfile);
         }
     })
@@ -299,7 +304,7 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
                 ScribeUI.UI.logs.pre().append("\n");
                 
                 //Find and place a marker in the scribe mapeditor area
-                this.markError(mapfile, syntaxError[1], syntaxError[2]);
+                this.markError(syntaxError[1], syntaxError[2], errorArray[i]);
             }
             else{ //Log the error without a link
                 ScribeUI.UI.logs.pre().append(errorArray[i] + '\n');
@@ -312,46 +317,90 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
 mapfile: string, mapfile version of the map
 error: string, the unknown identifier in the error
 lineNumber: int, the line where the error is located
+errorMessage: string, the error message
 
 This function places markers in the scribe version of the map
 for any errors marked in the result tab
 */
-ScribeUI.Map.prototype.markError = function(mapfile, error, lineNumber){
-    mapfileArray = mapfile.split('\n');
-    lineNumber--; //Array index starts at 0, lineNumber at 1
-    lineFound = false;
-    while(!lineFound && lineNumber >= 0){
-        line = mapfileArray[lineNumber].trim().toUpperCase();
-        if(line == "MAP"){
-            lineFound = true;
-            ScribeUI.UI.logs.pre().append("Error located in the MAP config\n");
-        }
-        else if(line == "LAYER"){
-            lineFound = true;
-            
-            //Find which layer
-            layerNameFound = false;
-            while(!layerNameFound && lineNumber < mapfileArray.length){
-                line = mapfileArray[lineNumber].trim();
-                lineArray = line.split(' ');
-                if(lineArray[0].toUpperCase() == "NAME"){
-                    layerNameFound = true;
-                    layerName = lineArray[1].replace(/'/g, "");
-                    layerNameArray = layerName.split('_');
-                    layerZoomLevel = layerNameArray[layerNameArray.length - 1];
-                    layerName = layerName.substring(0, layerName.length - layerZoomLevel.length - 1);
-                    ScribeUI.UI.logs.pre().append("Error located in layer " + layerName + " on zoom level " + layerZoomLevel + "\n");
-                    
-                }
-                else {
-                    lineNumber++;
+ScribeUI.Map.prototype.markError = function(error, lineNumber, errorMessage){
+    loc = ScribeUI.workspace.openedMap.findLine(error);
+    /*loc contains the line number where the error is located in Scribe,
+    the editor in which it's located and the group if there's one */
+
+    //Log it
+    ScribeUI.UI.logs.pre().append("Error located at ")
+    linkString = 'line '+ (parseInt(loc.lineNumber)+1) +' in editor "' + loc.editor.name + '"';
+    if(loc.group != undefined)
+    {
+        linkString += ' in group "' + loc.group + '"';
+    }
+
+    //The error widget div
+    var div = document.createElement("div");
+    div.innerHTML = errorMessage;
+    div.setAttribute('class', 'outputError');
+
+    //Add it to the opened group if it's the right one or to the editor if it's not a group
+    if(loc.group != undefined && ScribeUI.workspace.openedMap.selectedGroup.name == loc.group || loc.group == undefined)
+    {
+        widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
+
+        //Push it so it can be removed later
+        this.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
+    }
+
+    //Add the link to go to the correct location and add the widget
+    var self = this;
+    var link = $('<a href="javascript:void(0);">' + linkString + '</a>').click(function(){
+        ScribeUI.UI.switchToLayer(loc);
+        widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
+
+        //Push it so it can be removed later
+        self.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
+    });
+    ScribeUI.UI.logs.pre().append(link);
+    ScribeUI.UI.logs.pre().append('\n');
+}
+
+ScribeUI.Map.prototype.findLine = function(line){
+    var result = null;
+    for(var key in ScribeUI.editorManager.editors){
+        if(key == "groups") { //For groups, check every group
+            nbOptions = ScribeUI.workspace.openedMap.groups.length;
+            for(i = 0; i < nbOptions; i++)
+            {
+                groupName = ScribeUI.workspace.openedMap.groups[i].name;
+                content = ScribeUI.workspace.openedMap.groups[i].content;
+
+                lineNumber = this.searchLine(line, content);
+                if(lineNumber != null){
+                    return {editor: ScribeUI.editorManager.get(key),
+                            lineNumber: lineNumber,
+                            group: groupName};
                 }
             }
         }
-        else{
-            lineNumber--;
+        else {
+            content = ScribeUI.workspace.openedMap[key];
+            lineNumber = this.searchLine(line, content);
+            if(lineNumber != null){
+                return {editor: ScribeUI.editorManager.get(key),
+                        lineNumber: lineNumber};
+            }
         }
     }
+    return result;
+}
+
+ScribeUI.Map.prototype.searchLine = function(needle, haystack){
+    haystackArray = haystack.split('\n');
+	for(var i=0; i < haystackArray.length; i++){
+		var line = haystackArray[i];
+		if(line.indexOf(needle) !== -1){
+			return i;
+		}
+	}
+    return null;
 }
 
 ScribeUI.Map.prototype.display = function(){
@@ -864,7 +913,7 @@ ScribeUI.Map.exportMap = function(){
 }
 
 ScribeUI.Map.onMapMoveEnd = function(){
-    setTimeout(function(){ScribeUI.UI.displayDebug()},500);
+    //setTimeout(function(){ScribeUI.UI.displayDebug()},500);
 }
 
 ScribeUI.Map.onMapOpened = function(){

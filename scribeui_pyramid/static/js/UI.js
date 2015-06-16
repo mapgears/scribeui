@@ -572,6 +572,7 @@ ScribeUI.UI.openSecondaryPanel = function(editor){
     }else{
          $('.secondary-wrap').hide();
     }
+    $('#editor_select_chosen').find('span').text(editor.name);
     ScribeUI.UI.resizeEditors();
 }
 
@@ -602,6 +603,27 @@ ScribeUI.UI.displayResultLine = function(line){
     var coords = ScribeUI.UI.editor.mapfilePre().charCoords({line: line, ch: 0}, "local");
     ScribeUI.UI.editor.mapfilePre().scrollTo(null, (coords.top + coords.bottom - h) / 2);
     
+}
+
+/* This function switches to the right layer and group
+loc contains:
+    loc.editor, the editor,
+    loc.group if loc.editor == 'groups'
+    loc.lineNumber, the line number */
+ScribeUI.UI.switchToLayer = function(loc){
+    //Switch to the editor tab
+    var tabIndex = $('[href="#editor-tab"]').parent().index();
+    $('#main-tabs').tabs({active: tabIndex});
+
+    //ScribeUI.UI.editor.editorSelect().val(loc.editor).trigger('change');
+    this.openSecondaryPanel(loc.editor);
+
+    if(loc.editor.name == "Groups"){
+        ScribeUI.UI.editor.groupSelect().val(loc.group).trigger('change');
+        ScribeUI.UI.editor.groupSelect().trigger('chosen:updated');
+    }
+
+    loc.editor.CMEditor.refresh();
 }
 
 ScribeUI.UI.displayLineEditor = function(cm, line, text){

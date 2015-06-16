@@ -35,7 +35,7 @@ ScribeUI.Editor.prototype.searchLine = function(needle){
 			lineHandle = haystack.getLineHandle(i);
 
 			//Skip the line if it is commented
-			if(lineHandle.styles.indexOf("comment") >= 0)
+			if(lineHandle.styles != undefined && lineHandle.styles.indexOf("comment") >= 0)
 				continue;
 
 			return lineHandle;
