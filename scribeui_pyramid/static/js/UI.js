@@ -191,6 +191,9 @@ ScribeUI.UI.init = function(){
         $('#log-notification').hide();  
         ScribeUI.UI.resizeMapViewport();
     });
+    $('#link-open-logs').click( function(){
+        $('#logs').show();
+    });
     $('#btn-zoom-poi').button().click( function(){
         ScribeUI.POI.zoomToPOI();
     });

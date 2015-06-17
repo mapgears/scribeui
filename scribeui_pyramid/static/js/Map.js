@@ -77,6 +77,8 @@ ScribeUI.Map.prototype.open = function(callback){
 
                 self.display();
 
+                self.save(); //This is to get and display errors when loading a map
+
                 self.saved = true;
 
                 $("#map-name").text(self.name);
@@ -281,6 +283,8 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
     
     //Handle the errors if there are any
     if(errorArray.length > 0){
+
+        //Error notification
         ScribeUI.UI.logs.pre().text('Errors: \n');
         ScribeUI.UI.logs.notification().show('pulsate', 1000);
         
@@ -465,6 +469,16 @@ ScribeUI.Map.prototype.display = function(){
 				//resolutions: [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508]
             }
         );
+
+        WMSLayer.events.register("loadend", WMSLayer, function(){
+            if($(".olImageLoadError").length > 0) {
+                //Add error message over map
+                $('.map-render-error').show();
+            }
+            else {
+                $('.map-render-error').hide();
+            }
+        });
 
         OLMap.addLayers([WMSLayer]);
 

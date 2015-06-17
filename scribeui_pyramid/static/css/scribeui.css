@@ -851,6 +851,14 @@ div.olControlZoom a {
 	margin-bottom:0.5em;
 }
 
+.map-render-error{
+    position: absolute;
+    top: 10px;
+    left: 25%;
+    width: 50%;
+    padding: 3px;
+    z-index: 10000;
+}
 input.long,
 textarea.long {
     width: 400px;
