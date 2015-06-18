@@ -327,47 +327,55 @@ This function places markers in the scribe version of the map
 for any errors marked in the result tab
 */
 ScribeUI.Map.prototype.markError = function(error, lineNumber, errorMessage){
-    loc = ScribeUI.workspace.openedMap.findLine(error);
+    loc = ScribeUI.workspace.openedMap.findLine(error, lineNumber);
     /*loc contains the line number where the error is located in Scribe,
     the editor in which it's located and the group if there's one */
 
-    //Log it
-    ScribeUI.UI.logs.pre().append("Error located at ")
-    linkString = 'line '+ (parseInt(loc.lineNumber)+1) +' in editor "' + loc.editor.name + '"';
-    if(loc.group != undefined)
-    {
-        linkString += ' in group "' + loc.group + '"';
+    if(loc == null){
+        ScribeUI.UI.logs.pre().append("This error couldn't be located in the editor. Use the result tab instead.\n");
     }
+    else {
+        //Log it
+        ScribeUI.UI.logs.pre().append("Error located at ")
+        linkString = 'line '+ (parseInt(loc.lineNumber)+1) +' in editor "' + loc.editor.name + '"';
+        if(loc.group != undefined)
+        {
+            linkString += ' in group "' + loc.group + '"';
+        }
 
-    //The error widget div
-    var div = document.createElement("div");
-    div.innerHTML = errorMessage;
-    div.setAttribute('class', 'outputError');
+        //The error widget div
+        var div = document.createElement("div");
+        div.innerHTML = errorMessage;
+        div.setAttribute('class', 'outputError');
 
-    //Add it to the opened group if it's the right one or to the editor if it's not a group
-    if(loc.group != undefined && ScribeUI.workspace.openedMap.selectedGroup.name == loc.group || loc.group == undefined)
-    {
-        widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
+        //Add it to the opened group if it's the right one or to the editor if it's not a group
+        if(loc.group != undefined && ScribeUI.workspace.openedMap.selectedGroup.name == loc.group || loc.group == undefined)
+        {
+            widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
 
-        //Push it so it can be removed later
-        this.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
+            //Push it so it can be removed later
+            this.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
+        }
+
+        //Add the link to go to the correct location and add the widget
+        var self = this;
+        var link = $('<a href="javascript:void(0);">' + linkString + '</a>').click(function(){
+            ScribeUI.UI.switchToLayer(loc);
+            widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
+
+            //Push it so it can be removed later
+            self.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
+        });
+        ScribeUI.UI.logs.pre().append(link);
+        ScribeUI.UI.logs.pre().append('\n');
     }
-
-    //Add the link to go to the correct location and add the widget
-    var self = this;
-    var link = $('<a href="javascript:void(0);">' + linkString + '</a>').click(function(){
-        ScribeUI.UI.switchToLayer(loc);
-        widget = loc.editor.CMEditor.addLineWidget(loc.lineNumber, div);
-
-        //Push it so it can be removed later
-        self.errorWidgets.push({editor: loc.editor.CMEditor, widget: widget});
-    });
-    ScribeUI.UI.logs.pre().append(link);
-    ScribeUI.UI.logs.pre().append('\n');
+    
 }
 
-ScribeUI.Map.prototype.findLine = function(line){
+ScribeUI.Map.prototype.findLine = function(line, lineNumber){
     var result = null;
+    var nbMatches = 0; //If more than one match, use another way
+    var initialLineNumber = lineNumber;
     for(var key in ScribeUI.editorManager.editors){
         if(key == "groups") { //For groups, check every group
             nbOptions = ScribeUI.workspace.openedMap.groups.length;
@@ -378,7 +386,8 @@ ScribeUI.Map.prototype.findLine = function(line){
 
                 lineNumber = this.searchLine(line, content);
                 if(lineNumber != null){
-                    return {editor: ScribeUI.editorManager.get(key),
+                    nbMatches++;
+                    result = {editor: ScribeUI.editorManager.get(key),
                             lineNumber: lineNumber,
                             group: groupName};
                 }
@@ -388,12 +397,76 @@ ScribeUI.Map.prototype.findLine = function(line){
             content = ScribeUI.workspace.openedMap[key];
             lineNumber = this.searchLine(line, content);
             if(lineNumber != null){
-                return {editor: ScribeUI.editorManager.get(key),
+                nbMatches++;
+                result = {editor: ScribeUI.editorManager.get(key),
                         lineNumber: lineNumber};
             }
         }
     }
+    if(nbMatches != 1) {
+        result = this.findLineFromMSLine(line, initialLineNumber);
+    }
     return result;
+}
+
+//This function finds the line using a different method if the previous one has returned more than one result
+ScribeUI.Map.prototype.findLineFromMSLine = function(line, msLineNumber){
+    msLine = ScribeUI.UI.editor.mapfilePre().getLineHandle(msLineNumber-1).text.trim();
+    msLineArray = msLine.split(' ');
+    var regString = '';
+    var result;
+    while(msLineArray.length > 0)
+    {
+        regString += '(' + msLineArray[0] + ')';
+        msLineArray.shift();
+        if(msLineArray.length > 0)
+        {
+            regString += '.*'
+        }
+    }
+    var regex = new RegExp(regString, 'g');
+    var nbMatches = 0;
+    
+    for(var key in ScribeUI.editorManager.editors){
+        if(key == "groups") { //For groups, check every group
+            nbOptions = ScribeUI.workspace.openedMap.groups.length;
+            for(i = 0; i < nbOptions; i++)
+            {
+                groupName = ScribeUI.workspace.openedMap.groups[i].name;
+                content = ScribeUI.workspace.openedMap.groups[i].content;
+                contentArray = content.split('\n');
+                for(j = 0; j < contentArray.length; j++)
+                {
+                    var match = contentArray[j].match(regex);
+                    if(match != null)
+                    {
+                        result = {editor: ScribeUI.editorManager.get(key),
+                                  lineNumber: j,
+                                  group: groupName};
+                        nbMatches++;
+                    }
+                }
+            }
+        }
+        else {
+            content = ScribeUI.workspace.openedMap[key];
+            contentArray = content.split('\n');
+            for(j = 0; j < contentArray.length; j++)
+            {
+                var match = contentArray[j].match(regex);
+                if(match != null)
+                {
+                    result = {editor: ScribeUI.editorManager.get(key),
+                              lineNumber: j};
+                    nbMatches++;
+                }
+            }
+        }
+    }
+    if(nbMatches == 1){
+        return result;
+    }
+    else return null;
 }
 
 ScribeUI.Map.prototype.searchLine = function(needle, haystack){
