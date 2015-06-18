@@ -68,7 +68,7 @@ deps:  venv dep_requirements
 
 
 dep_install:
-	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev zip
+	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev zip mapserver-bin
 	pip install virtualenv
 
 dep_requirements:
