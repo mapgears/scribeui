@@ -4,10 +4,16 @@ import subprocess
 import json
 
 import codecs
+import datetime
+import glob
 import os
+import re
 import transaction
+import zipfile
 from sqlalchemy import exc
 from pyramid.view import view_config
+from pyramid.response import FileResponse
+from tempfile import NamedTemporaryFile
 from ..app.sqla import DBSession
 from ..workspaces.models import Workspace
 from .models import Map
@@ -987,6 +993,66 @@ class APIMap(object):
                             
         return response
 
+    @view_config(
+        route_name='maps.export',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def export_map(self):
+        map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
+        workspace = Workspace.by_id(map.workspace_id)
+        export_data = self.request.POST.get('export_data') #How much pdata to be sent (none, min, all)
+
+        workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+        map_directory = workspace_directory + map.name + '/'
+
+        filename = str(map.name + '_'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+'.zip')
+
+        # Create the temporary file to store the zip
+        with NamedTemporaryFile(delete=True) as output:
+            map_zip = zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED)
+            length_mapdir = len(map_directory)
+
+            # Add the main files, pdata if export_map = all
+            for root, dirs, files in os.walk(map_directory, followlinks=True):
+                if export_data in ['none', 'min'] and 'pdata' in dirs:
+                    dirs.remove('pdata')
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    map_zip.write(file_path, file_path[length_mapdir:])
+
+            # Add appropriate files from pdata if export_data = min
+            if export_data == 'min':
+                pdata_path = ""
+                pdata_files = []
+                ms_map = open(map_directory + "map/" + map.name + ".map")#mapserver syntax map
+                for line in ms_map:
+                    # Check if the shapepath is there (if it hasn't been found already)
+                    if not pdata_path:
+                        result = re.search(r'(^ *SHAPEPATH.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                        if result:
+                            pdata_path = os.path.join(map_directory + 'map/', result.group(2))
+                    # At the same time, get all DATA lines
+                    result = re.search(r'(^ *DATA.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                    if result and result.group(2) not in pdata_files:
+                        pdata_files.append(result.group(2))
+                for file in pdata_files:
+                    file_path = os.path.join(pdata_path, file)
+                    sub_files = glob.glob(file_path + '.*')
+                    if sub_files:
+                        for sub_file in sub_files:
+                            map_zip.write(sub_file, sub_file[length_mapdir:])
+                    else:
+                        print('Could not find ' + file_path)
+
+            map_zip.close()
+
+            #Send the response as an attachement to let the user download the file
+            response = FileResponse(os.path.abspath(output.name))
+            response.headers['Content-Type'] = 'application/download'
+            response.headers['Content-Disposition'] = 'attachement; filename="'+filename+'"'
+            return response
 
     @view_config(
         route_name='maps.pois.new',

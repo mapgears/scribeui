@@ -130,6 +130,10 @@ ScribeUI.UI.init = function(){
         ScribeUI.Map.exportMap();
     });
 
+    $('#link_export_map_info').click(function(){
+        ScribeUI.UI.openMapExportInfoDialog();
+    });
+
     $('#btn_delete_map').button().click(function(){
         ScribeUI.Map.deleteMap();
     });
@@ -376,6 +380,20 @@ ScribeUI.UI.openNewMapDialog = function(){
         }).dialog("open");
 
     });
+}
+
+ScribeUI.UI.openMapExportInfoDialog = function(){
+    $("#exportmap-info").dialog({
+        autoOpen: false,
+        resizable: false,
+        modal: true,
+        width: '350px',
+        buttons: {
+            Close: function() {
+                $(this).dialog("close");
+            }
+        }
+    }).dialog("open");
 }
 
 ScribeUI.UI.displayConfiguration = function(config){

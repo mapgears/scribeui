@@ -764,9 +764,22 @@ ScribeUI.Map.prototype.closeDataBrowser = function(){
 }
 
 ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
-    $("#preparingExport").css("visibility","visible");
+    var form = $("#exportmap-form");
+    form.attr("action", $API + '/maps/export/' + this.id);
+    form.submit();
+    /*form.submit(function(response) {
+        console.log(response);
+        if(response.status == 1){
+            console.log("Exportating is of success!!!")
+        }
+        else {
+            console.log("No export today :(")
+        }
+    });*/
 
-    var self = this;
+    //$("#preparing-export").css("visibility","visible");
+
+    /*var self = this;
     publicData = publicData == true ? 1 : 0;
     privateData = privateData == true ? 1 : 0;
 
@@ -775,7 +788,7 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
         publicData: publicData,
         privateData: privateData
     }, function(url) {
-        $("#preparingExport").css("visibility","hidden");
+        $("#preparing-export").css("visibility","hidden");
         if(callback != null){
             callback.call();
         }
@@ -789,7 +802,7 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
             e.preventDefault();  //stop the browser from following
             window.location.href = url;
         }).click();
-    });
+    });*/
 }
 
 ScribeUI.Map.prototype.configure = function(config){
@@ -962,14 +975,14 @@ ScribeUI.Map.deleteMap = function(){
 }
 
 ScribeUI.Map.exportMap = function(){
-     var name = $("#map-list .ui-selected").text();
+     var name = ScribeUI.workspace.selectedMap.name;
      if (name){
-         $("#preparingExport").css("visibility","hidden");
-         $("#exportmap-form").dialog({
+         $("#preparing-export").css("visibility","hidden");
+         $("#exportmap-div").dialog({
             autoOpen: false,
             resizable: false,
-            width: "auto",
-            height: 200,
+            width: "210px",
+            height: "auto",
             modal: true,
             buttons: {
                 Export: function() {
@@ -984,10 +997,10 @@ ScribeUI.Map.exportMap = function(){
                         }
                     });
 
-                    var mapToExport = new ScribeUI.Map(name);
-
-                    var self = this;
-                    mapToExport.exportSelf(components["publicData"], components["privateData"], function(){$(self).dialog("close");})
+                    var map = ScribeUI.workspace.selectedMap;
+                    if(map){
+                        map.exportSelf();
+                    };
 
                 },
                 Cancel: function() {

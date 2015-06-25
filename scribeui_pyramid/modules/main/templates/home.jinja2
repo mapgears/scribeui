@@ -233,22 +233,45 @@
         </div>
     </div>
 
-    <div id="exportmap-form" title="Export map" style="display:none" class="scribe-dialog">
-        <form>
+    <div id="exportmap-div" title="Export map" style="display:none" class="scribe-dialog">
+        <form id="exportmap-form" method="post">
             <div class="control-group">
-                <label for="exportComponents">Public data</label>
+                <span>Select the amount of vector and raster data to include</span>
+                <a href="javascript:void(0)" id="link_export_map_info" title="Click for help">(?)</a>
+            </div>
+            <div class="control-group">
+                <label for="export_data">No data</label>
                 <div class="control">
-                    <input type="checkbox" name="exportComponents" value="publicData" checked="true">
+                    <input type="radio" name="export_data" value='none'>
                 </div>
             </div>
             <div class="control-group">
-                <label for="exportComponents">Private data</label>
+                <label for="export_data">Minimal data</label>
                 <div class="control">
-                    <input type="checkbox" name="exportComponents" value="privateData" checked="true">
+                    <input type="radio" name="export_data" value='min' checked>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="export_data">All data</label>
+                <div class="control">
+                    <input type="radio" name="export_data" value='all'>
                 </div>
             </div>
         </form>
-        <div id="preparingExport" class="hidden">Preparing data...</div>
+        <div id="preparing-export" class="hidden">Preparing data...</div>
+    </div>
+
+    <div id="exportmap-info" title="Help" class="scribe-dialog" style="display:none">
+        <div class="dialog-content">
+            This option specifies how much data from the pdata folder should be included.
+            <ul>
+                <li>Selecting "No Data" will not include any raster or vector data.
+                A user who wishes to view the map will need to have the appropriate data already installed.</li>
+                <li>Selecting "Minimal data" will include only the data used in the map to be exported.</li>
+                <li>Selecting "All data" will include the complete pdata folder.
+                This option will probably create very large files.</li>
+            </u>
+        </div>
     </div>
 
     <div id="creategroup-form" title="Create new group" style="display:none" class="scribe-dialog">

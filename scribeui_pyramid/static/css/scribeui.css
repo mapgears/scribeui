@@ -451,6 +451,12 @@ button.ui-widget{
 	width:100%;
 }
 */
+#exportmap-info li {
+    list-style-type: circle;
+}
+#exportmap-info ul {
+    padding: 0 25px;
+}
 /*== Editor ===*/
 #editor-toolbar{
 	background-color:#FCFCFC;
