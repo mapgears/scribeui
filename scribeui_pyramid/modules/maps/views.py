@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import logging
-import subprocess
-import json
-
 import codecs
 import datetime
 import glob
+import json
+import logging
 import os
 import re
+import subprocess
 import transaction
 import zipfile
 from sqlalchemy import exc
@@ -1000,6 +999,7 @@ class APIMap(object):
         request_method='POST'
     )
     def export_map(self):
+        # Find the files and directories
         map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
         workspace = Workspace.by_id(map.workspace_id)
         export_data = self.request.POST.get('export_data') #How much pdata to be sent (none, min, all)
@@ -1009,10 +1009,30 @@ class APIMap(object):
 
         filename = str(map.name + '_'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+'.zip')
 
+        '''
+        # Clear the logs
+        open(map_directory + 'exportLogs.txt', 'w').close()
+            
+        # Set up the logs
+        export_log = logging.getLogger('export_log')
+        handler = logging.FileHandler(map_directory + 'exportLogs.txt')
+        formatter = logging.Formatter('[%(asctime)s] %(levelname)s:  %(message)s')
+        handler.setFormatter(formatter)
+        export_log.propagate = False;
+        export_log.setLevel(logging.INFO)
+        export_log.addHandler(handler)
+
+        # Start the logs
+        export_log.info("Starting export, file name will be "+filename)
+        '''
+
         # Create the temporary file to store the zip
         with NamedTemporaryFile(delete=True) as output:
             map_zip = zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED)
             length_mapdir = len(map_directory)
+
+            # Log current step
+            #export_log.info("Adding main files... (This might take a while)")
 
             # Add the main files, pdata if export_map = all
             for root, dirs, files in os.walk(map_directory, followlinks=True):
@@ -1021,9 +1041,13 @@ class APIMap(object):
                 for file in files:
                     file_path = os.path.join(root, file)
                     map_zip.write(file_path, file_path[length_mapdir:])
+                    #export_log.info("Adding file: " + file_path[length_mapdir:])
 
             # Add appropriate files from pdata if export_data = min
             if export_data == 'min':
+                # Log current step
+                #export_log.info("Looking for and adding the required data files...")
+                    
                 pdata_path = ""
                 pdata_files = []
                 ms_map = open(map_directory + "map/" + map.name + ".map")#mapserver syntax map
@@ -1043,17 +1067,70 @@ class APIMap(object):
                     if sub_files:
                         for sub_file in sub_files:
                             map_zip.write(sub_file, sub_file[length_mapdir:])
-                    else:
-                        print('Could not find ' + file_path)
+                            #export_log.info("Adding file: " + sub_file[length_mapdir:])
+                    #else:
+                        # Log error
+                        #export_log.warning('Could not find ' + file_path + '')
+            
+            # Log current step
+            #export_log.info("Export finished, prompting user for download...")
 
             map_zip.close()
 
-            #Send the response as an attachement to let the user download the file
+            # Send the response as an attachement to let the user download the file
             response = FileResponse(os.path.abspath(output.name))
             response.headers['Content-Type'] = 'application/download'
             response.headers['Content-Disposition'] = 'attachement; filename="'+filename+'"'
+            
+            #Close logs 
+            #export_log.info("END")
+            #handler.close()
+            #export_log.removeHandler(handler)
+            
+            #Return
             return response
-
+    
+    '''        
+    @view_config(
+        route_name='maps.logs.view',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def view_logs(self):
+        #Find the log file
+        map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
+        workspace = Workspace.by_id(map.workspace_id)
+        
+        workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+        map_directory = workspace_directory + map.name + '/'
+        log_path = map_directory + 'exportLogs.txt'
+        
+        #Starting point
+        starting_point = self.request.POST.get('start')
+        
+        #Open and read the logs
+        if os.path.isfile(log_path):
+            with open(log_path, "r") as log_file:
+                log_content = log_file.read()
+                
+            return log_content[starting_point:]
+        else: return
+        
+    @view_config(
+        route_name='maps.logs.delete',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def delete_logs(self):
+        #Find the log file
+        map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
+        workspace = Workspace.by_id(map.workspace_id)
+        
+        workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+        map_directory = export
+        '''
     @view_config(
         route_name='maps.pois.new',
         permission='view',

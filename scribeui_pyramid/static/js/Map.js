@@ -764,9 +764,54 @@ ScribeUI.Map.prototype.closeDataBrowser = function(){
 }
 
 ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
+    //Clear logs
+    ScribeUI.UI.manager.exportMap.logs().text('');
+    
+    var self = this;
+    
+    //Export map
     var form = $("#exportmap-form");
     form.attr("action", $API + '/maps/export/' + this.id);
     form.submit();
+    
+    /* This code checks the logs every second and stops once the logs say it's
+       finished */
+    (function(){
+        var thisFunction = arguments.callee;
+        $.ajax({
+            type: "POST",
+            url: $API + '/maps/'+self.id+'/logs/view',
+            //start: ScribeUI.UI.manager.exportMap.logs().text().length,
+            success: function(response){
+                var exportLogsArea = ScribeUI.UI.manager.exportMap.logs();
+                /*exportLogsArea.text(response);
+                exportLogsArea.scrollTop(exportLogsArea[0].scrollHeight - exportLogsArea.height());
+                
+                //Check if we continue logging
+                if(response.length == 0){ //No logs yet
+                    setTimeout(thisFunction, 500)
+                }
+                else
+                {
+                    var lines = response.split('\n');
+                    var lastLine = lines[lines.length - 2];
+                    if(lastLine.indexOf("END") == -1){
+                        setTimeout(thisFunction, 1000);
+                    }
+                    else {
+                        //Delete the logs
+                        $.ajax({
+                            type: "POST",
+                            url: $API + '/maps/'+self.id+'/logs/delete'
+                        });
+                        console.log("Logs deleted");
+                    }
+                }*/
+            }
+        });
+    })();
+    
+    
     /*form.submit(function(response) {
         console.log(response);
         if(response.status == 1){
@@ -981,27 +1026,15 @@ ScribeUI.Map.exportMap = function(){
          $("#exportmap-div").dialog({
             autoOpen: false,
             resizable: false,
-            width: "210px",
+            width: "auto",
             height: "auto",
             modal: true,
             buttons: {
                 Export: function() {
-                    var checkBoxes = $("input[name='exportComponents']");
-                    var components = {};
-
-                    $.each(checkBoxes, function() {
-                        if ($(this).attr('checked')){
-                            components[this.value] = 1;
-                        } else {
-                            components[this.value] = 0;
-                        }
-                    });
-
                     var map = ScribeUI.workspace.selectedMap;
                     if(map){
                         map.exportSelf();
                     };
-
                 },
                 Cancel: function() {
                     $(this).dialog("close");
