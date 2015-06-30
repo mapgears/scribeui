@@ -512,7 +512,7 @@ class APIMap(object):
                         response['errors'].append("An error occured while saving '" + map_directory + filenames[filename] + "' file.")
 
                 if len(response['errors']) == 0:
-                    debug_level = '5'
+                    debug_level = '1'
                     if map.type == 'Scribe':
                         scribe = self.request.registry.settings.get('scribe.python', '')
                         sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d ' + debug_level, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
