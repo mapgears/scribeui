@@ -475,7 +475,7 @@ class APIMap(object):
                     for group in data['groups']:
                         try:
                             with codecs.open(groups_directory + group['name'] + '.layer', encoding='utf8', mode='w+') as f:
-                                f.write(group['content'].encode('utf-8'))
+                                f.write(group['content'].encode('utf-8', errors='replace'))
                                 f.close()
                         except IOError:
                             response['errors'].append("An error occured while saving '" + map_directory + group['name'] + ".layer' file.")
@@ -486,7 +486,7 @@ class APIMap(object):
 
                     try:
                         with codecs.open(map_directory + 'editor/layers', encoding='utf8', mode='w+') as f:
-                            f.write(layers.encode('utf-8'))
+                            f.write(layers.encode('utf-8', errors='replace'))
                             f.close()
                     except IOError:
                         response['errors'].append("An error occured while saving '" + map_directory + "editor/layers' file.")
@@ -497,7 +497,7 @@ class APIMap(object):
                     for group in data['groups']:
                         try:
                             with codecs.open(groups_directory + group['name'] + '.map', encoding='utf8', mode='w+') as f:
-                                f.write(group['content'].encode('utf-8'))
+                                f.write(group['content'].encode('utf-8', errors='replace'))
                                 f.close()
                         except IOError:
                             response['errors'].append("An error occured while saving '" + map_directory + group['name'] + ".map' file.")
