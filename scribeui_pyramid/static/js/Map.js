@@ -636,9 +636,6 @@ ScribeUI.Map.prototype.findTopLayerName = function(){
 				layername = layername.replace(/^"*'*/, "")
 				layername = layername.replace(/"*'*$/, "")
 
-				//Scribe numbers all NAMEs, including the map name.
-				if(this.type == "Scribe" && hadQuotes) // ...except the ones that are not in quotes.
-					layername+="1";
 				break;
 			}
 		}

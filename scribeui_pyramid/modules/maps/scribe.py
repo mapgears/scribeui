@@ -246,10 +246,10 @@ def write(string, scales, files, indentation):
 
             files[value].write(indentation + "MINSCALEDENOM " + str(scales[value]) + "\n")
             indentation = substractIndentation(indentation, INDENTATION)
-        elif re.match(r"^(NAME|MASK)", string, re.IGNORECASE):
+        elif re.match(r"^(NAME|MASK)", string, re.IGNORECASE) and scales.itervalues().next() is not None:
             text = string
             text = re.sub(r"'$", '_' + value + "'", text)
-            text = re.sub(r"\"$", value + "\"", text)
+            text = re.sub(r"\"$", '_' + value + "\"", text)
             files[value].write(indentation + text + "\n")
         else:
             files[value].write(indentation + string + "\n")
