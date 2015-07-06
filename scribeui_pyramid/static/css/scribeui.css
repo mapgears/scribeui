@@ -451,11 +451,10 @@ button.ui-widget{
 	width:100%;
 }
 */
-#exportmap-info li {
-    list-style-type: circle;
-}
-#exportmap-info ul {
-    padding: 0 25px;
+.export-description {
+    width: 350px;
+    float: right;
+    margin: 0px 10px 10px 10px;
 }
 /*== Editor ===*/
 #editor-toolbar{

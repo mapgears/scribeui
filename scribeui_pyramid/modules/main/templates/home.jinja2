@@ -237,24 +237,29 @@
         <form id="exportmap-form" method="post">
             <div class="control-group">
                 <span>Select the amount of vector and raster data to include</span>
-                <a href="javascript:void(0)" id="link_export_map_info" title="Click for help">(?)</a>
             </div>
             <div class="control-group">
                 <label for="export_data">No data</label>
                 <div class="control">
                     <input type="radio" name="export_data" value='none'>
+                    <span class="export-description">Do not include any raster or vector data.
+                    A user who wishes to view the map will need to have the appropriate data already installed.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label for="export_data">Minimal data</label>
                 <div class="control">
                     <input type="radio" name="export_data" value='min' checked>
+                    <span class="export-description">Include only the data necessary for the map to render, 
+                    no unused data will be included.</span>
                 </div>
             </div>
             <div class="control-group">
                 <label for="export_data">All data</label>
                 <div class="control">
                     <input type="radio" name="export_data" value='all'>
+                    <span class="export-description">Include all data, even vector or raster files not used in the map.
+                    This option will probably create very large files.</span>
                 </div>
             </div>
         </form>
@@ -263,19 +268,6 @@
             <div class="control">
                 <textarea id="export-logs" class="git-logs" readonly></textarea>
             </div>
-        </div>
-    </div>
-
-    <div id="exportmap-info" title="Help" class="scribe-dialog" style="display:none">
-        <div class="dialog-content">
-            This option specifies how much data from the pdata folder should be included.
-            <ul>
-                <li>Selecting "No Data" will not include any raster or vector data.
-                A user who wishes to view the map will need to have the appropriate data already installed.</li>
-                <li>Selecting "Minimal data" will include only the data used in the map to be exported.</li>
-                <li>Selecting "All data" will include the complete pdata folder.
-                This option will probably create very large files.</li>
-            </u>
         </div>
     </div>
 
