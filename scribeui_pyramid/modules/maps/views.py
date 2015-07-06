@@ -1006,12 +1006,7 @@ class APIMap(object):
 
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
         map_directory = workspace_directory + map.name + '/'
-
         filename = str(map.name + '_'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+'.zip')
-
-        
-        # Clear the logs
-        open(map_directory + 'exportLogs.txt', 'w').close()
             
         # Set up the logs
         export_log = logging.getLogger('export_log')
@@ -1024,78 +1019,26 @@ class APIMap(object):
 
         # Start the logs
         export_log.info("Starting export, file name will be "+filename)
-        
 
         # Create the temporary file to store the zip
         with NamedTemporaryFile(delete=True) as output:
             map_zip = zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED)
             length_mapdir = len(map_directory)
 
-            # This section adds every file included in the mapfile to the data_files array
-            data_files = []
+            files_array = self.get_files_to_export(export_data, export_log, map, map_directory)
             
-            # Not necessary if we export every file
-            if export_data in ['none', 'min']:
-                # Log current step
-                export_log.info("Looking for and adding the required data files...")
-                    
-                data_names = []
-                data_path = map_directory + 'map/'
-                shapepath_found = False
-                
-                # Open the output mapfile
-                with open(map_directory + "map/" + map.name + ".map") as ms_map:#mapserver syntax map
-                    for line in ms_map:
-                        # Check if the shapepath is there (if it hasn't been found already)
-                        if not shapepath_found:
-                            result = re.search(r'(^ *SHAPEPATH.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
-                            if result:
-                                data_path = os.path.join(data_path, result.group(2))
-                                shapepath_found = True
-                        # get all DATA lines
-                        result = re.search(r'(^ *DATA.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
-                        if result and result.group(2) not in data_names:
-                            data_names.append(result.group(2))
-                    for file in data_names:
-                        # For every data line found, get all the actual files
-                        file_path = os.path.join(data_path, file)
-                        sub_files = glob.glob(file_path + '.*')
-                        if sub_files:
-                            for sub_file in sub_files:
-                                data_files.append(sub_file)
-                                #map_zip.write(sub_file, sub_file[length_mapdir:])
-                                export_log.info("Adding file: " + sub_file[length_mapdir:])
-                        else:
-                            # Log error
-                            export_log.warning('Could not find ' + file_path + '')
-            
-            # Log current step
-            export_log.info("Adding main files... (This might take a while)")
-            
-            # Add the main files, pdata if export_map = all
-            for root, dirs, files in os.walk(map_directory, followlinks=True):
-                if export_data in ['none', 'min'] and 'pdata' in dirs:
-                    dirs.remove('pdata')
-                if export_data == 'none':
-                    #Remove the most data files we can if they weren't deleted before
-                    for data_file in data_files:
-                        try:
-                            data_files.remove(data_file)
-                            files.remove(data_file)
-                        except ValueError:
-                            pass #expected behavior
-                if export_data == 'min':
-                    #Add required data files
-                    for data_file in data_files:
-                        data_files.remove(data_file)
-                        files.append(data_file)
-                for file in files:
-                    try:
-                        file_path = os.path.join(root, file)
-                        map_zip.write(file_path, file_path[length_mapdir:])
-                        export_log.info("Adding file: " + file_path[length_mapdir:])
-                    except OSError:
-                        pass
+            # The part where the files are zipped
+            export_log.info("Starting compression of " + str(len(files_array)) + " files")
+            nb_files_zipped = 0
+            for file in files_array:
+                try:
+                    #file_path = os.path.join(root, file)
+                    file_path = file
+                    map_zip.write(file_path, file_path[length_mapdir:])
+                    nb_files_zipped+=1
+                    export_log.info("Adding file "+str(nb_files_zipped)+"/" + str(len(files_array)) + " : " + file_path[length_mapdir:])
+                except OSError:
+                    pass
                     
             # Log current step
             export_log.info("Export finished, prompting user for download...")
@@ -1115,7 +1058,72 @@ class APIMap(object):
             #Return
             return response
     
-    '''        
+    def get_files_to_export(self, export_data, export_log, map, map_directory):
+        # This section adds every file included in the mapfile to the data_files array
+        data_files = []
+        length_mapdir = len(map_directory)
+        
+        # Not necessary if we export every file
+        if export_data in ['none', 'min']:
+            # Log current step
+            export_log.info("Looking for and adding the required data files...")
+                
+            data_names = []
+            data_path = map_directory + 'map/'
+            shapepath_found = False
+            
+            # Open the output mapfile
+            with open(map_directory + "map/" + map.name + ".map") as ms_map:#mapserver syntax map
+                for line in ms_map:
+                    # Check if the shapepath is there (if it hasn't been found already)
+                    if not shapepath_found:
+                        result = re.search(r'(^ *SHAPEPATH.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                        if result:
+                            data_path = os.path.join(data_path, result.group(2))
+                            shapepath_found = True
+                    # get all DATA lines
+                    result = re.search(r'(^ *DATA.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                    if result and result.group(2) not in data_names:
+                        data_names.append(result.group(2))
+                for file in data_names:
+                    # For every data line found, get all the actual files
+                    file_path = os.path.join(data_path, file)
+                    sub_files = glob.glob(file_path + '.*')
+                    if sub_files:
+                        for sub_file in sub_files:
+                            data_files.append(sub_file)
+                            #map_zip.write(sub_file, sub_file[length_mapdir:])
+                            export_log.info("Adding file: " + sub_file[length_mapdir:])
+                    else:
+                        # Log error
+                        export_log.warning('Could not find ' + file_path + '')
+        
+        # Log current step
+        export_log.info("Adding main files... (This might take a while)")
+        
+        # Add the main files, pdata if export_map = all
+        files_array = []
+        for root, dirs, files in os.walk(map_directory, followlinks=True):
+            if export_data in ['none', 'min'] and 'pdata' in dirs:
+                dirs.remove('pdata')
+            if export_data == 'none':
+                #Remove the most data files we can if they weren't deleted before
+                for data_file in data_files:
+                    try:
+                        data_files.remove(data_file)
+                        files.remove(data_file)
+                    except ValueError:
+                        pass #expected behavior
+            if export_data == 'min':
+                #Add required data files
+                for data_file in data_files:
+                    data_files.remove(data_file)
+                    files.append(data_file)
+            for file in files:
+                files_array.append(os.path.join(root, file))
+        
+        return files_array
+    
     @view_config(
         route_name='maps.logs.view',
         permission='view',
@@ -1131,17 +1139,15 @@ class APIMap(object):
         map_directory = workspace_directory + map.name + '/'
         log_path = map_directory + 'exportLogs.txt'
         
-        #Starting point
-        starting_point = self.request.POST.get('start')
-        
         #Open and read the logs
         if os.path.isfile(log_path):
             with open(log_path, "r") as log_file:
                 log_content = log_file.read()
                 
-            return log_content[starting_point:]
+            return log_content
         else: return
         
+                
     @view_config(
         route_name='maps.logs.delete',
         permission='view',
@@ -1154,8 +1160,11 @@ class APIMap(object):
         workspace = Workspace.by_id(map.workspace_id)
         
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
-        map_directory = export
-        '''
+        map_directory = workspace_directory + map.name + '/'
+        
+        # Clear the logs
+        open(map_directory + 'exportLogs.txt', 'w').close()
+        
     @view_config(
         route_name='maps.pois.new',
         permission='view',

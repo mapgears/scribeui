@@ -781,7 +781,7 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
             //start: ScribeUI.UI.manager.exportMap.logs().text().length,
             success: function(response){
                 var exportLogsArea = ScribeUI.UI.manager.exportMap.logs();
-                /*exportLogsArea.text(response);
+                exportLogsArea.text(response);
                 exportLogsArea.scrollTop(exportLogsArea[0].scrollHeight - exportLogsArea.height());
                 
                 //Check if we continue logging
@@ -803,7 +803,7 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
                         });
                         console.log("Logs deleted");
                     }
-                }*/
+                }
             }
         });
     })();
@@ -1033,7 +1033,7 @@ ScribeUI.Map.exportMap = function(){
                         map.exportSelf();
                     };
                 },
-                Cancel: function() {
+                Close: function() {
                     $(this).dialog("close");
                 }
             },
