@@ -1009,7 +1009,7 @@ class APIMap(object):
         filename = str(map.name + '_'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+'.zip')
             
         # Set up the logs
-        export_log = logging.getLogger('export_log')
+        export_log = logging.getLogger('export_log_'+map.name)
         handler = logging.FileHandler(map_directory + 'exportLogs.txt')
         formatter = logging.Formatter('[%(asctime)s] %(levelname)s:  %(message)s')
         handler.setFormatter(formatter)
@@ -1028,15 +1028,13 @@ class APIMap(object):
             files_array = self.get_files_to_export(export_data, export_log, map, map_directory)
             
             # The part where the files are zipped
-            export_log.info("Starting compression of " + str(len(files_array)) + " files")
+            export_log.info("Starting compression of " + str(len(files_array)) + " files (This might take a while)")
             nb_files_zipped = 0
             for file in files_array:
                 try:
-                    #file_path = os.path.join(root, file)
-                    file_path = file
-                    map_zip.write(file_path, file_path[length_mapdir:])
                     nb_files_zipped+=1
-                    export_log.info("Adding file "+str(nb_files_zipped)+"/" + str(len(files_array)) + " : " + file_path[length_mapdir:])
+                    export_log.info("Compressing file "+str(nb_files_zipped)+"/" + str(len(files_array)) + " : " + file[length_mapdir:])
+                    map_zip.write(file, file[length_mapdir:])
                 except OSError:
                     pass
                     
@@ -1088,18 +1086,23 @@ class APIMap(object):
                 for file in data_names:
                     # For every data line found, get all the actual files
                     file_path = os.path.join(data_path, file)
-                    sub_files = glob.glob(file_path + '.*')
-                    if sub_files:
-                        for sub_file in sub_files:
-                            data_files.append(sub_file)
-                            #map_zip.write(sub_file, sub_file[length_mapdir:])
-                            export_log.info("Adding file: " + sub_file[length_mapdir:])
+                    
+                    # If the path points to a single file
+                    if os.path.isfile(file_path):
+                        data_files.append(file_path)
                     else:
-                        # Log error
-                        export_log.warning('Could not find ' + file_path + '')
+                        # Group of files
+                        sub_files = glob.glob(file_path + '.*')
+                        if sub_files:
+                            for sub_file in sub_files:
+                                data_files.append(sub_file)
+                                export_log.info("Adding file: " + sub_file[length_mapdir:])
+                        else:
+                            # Log error
+                            export_log.warning('Could not find ' + file_path + '')
         
         # Log current step
-        export_log.info("Adding main files... (This might take a while)")
+        export_log.info("Adding main files...")
         
         # Add the main files, pdata if export_map = all
         files_array = []
@@ -1120,7 +1123,8 @@ class APIMap(object):
                     data_files.remove(data_file)
                     files.append(data_file)
             for file in files:
-                files_array.append(os.path.join(root, file))
+                if "exportLogs.txt" not in file:
+                    files_array.append(os.path.join(root, file))
         
         return files_array
     
@@ -1134,6 +1138,7 @@ class APIMap(object):
         #Find the log file
         map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
         workspace = Workspace.by_id(map.workspace_id)
+        start = int(self.request.POST.get('start')) #Where to start the logs
         
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
         map_directory = workspace_directory + map.name + '/'
@@ -1144,7 +1149,7 @@ class APIMap(object):
             with open(log_path, "r") as log_file:
                 log_content = log_file.read()
                 
-            return log_content
+            return log_content[start:]
         else: return
         
                 
@@ -1163,7 +1168,7 @@ class APIMap(object):
         map_directory = workspace_directory + map.name + '/'
         
         # Clear the logs
-        open(map_directory + 'exportLogs.txt', 'w').close()
+        os.remove(map_directory + 'exportLogs.txt')
         
     @view_config(
         route_name='maps.pois.new',

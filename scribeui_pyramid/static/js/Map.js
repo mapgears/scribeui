@@ -778,18 +778,21 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
         $.ajax({
             type: "POST",
             url: $API + '/maps/'+self.id+'/logs/view',
-            //start: ScribeUI.UI.manager.exportMap.logs().text().length,
+            data: {
+                'start': ScribeUI.UI.manager.exportMap.logs().text().length
+            },
             success: function(response){
-                var exportLogsArea = ScribeUI.UI.manager.exportMap.logs();
-                exportLogsArea.text(response);
-                exportLogsArea.scrollTop(exportLogsArea[0].scrollHeight - exportLogsArea.height());
-                
                 //Check if we continue logging
-                if(response.length == 0){ //No logs yet
+                if(!response || response.length == 0){ //No logs yet
                     setTimeout(thisFunction, 500)
                 }
                 else
                 {
+                    //Display logs
+                    var exportLogsArea = ScribeUI.UI.manager.exportMap.logs();
+                    exportLogsArea.text(exportLogsArea.text() + response);
+                    exportLogsArea.scrollTop(exportLogsArea[0].scrollHeight - exportLogsArea.height());
+                    
                     var lines = response.split('\n');
                     var lastLine = lines[lines.length - 2];
                     if(lastLine.indexOf("END") == -1){
@@ -801,50 +804,11 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
                             type: "POST",
                             url: $API + '/maps/'+self.id+'/logs/delete'
                         });
-                        console.log("Logs deleted");
                     }
                 }
             }
         });
     })();
-    
-    
-    /*form.submit(function(response) {
-        console.log(response);
-        if(response.status == 1){
-            console.log("Exportating is of success!!!")
-        }
-        else {
-            console.log("No export today :(")
-        }
-    });*/
-
-    //$("#preparing-export").css("visibility","visible");
-
-    /*var self = this;
-    publicData = publicData == true ? 1 : 0;
-    privateData = privateData == true ? 1 : 0;
-
-    $.post($SCRIPT_ROOT + '/_export_map', {
-        name: this.name,
-        publicData: publicData,
-        privateData: privateData
-    }, function(url) {
-        $("#preparing-export").css("visibility","hidden");
-        if(callback != null){
-            callback.call();
-        }
-
-        var link = $("<a/>", {
-            "id": "export-link",
-            "href": url
-        }).appendTo("body")
-
-        link.click(function(e) {
-            e.preventDefault();  //stop the browser from following
-            window.location.href = url;
-        }).click();
-    });*/
 }
 
 ScribeUI.Map.prototype.configure = function(config){
