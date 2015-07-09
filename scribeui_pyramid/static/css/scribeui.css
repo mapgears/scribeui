@@ -451,7 +451,7 @@ button.ui-widget{
 	width:100%;
 }
 */
-.export-description {
+.export-info, .import-info {
     white-space: pre-line;
 }
 
@@ -660,6 +660,7 @@ button.ui-widget{
     height: 160px;
     width: 300px;
 }
+
 #edit-line-content {
     height: 120px;
     width: 500px;

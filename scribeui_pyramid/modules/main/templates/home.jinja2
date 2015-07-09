@@ -46,13 +46,16 @@
                  <div class="maps-buttons">
                      <div class="buttons-container">
                         <div>
-                            <table class="two-col-actions">
+                            <table class="three-col-actions">
                                 <tr>
                                     <td align="center">
                                         <button id="btn_new_map" >New Map</button>
                                     </td>
                                     <td align="center">
                                         <button id="btn_clone_map">Clone Map</button>
+                                    </td>
+                                    <td align="center">
+                                        <button id="btn_import_map">Import Map</button>
                                     </td>
                                 </tr>
                             </table>
@@ -233,32 +236,59 @@
         </div>
     </div>
 
+    <div id="importmap-div" title="Import map" style="display:none" class="scribe-dialog">
+        <form id="importmap-form" action="/maps/import" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+            <div class="control-group">
+                <span class="import-info">Select a map to import. It has to be a .zip file that was created using
+                the export feature of ScribeUI.</span>
+            </div>
+            <div class="control-group">
+                <label>Name</label>
+                <div class="control">
+                    <input type="text" name="import-name" id="import-name" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label>File</label>
+                <div class="control">
+                    <input name='input-file' id='input-file' type="file" accept=".zip"/>
+                </div>
+            </div>
+        </form>
+        <div class="control-group">
+            <label>Logs</label>
+            <div class="control">
+                <textarea id="import-logs" class="git-logs" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    
     <div id="exportmap-div" title="Export map" style="display:none" class="scribe-dialog">
         <form id="exportmap-form" method="post">
             <div class="control-group">
-                <span class="export-description">Select the amount of vector and raster data to include. If you placed your data
+                <span class="export-info">Select the amount of vector and raster data to include. If you placed your data
                 outside the pdata folder, these options will not work properly.</span>
             </div>
             <div class="control-group">
-                <label for="export_data">No data</label>
+                <label for="export-data">No data</label>
                 <div class="control">
-                    <input type="radio" name="export_data" value='none'>
+                    <input type="radio" name="export-data" value='none'>
                     <span class="export-option">Do not include any raster or vector data.
                     A user who wishes to view the map will need to have the appropriate data already installed.</span>
                 </div>
             </div>
             <div class="control-group">
-                <label for="export_data">Minimal data</label>
+                <label for="export-data">Minimal data</label>
                 <div class="control">
-                    <input type="radio" name="export_data" value='min' checked>
+                    <input type="radio" name="export-data" value='min' checked>
                     <span class="export-option">Include only the data necessary for the map to render, 
                     no unused data will be included.</span>
                 </div>
             </div>
             <div class="control-group">
-                <label for="export_data">All data</label>
+                <label for="export-data">All data</label>
                 <div class="control">
-                    <input type="radio" name="export_data" value='all'>
+                    <input type="radio" name="export-data" value='all'>
                     <span class="export-option">Include all data, even vector or raster files not used in the map.
                     This option will probably create very large files.</span>
                 </div>

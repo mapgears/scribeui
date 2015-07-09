@@ -24,6 +24,7 @@ def routes_api(config):
     config.add_route('maps.pull', '/maps/pull/{id}',
                      custom_predicates=(int_predicate,))
     config.add_route('maps.clone', '/maps/clone')
+    config.add_route('maps.import', '/maps/import')
     config.add_route('maps.export', '/maps/export/{id}',
                      custom_predicates=(int_predicate,))
     config.add_route('maps.logs.view', '/maps/{id}/logs/view',

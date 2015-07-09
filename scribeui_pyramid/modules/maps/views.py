@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+import shutil
 import subprocess
 import transaction
 import zipfile
@@ -993,6 +994,86 @@ class APIMap(object):
         return response
 
     @view_config(
+        route_name='maps.import',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def import_map(self):
+        # Setup response
+        response = {
+            'status': 0,
+            'errors': [],
+            'logs': '',
+            'id': ''
+        }
+        
+        # Get some variables from the request    
+        file_name = "import.zip"
+        input_file = self.request.POST.get('input-file').file
+        map_name = self.request.POST.get('import-name')
+        workspace_name = self.request.userid
+        workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
+        
+        # Upload the map
+
+        file_path = '/tmp/' + file_name
+        temp_file_path = file_path + '~'
+        
+        input_file.seek(0)
+        with open(temp_file_path, 'wb') as output_file:
+            shutil.copyfileobj(input_file, output_file)
+            
+        os.rename(temp_file_path, file_path)
+        
+        # Import the map to the disk (unzip)
+        dest_dir = workspaces_directory + workspace_name + '/' + map_name
+        
+        if not os.path.exists(dest_dir):
+            os.mkdir(dest_dir)
+        
+        map_zip = zipfile.ZipFile(file_path)
+        for name in map_zip.namelist():
+            (dir_name, file_name) = os.path.split(name)
+            if dir_name:
+                new_dir = dest_dir + '/' + dir_name
+                if not os.path.exists(new_dir):
+                    os.makedirs(new_dir)
+            if file_name:
+                dest_file = open(dest_dir + '/' + name, 'wb')
+                dest_file.write(map_zip.read(name))
+                dest_file.close()
+        map_zip.close()
+        os.remove(file_path)
+        
+        # Import the map to the DB
+        with open(dest_dir + '/.exportData') as export_data:
+            exdata_json = json.load(export_data)
+            old_map_name = exdata_json['name']
+            os.rename(dest_dir + '/map/' + old_map_name + '.map', dest_dir + '/map/' + map_name + '.map')
+            current_workspace = Workspace.by_name(workspace_name)
+            
+            map_args = {
+                'name': map_name,
+                'type': exdata_json['type'],
+                'description': exdata_json['description'],
+                'projection': exdata_json['projection'],
+                'extent': exdata_json['extent'],
+                'workspace_id': current_workspace.id
+            }
+            
+            map = Map(**map_args)
+            
+            try:
+                DBSession.add(map)
+                response['status'] = 1
+            except exc.SQLAlchemyError as e:
+                response['errors'].append(e)
+
+        os.remove(dest_dir + '/.exportData')
+        return response
+        
+    @view_config(
         route_name='maps.export',
         permission='view',
         renderer='json',
@@ -1002,7 +1083,7 @@ class APIMap(object):
         # Find the files and directories
         map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
         workspace = Workspace.by_id(map.workspace_id)
-        export_data = self.request.POST.get('export_data') #How much pdata to be sent (none, min, all)
+        export_data = self.request.POST.get('export-data') #How much pdata to be sent (none, min, all)
 
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
         map_directory = workspace_directory + map.name + '/'
@@ -1038,6 +1119,22 @@ class APIMap(object):
                 except OSError:
                     pass
                     
+            # Insert some data needed for import
+            export_data_path = map_directory + ".exportData"
+            with open(export_data_path, 'w') as export_data:
+                export_log.info("Adding export info")
+                map_data = {
+                    'name': map.name,
+                    'type': map.type,
+                    'description': map.description,
+                    'projection': map.projection,
+                    'extent': map.extent,
+                    'workspace_id': self.request.userid
+                }
+                export_data.write(json.dumps(map_data))
+            map_zip.write(export_data_path, export_data_path[length_mapdir:])
+            os.remove(export_data_path)
+                    
             # Log current step
             export_log.info("Export finished, prompting user for download...")
 
@@ -1062,7 +1159,7 @@ class APIMap(object):
         length_mapdir = len(map_directory)
         
         # Not necessary if we export every file
-        if export_data in ['none', 'min']:
+        if export_data == 'min':
             # Log current step
             export_log.info("Looking for and adding the required data files...")
                 
@@ -1109,14 +1206,6 @@ class APIMap(object):
         for root, dirs, files in os.walk(map_directory, followlinks=True):
             if export_data in ['none', 'min'] and 'pdata' in dirs:
                 dirs.remove('pdata')
-            if export_data == 'none':
-                #Remove the most data files we can if they weren't deleted before
-                for data_file in data_files:
-                    try:
-                        data_files.remove(data_file)
-                        files.remove(data_file)
-                    except ValueError:
-                        pass #expected behavior
             if export_data == 'min':
                 #Add required data files
                 for data_file in data_files:

@@ -127,6 +127,10 @@ ScribeUI.UI.init = function(){
     $('#btn_open_map').button().click(function(){
         ScribeUI.Map.openMap();
     });
+    
+    $('#btn_import_map').button().click(function(){
+        ScribeUI.Map.importMap();   
+    });
 
     $('#btn_export_map').button().click(function(){
         ScribeUI.Map.exportMap();
