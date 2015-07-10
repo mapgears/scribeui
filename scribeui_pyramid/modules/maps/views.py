@@ -1014,17 +1014,35 @@ class APIMap(object):
         map_name = self.request.POST.get('import-name')
         workspace_name = self.request.userid
         workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
+        workspace_directory = workspaces_directory + workspace_name + '/'
         
-        # Upload the map
-
-        file_path = '/tmp/' + file_name
+        # Set up the logs
+        import_log = logging.getLogger('import_log_'+workspace_name)
+        handler = logging.FileHandler(workspace_directory + 'importLogs.txt')
+        formatter = logging.Formatter('[%(asctime)s] %(levelname)s:  %(message)s')
+        handler.setFormatter(formatter)
+        import_log.propagate = False;
+        import_log.setLevel(logging.INFO)
+        import_log.addHandler(handler)
+        
+        # Start the logs
+        import_log.info("Starting import...")
+        
+        # Download the map to the server to a temporary zip file
+        file_path = workspace_directory + file_name
         temp_file_path = file_path + '~'
+        
+        # Log current step
+        import_log.info("Downloading the map to the server")
         
         input_file.seek(0)
         with open(temp_file_path, 'wb') as output_file:
             shutil.copyfileobj(input_file, output_file)
             
         os.rename(temp_file_path, file_path)
+        
+        # Log current step
+        import_log.info("Download complete. Extracting the map...")
         
         # Import the map to the disk (unzip)
         dest_dir = workspaces_directory + workspace_name + '/' + map_name
@@ -1035,6 +1053,7 @@ class APIMap(object):
         map_zip = zipfile.ZipFile(file_path)
         for name in map_zip.namelist():
             (dir_name, file_name) = os.path.split(name)
+            import_log.info("Extracting file "+name)
             if dir_name:
                 new_dir = dest_dir + '/' + dir_name
                 if not os.path.exists(new_dir):
@@ -1044,7 +1063,9 @@ class APIMap(object):
                 dest_file.write(map_zip.read(name))
                 dest_file.close()
         map_zip.close()
-        os.remove(file_path)
+        
+        # Log current step
+        import_log.info("Extraction complete. Importing the map to the database...")
         
         # Import the map to the DB
         with open(dest_dir + '/.exportData') as export_data:
@@ -1057,8 +1078,6 @@ class APIMap(object):
                 'name': map_name,
                 'type': exdata_json['type'],
                 'description': exdata_json['description'],
-                'projection': exdata_json['projection'],
-                'extent': exdata_json['extent'],
                 'workspace_id': current_workspace.id
             }
             
@@ -1070,7 +1089,16 @@ class APIMap(object):
             except exc.SQLAlchemyError as e:
                 response['errors'].append(e)
 
+        # Remove temporary files
+        import_log.info("Import complete, cleaning up files")
         os.remove(dest_dir + '/.exportData')
+        os.remove(file_path)
+        
+        #Close logs 
+        import_log.info("END")
+        handler.close()
+        import_log.removeHandler(handler)
+        
         return response
         
     @view_config(
@@ -1225,13 +1253,18 @@ class APIMap(object):
     )
     def view_logs(self):
         #Find the log file
-        map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
-        workspace = Workspace.by_id(map.workspace_id)
+    
+        workspace = Workspace.by_name(self.request.userid)
         start = int(self.request.POST.get('start')) #Where to start the logs
+        operation = self.request.POST.get('operation')
         
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
-        map_directory = workspace_directory + map.name + '/'
-        log_path = map_directory + 'exportLogs.txt'
+        if 'export' in operation:
+            map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
+            map_directory = workspace_directory + map.name + '/'
+            log_path = map_directory + 'exportLogs.txt'
+        else:
+            log_path = workspace_directory + 'importLogs.txt'
         
         #Open and read the logs
         if os.path.isfile(log_path):
@@ -1250,14 +1283,18 @@ class APIMap(object):
     )
     def delete_logs(self):
         #Find the log file
-        map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
-        workspace = Workspace.by_id(map.workspace_id)
+        workspace = Workspace.by_name(self.request.userid)
+        operation = self.request.POST.get('operation')
         
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
-        map_directory = workspace_directory + map.name + '/'
         
         # Clear the logs
-        os.remove(map_directory + 'exportLogs.txt')
+        if 'export' in operation:
+            map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
+            map_directory = workspace_directory + map.name + '/'
+            os.remove(map_directory + 'exportLogs.txt')
+        else:
+            os.remove(workspace_directory + 'importLogs.txt')
         
     @view_config(
         route_name='maps.pois.new',

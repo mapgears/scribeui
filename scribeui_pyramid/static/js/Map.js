@@ -764,8 +764,6 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     //Clear logs
     ScribeUI.UI.manager.exportMap.logs().text('');
     
-    var self = this;
-    
     //Export map
     var form = $("#exportmap-form");
     form.attr("action", $API + '/maps/export/' + this.id);
@@ -773,42 +771,55 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     
     /* This code checks the logs every second and stops once the logs say it's
        finished */
-    (function(){
-        var thisFunction = arguments.callee;
-        $.ajax({
-            type: "POST",
-            url: $API + '/maps/'+self.id+'/logs/view',
-            data: {
-                'start': ScribeUI.UI.manager.exportMap.logs().text().length
-            },
-            success: function(response){
-                //Check if we continue logging
-                if(!response || response.length == 0){ //No logs yet
-                    setTimeout(thisFunction, 500)
+    ScribeUI.Map.checkLogs(ScribeUI.UI.manager.exportMap.logs(), 'export', this.id);
+}
+
+/* Function to check import or export logs on the server.
+   Parameters:
+       logElement: element for the log box
+       operation: string, 'import' or 'export'
+       mapID: Map ID
+*/
+ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
+    
+    $.ajax({
+        type: "POST",
+        url: $API + '/maps/'+mapID+'/logs/view',
+        data: {
+            'start': logElement.text().length,
+            'operation': operation
+        },
+        success: function(response){
+            //Check if we continue logging
+            if(!response || response.length == 0){ //No logs yet
+                setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 500)
+            }
+            else
+            {
+                //Display logs
+                logElement.append(response);
+                logElement.scrollTop(logElement[0].scrollHeight - logElement.height());
+                
+                //Check if the logs are finished
+                var lines = response.split('\n');
+                var lastLine = lines[lines.length - 2];
+                if(lastLine.indexOf("END") == -1){
+                    //Logs not finished
+                    setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 1000);
                 }
-                else
-                {
-                    //Display logs
-                    var exportLogsArea = ScribeUI.UI.manager.exportMap.logs();
-                    exportLogsArea.text(exportLogsArea.text() + response);
-                    exportLogsArea.scrollTop(exportLogsArea[0].scrollHeight - exportLogsArea.height());
-                    
-                    var lines = response.split('\n');
-                    var lastLine = lines[lines.length - 2];
-                    if(lastLine.indexOf("END") == -1){
-                        setTimeout(thisFunction, 1000);
-                    }
-                    else {
-                        //Delete the logs
-                        $.ajax({
-                            type: "POST",
-                            url: $API + '/maps/'+self.id+'/logs/delete'
-                        });
-                    }
+                else {
+                    //Delete the logs
+                    $.ajax({
+                        type: "POST",
+                        url: $API + '/maps/'+mapID+'/logs/delete',
+                        data: {
+                            'operation': operation
+                        }
+                    });
                 }
             }
-        });
-    })();
+        }
+    });
 }
 
 ScribeUI.Map.prototype.configure = function(config){
@@ -981,6 +992,7 @@ ScribeUI.Map.deleteMap = function(){
 }
 
 ScribeUI.Map.importMap = function(){
+    $("#import-status").text("Not started");
     $("#importmap-div").dialog({
        autoOpen: false,
        resizable: false,
@@ -996,6 +1008,7 @@ ScribeUI.Map.importMap = function(){
                else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
                if(mapInput.length == 0) errors += "Please select a file \n"
                if(errors.length == 0) {
+                   $("#import-status").text("In progress");
                    var form = $("#importmap-form");
                    var formData = new FormData(form[0]);
                    $.ajax({
@@ -1006,9 +1019,11 @@ ScribeUI.Map.importMap = function(){
                         processData: false,
                         type: 'POST',
                         success: function(data){
-                            alert(data);
+                            ScribeUI.workspace.getMaps();
+                            $("#import-status").text("Complete");
                         }
                    });
+                   ScribeUI.Map.checkLogs(ScribeUI.UI.manager.importMap.logs(), 'import', 0);
                }
                else {
                    alert(errors);
@@ -1025,7 +1040,6 @@ ScribeUI.Map.importMap = function(){
 ScribeUI.Map.exportMap = function(){
      var name = ScribeUI.workspace.selectedMap.name;
      if (name){
-         $("#preparing-export").css("visibility","hidden");
          $("#exportmap-div").dialog({
             autoOpen: false,
             resizable: false,

@@ -455,6 +455,12 @@ button.ui-widget{
     white-space: pre-line;
 }
 
+.import-status {
+    font-size: 1.2em;
+    font-weight: normal;
+    line-height: 30px;
+}
+
 .export-option {
     width: 350px;
     float: right;
