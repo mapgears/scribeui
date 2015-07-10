@@ -57,6 +57,9 @@ ScribeUI.Workspace.prototype.deleteMap = function(map, callback){
 
             self.open();
         }
+        else{
+            alert(response.errors);
+        }
     });   
 };
  

@@ -326,15 +326,15 @@ class APIMap(object):
                             '/elfinder-python/connector-' + workspace.name + '-' + map.name + '.py'
 
             try:
-                subprocess.call(['rm','-r', map_directory]) 
-            except subprocess.CalledProcessError as e:
-                response['errors'].append(e.output)
+                shutil.rmtree(map_directory)
+            except OSError as e:
+                response['errors'].append("Error while deleting " + map_directory + ": " + e.strerror)
 
             if len(response['errors']) == 0:
                 try:
-                    subprocess.call(['rm', connector_file]) 
-                except subprocess.CalledProcessError as e:
-                    response['errors'].append(e.output)
+                    os.remove(connector_file) 
+                except OSError as e:
+                    pass
 
                 if len(response['errors']) == 0:
                     try:
