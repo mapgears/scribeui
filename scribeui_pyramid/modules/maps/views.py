@@ -1194,37 +1194,57 @@ class APIMap(object):
             data_names = []
             data_path = map_directory + 'map/'
             shapepath_found = False
-            
-            # Open the output mapfile
-            with open(map_directory + "map/" + map.name + ".map") as ms_map:#mapserver syntax map
+
+            # Put the complete mapfile in a string, with includes
+            map_file = []
+            included_files_read = []
+            with open(map_directory + "map/" + map.name + ".map") as ms_map:
                 for line in ms_map:
-                    # Check if the shapepath is there (if it hasn't been found already)
-                    if not shapepath_found:
-                        result = re.search(r'(^ *SHAPEPATH.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
-                        if result:
-                            data_path = os.path.join(data_path, result.group(2))
-                            shapepath_found = True
-                    # get all DATA lines
-                    result = re.search(r'(^ *DATA.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
-                    if result and result.group(2) not in data_names:
-                        data_names.append(result.group(2))
-                for file in data_names:
-                    # For every data line found, get all the actual files
-                    file_path = os.path.join(data_path, file)
-                    
-                    # If the path points to a single file
-                    if os.path.isfile(file_path):
-                        data_files.append(file_path)
+                    result = re.search(r'[ ]*INCLUDE[ :]*[\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                    if result:
+                        include_path = os.path.realpath(map_directory + 'map/' + result.group(1))
+                        
+                        #Read includes only once
+                        if(include_path not in included_files_read):
+                            export_log.info("Scanning included file: " + result.group(1))
+                            included_files_read.append(include_path)
+                            
+                            # Add include content to map_file var
+                            with open(include_path) as include:
+                                for line_include in include:
+                                    map_file.append(line_include)
                     else:
-                        # Group of files
-                        sub_files = glob.glob(file_path + '.*')
-                        if sub_files:
-                            for sub_file in sub_files:
-                                data_files.append(sub_file)
-                                export_log.info("Adding file: " + sub_file[length_mapdir:])
-                        else:
-                            # Log error
-                            export_log.warning('Could not find ' + file_path + '')
+                        map_file.append(line)
+                    
+            # Open the output mapfile
+            for line in map_file:
+                # Check if the shapepath is there (if it hasn't been found already)
+                if not shapepath_found:
+                    result = re.search(r'(^ *SHAPEPATH.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                    if result:
+                        data_path = os.path.join(data_path, result.group(2))
+                        shapepath_found = True
+                # get all DATA lines
+                result = re.search(r'(^ *DATA.*) [\'"](.*)[\'"]', line, flags=re.MULTILINE)
+                if result and result.group(2) not in data_names:
+                    data_names.append(result.group(2))
+            for file in data_names:
+                # For every data line found, get all the actual files
+                file_path = os.path.join(data_path, file)
+                
+                # If the path points to a single file
+                if os.path.isfile(file_path):
+                    data_files.append(file_path)
+                else:
+                    # Group of files
+                    sub_files = glob.glob(file_path + '.*')
+                    if sub_files:
+                        for sub_file in sub_files:
+                            data_files.append(sub_file)
+                            export_log.info("Adding file: " + sub_file[length_mapdir:])
+                    else:
+                        # Log error
+                        export_log.warning('Could not find ' + file_path + '')
         
         # Log current step
         export_log.info("Adding main files...")

@@ -993,6 +993,7 @@ ScribeUI.Map.deleteMap = function(){
 
 ScribeUI.Map.importMap = function(){
     $("#import-status").text("Not started");
+    $("#import-status").removeClass("import-complete");
     $("#importmap-div").dialog({
        autoOpen: false,
        resizable: false,
@@ -1020,7 +1021,8 @@ ScribeUI.Map.importMap = function(){
                         type: 'POST',
                         success: function(data){
                             ScribeUI.workspace.getMaps();
-                            $("#import-status").text("Complete");
+                            $("#import-status").text("Complete")
+                            $("#import-status").addClass("import-complete");
                         }
                    });
                    ScribeUI.Map.checkLogs(ScribeUI.UI.manager.importMap.logs(), 'import', 0);

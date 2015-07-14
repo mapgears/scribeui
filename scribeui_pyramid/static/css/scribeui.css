@@ -461,6 +461,10 @@ button.ui-widget{
     line-height: 30px;
 }
 
+.import-complete {
+    color: #009900;
+}
+
 .export-option {
     width: 350px;
     float: right;
