@@ -781,7 +781,6 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
        mapID: Map ID
 */
 ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
-
     $.ajax({
         type: "POST",
         url: $API + '/maps/'+mapID+'/logs/view',
@@ -809,15 +808,20 @@ ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
                 }
                 else {
                     //Delete the logs
-                    $.ajax({
-                        type: "POST",
-                        url: $API + '/maps/'+mapID+'/logs/delete',
-                        data: {
-                            'operation': operation
-                        }
-                    });
+                    ScribeUI.Map.deleteLogs(operation, mapID);
                 }
             }
+        }
+    });
+}
+
+ScribeUI.Map.deleteLogs = function(operation, mapID)
+{
+    $.ajax({
+        type: "POST",
+        url: $API + '/maps/'+mapID+'/logs/delete',
+        data: {
+            'operation': operation
         }
     });
 }
@@ -992,6 +996,9 @@ ScribeUI.Map.deleteMap = function(){
 }
 
 ScribeUI.Map.importMap = function(){
+    //Clear logs on server
+    ScribeUI.Map.deleteLogs("import", 0);
+
     $("#import-status").text("Not started");
     $("#import-status").removeClass("import-complete");
     $("#importmap-div").dialog({
@@ -1009,6 +1016,9 @@ ScribeUI.Map.importMap = function(){
                else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
                if(mapInput.length == 0) errors += "Please select a file \n"
                if(errors.length == 0) {
+                   //Clear logs
+                   ScribeUI.UI.manager.importMap.logs().text('');
+
                    $("#import-status").text("In progress");
                    var form = $("#importmap-form");
                    var formData = new FormData(form[0]);
@@ -1039,10 +1049,15 @@ ScribeUI.Map.importMap = function(){
    }).dialog("open");
 }
 
-ScribeUI.Map.exportMap = function(){
-     var name = ScribeUI.workspace.selectedMap.name;
-     if (name){
-         $("#exportmap-div").dialog({
+ScribeUI.Map.exportMap = function()
+{
+    //Clear logs on server
+    var map = ScribeUI.workspace.selectedMap;
+    ScribeUI.Map.deleteLogs("export", map.id);
+
+    var name = ScribeUI.workspace.selectedMap.name;
+    if (name){
+        $("#exportmap-div").dialog({
             autoOpen: false,
             resizable: false,
             width: "auto",

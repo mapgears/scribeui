@@ -1307,14 +1307,20 @@ class APIMap(object):
         operation = self.request.POST.get('operation')
 
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
+        log_path = ""
 
         # Clear the logs
         if 'export' in operation:
             map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
             map_directory = workspace_directory + map.name + '/'
-            os.remove(map_directory + 'exportLogs.txt')
+            log_path = map_directory + 'exportLogs.txt'
         else:
-            os.remove(workspace_directory + 'importLogs.txt')
+            log_path = workspace_directory + 'importLogs.txt'
+
+        try:
+            os.remove(log_path)
+        except OSError as e:
+            pass
 
     @view_config(
         route_name='maps.pois.new',
