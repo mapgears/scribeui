@@ -221,7 +221,7 @@ ScribeUI.Map.prototype.save = function(){
         readme: this.readme,
         groups: this.groups
     })
-        
+
     $.ajax({
         url: $API + '/maps/save/' + this.id,
         type: "POST",
@@ -271,7 +271,7 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
     regexSyntaxError = /\((.[^\(\)]*)\):\(line ([0-9]*)\)/g;
     var errorArray = [];
     error = regexError.exec(debugText);
-    
+
     //Build a list of strings containing 'error', excepted the projection one
     while(error != null){
         if(error[0].indexOf('tolerance condition error') == -1){ //Ignore this error
@@ -280,33 +280,33 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
         //Check for the next one
         error = regexError.exec(debugText);
     }
-    
+
     //Handle the errors if there are any
     if(errorArray.length > 0){
 
         //Error notification
         ScribeUI.UI.logs.pre().text('Errors: \n');
         ScribeUI.UI.logs.notification().show('pulsate', 1000);
-        
+
         for(i = 0; i < errorArray.length; i++){
             //Find line numbers (syntax errors)
             syntaxError = regexSyntaxError.exec(errorArray[i]);
             if(syntaxError != null){
                 var line = parseInt(syntaxError[2]);
-                
+
                 //Place an error widget in the result area
                 var div = document.createElement("div");
                 div.innerHTML = errorArray[i];
                 div.setAttribute('class', 'outputError');
                 ScribeUI.UI.editor.mapfilePre().addLineWidget(line-1, div);
-                
+
                 //Log the error with a link
                 var link = $('<a href="javascript:void(0);">' + errorArray[i] + '</a>').click(function(){
                     ScribeUI.UI.displayResultLine(line);
                 });
                 ScribeUI.UI.logs.pre().append(link);
                 ScribeUI.UI.logs.pre().append("\n");
-                
+
                 //Find and place a marker in the scribe mapeditor area
                 this.markError(syntaxError[1], syntaxError[2], errorArray[i]);
             }
@@ -369,7 +369,7 @@ ScribeUI.Map.prototype.markError = function(error, lineNumber, errorMessage){
         ScribeUI.UI.logs.pre().append(link);
         ScribeUI.UI.logs.pre().append('\n');
     }
-    
+
 }
 
 ScribeUI.Map.prototype.findLine = function(line, lineNumber){
@@ -426,7 +426,7 @@ ScribeUI.Map.prototype.findLineFromMSLine = function(line, msLineNumber){
     }
     var regex = new RegExp(regString, 'g');
     var nbMatches = 0;
-    
+
     for(var key in ScribeUI.editorManager.editors){
         if(key == "groups") { //For groups, check every group
             nbOptions = ScribeUI.workspace.openedMap.groups.length;
@@ -606,13 +606,13 @@ ScribeUI.Map.prototype.close = function(){
     this.clearPois();
     this.workspace.openedMap = null;
     this.previousGroup = null;
-    
+
     //Remove leftover text
     $("#map-name").text('');
     ScribeUI.UI.editor.mapfilePre().setValue('');
     ScribeUI.UI.logs.pre().text('');
     ScribeUI.UI.logs.debugPre().text('');
-    
+
 }
 
 //Find the map's name in the mapeditor
@@ -763,12 +763,12 @@ ScribeUI.Map.prototype.closeDataBrowser = function(){
 ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     //Clear logs
     ScribeUI.UI.manager.exportMap.logs().text('');
-    
+
     //Export map
     var form = $("#exportmap-form");
     form.attr("action", $API + '/maps/export/' + this.id);
     form.submit();
-    
+
     /* This code checks the logs every second and stops once the logs say it's
        finished */
     ScribeUI.Map.checkLogs(ScribeUI.UI.manager.exportMap.logs(), 'export', this.id);
@@ -781,7 +781,7 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
        mapID: Map ID
 */
 ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
-    
+
     $.ajax({
         type: "POST",
         url: $API + '/maps/'+mapID+'/logs/view',
@@ -799,7 +799,7 @@ ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
                 //Display logs
                 logElement.append(response);
                 logElement.scrollTop(logElement[0].scrollHeight - logElement.height());
-                
+
                 //Check if the logs are finished
                 var lines = response.split('\n');
                 var lastLine = lines[lines.length - 2];
@@ -1029,7 +1029,7 @@ ScribeUI.Map.importMap = function(){
                }
                else {
                    alert(errors);
-               }    
+               }
            },
            Close: function() {
                $(this).dialog("close");

@@ -86,7 +86,7 @@ class APIMap(object):
                     response['errors'].append('Wrong credentials.')
             else:
                 workspace = Workspace.by_name(template_workspace)
-                
+
             if len(response['errors']) == 0:
                 current_workspace = Workspace.by_name(self.request.userid)
 
@@ -101,18 +101,18 @@ class APIMap(object):
                     template_directory = workspaces_directory + template_workspace + '/' + template + '/'
                     map_directory = workspaces_directory + self.request.userid + '/' + name + '/'
                     mapfile_directory = map_directory + 'map/'
-                    mapfile = mapfile_directory + name + '.map' 
+                    mapfile = mapfile_directory + name + '.map'
 
                     try:
-                        subprocess.call(['cp','-r', template_directory, map_directory]) 
+                        subprocess.call(['cp','-r', template_directory, map_directory])
                     except subprocess.CalledProcessError as e:
                         response['errors'].append(e.output)
 
                     try:
-                        subprocess.call(['mv', mapfile_directory + template + '.map', mapfile]) 
+                        subprocess.call(['mv', mapfile_directory + template + '.map', mapfile])
                     except subprocess.CalledProcessError as e:
                         response['errors'].append(e.output)
-                                              
+
 
                     if len(response['errors']) == 0:
                         workspace_id = current_workspace.id
@@ -135,7 +135,7 @@ class APIMap(object):
                             response['status'] = 1
                         except exc.SQLAlchemyError as e:
                             response['errors'].append(e)
-                            
+
         return response
 
 
@@ -167,7 +167,7 @@ class APIMap(object):
                 mapfile_directory=mapfile_directory,
                 mapserver_url=mapserver_url
                 )
-            
+
             data = dict(map)
             data['url'] = url
             data['thumbnail_url'] = thumbnail_url
@@ -239,7 +239,7 @@ class APIMap(object):
 
                         try:
                             scales = json.loads(string2json(data['scales']))
-                            data['OLScales'] = list2dict(scales['SCALES']) 
+                            data['OLScales'] = list2dict(scales['SCALES'])
                         except:
                             response['errors'].append('Could not determine scale levels.')
 
@@ -263,7 +263,7 @@ class APIMap(object):
                                 'lon': float(poi[1]),
                                 'lat': float(poi[2]),
                                 'scale': float(poi[3]) if len(poi) >= 4 else None,
-                                'projection': poi[4] if len(poi) == 5 else None  
+                                'projection': poi[4] if len(poi) == 5 else None
                                 })
                         #else:
                         #    response['errors'].append("Invalid poi file.")
@@ -271,7 +271,7 @@ class APIMap(object):
             if len(response['errors']) == 0:
                 connector_directory = self.request.registry.settings.get('cgi.directory', '') + '/elfinder-python/'
                 connector_file = connector_directory + 'connector-' + workspace.name + '-' + map.name + '.py'
-                source_file = connector_directory + 'connector.py' 
+                source_file = connector_directory + 'connector.py'
 
                 if not os.path.isfile(connector_file):
                     try:
@@ -290,7 +290,7 @@ class APIMap(object):
 
                     try:
                         subprocess.call(['chmod','+x', connector_file])
-                        response['status'] = 1 
+                        response['status'] = 1
                     except subprocess.CalledProcessError as e:
                         response['errors'].append(e.output)
                 else:
@@ -332,7 +332,7 @@ class APIMap(object):
 
             if len(response['errors']) == 0:
                 try:
-                    os.remove(connector_file) 
+                    os.remove(connector_file)
                 except OSError as e:
                     pass
 
@@ -389,7 +389,7 @@ class APIMap(object):
                     if not MapManager.is_valid_name(group):
                         response['errors'].append('Name is not valid.')
 
-            if len(response['errors']) == 0:    
+            if len(response['errors']) == 0:
                 workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
                 map_directory = workspace_directory + map.name + '/'
 
@@ -465,7 +465,7 @@ class APIMap(object):
                 workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
                 map_directory = workspace_directory + map.name + '/'
                 mapfile_directory = map_directory + 'map/'
-                mapfile = mapfile_directory + map.name + '.map' 
+                mapfile = mapfile_directory + map.name + '.map'
 
                 if map.type == 'Scribe':
                     groups_directory = map_directory + "editor/groups/"
@@ -516,7 +516,7 @@ class APIMap(object):
                     debug_level = '1'
                     if map.type == 'Scribe':
                         scribe = self.request.registry.settings.get('scribe.python', '')
-                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d ' + debug_level, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+                        sub = subprocess.Popen('/usr/bin/python2.7 ' + scribe + ' -n ' + map.name + ' -i ' + map_directory + 'editor/ -o ' + map_directory + 'map/ -f ' + map_directory + 'config -d ' + debug_level, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         logs = sub.stdout.read()
                         errors = sub.stderr.read()
 
@@ -528,7 +528,7 @@ class APIMap(object):
                             response['errors'].append('An error occured while running scribe.py')
                     else:
                         outputDirectory = map_directory + 'map/';
-                        sub = subprocess.Popen('shp2img -m ' + outputDirectory + map.name + '.map -all_debug ' + debug_level + ' -o ' + outputDirectory + 'debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+                        sub = subprocess.Popen('shp2img -m ' + outputDirectory + map.name + '.map -all_debug ' + debug_level + ' -o ' + outputDirectory + 'debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                         logs = 'Mapserver logs (debug level ' + debug_level + ')\n'
                         logs += '------------------------------\n'
                         logs += sub.stderr.read().strip() + sub.stdout.read().strip()
@@ -540,10 +540,10 @@ class APIMap(object):
                     map.projection = projection
                     map.extent = extent
                     transaction.commit()
-                    
+
                     if len(response['errors']) == 0:
                         response['status'] = 1
-                        
+
                 try:
                     with codecs.open(mapfile, encoding='utf8') as f:
                         mapfile_content = f.read()
@@ -596,7 +596,7 @@ class APIMap(object):
                 except IOError:
                     pass
 
-            if (git_url != map.git_url) or (git_url is not None and git_url == map.git_url and not hasGitConfig):   
+            if (git_url != map.git_url) or (git_url is not None and git_url == map.git_url and not hasGitConfig):
                 try:
                     MapManager.git_init(git_url)
                 except Exception, e:
@@ -605,14 +605,14 @@ class APIMap(object):
 
                 if len(response['errors']) == 0:
                     if map.git_url and hasGitConfig:
-                        response['logs'] += 'Another git config file was detected and has been overwritten.\n' 
+                        response['logs'] += 'Another git config file was detected and has been overwritten.\n'
                     map.git_url = git_url
-                  
+
             if description:
                 map.description = description
 
             transaction.commit()
-            
+
             if len(response['errors']) == 0:
                 response['status'] = 1
                 response['logs'] += 'Configuration successful.\n'
@@ -675,7 +675,7 @@ class APIMap(object):
                     except subprocess.CalledProcessError as e:
                         response['errors'].append(e.output)
                         response['logs'] += e.output
-                    
+
                     response['logs'] += u'git commit -m "' + message + u'"\n'
                     response['logs'] += '---------------------------------------------------\n'
                     try:
@@ -686,7 +686,7 @@ class APIMap(object):
                         else:
                             response['errors'].append(e.output)
                         response['logs'] += e.output
-                    
+
                     response['logs'] += 'git pull origin master\n'
                     response['logs'] += '---------------------------------------------------\n'
                     try:
@@ -702,7 +702,7 @@ class APIMap(object):
                     except subprocess.CalledProcessError as e:
                         response['errors'].append(e.output)
                         response['logs'] += e.output
-                    
+
                     if len(response['errors']) == 0:
                         response['status'] = 1
 
@@ -801,7 +801,7 @@ class APIMap(object):
                         except subprocess.CalledProcessError as e:
                             response['errors'].append(e.output)
                             response['logs'] += e.output
-                    
+
                         response['logs'] += 'git pull origin master\n'
                         response['logs'] += '---------------------------------------------------\n'
                         try:
@@ -817,7 +817,7 @@ class APIMap(object):
                         except subprocess.CalledProcessError as e:
                             response['errors'].append(e.output)
                             response['logs'] += e.output
-                    
+
                     if len(response['errors']) == 0:
                         try:
                             subprocess.check_output(['rm ' + mapfile_directory + 'level*.map'], shell=True, stderr=subprocess.STDOUT)
@@ -870,10 +870,10 @@ class APIMap(object):
         if len(response['errors']) == 0:
             if not MapManager.is_valid_name(name):
                     response['errors'].append('Name is not valid.')
-                    
+
             if git_url == '':
                response['errors'].append('A valid git URL is required.')
-                
+
             try:
                 description = self.request.POST.get('description')
             except KeyError as e:
@@ -894,7 +894,7 @@ class APIMap(object):
 
         if len(response['errors']) == 0:
             workspace = Workspace.by_name(template_workspace)
-                
+
             if not MapManager.is_valid_name(name):
                 response['errors'].append('Name is not valid.')
 
@@ -906,18 +906,18 @@ class APIMap(object):
                 template_directory = workspaces_directory + template_workspace + '/' + template + '/'
                 map_directory = workspaces_directory + self.request.userid + '/' + name + '/'
                 mapfile_directory = map_directory + 'map/'
-                mapfile = mapfile_directory + name + '.map' 
+                mapfile = mapfile_directory + name + '.map'
 
                 try:
-                    subprocess.call(['cp','-r', template_directory, map_directory]) 
+                    subprocess.call(['cp','-r', template_directory, map_directory])
                 except subprocess.CalledProcessError as e:
                     response['errors'].append(e.output)
 
                 #try:
-                #    subprocess.call(['mv', mapfile_directory + template + '.map', mapfile]) 
+                #    subprocess.call(['mv', mapfile_directory + template + '.map', mapfile])
                 #except subprocess.CalledProcessError as e:
                 #    response['errors'].append(e.output)
-                                          
+
 
                 if len(response['errors']) == 0:
                     os.chdir(map_directory)
@@ -954,7 +954,7 @@ class APIMap(object):
                             try:
                                 subprocess.check_output(['mv ' + mapfile_directory + '*.map ' + mapfile], shell=True, stderr=subprocess.STDOUT)
                             except subprocess.CalledProcessError as e:
-                                pass 
+                                pass
 
                             if len(response['errors']) == 0:
                                 response['status'] = 1
@@ -986,11 +986,11 @@ class APIMap(object):
 
                     if len(response['errors']) != 0:
                         try:
-                            subprocess.call(['rm','-r', map_directory]) 
+                            subprocess.call(['rm','-r', map_directory])
                         except subprocess.CalledProcessError as e:
                             response['errors'].append(e.output)
                             response['status'] = 0
-                            
+
         return response
 
     @view_config(
@@ -1007,15 +1007,15 @@ class APIMap(object):
             'logs': '',
             'id': ''
         }
-        
-        # Get some variables from the request    
+
+        # Get some variables from the request
         file_name = "import.zip"
         input_file = self.request.POST.get('input-file').file
         map_name = self.request.POST.get('import-name')
         workspace_name = self.request.userid
         workspaces_directory = self.request.registry.settings.get('workspaces.directory', '') + '/'
         workspace_directory = workspaces_directory + workspace_name + '/'
-        
+
         # Set up the logs
         import_log = logging.getLogger('import_log_'+workspace_name)
         handler = logging.FileHandler(workspace_directory + 'importLogs.txt')
@@ -1024,32 +1024,32 @@ class APIMap(object):
         import_log.propagate = False;
         import_log.setLevel(logging.INFO)
         import_log.addHandler(handler)
-        
+
         # Start the logs
         import_log.info("Starting import...")
-        
+
         # Download the map to the server to a temporary zip file
         file_path = workspace_directory + file_name
         temp_file_path = file_path + '~'
-        
+
         # Log current step
         import_log.info("Downloading the map to the server")
-        
+
         input_file.seek(0)
         with open(temp_file_path, 'wb') as output_file:
             shutil.copyfileobj(input_file, output_file)
-            
+
         os.rename(temp_file_path, file_path)
-        
+
         # Log current step
         import_log.info("Download complete. Extracting the map...")
-        
+
         # Import the map to the disk (unzip)
         dest_dir = workspaces_directory + workspace_name + '/' + map_name
-        
+
         if not os.path.exists(dest_dir):
             os.mkdir(dest_dir)
-        
+
         map_zip = zipfile.ZipFile(file_path)
         for name in map_zip.namelist():
             (dir_name, file_name) = os.path.split(name)
@@ -1063,26 +1063,26 @@ class APIMap(object):
                 dest_file.write(map_zip.read(name))
                 dest_file.close()
         map_zip.close()
-        
+
         # Log current step
         import_log.info("Extraction complete. Importing the map to the database...")
-        
+
         # Import the map to the DB
         with open(dest_dir + '/.exportData') as export_data:
             exdata_json = json.load(export_data)
             old_map_name = exdata_json['name']
             os.rename(dest_dir + '/map/' + old_map_name + '.map', dest_dir + '/map/' + map_name + '.map')
             current_workspace = Workspace.by_name(workspace_name)
-            
+
             map_args = {
                 'name': map_name,
                 'type': exdata_json['type'],
                 'description': exdata_json['description'],
                 'workspace_id': current_workspace.id
             }
-            
+
             map = Map(**map_args)
-            
+
             try:
                 DBSession.add(map)
                 response['status'] = 1
@@ -1093,14 +1093,14 @@ class APIMap(object):
         import_log.info("Import complete, cleaning up files")
         os.remove(dest_dir + '/.exportData')
         os.remove(file_path)
-        
-        #Close logs 
+
+        #Close logs
         import_log.info("END")
         handler.close()
         import_log.removeHandler(handler)
-        
+
         return response
-        
+
     @view_config(
         route_name='maps.export',
         permission='view',
@@ -1116,7 +1116,7 @@ class APIMap(object):
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
         map_directory = workspace_directory + map.name + '/'
         filename = str(map.name + '_'+datetime.datetime.now().strftime("%Y%m%d_%H%M%S")+'.zip')
-            
+
         # Set up the logs
         export_log = logging.getLogger('export_log_'+map.name)
         handler = logging.FileHandler(map_directory + 'exportLogs.txt')
@@ -1135,7 +1135,7 @@ class APIMap(object):
             length_mapdir = len(map_directory)
 
             files_array = self.get_files_to_export(export_data, export_log, map, map_directory)
-            
+
             # The part where the files are zipped
             export_log.info("Starting compression of " + str(len(files_array)) + " files (This might take a while)")
             nb_files_zipped = 0
@@ -1146,7 +1146,7 @@ class APIMap(object):
                     map_zip.write(file, file[length_mapdir:])
                 except OSError:
                     pass
-                    
+
             # Insert some data needed for import
             export_data_path = map_directory + ".exportData"
             with open(export_data_path, 'w') as export_data:
@@ -1162,7 +1162,7 @@ class APIMap(object):
                 export_data.write(json.dumps(map_data))
             map_zip.write(export_data_path, export_data_path[length_mapdir:])
             os.remove(export_data_path)
-                    
+
             # Log current step
             export_log.info("Export finished, prompting user for download...")
 
@@ -1172,25 +1172,25 @@ class APIMap(object):
             response = FileResponse(os.path.abspath(output.name))
             response.headers['Content-Type'] = 'application/download'
             response.headers['Content-Disposition'] = 'attachement; filename="'+filename+'"'
-            
-            #Close logs 
+
+            #Close logs
             export_log.info("END")
             handler.close()
             export_log.removeHandler(handler)
-            
+
             #Return
             return response
-    
+
     def get_files_to_export(self, export_data, export_log, map, map_directory):
         # This section adds every file included in the mapfile to the data_files array
         data_files = []
         length_mapdir = len(map_directory)
-        
+
         # Not necessary if we export every file
         if export_data == 'min':
             # Log current step
             export_log.info("Looking for and adding the required data files...")
-                
+
             data_names = []
             data_path = map_directory + 'map/'
             shapepath_found = False
@@ -1203,19 +1203,19 @@ class APIMap(object):
                     result = re.search(r'[ ]*INCLUDE[ :]*[\'"](.*)[\'"]', line, flags=re.MULTILINE)
                     if result:
                         include_path = os.path.realpath(map_directory + 'map/' + result.group(1))
-                        
+
                         #Read includes only once
                         if(include_path not in included_files_read):
                             export_log.info("Scanning included file: " + result.group(1))
                             included_files_read.append(include_path)
-                            
+
                             # Add include content to map_file var
                             with open(include_path) as include:
                                 for line_include in include:
                                     map_file.append(line_include)
                     else:
                         map_file.append(line)
-                    
+
             # Open the output mapfile
             for line in map_file:
                 # Check if the shapepath is there (if it hasn't been found already)
@@ -1231,7 +1231,7 @@ class APIMap(object):
             for file in data_names:
                 # For every data line found, get all the actual files
                 file_path = os.path.join(data_path, file)
-                
+
                 # If the path points to a single file
                 if os.path.isfile(file_path):
                     data_files.append(file_path)
@@ -1245,10 +1245,10 @@ class APIMap(object):
                     else:
                         # Log error
                         export_log.warning('Could not find ' + file_path + '')
-        
+
         # Log current step
         export_log.info("Adding main files...")
-        
+
         # Add the main files, pdata if export_map = all
         files_array = []
         for root, dirs, files in os.walk(map_directory, followlinks=True):
@@ -1262,9 +1262,9 @@ class APIMap(object):
             for file in files:
                 if "exportLogs.txt" not in file:
                     files_array.append(os.path.join(root, file))
-        
+
         return files_array
-    
+
     @view_config(
         route_name='maps.logs.view',
         permission='view',
@@ -1273,11 +1273,11 @@ class APIMap(object):
     )
     def view_logs(self):
         #Find the log file
-    
+
         workspace = Workspace.by_name(self.request.userid)
         start = int(self.request.POST.get('start')) #Where to start the logs
         operation = self.request.POST.get('operation')
-        
+
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
         if 'export' in operation:
             map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
@@ -1285,16 +1285,16 @@ class APIMap(object):
             log_path = map_directory + 'exportLogs.txt'
         else:
             log_path = workspace_directory + 'importLogs.txt'
-        
+
         #Open and read the logs
         if os.path.isfile(log_path):
             with open(log_path, "r") as log_file:
                 log_content = log_file.read()
-                
+
             return log_content[start:]
         else: return
-        
-                
+
+
     @view_config(
         route_name='maps.logs.delete',
         permission='view',
@@ -1305,9 +1305,9 @@ class APIMap(object):
         #Find the log file
         workspace = Workspace.by_name(self.request.userid)
         operation = self.request.POST.get('operation')
-        
+
         workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
-        
+
         # Clear the logs
         if 'export' in operation:
             map = Map.by_id(self.matchdict.get('id')) #Value sent through the url
@@ -1315,7 +1315,7 @@ class APIMap(object):
             os.remove(map_directory + 'exportLogs.txt')
         else:
             os.remove(workspace_directory + 'importLogs.txt')
-        
+
     @view_config(
         route_name='maps.pois.new',
         permission='view',
@@ -1424,8 +1424,8 @@ class APIMap(object):
                         for o in output:
                             f.write(o)
                         f.close()
-                     
-                               
+
+
                 except IOError:
                     response['errors'].append("An error occured while opening '" + poi_file + "' file.")
 
@@ -1465,9 +1465,9 @@ class APIMap(object):
             try:
                 debug = MapManager.get_debug_from_mapfile(mapfile, mapfile_directory)
             except Exception, e:
-                response['errors'].append(str(e)) 
+                response['errors'].append(str(e))
 
-            
+
             if len(response['errors']) == 0:
                 response['debug'] = debug
                 response['status'] = 1
@@ -1501,9 +1501,9 @@ class APIMap(object):
             try:
                 MapManager.set_debug_from_mapfile(mapfile, mapfile_directory, '')
             except Exception, e:
-                response['errors'].append(str(e)) 
+                response['errors'].append(str(e))
 
-            
+
             if len(response['errors']) == 0:
                 response['status'] = 1
         else:

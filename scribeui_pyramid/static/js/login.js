@@ -1,6 +1,6 @@
 jQuery(function() { 
     $('select').chosen();
-    
+
     $("button").button({
         text: true
     });
@@ -56,7 +56,7 @@ function openNewWorkspaceDialog(){
         close: function(e) {
             $(this).find('input').val('');
         }
-    }).dialog("open");   
+    }).dialog("open");
 }
 
 
@@ -75,7 +75,7 @@ function openDeleteWorkspaceDialog(){
         if(response.status == 1){
             $('select#name').find('option[value="' + name + '"]').remove();
             $('select#name').trigger('chosen:updated');
-            $('#password').val('');  
+            $('#password').val('');
         }
     });
 }

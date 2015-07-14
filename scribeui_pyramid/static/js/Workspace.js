@@ -1,6 +1,6 @@
 ScribeUI.Workspace = function(name, options){
     this.name = name;
-    
+
     this.maps = [];
 
     this.selectedMap = null;
@@ -39,7 +39,7 @@ ScribeUI.Workspace.prototype.cloneMap = function(data){
     $.post($API + '/maps/clone', data, function(response) {
         ScribeUI.UI.manager.git.cloneLogs().val(response.logs);
         if(response.status == 1){
-            self.open();    
+            self.open();
         }
     });
 };
@@ -60,9 +60,9 @@ ScribeUI.Workspace.prototype.deleteMap = function(map, callback){
         else{
             alert(response.errors);
         }
-    });   
+    });
 };
- 
+
 ScribeUI.Workspace.prototype.create = function(){
     var self = this;
     $.post($SCRIPT_ROOT + '/_create_new_ws', {
@@ -75,7 +75,7 @@ ScribeUI.Workspace.prototype.create = function(){
         }else {
             alert(status);
         }
-    });   
+    });
 };
 
 ScribeUI.Workspace.prototype.getMaps = function(){
@@ -99,7 +99,7 @@ ScribeUI.Workspace.prototype.getMaps = function(){
             self.displayMaps(self.maps);
 
             //closeWorkspacePopup({"workspaceManage": self.workspaceManage});
-            //$('#'+self.workspaceManage+' .workspace-errors').hide();    
+            //$('#'+self.workspaceManage+' .workspace-errors').hide();
         } /*else {
             $('#'+self.workspaceManage+' .workspace-errors').show();
             $('#'+self.workspaceManage+' .workspace-errors .error').html(data);
@@ -145,9 +145,9 @@ ScribeUI.Workspace.prototype.getPointsOfInterest = function(callback){
                 var oPoi = new POI(poi.name, poi.lon, poi.lat, poi.scale);
                 oPoi["workspace"] = self;
         pois.push(oPoi);
-                
+
         });
-            
+
             for(var i = 0; i < pois.length; i++){
             self.pointsOfInterest.push(pois[i]);
             }
@@ -155,7 +155,7 @@ ScribeUI.Workspace.prototype.getPointsOfInterest = function(callback){
         if(callback){
         callback.call(self)
         }
-    }    
+    }
     });
 };
 
@@ -182,8 +182,8 @@ ScribeUI.Workspace.prototype.addPointOfInterest = function(name){
 
     $.post($SCRIPT_ROOT + '/_add_poi', {
         name: name,
-        lon: lonLat.lon, 
-        lat: lonLat.lat, 
+        lon: lonLat.lon,
+        lat: lonLat.lat,
         scale: scale
     }, function(status) {
     //self.pointsOfInterest.push(poi);
@@ -210,12 +210,12 @@ ScribeUI.Workspace.prototype.displayMaps = function(maps){
             self.selectedMap = self.getMapByName(li.text());
 
             if(self.selectedMap){
-                self.selectedMap.displayDescription();    
+                self.selectedMap.displayDescription();
             }
 
             if(li.find('.default-preview').length > 0){
                 li.addClass('li-default-thumbnail');
-            }  
+            }
         }
     });
 };
@@ -230,17 +230,17 @@ ScribeUI.Workspace.prototype.displayThumbnail = function(map){
     } else{
         image.addClass('default-preview');
     }
-    ScribeUI.UI.manager.mapsList().append(li);    
+    ScribeUI.UI.manager.mapsList().append(li);
 };
 
 ScribeUI.Workspace.prototype.displayPointsOfInterest = function(){
     this.clearPointsOfInterest();
 
     for(var i = 0; i < this.pointsOfInterest.length; i++){
-       $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name)); 
+       $("#" + this.poiSelect).append($("<option></option>").attr("value", this.pointsOfInterest[i].name).text(this.pointsOfInterest[i].name));
     }
 
-    $("#" + this.poiSelect).trigger('chosen:updated');   
+    $("#" + this.poiSelect).trigger('chosen:updated');
 };
 
 ScribeUI.Workspace.prototype.display = function(){
@@ -274,7 +274,7 @@ ScribeUI.Workspace.prototype.destroy = function(callback){
         }else {
             alert(status);
         }
-    });   
+    });
 };
 
 ScribeUI.Workspace.prototype.clearMaps = function(){
@@ -297,7 +297,7 @@ ScribeUI.Workspace.prototype.clearPointsOfInterest = function(){
         div.dialog({
             title: "Confirm",
             resizable: false,
-            
+
             buttons: [{
                  text: "Yes",
                  click: function () {
@@ -336,7 +336,7 @@ ScribeUI.Workspace.prototype.clearPointsOfInterest = function(){
     if(_workspace.open())
         return true;
     else return false;
-   
+
 }*/
 
 
@@ -347,7 +347,7 @@ ScribeUI.Workspace.getWorkspaces = function(callback){
                 callback.call(null, response.workspaces);
             }
         }
-    });    
+    });
 }
 
 ScribeUI.Workspace.onWorkspaceOpened = function(){

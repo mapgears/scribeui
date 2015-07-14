@@ -37,7 +37,7 @@ ScribeUI.UI.init = function(){
     this.poi = {};
 	this.poi.select= function() { return $('#poi-select') };
 	this.poi.actions= function() { return $('.poi-container') }
-    
+
     this.updateTimeout = null; //For window resize event
 
     /*--------------------------------
@@ -48,22 +48,22 @@ ScribeUI.UI.init = function(){
     this.logs.logs().resizable({
         handles: 'n',
         alsoResize: '#logs .tabcontent'
-    }).bind('resize', function(){        
+    }).bind('resize', function(){
         $(this).css("max-height", $('.main').height() - 40 + 'px'); //Fix for issue #121
         ScribeUI.UI.editor.mapfilePre().refresh(); //Fix for issue #122
-        
-        //Timeout to not update every millisecond a user is resizing the map 
-        if(this.updateTimeout != null) 
+
+        //Timeout to not update every millisecond a user is resizing the map
+        if(this.updateTimeout != null)
         {
             clearTimeout(this.updateTimeout);
         }
         this.updateTimeout = setTimeout(function() { ScribeUI.UI.resizeMapViewport(); }, 200);  //Fix for issue #87
-        
+
     });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
     $('#log-tabs .tabheader').append(
-        $('#logs-close-button').button({ 
+        $('#logs-close-button').button({
             text: false,
             title: 'Close',
             icons: {
@@ -77,7 +77,7 @@ ScribeUI.UI.init = function(){
 
     // Fix for ticket #40 https://github.com/mapgears/scribeui/issues/40
     $('#logs').css('top', $('#logs').position().top);
-    
+
     $('#logs').hide();
 
     $('#editors-container').height($('#editor-tab').height() - this.editor.toolbar().outerHeight());
@@ -97,9 +97,9 @@ ScribeUI.UI.init = function(){
 
     $("a[href = '#manager-tab'], a[href = '#help-tab']").bind('click', function(){
         $("div[class='CodeMirror']").hide();
-    }); 
-    
-    
+    });
+
+
     $("a[href='#mapfile-tab']").bind('click', function(){
         if(ScribeUI.workspace != null) {
             if(ScribeUI.workspace.openedMap){
@@ -129,9 +129,9 @@ ScribeUI.UI.init = function(){
     $('#btn_open_map').button().click(function(){
         ScribeUI.Map.openMap();
     });
-    
+
     $('#btn_import_map').button().click(function(){
-        ScribeUI.Map.importMap();   
+        ScribeUI.Map.importMap();
     });
 
     $('#btn_export_map').button().click(function(){
@@ -188,15 +188,15 @@ ScribeUI.UI.init = function(){
 
     $('#btn_change_group_order').button({
         text:false,
-        icons: { primary: 'ui-icon-wrench' }    
+        icons: { primary: 'ui-icon-wrench' }
     }).click(function(){
         ScribeUI.UI.openGroupOrderDialog();
     });
     $('#btn-open-logs').button({
-        icons: { primary: 'ui-icon-flag' }    
+        icons: { primary: 'ui-icon-flag' }
     }).click(function(){
         $('#logs').toggle();
-        $('#log-notification').hide();  
+        $('#log-notification').hide();
         ScribeUI.UI.resizeMapViewport();
     });
     $('#link-open-logs').click( function(){
@@ -230,14 +230,14 @@ ScribeUI.UI.init = function(){
         resize: ScribeUI.UI.resizeEditors
     });
     $('.secondary-wrap').hide();
-    
+
     $("a[href = '#data-tab']").bind('click', function(){
         ScribeUI.UI.displayDataBrowser();
     });
 
 
     $('select').chosen();
-    
+
     //Shortcut for commit
     $("body").keypress(function(e){
         if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
@@ -248,7 +248,7 @@ ScribeUI.UI.init = function(){
     //Warn the user if leaving before saving
     window.onbeforeunload = function(e){
         if(ScribeUI.workspace.openedMap && ScribeUI.workspace.openedMap.saved == false)
-            return 'All unsaved changes will be lost, do you want to continue ?';    
+            return 'All unsaved changes will be lost, do you want to continue ?';
     }
 
     getFeatureInfoDialog = $("#get-feature-info").dialog({
@@ -288,7 +288,7 @@ ScribeUI.UI.displayWorkspaces = function(select){
         if(workspaces){
             var workspaceSelect =  $('#' + select);
             for(ws in workspaces){
-               workspaceSelect.append($("<option></option>").attr("value", workspaces[ws]).text(workspaces[ws])); 
+               workspaceSelect.append($("<option></option>").attr("value", workspaces[ws]).text(workspaces[ws]));
             }
             workspaceSelect.trigger("chosen:updated");
         }
@@ -301,7 +301,7 @@ ScribeUI.UI.displayTemplates = function(templates){
         var option = $('<option>').val(template.name).text(template.name);
         ScribeUI.UI.manager.newMap.templateSelect().append(option);
     });
-    this.manager.newMap.templateSelect().trigger('chosen:updated');    
+    this.manager.newMap.templateSelect().trigger('chosen:updated');
 }
 
 ScribeUI.UI.openNewMapDialog = function(){
@@ -322,13 +322,13 @@ ScribeUI.UI.openNewMapDialog = function(){
                     var templateWorkspace = ScribeUI.UI.manager.newMap.templateWorkspaceSelect().val();
                     var templateWorkspacePassword = ScribeUI.UI.manager.newMap.templateWorkspacePassword().val();
                     var description = $("<div>").text(ScribeUI.UI.manager.newMap.description().val()).html(); //Escape characters
-                    
+
                     var errors = "";
                     var alphaNumericRegex = new RegExp("^[a-zA-Z0-9_]*$")
                     if(name.length == 0) errors += "The 'Name' field is mandatory \n"
                     else if (!alphaNumericRegex.test(name)) errors += "The 'Name' field must contain only alphanumeric characters (A-z, 0-9, _)\n"
                     else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
-                    
+
                     if(errors.length == 0)
                     {
                         var mapData = {
@@ -366,9 +366,9 @@ ScribeUI.UI.openNewMapDialog = function(){
 
                             ScribeUI.getTemplates(templateWorkspace, type, null, function(templates){
                                 ScribeUI.UI.displayTemplates(templates);
-                            }); 
+                            });
                         });
-                    });         
+                    });
                 },
                 Cancel: function() {
                     $(this).dialog("close");
@@ -416,7 +416,7 @@ ScribeUI.UI.openNewGroupDialog= function(){
 
                     ScribeUI.workspace.openedMap.displayGroupsList();
 
-                    $(this).dialog('close');    
+                    $(this).dialog('close');
                 }
             },
             Cancel: function() {
@@ -507,9 +507,9 @@ ScribeUI.UI.openGroupOrderDialog = function(){
                 });
 
                 $("#grouporder-form li:not(.to-be-deleted)").each(function(){
-                    ScribeUI.workspace.openedMap.updatedGroups.push($(this).text());    
+                    ScribeUI.workspace.openedMap.updatedGroups.push($(this).text());
                 })
-                
+
                 $(this).dialog("close");
 
                 ScribeUI.workspace.openedMap.setGroups();
@@ -551,22 +551,22 @@ ScribeUI.UI.resizeEditors = function(){
     else var remainingSpace = $('#editors-container').height();
     var divTwo = $('.main-editor');
     var divTwoHeight = remainingSpace - (divTwo.outerHeight() - divTwo.height());
-    divTwo.css('height', divTwoHeight + 'px');    
+    divTwo.css('height', divTwoHeight + 'px');
     $('#editors-container').height($('#editor-tab').height() - ScribeUI.UI.editor.toolbar().outerHeight());
 }
 
 ScribeUI.UI.resizeMapViewport = function(){
     if($('#logs').is(':visible')){
-        $('#map').css("bottom", 30 + $('#logs').height() + "px");  
+        $('#map').css("bottom", 30 + $('#logs').height() + "px");
     }
     else {
-        $('#map').css("bottom", 30 + "px");  
-    }            
+        $('#map').css("bottom", 30 + "px");
+    }
     ScribeUI.workspace.openedMap.OLMap.updateSize();
-    
+
     //This ugly fix refreshes the viewport size, fixes a bug where the viewport doesn't take its place back after resizing the logs
     ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='99%'
-    setTimeout(function() { ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='100%'; }, 30); 
+    setTimeout(function() { ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='100%'; }, 30);
 }
 
 ScribeUI.UI.openSecondaryPanel = function(editor){
@@ -590,9 +590,9 @@ ScribeUI.UI.openSecondaryPanel = function(editor){
 ScribeUI.UI.scribeLog = function(msg){
     if(msg.indexOf("**ERRORS**") != -1){
         if(!$('#logs').is(':visible'))
-            $('#log-notification').show('pulsate', 1000);                
+            $('#log-notification').show('pulsate', 1000);
     }else{
-        $('#log-notification').hide();                
+        $('#log-notification').hide();
     }
     $("#" + self.workspace.logTextarea).val(msg);
 }
@@ -613,7 +613,7 @@ ScribeUI.UI.displayResultLine = function(line){
     var h = ScribeUI.UI.editor.mapfilePre().getScrollInfo().clientHeight;
     var coords = ScribeUI.UI.editor.mapfilePre().charCoords({line: line, ch: 0}, "local");
     ScribeUI.UI.editor.mapfilePre().scrollTo(null, (coords.top + coords.bottom - h) / 2);
-    
+
 }
 
 /* This function switches to the right layer and group
@@ -664,9 +664,9 @@ ScribeUI.UI.displayLineEditor = function(cm, line, text){
         close: function() {
             $(this).find('textarea').val('');
         }
-    }).dialog("open");   
+    }).dialog("open");
 }
-/* 
+/*
 name: string, Name of the tab
 destinationSelector: jquery selector of the tab group, ex #main-tabs or #log-tabs
 options: (optional) object
@@ -685,7 +685,7 @@ ScribeUI.UI.addTab = function(name, destinationSelector, options){
 
         var li = $('<li class="tab-large"></li>');
         li.append(link);
-                
+
         if(position == 'last')
             $(destinationSelector+' .tabheader').append(li)
         if(position == 'first')
@@ -717,9 +717,9 @@ ScribeUI.UI.addComponent = function(component, destinationSelector, options){
 
     }else return null;
 }
-/* 
+/*
 name: string, Name of the button
-destinationSelector: jquery selector of the toolbar, ex editor-toolbar, tools-left or tools-right 
+destinationSelector: jquery selector of the toolbar, ex editor-toolbar, tools-left or tools-right
 options: (optional) object
     onclick: function called when button is clicked
     position: string, where to add tab, possible values: last, first

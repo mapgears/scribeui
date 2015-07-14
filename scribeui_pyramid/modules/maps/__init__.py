@@ -61,7 +61,7 @@ class MapManager(object):
         try:
             f = open(mapfile)
             lines = f.readlines()
-            
+
             for line in lines:
                 line = line.strip()
 
@@ -101,7 +101,7 @@ class MapManager(object):
         file_name = None
 
         debug_file = cls.get_debug_file(mapfile, mapfile_directory)
-        
+
         if debug_file is not None:
             try:
                 with codecs.open(debug_file, encoding='utf8') as f:
@@ -118,7 +118,7 @@ class MapManager(object):
     @classmethod
     def set_debug_from_mapfile(cls, mapfile, mapfile_directory, content):
         file_name = None
-        
+
         debug_file = cls.get_debug_file(mapfile, mapfile_directory)
 
         if debug_file is not None:
@@ -141,7 +141,7 @@ class MapManager(object):
         try:
             f = open(mapfile)
             lines = f.readlines()
-            
+
             for line in lines:
                 line = line.strip()
 
@@ -172,12 +172,12 @@ class MapManager(object):
             'scales':'editor/scales',
             'variables':'editor/variables',
             'map':'editor/map',
-            'projections':'epsg', 
+            'projections':'epsg',
             'fonts':'fonts.lst',
             'symbols':'symbols.map',
             'readme':'README.markdown'
             }
-            
+
 
     @staticmethod
     def get_standard_files(name):

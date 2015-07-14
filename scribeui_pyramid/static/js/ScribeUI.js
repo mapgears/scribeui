@@ -289,7 +289,7 @@ $(document).ready(function() {
 			new ScribeUI.Editor("readme-editor", "ReadMe", {position:"secondary"}, options)
 		]
 		ScribeUI.editorManager = new ScribeUI.EditorManager(editors);
-        
+
         //Turn the mapfile output into a codemirror space for error highlighting
         var mapfileOutputOptions = {
             readOnly: true,

@@ -8,8 +8,8 @@ ScribeUI.POI = function(name, lon, lat, scale, projection){
     this.lat = lat;
 
     this.scale = scale;
-    
-    this.projection = projection;   
+
+    this.projection = projection;
 }
 
 ScribeUI.POI.prototype.findScaleLevel = function(denom){
@@ -19,7 +19,7 @@ ScribeUI.POI.prototype.findScaleLevel = function(denom){
         diff = Math.abs(this.map.OLScales[i] - denom);
         if(diff < diff0){
             diff0 = diff;
-            var level = i; 
+            var level = i;
         }
     }
     //Displayed zoom levels are actually one level too high.
@@ -35,7 +35,7 @@ ScribeUI.POI.zoomToPOI = function(){
     if(ScribeUI.workspace && ScribeUI.workspace.openedMap){
         var name = ScribeUI.UI.poi.select().val();
         ScribeUI.workspace.openedMap.zoomToPOI(name);
-    }    
+    }
 }
 
 ScribeUI.POI.addPOI = function(){
@@ -51,9 +51,9 @@ ScribeUI.POI.addPOI = function(){
                     if(ScribeUI.workspace.openedMap.getPOIByName(name)){
                         alert('A poi with that name exists already.');
                     } else{
-                        ScribeUI.workspace.openedMap.addPOI(name);    
+                        ScribeUI.workspace.openedMap.addPOI(name);
                     }
-                    
+
                     $(this).dialog("close");
                 },
                 Cancel: function() {
@@ -70,6 +70,6 @@ ScribeUI.POI.addPOI = function(){
 ScribeUI.POI.removePOI = function(){
     if(ScribeUI.workspace && ScribeUI.workspace.openedMap){
         var name = ScribeUI.UI.poi.select().val();
-        ScribeUI.workspace.openedMap.removePOI(name);    
+        ScribeUI.workspace.openedMap.removePOI(name);
     }
 }
