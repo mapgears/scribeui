@@ -211,6 +211,12 @@ ScribeUI.Map.prototype.save = function(){
     var self = this;
     this.updateComponents();
 
+    //Create the debugging query to be run with mapserv
+    queryString = self.WMSLayer.getFullRequestString().replace($SETTINGS.cgibin_url + "/mapserv?", '')
+        + "&BBOX=" + self.WMSLayer.getTilesBounds().toBBOX()
+        + '&WIDTH=' + self.WMSLayer.getImageSize().w
+        + '&HEIGHT=' + self.WMSLayer.getImageSize().h;
+
     var data = JSON.stringify({
         map: this.map,
         scales: this.scales,
@@ -219,7 +225,8 @@ ScribeUI.Map.prototype.save = function(){
         fonts: this.fonts,
         projections: this.projections,
         readme: this.readme,
-        groups: this.groups
+        groups: this.groups,
+        query: queryString
     })
 
     $.ajax({
@@ -254,7 +261,7 @@ ScribeUI.Map.prototype.save = function(){
                 self.errorWidgets[i].editor.removeLineWidget(self.errorWidgets[i].widget);
             }
 
-            self.handleDebug(response.debug, response.mapfile);
+            self.handleDebug(response.logs, response.mapfile);
         }
     })
 }
