@@ -1056,9 +1056,12 @@ class APIMap(object):
                 if not os.path.exists(new_dir):
                     os.makedirs(new_dir)
             if file_name:
-                dest_file = open(dest_dir + '/' + name, 'wb')
-                dest_file.write(map_zip.read(name))
-                dest_file.close()
+                try:
+                    dest_file = open(dest_dir + '/' + name, 'wb')
+                    dest_file.write(map_zip.read(name))
+                    dest_file.close()
+                except IOError as e:
+                    import_log.error("Error while writing file " + dest_dir + '/' + name + ": " + e.strerror)
         map_zip.close()
 
         # Log current step

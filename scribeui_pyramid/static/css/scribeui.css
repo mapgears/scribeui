@@ -384,6 +384,17 @@ button.ui-widget{
 #map-description p{
     padding: 5px;
 }
+.wms-url-container {
+    display: none;
+}
+.wms-url-container label{
+    font-size: 100%;
+    padding: 8px;
+}
+.wms-url-container input{
+    width: 165px;
+    margin-bottom: 3px;
+}
 .three-col-actions button {
     max-width: 80px;
     width: 80px;

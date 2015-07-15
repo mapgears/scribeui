@@ -79,8 +79,6 @@ ScribeUI.Map.prototype.open = function(callback){
 
                 self.save(); //This is to get and display errors when loading a map
 
-                self.saved = true;
-
                 $("#map-name").text(self.name);
             }
         }
@@ -192,6 +190,8 @@ ScribeUI.Map.prototype.displayDescription = function(){
     mapDescription.append("<p class=\"map-title\">" + this.name + "</p>");
     mapDescription.append("<p class=\"map-description\">" + this.description + "</p>");
     ScribeUI.UI.manager.mapActions().show();
+    $('.wms-url-container').show();
+    $('#wms-url').val(this.url);
 };
 
 ScribeUI.Map.prototype.updateComponents = function(){
