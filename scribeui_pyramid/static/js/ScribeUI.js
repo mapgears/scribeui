@@ -49,20 +49,6 @@ ScribeUI.deleteGroup = function(groups){
     });
 }
 
-ScribeUI.unregisterDebug = function(){
-    if(ScribeUI.workspace.openedMap.OLMap != null){
-        ScribeUI.workspace.openedMap.OLMap.events.unregister('moveend', ScribeUI.workspace.openedMap.OLMap, ScribeUI.Map.onMapMoveEnd);
-    }
-}
-
-ScribeUI.registerDebug = function(){
-    if(ScribeUI.workspace.openedMap.OLMap != null){
-        ScribeUI.workspace.openedMap.OLMap.events.on({
-            'moveend': ScribeUI.Map.onMapMoveEnd
-        });
-     }
-}
-
 ScribeUI.clearDebug = function(){
     ScribeUI.workspace.openedMap.clearDebug();
 }

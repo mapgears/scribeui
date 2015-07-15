@@ -254,7 +254,6 @@ ScribeUI.Map.prototype.save = function(){
 
             ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
             ScribeUI.UI.logs.pre().text(response.logs);
-            ScribeUI.UI.logs.debugPre().text(response.debug);
 
             for (var i = 0; i < self.errorWidgets.length; ++i)
             {
@@ -489,6 +488,7 @@ ScribeUI.Map.prototype.searchLine = function(needle, haystack){
 
 ScribeUI.Map.prototype.display = function(){
     var scales = [];
+    var self = this;
 
     if(this.OLUnits == "meters" || this.OLUnits == null){
         for(i in this.OLScales){
@@ -558,6 +558,7 @@ ScribeUI.Map.prototype.display = function(){
             else {
                 $('.map-render-error').hide();
             }
+            self.getDebug();
         });
 
         OLMap.addLayers([WMSLayer]);

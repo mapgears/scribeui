@@ -158,7 +158,10 @@
                         <li class="tab-large"><a href="#log-tab">Logs</a></li>
                         <li class="tab-large"><a href="#debug-tab">Debug</a></li>
                         <li class="tab-large"><a href="#mapfile-tab">Result</a></li>
-                        <button id="logs-close-button">Close</button>
+                        <span id="logs-buttons">
+                            <button id="debug-clear-button">Clear debug</button>
+                            <button id="logs-close-button">Close</button>
+                        </span>
                     </ul>
 
                     <div id="log-tab" class="tabcontent">
@@ -268,7 +271,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="exportmap-div" title="Export map" style="display:none" class="scribe-dialog">
         <form id="exportmap-form" method="post">
             <div class="control-group">
@@ -287,7 +290,7 @@
                 <label for="export-data">Minimal data</label>
                 <div class="control">
                     <input type="radio" name="export-data" value='min' checked>
-                    <span class="export-option">Include only the data necessary for the map to render, 
+                    <span class="export-option">Include only the data necessary for the map to render,
                     no unused data will be included.</span>
                 </div>
             </div>

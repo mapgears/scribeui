@@ -13,7 +13,7 @@ html, body {
     font-family: Helvetica,Arial,sans-serif;
 }
 html{
-	font-size: 62.5%; /* Note: important for all jquery-ui default styles 
+	font-size: 62.5%; /* Note: important for all jquery-ui default styles
 	also allows to set all font sizes in em (1.1em = 11px, 0.8em = 8px)*/
 }
 body{
@@ -51,7 +51,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus{
     border: solid 1px #1c8d61;
 }
-button, .ui-button, 
+button, .ui-button,
 button.ui-widget{
     border-radius: 5px;
     font-size: 10px;
@@ -123,10 +123,10 @@ button.ui-widget{
     font-size: 14px;
 }
 
-.ui-menu { 
-    position: absolute; 
+.ui-menu {
+    position: absolute;
     width: 100px;
-    font-size: 14px; 
+    font-size: 14px;
 }
 
 .title-left {
@@ -212,7 +212,7 @@ button.ui-widget{
 /* === Tabs ===*/
 .main-left {
     float: left;
-    
+
     width: 42%;
     height: 100%;
 
@@ -258,7 +258,7 @@ button.ui-widget{
 
 #main-tabs {
     border-radius: 0px;
-    border-top-width: 0px;    
+    border-top-width: 0px;
 }
 
 .tabheader {
@@ -267,7 +267,7 @@ button.ui-widget{
     border-left-width: 0px;
     border-top-width: 0px;
     border-right-width: 0px;
-   
+
     line-height: 1.3;
     padding-top: 5px;
     padding-left: 5px;
@@ -279,7 +279,7 @@ button.ui-widget{
     border-left-width: 0px;
     border-right-width: 0px;
     border-top-width: 0px;
-    
+
     padding-top: 5px;
     padding-left: 5px;
     line-height: 0.4;
@@ -313,7 +313,7 @@ button.ui-widget{
 .tabheader-ws-container {
     overflow-y: auto;
     position: relative;
-    height: 25%;  
+    height: 25%;
 }
 
 .tabfooter-ws-container {
@@ -339,7 +339,7 @@ button.ui-widget{
 }
 
 .manager-maps {
-     overflow-y: auto; 
+     overflow-y: auto;
 }
 
 .manager-jobs{
@@ -409,14 +409,14 @@ button.ui-widget{
 	display:block;
 }
 .default-preview {
-    background-image:url('images/map-preview-placeholder.png');   
+    background-image:url('images/map-preview-placeholder.png');
 }
 .thumbnail-preview {
     border-radius: 6px;
     border: 1px solid #AAAAAA;
 }
 
-.separator{ 
+.separator{
     border-bottom: 1px solid #AAAAAA;
 	display:block;
 	margin:20px;
@@ -439,7 +439,7 @@ button.ui-widget{
     left: 0;
     right: 60%;
     top: 0;
-    bottom: 0;    
+    bottom: 0;
 }
 
 .map-table {
@@ -538,7 +538,7 @@ button.ui-widget{
 .datacontent {
     padding: 0em;
     overflow-y: auto;
-    
+
     position: absolute;
     top: 38px;
     bottom: 0;
@@ -571,8 +571,8 @@ button.ui-widget{
     overflow: auto;
     padding: 10px;
 }
-#logs-close-button{
-	float:right;
+#logs-buttons{
+    float: right;
 }
 #txt-logs, #txt-debug, #txt-result{
 	font-family:monospace;
@@ -658,12 +658,12 @@ button.ui-widget{
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
     border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px; 
+    border-top-left-radius: 0px;
 }
 
 .bottom-button {
     border-top-right-radius: 0px;
-    border-top-left-radius: 0px; 
+    border-top-left-radius: 0px;
 }
 
 .newmap-description{
@@ -685,7 +685,7 @@ button.ui-widget{
 }
 
 li {
-    list-style: none; 
+    list-style: none;
 }
 
 fieldset select {
@@ -726,23 +726,23 @@ div.olControlZoom a {
     left: 20px;
     margin-right:16px;
 }
-#groups-ol .ui-selecting { 
+#groups-ol .ui-selecting {
 	/*color:#007BD1;*/
     color: #1C8D61;
 }
-#groups-ol .ui-selected { 
+#groups-ol .ui-selected {
 	background-color:#fff;
 	/*color:#007BD1;*/
     color: #1C8D61;
 }
-#groups-ol { 
-	list-style-type: none; 
-	margin: 0; 
+#groups-ol {
+	list-style-type: none;
+	margin: 0;
 	padding: 0;
 }
-#groups-ol li { 
-	margin: 3px; 
-	padding: 4px; 
+#groups-ol li {
+	margin: 3px;
+	padding: 4px;
 	cursor:pointer;
 }
 
@@ -759,7 +759,7 @@ div.olControlZoom a {
 .no-close .ui-dialog-titlebar-close {display: none }
 
 .scribe-dialog {
-    width: auto;    
+    width: auto;
     height: auto;
     min-width: 200px;
     overflow: visible;
@@ -769,7 +769,7 @@ div.olControlZoom a {
     display: table;
     margin-bottom: 20px;
     height: 30px;
-    margin-top:10px;    
+    margin-top:10px;
 }
 
 .control-group label {
@@ -921,7 +921,7 @@ textarea.long {
 
 #poi_select_chosen a{
     border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;    
+    border-bottom-right-radius: 0px;
 }
 
 #poi_select_chosen .chosen-drop {
@@ -1009,7 +1009,7 @@ button.btn-group-last {
 
 .login .alert {
     position: relative;
-    top: 150px;    
+    top: 150px;
     background-color: #FCF8E3;
     border: 1px solid #FBEED5;
     border-radius: 4px 4px 4px 4px;

@@ -62,18 +62,28 @@ ScribeUI.UI.init = function(){
     });
 
     $("#log-tabs").tabs({heightStyle: "fill"});
-    $('#log-tabs .tabheader').append(
-        $('#logs-close-button').button({
-            text: false,
-            title: 'Close',
-            icons: {
-                primary: "ui-icon-close"
+
+    $('#logs-close-button').button({
+        text: false,
+        title: 'Close',
+        icons: {
+            primary: "ui-icon-close"
+        }
+    }).click(function(e){
+        $('#logs').hide();
+        ScribeUI.UI.resizeMapViewport();
+    })
+
+    $('#debug-clear-button').button({
+        text: false,
+        title: 'Clear debug',
+    }).click(function(e){
+        if(ScribeUI.workspace != null) {
+            if(ScribeUI.workspace.openedMap){
+                ScribeUI.workspace.openedMap.clearDebug();
             }
-        }).click(function(e){
-            $('#logs').hide();
-            ScribeUI.UI.resizeMapViewport();
-        })
-    );
+        }
+    })
 
     // Fix for ticket #40 https://github.com/mapgears/scribeui/issues/40
     $('#logs').css('top', $('#logs').position().top);
