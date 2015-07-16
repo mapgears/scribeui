@@ -22,11 +22,19 @@ ScribeUI.Workspace.prototype.open = function(){
 	ScribeUI.Workspace.onWorkspaceOpened();
 };
 
+ScribeUI.Workspace.prototype.refresh = function(){
+    this.getMaps();
+	ScribeUI.Workspace.onWorkspaceOpened();
+
+    ScribeUI.UI.manager.mapActions().hide();
+    $('.wms-url-container').hide()
+}
+
 ScribeUI.Workspace.prototype.createMap = function(data){
     var self = this;
     $.post($API + '/maps/new', data, function(response) {
         if(response.status == 1){
-            self.open();
+            self.refresh();
         }
         else alert(response.errors[0]);
     });
@@ -46,7 +54,7 @@ ScribeUI.Workspace.prototype.importMap = function(data){
              if(response.status == 1){
                  $("#import-status").text("Complete")
                  $("#import-status").addClass("import-complete");
-                 ScribeUI.workspace.open();
+                 ScribeUI.workspace.refresh();
              }
              else alert(response.errors[0]);
          },
@@ -68,7 +76,7 @@ ScribeUI.Workspace.prototype.cloneMap = function(data){
     $.post($API + '/maps/clone', data, function(response) {
         ScribeUI.UI.manager.git.cloneLogs().val(response.logs);
         if(response.status == 1){
-            self.open();
+            self.refresh();
         }
     });
 };
@@ -82,9 +90,7 @@ ScribeUI.Workspace.prototype.deleteMap = function(map, callback){
                 self.openedMap.close();
             }
 
-            ScribeUI.UI.manager.mapActions().hide();
-
-            self.open();
+            self.refresh();
         }
         else{
             alert(response.errors);
