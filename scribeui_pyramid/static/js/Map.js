@@ -799,7 +799,7 @@ ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
         success: function(response){
             //Check if we continue logging
             if(!response || response.length == 0){ //No logs yet
-                setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 500)
+                ScribeUI.Map.logsTimer = setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 500)
             }
             else
             {
@@ -812,7 +812,7 @@ ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
                 var lastLine = lines[lines.length - 2];
                 if(lastLine.indexOf("END") == -1){
                     //Logs not finished
-                    setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 1000);
+                    ScribeUI.Map.logsTimer = setTimeout(function(){ScribeUI.Map.checkLogs(logElement, operation, mapID);}, 1000);
                 }
                 else {
                     //Delete the logs

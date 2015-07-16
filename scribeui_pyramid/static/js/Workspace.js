@@ -49,6 +49,15 @@ ScribeUI.Workspace.prototype.importMap = function(data){
                  ScribeUI.workspace.open();
              }
              else alert(response.errors[0]);
+         },
+         error: function(XMLHttpRequest, textStatus, errorThrown){
+             $("#import-status").text("Error")
+             var message = XMLHttpRequest.statusText;
+             if(XMLHttpRequest.status == 413){
+                 message += "\nTry adding 'LimitRequestBody 0' to your apache config";
+             }
+             alert(message);
+             clearTimeout(ScribeUI.Map.logsTimer);
          }
     });
 }

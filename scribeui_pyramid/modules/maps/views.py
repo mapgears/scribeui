@@ -1078,6 +1078,8 @@ class APIMap(object):
                 'name': map_name,
                 'type': exdata_json['type'],
                 'description': exdata_json['description'],
+                'projection': exdata_json['projection'],
+                'extent': exdata_json['extent'],
                 'workspace_id': current_workspace.id
             }
 
@@ -1467,12 +1469,10 @@ class APIMap(object):
             map_directory = workspace_directory + map.name + '/'
             mapfile_directory = map_directory + 'map/'
             mapfile = mapfile_directory + map.name + '.map'
-
             try:
                 debug = MapManager.get_debug_from_mapfile(mapfile, mapfile_directory)
             except Exception, e:
                 response['errors'].append(str(e))
-
 
             if len(response['errors']) == 0:
                 response['debug'] = debug

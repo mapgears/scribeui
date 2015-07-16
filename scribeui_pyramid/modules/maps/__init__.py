@@ -99,9 +99,7 @@ class MapManager(object):
     def get_debug_from_mapfile(cls, mapfile, mapfile_directory):
         debug = ''
         file_name = None
-
         debug_file = cls.get_debug_file(mapfile, mapfile_directory)
-
         if debug_file is not None:
             try:
                 with codecs.open(debug_file, encoding='utf8') as f:
@@ -147,7 +145,6 @@ class MapManager(object):
 
                 if line.upper().find('MS_ERRORFILE') != -1:
                     components = line.split(' ')
-                    print components
                     file_name = components[len(components) - 1].replace("'", '').replace('"', '')
                     break
             f.close();
