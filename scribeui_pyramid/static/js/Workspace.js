@@ -24,7 +24,6 @@ ScribeUI.Workspace.prototype.open = function(){
 
 ScribeUI.Workspace.prototype.createMap = function(data){
     var self = this;
-
     $.post($API + '/maps/new', data, function(response) {
         if(response.status == 1){
             self.open();
@@ -32,6 +31,27 @@ ScribeUI.Workspace.prototype.createMap = function(data){
         else alert(response.errors[0]);
     });
 };
+
+ScribeUI.Workspace.prototype.importMap = function(data){
+    var self = this;
+    ScribeUI.Map.checkLogs(ScribeUI.UI.manager.importMap.logs(), 'import', 0);
+    $.ajax({
+         url: $API + '/maps/import',
+         data: data,
+         cache: false,
+         contentType: false,
+         processData: false,
+         type: 'POST',
+         success: function(response){
+             if(response.status == 1){
+                 $("#import-status").text("Complete")
+                 $("#import-status").addClass("import-complete");
+                 ScribeUI.workspace.open();
+             }
+             else alert(response.errors[0]);
+         }
+    });
+}
 
 ScribeUI.Workspace.prototype.cloneMap = function(data){
     var self = this;
@@ -97,7 +117,6 @@ ScribeUI.Workspace.prototype.getMaps = function(){
             });
 
             self.displayMaps(self.maps);
-
             //closeWorkspacePopup({"workspaceManage": self.workspaceManage});
             //$('#'+self.workspaceManage+' .workspace-errors').hide();
         } /*else {

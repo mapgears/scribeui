@@ -141,7 +141,7 @@ ScribeUI.UI.init = function(){
     });
 
     $('#btn_import_map').button().click(function(){
-        ScribeUI.Map.importMap();
+        ScribeUI.UI.openImportMapDialog();
     });
 
     $('#btn_export_map').button().click(function(){
@@ -394,6 +394,47 @@ ScribeUI.UI.openNewMapDialog = function(){
         }).dialog("open");
 
     });
+}
+
+ScribeUI.UI.openImportMapDialog = function(){
+    //Clear logs on server
+    ScribeUI.Map.deleteLogs("import", 0);
+
+    $("#import-status").text("Not started");
+    $("#import-status").removeClass("import-complete");
+    $("#importmap-div").dialog({
+       autoOpen: false,
+       resizable: false,
+       width: "auto",
+       height: "auto",
+       modal: true,
+       buttons: {
+           Import: function() {
+               var errors = "";
+               var name = $('#import-name').val();
+               var mapInput = $('#input-file').val();
+               if(name.length == 0) errors += "The 'Name' field is mandatory \n"
+               else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
+               if(mapInput.length == 0) errors += "Please select a file \n"
+               if(errors.length == 0) {
+                   //Clear logs
+                   ScribeUI.UI.manager.importMap.logs().text('');
+
+                   $("#import-status").text("In progress");
+                   var form = $("#importmap-form");
+                   var formData = new FormData(form[0]);
+                   ScribeUI.workspace.importMap(formData);
+               }
+               else {
+                   alert(errors);
+               }
+           },
+           Close: function() {
+               $(this).dialog("close");
+           }
+       },
+       close: function() {}
+   }).dialog("open");
 }
 
 ScribeUI.UI.displayConfiguration = function(config){

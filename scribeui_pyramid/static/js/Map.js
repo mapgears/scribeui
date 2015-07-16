@@ -1003,60 +1003,6 @@ ScribeUI.Map.deleteMap = function(){
     }
 }
 
-ScribeUI.Map.importMap = function(){
-    //Clear logs on server
-    ScribeUI.Map.deleteLogs("import", 0);
-
-    $("#import-status").text("Not started");
-    $("#import-status").removeClass("import-complete");
-    $("#importmap-div").dialog({
-       autoOpen: false,
-       resizable: false,
-       width: "auto",
-       height: "auto",
-       modal: true,
-       buttons: {
-           Import: function() {
-               var errors = "";
-               var name = $('#import-name').val();
-               var mapInput = $('#input-file').val();
-               if(name.length == 0) errors += "The 'Name' field is mandatory \n"
-               else if (ScribeUI.workspace.getMapByName(name)) errors += "There is already a map with that name\n"
-               if(mapInput.length == 0) errors += "Please select a file \n"
-               if(errors.length == 0) {
-                   //Clear logs
-                   ScribeUI.UI.manager.importMap.logs().text('');
-
-                   $("#import-status").text("In progress");
-                   var form = $("#importmap-form");
-                   var formData = new FormData(form[0]);
-                   $.ajax({
-                        url: $API + '/maps/import',
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        type: 'POST',
-                        success: function(data){
-                            ScribeUI.workspace.getMaps();
-                            $("#import-status").text("Complete")
-                            $("#import-status").addClass("import-complete");
-                        }
-                   });
-                   ScribeUI.Map.checkLogs(ScribeUI.UI.manager.importMap.logs(), 'import', 0);
-               }
-               else {
-                   alert(errors);
-               }
-           },
-           Close: function() {
-               $(this).dialog("close");
-           }
-       },
-       close: function() {}
-   }).dialog("open");
-}
-
 ScribeUI.Map.exportMap = function()
 {
     //Clear logs on server
