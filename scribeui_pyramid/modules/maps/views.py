@@ -476,7 +476,7 @@ class APIMap(object):
                     for group in data['groups']:
                         try:
                             with codecs.open(groups_directory + group['name'] + '.layer', encoding='utf8', mode='w+') as f:
-                                f.write(group['content'].encode('utf-8', errors='replace'))
+                                f.write(group['content'])
                                 f.close()
                         except IOError:
                             response['errors'].append("An error occured while saving '" + map_directory + group['name'] + ".layer' file.")
@@ -487,7 +487,7 @@ class APIMap(object):
 
                     try:
                         with codecs.open(map_directory + 'editor/layers', encoding='utf8', mode='w+') as f:
-                            f.write(layers.encode('utf-8', errors='replace'))
+                            f.write(layers)
                             f.close()
                     except IOError:
                         response['errors'].append("An error occured while saving '" + map_directory + "editor/layers' file.")
@@ -498,7 +498,7 @@ class APIMap(object):
                     for group in data['groups']:
                         try:
                             with codecs.open(groups_directory + group['name'] + '.map', encoding='utf8', mode='w+') as f:
-                                f.write(group['content'].encode('utf-8', errors='replace'))
+                                f.write(group['content'])
                                 f.close()
                         except IOError:
                             response['errors'].append("An error occured while saving '" + map_directory + group['name'] + ".map' file.")
@@ -506,7 +506,6 @@ class APIMap(object):
                 for filename in filenames.keys():
                     try:
                         with codecs.open(map_directory + filenames[filename], encoding='utf8', mode='w+') as f:
-                            ##f.write(data[filename].encode('utf-8'))
                             f.write(data[filename])
                             f.close()
                     except IOError:
@@ -519,18 +518,18 @@ class APIMap(object):
                         logs = sub.stdout.read()
                         errors = sub.stderr.read()
 
-                        if errors == '':
-                            response['logs'] = '**Success**'
-                        else:
+                        if errors:
                             response['logs'] = '**Errors**\n----------\n' + errors + '\n**Logs**\n----------\n' + logs
                             response['errors'].append('An error occured while running scribe.py')
+                        else:
+                            response['logs'] = 'Scribe interpreter: Success\n'
 
                     sub = subprocess.Popen('mapserv -nh "QUERY_STRING=' + data['query'] + '"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     try:
-                        response['logs'] = sub.stdout.read().strip().decode('utf-8')
+                        response['logs'] += sub.stdout.read().strip().decode('utf-8')
                     except:
                         # This error happens when the command returns a png, which is not utf8. It means everything worked fine.
-                        response['logs'] = '**Success**'
+                        response['logs'] += 'Mapserver interpreter: Success'
 
                     (projection, extent) = MapManager.get_proj_extent_from_mapfile(mapfile)
 

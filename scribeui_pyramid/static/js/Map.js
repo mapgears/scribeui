@@ -210,6 +210,7 @@ ScribeUI.Map.prototype.updateComponents = function(){
 ScribeUI.Map.prototype.save = function(){
     var self = this;
     this.updateComponents();
+    ScribeUI.UI.logs.pre().text('');
 
     //Create the debugging query to be run with mapserv
     queryString = self.WMSLayer.getFullRequestString().replace($SETTINGS.cgibin_url + "/mapserv?", '')
@@ -253,7 +254,7 @@ ScribeUI.Map.prototype.save = function(){
             }
 
             ScribeUI.UI.editor.mapfilePre().setValue(response.mapfile);
-            ScribeUI.UI.logs.pre().text(response.logs);
+            ScribeUI.UI.logs.pre().append(response.logs + "\n\n");
 
             for (var i = 0; i < self.errorWidgets.length; ++i)
             {
@@ -291,7 +292,7 @@ ScribeUI.Map.prototype.handleDebug = function(debugText, mapfile){
     if(errorArray.length > 0){
 
         //Error notification
-        ScribeUI.UI.logs.pre().text('Errors: \n');
+        ScribeUI.UI.logs.pre().append('Errors: \n');
         ScribeUI.UI.logs.notification().show('pulsate', 1000);
 
         for(i = 0; i < errorArray.length; i++){
