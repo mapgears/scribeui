@@ -1005,7 +1005,8 @@ ScribeUI.Map.deleteMap = function(){
 
 ScribeUI.Map.exportMap = function()
 {
-    //Clear logs on server
+    //Clear logs
+    ScribeUI.UI.manager.exportMap.logs().text('');
     var map = ScribeUI.workspace.selectedMap;
     ScribeUI.Map.deleteLogs("export", map.id);
 

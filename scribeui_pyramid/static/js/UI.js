@@ -397,8 +397,12 @@ ScribeUI.UI.openNewMapDialog = function(){
 }
 
 ScribeUI.UI.openImportMapDialog = function(){
-    //Clear logs on server
+    //Clear logs
     ScribeUI.Map.deleteLogs("import", 0);
+    ScribeUI.UI.manager.importMap.logs().text('');
+
+    $('#import-name').val('');
+    $('#input-file').val('');
 
     $("#import-status").text("Not started");
     $("#import-status").removeClass("import-complete");
