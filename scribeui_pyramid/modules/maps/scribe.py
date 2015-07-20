@@ -29,13 +29,13 @@ def parseDict(data, scales, files, indentation):
             if d == "VARIABLE":
                 value = VAR[data[d]]
                 vType = type(value)
-    
+
                 if vType == type(list()):
                     parseList(data[d], value, scales, files, indentation, False)
             elif data[d][:9] == "VARIABLE:":
                 value = parseVariable(data[d][9:])
                 vType = type(value)
-                
+
                 if vType == type(list()):
                     parseList(d, value, scales, files, indentation)
                 elif vType == type(unicode()):
@@ -57,7 +57,7 @@ def parseDict(data, scales, files, indentation):
                     if isScale(d) == False:
                         write(d + " " + value, scales, files, indentation)
         elif dType == type(int()):
-            value = str(data[d])    
+            value = str(data[d])
             if isScale(value) == False:
                 write(d + " " + value, scales, files, indentation)
 
@@ -92,7 +92,7 @@ def parseScaleList(d, data, files, minScale, maxScale, indentation, close=True):
     for item in data:
         for scale in item:
             scales = scaleToScaleList(scale, minScale, maxScale)
-           
+
             if scale == "VARIABLE":
                 key = item[scale]
                 value = VAR[key]
@@ -111,7 +111,7 @@ def parseScaleList(d, data, files, minScale, maxScale, indentation, close=True):
             elif vType == type(list()):
                 write(d, scales, files, indentation)
                 indentation = addIndentation(indentation, INDENTATION)
-                parseList(key, value, scales, files, indentation)               
+                parseList(key, value, scales, files, indentation)
             elif vType == type(unicode()):
                 write(d + " " + value, scales, files, indentation)
             elif vType == type(int()):
@@ -119,7 +119,7 @@ def parseScaleList(d, data, files, minScale, maxScale, indentation, close=True):
 
         if closeTag(data) == True:
             indentation = substractIndentation(indentation, INDENTATION)
-            write("END", scales, files, indentation) 
+            write("END", scales, files, indentation)
 
 
 def parseScale(scale, data, files, minScale, maxScale, indentation):
@@ -136,11 +136,11 @@ def parseScale(scale, data, files, minScale, maxScale, indentation):
                     value = parseVariable(d[item][9:])
                 else:
                     key = item
-                    value = d[key]   
+                    value = d[key]
             else:
                 key = item
                 value = d[key]
-   
+
             vType = type(value)
 
             if vType == type(dict()):
@@ -158,7 +158,7 @@ def parseVariable(value):
     var = VAR[value]
     if var[:9] == "VARIABLE:":
         var = parseVariable(var[9:])
-        
+
     return var
 
 
@@ -170,9 +170,9 @@ def scaleToScaleList(scale, minScale, maxScale):
         for i in range(s1, s2 + 1):
             if (i >= minScale) and (i <= maxScale):
                 scales[str(i)] = SCALES[str(i)]
-                
+
     elif re.match(r"[0-9]+", scale):
-        if (int(scale) >= minScale) and (int(scale) <= maxScale): 
+        if (int(scale) >= minScale) and (int(scale) <= maxScale):
             scales[scale] = SCALES[scale]
 
     return scales
@@ -188,7 +188,7 @@ def isScale(string):
 def isScaleList(data):
     scale = False
     for value in data:
-        for d in value: 
+        for d in value:
             if isScale(d) == True:
                 scale = True
             else:
@@ -267,7 +267,7 @@ def openLayerFiles(directory, scales):
     return layerFiles
 
 
-def openMapFile(directory, name):  
+def openMapFile(directory, name):
     mapFile = codecs.open(directory + name + ".map", encoding='utf-8', mode="w+")
     return {"1": mapFile}
 
@@ -295,7 +295,7 @@ def jsonToMap(content, outputDirectory, mapName, clean):
     mapFile = openMapFile(outputDirectory, mapName)
     parseList("MAP", MAP, {"1": None}, mapFile, "")
     mapFile["1"].seek(-4, 2)
-    
+
     for value in range(1, len(SCALES) + 1):
         if clean == True:
             write("INCLUDE 'level" + str(value) + ".map'", {"1": None}, mapFile, "")
@@ -318,7 +318,7 @@ def string2json(string):
     comments = re.findall(r"\#\#.*", t, flags=0)
     t = re.sub(r"\#\#.*", "VOID:FLAGCOMMENT\n", t, flags=0)
     #Remove tabs
-    t = re.sub(r"\t", " ", t) 
+    t = re.sub(r"\t", " ", t)
     #Replace @ with VARIABLE:
     t = re.sub(r"@", "VARIABLE:", t)
     #Find and replace the text between {{ and }} (useful for blocks like PROJECTION, METADATA, PATTERN etc.)
@@ -345,16 +345,16 @@ def string2json(string):
     #Replace line break with \""},\n
     t = re.sub(r"\"[\s\n]+", "\\\"\"},\n", t)
     #Replace spaces preceded by alphabetic characters or _ with "},\n
-    t = re.sub(r"(?<=[a-zA-Z_])\s", "\"},\n", t)    
+    t = re.sub(r"(?<=[a-zA-Z_])\s", "\"},\n", t)
     #Replace , followed by a ine break and ] with ]
-    t = re.sub(r",\s+\n*\]", "]", t)    
+    t = re.sub(r",\s+\n*\]", "]", t)
     #Replace ] not preceded by and alphanumeric chracter with ]}
-    t = re.sub(r"(?<!\w)\]", "]}", t) 
+    t = re.sub(r"(?<!\w)\]", "]}", t)
     #Substitute the FLAGVALUE with the corresponding values
     for i in range (0, len(values)):
         value = re.sub(r"\"", re.escape("\\") + "\"", values[i].strip())
         t = re.sub(r"FLAGVALUE", value, t, 1)
-    #Substitute the FLAGPARAM with the corresponding values    
+    #Substitute the FLAGPARAM with the corresponding values
     for i in range (0, len(params)):
         param = re.sub(r"\"", re.escape("\\") + "\"", params[i].strip())
         t = re.sub(r"FLAGPARAM", param, t, 1)
@@ -363,7 +363,7 @@ def string2json(string):
         text = re.sub(r"\"", re.escape("\\") + "\"", texts[i].strip())
         text = re.sub(r"\n", "\"}{\"VOID\":\"", text)
         t = re.sub(r"FLAGTEXT", text, t, 1)
-    #Substitute the FLAGCOMMENT with the corresponding comment blocks. Each line of the comment block is preceded with ##  
+    #Substitute the FLAGCOMMENT with the corresponding comment blocks. Each line of the comment block is preceded with ##
     for i in range (0, len(comments)):
         comment = re.sub(r"\"", re.escape("\\") + "\"", comments[i].strip())
         t = re.sub(r"FLAGCOMMENT",  comment, t, 1)
@@ -417,7 +417,7 @@ def validateSyntax(content, name, variables=None):
     if not(matchingBrackets(test_string)):
         errors.append("Error : Brackets mismatch in file " + name)
 
-    if len(errors) == 0:    
+    if len(errors) == 0:
         #Missing ":"
         #Remove the values preceded with :
         test_string = re.sub(r"(?<=:).+", "FLAG:", no_plain_text_string)
@@ -434,7 +434,7 @@ def validateSyntax(content, name, variables=None):
 
                     line_errors[str_line_number].append({
                         "text": "Error : Missing ':' in file " + name + " on line " + str_line_number + " :",
-                        "value": line        
+                        "value": line
                     })
 
         #Unexpected ":"
@@ -451,7 +451,7 @@ def validateSyntax(content, name, variables=None):
 
                     line_errors[str_line_number].append({
                         "text": "Error : Unexpected ':' in file " + name + " on line " + str_line_number + " :",
-                        "value": line        
+                        "value": line
                     })
 
         unexpected_dots2 = re.findall(r"\w+\s*\:\s*\n+\s*\{", no_plain_text_string)
@@ -466,9 +466,9 @@ def validateSyntax(content, name, variables=None):
 
                     line_errors[str_line_number].append({
                         "text": "Error : Unexpected ':' in file " + name + " on line " + str_line_number + " :",
-                        "value": line        
+                        "value": line
                     })
-        
+
         #Unexpected plain text
         test_string = re.sub(r"epsg\:", "epsg$", no_plain_text_string, flags=re.IGNORECASE)
         no_plain_text_lines = test_string.split("\n")
@@ -487,9 +487,9 @@ def validateSyntax(content, name, variables=None):
                         line_errors[str_line_number].append({
                             "text": "Error : Malformed text in file " + name + " on line " + str_line_number + \
                             ". Consider using double brackets {{ }} :",
-                            "value": line        
+                            "value": line
                         })
-        
+
         unexpected_plain_text = re.findall(r"(\:\s*\{|\{\s*\:)", no_plain_text_string)
 
         #Call to undefined variable
@@ -507,7 +507,7 @@ def validateSyntax(content, name, variables=None):
 
                         line_errors[str_line_number].append({
                             "text": "Error : Call to undefined variable in file " + name + " on line " + str_line_number + " :",
-                            "value": line        
+                            "value": line
                         })
 
     return (errors, line_errors)
@@ -537,7 +537,7 @@ def list2dict(ls):
     return dc
 
 def debugMapfile(outputDirectory, mapName, level):
-    sub = subprocess.Popen('shp2img -m ' + outputDirectory + mapName + '.map -all_debug ' + str(level) + ' -o ' + outputDirectory + ' debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    sub = subprocess.Popen('shp2img -m ' + outputDirectory + mapName + '.map -all_debug ' + str(level) + ' -o ' + outputDirectory + ' debug.png', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     logs = 'Mapserver logs (debug level ' + str(level) + ')\n'
     logs += '------------------------------\n'
     logs += sub.stderr.read().strip() + sub.stdout.read().strip()
@@ -550,24 +550,24 @@ def main():
 
     inputDirectory = "./"
     outputDirectory = "./result/"
-    mapName = "result" 
+    mapName = "result"
     configFile = "config"
     clean = False
     error = ""
     outputJSONFile = None
     debugLevel = -1
 
-    try:                                
+    try:
         opts, args = getopt.getopt(sys.argv[1:], "i:o:n:cf:t:j:d:", ["input", "output", "name", "clean", "file","tabulation", "json", "debug"])
     except getopt.GetoptError as err:
-        print >> sys.stderr, str(err)                      
-        sys.exit(2) 
-                    
+        print >> sys.stderr, str(err)
+        sys.exit(2)
+
     for opt, arg in opts:
         if opt in ("-i", "--input"):
             inputDirectory = arg
         elif opt in ('-o', "--ouput"):
-            outputDirectory = arg     
+            outputDirectory = arg
         elif opt in ("-n", "--name"):
             mapName = arg
         elif opt in ("-c", "--clean"):
@@ -580,7 +580,7 @@ def main():
             outputJSONFile = arg
         elif opt in ("-d", "--debug"):
             debugLevel = int(arg)
-            
+
     if os.path.isfile(inputDirectory + "scales"):
         inputScalesFile = codecs.open(inputDirectory + "scales", encoding='utf-8')
         inputScalesContent = inputScalesFile.read()
@@ -614,7 +614,7 @@ def main():
         inputLayersContent = "LAYERS {\n"
         groupFiles = [""] * (len(jsonConfig["ORDER"]) + 1)
         groups= []
-        
+
         for i in range(0, len(jsonConfig["ORDER"])):
             for j in jsonConfig["ORDER"][i]:
                 if jsonConfig["ORDER"][i][j][:1] == "/":
@@ -626,7 +626,7 @@ def main():
                     if (int(j) > 0 and int(j) <= len(jsonConfig["ORDER"])):
                         groupFiles[int(j)] = layerFilePath
                     else:
-                        error += "Index " + j + " out of bounds in config file.\n" 
+                        error += "Index " + j + " out of bounds in config file.\n"
                 else:
                     error += "File '" +  layerFilePath + "' not found.\n"
 
@@ -650,7 +650,7 @@ def main():
             if outputJSONFile is not None:
                 jFile = codecs.open(outputJSONFile, encoding='utf-8', mode="w+")
                 jFile.write(jsonContent.encode('utf-8'))
-                
+
             try:
                 jsonToMap(jsonContent, outputDirectory, mapName, clean)
                 if debugLevel >= 0 and debugLevel <= 5: #debug using shp2img
@@ -662,8 +662,7 @@ def main():
     else:
         print >> sys.stderr, error
         sys.exit(2)
-        
+
 
 if __name__ == "__main__":
     main()
-    
