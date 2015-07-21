@@ -728,18 +728,53 @@ ScribeUI.Map.prototype.setGroups = function(callback){
                 self.displayGroups(true);
 
                 if(self.type == 'Standard'){
-                    $.each(self.removedGroups, function(index, name){
-                        removeIncludeFromMap(name + '.map', false);
-                    });
-                    $.each(self.groups, function(index, group){
-                        removeIncludeFromMap(group.name + '.map', false);
-                        addIncludeToMap(group.name + '.map', false);
-                    });
+                    self.updateGroups();
                     self.save();
                 }
             }
+            else{
+                alert(response.errors);
+                $.each(response.groups, function(index, name){
+                    self.removeGroup(name);
+                })
+                self.updateGroups();
+            }
         }
     );
+}
+
+/* This function replaces removeIncludeFromMap and addIncludeToMap.
+   It is called when a standard map's groups are changed.
+   Its objective is to update and replace the "include" strings in the mapfile,
+   in the correct order. */
+ScribeUI.Map.prototype.updateGroups = function(){
+    //First, remove all groups from the mapfile
+    var mapCMEditor = ScribeUI.editorManager.get('map').CMEditor;
+
+    for(var i=0; i < mapCMEditor.lineCount(); i++){
+        var line = mapCMEditor.getLine(i);
+        //Rewrite the map file, skipping include lines
+        if (line.search(/layers\/.*\.map/) !== -1){
+            mapCMEditor.replaceRange("", CodeMirror.Pos(i-1), CodeMirror.Pos(i));
+            i--;
+        }
+    }
+
+    //Find the last "END" value
+    var lastEnd = 0;
+    for(var i = mapCMEditor.lineCount() - 1; i >= 0 && lastEnd == 0; i--){
+        if(mapCMEditor.getLine(i).indexOf("END") !== -1){
+            lastEnd = i;
+        }
+    }
+
+    //After that, put the groups back in, in the correct order
+    for(var i=0; i < this.groups.length; i++) {
+        mapCMEditor.replaceRange("\n    "
+            + "INCLUDE 'layers/"+this.groups[i].name + '.map'+"'",
+            CodeMirror.Pos(lastEnd - 1 + i))
+    }
+
 }
 
 ScribeUI.Map.prototype.openDataBrowser = function(){
@@ -1043,39 +1078,5 @@ ScribeUI.Map.onMapOpened = function(){
     for(i in ScribeUI.plugins){
         if(plugins[i].onMapOpened)
             plugins[i].onMapOpened();
-    }
-}
-ScribeUI.Map.removeIncludeFromMap = function(filename, commit){
-    var mapCMEditor = ScribeUI.editorManager.get('map').CMEditor;
-    for(var i=0; i < mapCMEditor.lineCount(); i++){
-        if( mapCMEditor.getLine(i).indexOf("layers/" + filename) !== -1){
-            var line =  mapCMEditor.getLine(i);
-			mapCMEditor.removeLine(i);
-            break;
-        }
-    }
-}
-ScribeUI.Map.addIncludeToMap = function(filename, commit){
-    //Find the includes in the mapeditor
-    lastinc = -1;
-    //BUG: WE SHOULD SET THE EDITOR SELECT TO THE MAP OPTION
-    //ALSO, THIS FUNCTION IS CALLED FOR EVERY GROUP EVEN IF IT HAS ALREADY BEEN ADDED TO THE MAPFILE
-    var mapCMEditor = ScribeUI.editorManager.get('map').CMEditor;
-    ScribeUI.UI.openSecondaryPanel(ScribeUI.editorManager.get("map"));
-    for(var i=0; i <  mapCMEditor.lineCount(); i++){
-        if( mapCMEditor.getLine(i).indexOf("INCLUDE") !== -1){
-            lastinc = i;
-        }else if(lastinc > -1){
-            //We add the new file at the end of the include list
-            var line =  mapCMEditor.getLine((i-1));
-            //TODO detect indentation
-            mapCMEditor.setLine((i-1), line+"\n    INCLUDE 'layers/"+filename+"'");
-            //Highlight for a short time:
-            //mapEditor.setLineClass(i, 'background', 'setextent-highlighted-line');
-            //setTimeout(function(){
-            //    mapEditor.setLineClass(i, 'background', '');
-            //}, 3000);
-            break;
-        }
     }
 }

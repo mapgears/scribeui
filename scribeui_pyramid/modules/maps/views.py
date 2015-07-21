@@ -358,7 +358,8 @@ class APIMap(object):
     def update_groups(self):
         response = {
             'status': 0,
-            'errors': []
+            'errors': [],
+            'groups': []
             }
 
         map = Map.by_id(self.matchdict.get('id'))
@@ -387,7 +388,8 @@ class APIMap(object):
             if isinstance(groups, list) and len(groups) > 0:
                 for group in groups:
                     if not MapManager.is_valid_name(group):
-                        response['errors'].append('Name is not valid.')
+                        response['errors'].append('Name is not valid: ' + group)
+                        response['groups'].append(group);
 
             if len(response['errors']) == 0:
                 workspace_directory = self.request.registry.settings.get('workspaces.directory', '') + '/' + workspace.name + '/'
