@@ -63,5 +63,5 @@ class MainView(BaseView):
             'settingsJSON': json.dumps(settings),
             'logo': self.request.static_url('scribeui_pyramid:static/img/logo_mini.png'),
             'logout_url': self.request.route_url('auth.logout'),
-            'version': 'v1.6'
+            'version': 'v1.7'
         }
