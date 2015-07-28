@@ -7,7 +7,7 @@ To get the latest **release**, clone this repo and then checkout the latest tag.
 
 Migrating from ScribeUI v0.5 to v1.0 is explained at the end of this file.
 
-The following instruction installations were tested on ubuntu precise. 
+The following instruction installations were tested on ubuntu precise.
 
 
 **Requirements**
@@ -19,9 +19,9 @@ The following instruction installations were tested on ubuntu precise.
 Production installation
 ------------
 
-You need to install apache2 with mod_wsgi: 
+You need to install apache2 with mod_wsgi:
 
-    sudo apt-get install libapache2-mod-wsgi 
+    sudo apt-get install libapache2-mod-wsgi
 
 **Note** mod_wsgi 3.4 or more is recommended. [How to compile mod_wsgi 3.4 on ubuntu precise](http://scribeui.org/faq.html#wsgi-how)
 
@@ -32,7 +32,7 @@ Configuration
 First, clone the repository in a folder www-data will be able to access. In this configuration example, the scribeui folder will be located at ```/opt/scribeui```
 
 Then, copy the default production settings:
- 
+
     cp production.ini local.ini
 
 Make sure the mapserver url in local.ini points to your mapserver path:
@@ -50,6 +50,8 @@ Create a file 'pyramid.wsgi' with the following content, editing the path to you
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
+       export CPLUS_INCLUDE_PATH=/usr/include/gdal
+       export C_INCLUDE_PATH=/usr/include/gdal
        sudo make
        sudo chown -R youruser .
        make install
@@ -87,10 +89,10 @@ Once apache is restarted, ScribeUI should be available!
 
     sudo service apache2 restart
 
-Downloading template data is optional, but recommended for a better 
-experience: 
+Downloading template data is optional, but recommended for a better
+experience:
 
-        sudo make load-demo-data   
+        sudo make load-demo-data
 
 If you omit this step, the maps you create from default templates will display pink tiles.
 
@@ -114,26 +116,28 @@ Edit the proxy.cgi file and add your server host to the list of allowed hosts if
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
+        export CPLUS_INCLUDE_PATH=/usr/include/gdal
+        export C_INCLUDE_PATH=/usr/include/gdal
         sudo make
         make install
 
 This will download and install the required dependencies, setup the differents
-configurations files and install them in the proper directories. 
+configurations files and install them in the proper directories.
 
 To launch the server at http://localhost:6543/:
 
         make start
 
-Downloading template data is optional, but recommended for a better 
-experience. 
+Downloading template data is optional, but recommended for a better
+experience.
 
-        sudo make load-demo-data   
+        sudo make load-demo-data
 
 
 This will download some natural earth data and will help you get started with
 ScribeUI by making templates readily working so you don't start with an empty
 mapfile. (The template code is still available if you don't download the data,
-but the result will be pink tiles). 
+but the result will be pink tiles).
 
 Migrating from v0.5 to v1.0
 -----------------------------
@@ -147,7 +151,7 @@ You may now follow the production installation instructions and install ScribeUI
 Once the installation is finished and  ScribeUI up, you may import your old workspaces changing the workspace folder and the database to your user:
 
     sudo chown -R user scribeui.sqlite workspaces/
- 
+
 Then executre the update script:
 
     python update.py
@@ -156,9 +160,8 @@ Then change the database and workspace folders back to www-data:
 
     sudo chown -R www-data scribeui.sqlite workspaces/
 
-Your workspaces and maps will then be imported, although passwordless. 
+Your workspaces and maps will then be imported, although passwordless.
 
 Each map will have to be edited to delete or comment the following line in the map editor:
 
     CONFIG "MS_ERRORFILE" "../debugFile.log"
-
