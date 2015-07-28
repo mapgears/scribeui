@@ -55,6 +55,22 @@ jQuery(function() { $(document).ready(function(){
         '</div>');
 		dialogDiv.hide();
 		$('.main').append(dialogDiv);
+
+        var self = this;
+
+        //Refresh data sources on change
+        var dropdownGroups = $('#classify-input-group');
+        dropdownGroups.change(function(){
+            self.updateDatasources(
+                ScribeUI.workspace.openedMap.getGroupByName(
+                dropdownGroups.val()));
+        });
+
+        //Refresh attributes on datasource change
+        var dropdownDatasources = $('#classify-input-datasource');
+        dropdownDatasources.change(function(){
+            self.updateAttributes(dropdownDatasources.val());
+        });
     }
 
     //Function called when the Classify button is pressed
@@ -63,29 +79,23 @@ jQuery(function() { $(document).ready(function(){
         var map = ScribeUI.workspace.openedMap;
 
         //Add groups to the dropdown
-        var dropdown = $('#classify-input-group');
-        dropdown.empty();
+        var dropdownGroups = $('#classify-input-group');
+        dropdownGroups.empty();
         var groups = map.groups;
         $.each(groups, function(i, item) {
-            dropdown.append($('<option>', {
+            dropdownGroups.append($('<option>', {
                 value: item.name,
                 text: item.name
             }));
         });
 
-        var self = this;
-
-        //Refresh data sources on change
-        dropdown.change(function(){
-            self.updateDatasources(
-                ScribeUI.workspace.openedMap.getGroupByName(dropdown.val()));
-        });
-
         //Switch to selected group and trigger change
-        dropdown.val(map.selectedGroup.name).change();
+        dropdownGroups.val(map.selectedGroup.name).change();
 
         var dialogDiv = $('#classify-dialog');
-        //Open de dialog
+        var self = this;
+
+        //Open the dialog
         dialogDiv.dialog({
            autoOpen: false,
            resizable: false,
@@ -95,14 +105,6 @@ jQuery(function() { $(document).ready(function(){
            title: "Classify",
            buttons: {
                Classify: function() {
-                   //START TMP
-                   $.ajax({
-                       url: "helloworld",
-                       success: function(result){
-                           console.log(result);
-                       }
-                   });
-                   //END TMP
                    //Get values
                    var errors = [];
                    var nbClasses = $('#classify-nbclasses').val();
@@ -221,6 +223,33 @@ jQuery(function() { $(document).ready(function(){
         });
 
         dropdown.change();
+    }
+
+    classify.prototype.updateAttributes = function(datasource){
+        //Get shapefiles path
+        var shapepathRegex = /SHAPEPATH[ :]*'(.*)'/;
+        var shapepath = shapepathRegex.exec(ScribeUI.workspace.openedMap.map);
+        $.ajax({
+            url: $API + "/classify/attributes/get",
+            type: "POST",
+            data: {
+                'datasource': shapepath[1] + datasource,
+                'map_name': ScribeUI.workspace.openedMap.name,
+                'workspace_name': ScribeUI.workspace.name
+            },
+            success: function(result){
+                //Clear the datasource dropdown
+                var dropdown = $('#classify-input-attribute');
+                dropdown.empty();
+
+                $.each(result, function(i, item) {
+                    dropdown.append($('<option>', {
+                        value: item,
+                        text: item
+                    }));
+                });
+            }
+        });
     }
 
     //Add the plugin to ScribeUI
