@@ -9,7 +9,7 @@ PSERVE := bin/pserve
 EV_INI := local.ini
 
 .PHONY: admin
-admin: dep_install deps mv-elfinder 
+admin: dep_install deps mv-elfinder
 
 .PHONY: clean_all
 clean_all: clean_wd clean_venv
@@ -17,7 +17,7 @@ clean_all: clean_wd clean_venv
 clean_wd:
 	rm -rf data *.egg-info
 
-install: deps develop ev.db db_up db_data 
+install: deps develop ev.db db_up db_data
 
 develop: lib/python*/site-packages/ev.egg-link
 lib/python*/site-packages/ev.egg-link:
@@ -68,7 +68,7 @@ deps:  venv dep_requirements
 
 
 dep_install:
-	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev zip mapserver-bin
+	apt-get install build-essential swig libpq-dev python-dev libmysqlclient-dev python-pip libmysqlclient-dev zip mapserver-bin gdal-bin libgdal-dev
 	pip install virtualenv
 
 dep_requirements:
@@ -107,7 +107,7 @@ mv-elfinder:
 	sudo cp proxy.cgi /usr/lib/cgi-bin/
 
 perms:
-	sudo chown -R www-data scribeui_pyramid scribeui.sqlite workspaces 
+	sudo chown -R www-data scribeui_pyramid scribeui.sqlite workspaces
 	sudo chown www-data .
 
 venv: bin/python

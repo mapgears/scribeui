@@ -40,3 +40,4 @@ zope.deprecation==4.0.2
 zope.interface==4.0.5
 zope.sqlalchemy==0.7.2
 BeautifulSoup==3.2.1
+GDAL==1.10.0
