@@ -22,8 +22,8 @@ requires = [
     'm2crypto',
     'psycopg2',
     'alembic',
-    'fixture==1.4',
-    'GeoAlchemy2==0.2',
+    'fixture==1.5',
+    'GeoAlchemy2==0.2'
 ]
 
 tests_require = [
