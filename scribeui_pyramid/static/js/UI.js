@@ -405,6 +405,7 @@ ScribeUI.UI.openImportMapDialog = function(){
     $('#input-file').val('');
 
     $("#import-status").text("Not started");
+    $("#import-load-spinner").hide();
     $("#import-status").removeClass("import-complete");
     $("#importmap-div").dialog({
        autoOpen: false,
@@ -423,8 +424,9 @@ ScribeUI.UI.openImportMapDialog = function(){
                if(errors.length == 0) {
                    //Clear logs
                    ScribeUI.UI.manager.importMap.logs().text('');
-
+                   $("#import-status").removeClass("import-complete");
                    $("#import-status").text("In progress");
+                   $("#import-load-spinner").show();
                    var form = $("#importmap-form");
                    var formData = new FormData(form[0]);
                    ScribeUI.workspace.importMap(formData);

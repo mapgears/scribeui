@@ -808,6 +808,11 @@ ScribeUI.Map.prototype.exportSelf = function(publicData, privateData, callback){
     //Clear logs
     ScribeUI.UI.manager.exportMap.logs().text('');
 
+    //Set in progress
+    $("#export-status").removeClass("export-complete");
+    $("#export-status").text("In progress");
+    $("#export-load-spinner").show();
+
     //Export map
     var form = $("#exportmap-form");
     form.attr("action", $API + '/maps/export/' + this.id);
@@ -853,6 +858,13 @@ ScribeUI.Map.checkLogs = function(logElement, operation, mapID) {
                 else {
                     //Delete the logs
                     ScribeUI.Map.deleteLogs(operation, mapID);
+
+                    //Show it's finished on response from export
+                    if(operation == "export"){
+                        $("#export-status").text("Complete")
+                        $("#export-status").addClass("export-complete");
+                        $("#export-load-spinner").hide();
+                    }
                 }
             }
         }
@@ -1048,6 +1060,9 @@ ScribeUI.Map.exportMap = function()
 
     var name = ScribeUI.workspace.selectedMap.name;
     if (name){
+        $("#export-status").text("Not started");
+        $("#export-load-spinner").hide();
+        $("#export-status").removeClass("export-complete");
         $("#exportmap-div").dialog({
             autoOpen: false,
             resizable: false,

@@ -272,6 +272,7 @@
             <label>Status</label>
             <div class="control">
                 <span id="import-status" class="import-status">Not started</span>
+                <img id="import-load-spinner" src="/static/img/ajax-loader.gif"/>
             </div>
         </div>
     </div>
@@ -311,6 +312,13 @@
             <label>Logs</label>
             <div class="control">
                 <textarea id="export-logs" class="git-logs" readonly></textarea>
+            </div>
+        </div>
+        <div class="control-group">
+            <label>Status</label>
+            <div class="control">
+                <span id="export-status" class="export-status">Not started</span>
+                <img id="export-load-spinner" src="/static/img/ajax-loader.gif"/>
             </div>
         </div>
     </div>

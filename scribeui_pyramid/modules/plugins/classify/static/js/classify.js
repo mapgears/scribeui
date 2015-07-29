@@ -52,12 +52,15 @@ jQuery(function() { $(document).ready(function(){
                     '<select id="classify-input-field"/>' +
                 '</div>' +
             '</div>' +
+            '<img id="field-load-spinner" class="load-spinner" ' +
+                'src="/static/img/ajax-loader.gif"/>' +
             '<pre id="classify-field-info">' +
             '</pre>' +
         '</div>');
 		dialogDiv.hide();
 		$('.main').append(dialogDiv);
         $('#classify-field-info').hide();
+        $('#field-load-spinner').hide();
 
         var self = this;
 
@@ -278,6 +281,13 @@ jQuery(function() { $(document).ready(function(){
 
     classify.prototype.getFieldInfo = function(field){
         var datasource = this.getDatasourcePath();
+
+        var loadSpinner = $('#field-load-spinner');
+        loadSpinner.show();
+
+        var fieldInfo = $("#classify-field-info");
+        fieldInfo.hide();
+
         $.ajax({
             url: $API + "/classify/field/getinfo",
             type: "POST",
@@ -287,8 +297,9 @@ jQuery(function() { $(document).ready(function(){
             },
             success: function(result){
                 var fieldType = result.geom_type;
-                var fieldInfo = $("#classify-field-info");
+
                 fieldInfo.show();
+                loadSpinner.hide();
 
                 fieldInfo.text("Informations for field '" + field + "'");
                 fieldInfo.append("\nField type: " + fieldType);

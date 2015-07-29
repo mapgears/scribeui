@@ -54,6 +54,7 @@ ScribeUI.Workspace.prototype.importMap = function(data){
              if(response.status == 1){
                  $("#import-status").text("Complete")
                  $("#import-status").addClass("import-complete");
+                 $("#import-load-spinner").hide();
                  ScribeUI.workspace.refresh();
              }
              else alert(response.errors[0]);
