@@ -1,12 +1,9 @@
-#classify-dialog label{
-    padding-top: 0px;
-    width: 150px;
-}
-#classify-dialog .control{
-    margin-left: 170px;
-}
-
 #classify-field-info{
     border: solid lightgray 1px;
     padding: 5px;
+}
+
+input.color-input{
+    margin-right: 8px;
+    width: 130px;
 }

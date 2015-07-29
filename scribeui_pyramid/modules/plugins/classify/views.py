@@ -27,7 +27,7 @@ class ClassifyView(object):
         if not datasource:
             datasource = ogr.Open(file + '.shp')
             if not datasource:
-                response['errors'].append("No shapefile found for " + file)
+                response['errors'].append("No shapefile found for " + self.request.POST.get('datasource'))
                 return response
         layer = datasource.GetLayer()
         layer_defn = layer.GetLayerDefn()

@@ -35,6 +35,7 @@ label {
 
 input[type="text"],
 input[type="password"],
+input[type="number"],
 textarea {
     border-radius: 4px;
     width:200px;
@@ -786,8 +787,7 @@ div.olControlZoom a {
 .control-group {
     display: table;
     margin-bottom: 20px;
-    height: 30px;
-    margin-top:10px;
+    margin-top: 20px;
 }
 
 .control-group label {
@@ -959,7 +959,8 @@ textarea.long {
 }
 
 .control-group input[type="text"],
-.control-group input[type="password"] {
+.control-group input[type="password"],
+.control-group input[type="number"] {
     margin-top: 4px;
 }
 

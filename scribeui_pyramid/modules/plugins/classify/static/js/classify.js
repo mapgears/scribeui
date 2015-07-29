@@ -53,16 +53,67 @@ jQuery(function() { $(document).ready(function(){
                 '</div>' +
             '</div>' +
             '<img id="field-load-spinner" class="load-spinner" ' +
-                'src="/static/img/ajax-loader.gif"/>' +
-            '<pre id="classify-field-info">' +
+                'src="/static/img/ajax-loader.gif" style="display: none;"/>' +
+            '<pre id="classify-field-info" style="display: none;">' +
             '</pre>' +
+            '<div id="classify-options">' +
+                '<div class="control-group" id="classify-type-select">' +
+                    '<label>Class type</label>' +
+                    '<div class="control">' +
+                        '<select id="classify-input-classtype">' +
+                            '<option>Sequential</option>' +
+                            '<option>Qualitative</option>' +
+                        '</select>' +
+                    '</div>' +
+                '</div>' +
+                '<div id="classify-sequential-options">' +
+                    '<div class="control-group">' +
+                        '<label>Number of classes</label>' +
+                        '<div class="control">' +
+                            '<input type="number" min="1"/>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="control-group">' +
+                        '<label>Start value</label>' +
+                        '<div class="control">' +
+                            '<input type="number"/>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="control-group">' +
+                        '<label>End value</label>' +
+                        '<div class="control">' +
+                            '<input type="number"/>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="control-group">' +
+                        '<label id="noclass">Colors</label>' +
+                        '<div class="control">' +
+                            '<input type="text" class="color-input"/>' +
+                            '<button type="button" class="classify-button-color">' +
+                                'Choose' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div id="classify-qualitative-options" style="display: none;">' +
+                    '<div class="control-group">' +
+                        '<label id="noclass">Colors</label>' +
+                        '<div class="control">' +
+                            '<input type="text" class="color-input"/>' +
+                            '<button type="button" class="classify-button-color">' +
+                                'Choose' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
         '</div>');
 		dialogDiv.hide();
 		$('.main').append(dialogDiv);
-        $('#classify-field-info').hide();
-        $('#field-load-spinner').hide();
 
         var self = this;
+
+        //Setup events
 
         //Refresh data sources on change
         var dropdownGroups = $('#classify-input-group');
@@ -72,8 +123,8 @@ jQuery(function() { $(document).ready(function(){
                 dropdownGroups.val()));
         });
 
-        var dropdownDatasources = $('#classify-input-datasource');
         //Refresh fields on datasource change
+        var dropdownDatasources = $('#classify-input-datasource');
         dropdownDatasources.change(function(){
             self.updateFields();
         });
@@ -81,7 +132,31 @@ jQuery(function() { $(document).ready(function(){
         //Get field info on field change
         var dropdownFields = $('#classify-input-field');
         dropdownFields.change(function(){
-            self.getFieldInfo(dropdownFields.val());
+            if(dropdownFields.val() !== null){
+                self.getFieldInfo(dropdownFields.val());
+            }
+        });
+
+        //Change displayed option on class type change
+        var dropdownClassType = $('#classify-input-classtype')
+        dropdownClassType.change(function(){
+            switch(dropdownClassType.val()){
+                case 'Sequential':
+                    $('#classify-sequential-options').show();
+                    $('#classify-qualitative-options').hide();
+                    break;
+                case 'Qualitative':
+                    $('#classify-sequential-options').hide();
+                    $('#classify-qualitative-options').show();
+                    break;
+            }
+        });
+
+        //Open color menu on color button press
+        var colorButton = $('.classify-button-color');
+        var colorChooser = new colorMenu();
+        colorButton.click(function(){
+            colorChooser.open();
         });
     };
 
@@ -265,16 +340,24 @@ jQuery(function() { $(document).ready(function(){
                 'datasource': datasource
             },
             success: function(result){
-                //Clear the datasource dropdown
                 var dropdown = $('#classify-input-field');
                 dropdown.empty();
-                $.each(result.fields, function(i, item) {
-                    dropdown.append($('<option>', {
-                        value: item,
-                        text: item
-                    }));
-                });
-                dropdown.change();
+
+                if(result.errors.length > 0){
+                    var fieldInfo = $("#classify-field-info");
+                    fieldInfo.show();
+                    fieldInfo.text(result.errors);
+                }
+                else{
+                    //Clear the datasource dropdown
+                    $.each(result.fields, function(i, item) {
+                        dropdown.append($('<option>', {
+                            value: item,
+                            text: item
+                        }));
+                    });
+                    dropdown.change();
+                }
             }
         });
     };
