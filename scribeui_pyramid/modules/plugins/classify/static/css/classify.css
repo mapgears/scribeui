@@ -5,3 +5,8 @@
 #classify-dialog .control{
     margin-left: 170px;
 }
+
+#classify-field-info{
+    border: solid lightgray 1px;
+    padding: 5px;
+}

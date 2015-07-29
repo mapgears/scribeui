@@ -13,14 +13,14 @@ jQuery(function() { $(document).ready(function(){
 
     //Get the current map's syntax, return a SyntaxEnum
     classify.getOpenedMapSyntax = function(){
-        syntaxString = ScribeUI.workspace.openedMap.type;
+        var syntaxString = ScribeUI.workspace.openedMap.type;
         switch(syntaxString){
             case "Scribe":
                 return classify.SyntaxEnum.SCRIBE;
             case "Standard":
                 return classify.SyntaxEnum.MAPSERVER;
         }
-    }
+    };
 
     //Function ran when the plugin is loaded
     classify.prototype.init = function(){
@@ -47,14 +47,17 @@ jQuery(function() { $(document).ready(function(){
                 '</div>' +
             '</div>' +
             '<div class="control-group">' +
-                '<label>Attribute</label>' +
+                '<label>Field</label>' +
                 '<div class="control">' +
-                    '<select id="classify-input-attribute"/>' +
+                    '<select id="classify-input-field"/>' +
                 '</div>' +
             '</div>' +
+            '<pre id="classify-field-info">' +
+            '</pre>' +
         '</div>');
 		dialogDiv.hide();
 		$('.main').append(dialogDiv);
+        $('#classify-field-info').hide();
 
         var self = this;
 
@@ -66,12 +69,18 @@ jQuery(function() { $(document).ready(function(){
                 dropdownGroups.val()));
         });
 
-        //Refresh attributes on datasource change
         var dropdownDatasources = $('#classify-input-datasource');
+        //Refresh fields on datasource change
         dropdownDatasources.change(function(){
-            self.updateAttributes(dropdownDatasources.val());
+            self.updateFields();
         });
-    }
+
+        //Get field info on field change
+        var dropdownFields = $('#classify-input-field');
+        dropdownFields.change(function(){
+            self.getFieldInfo(dropdownFields.val());
+        });
+    };
 
     //Function called when the Classify button is pressed
     classify.prototype.openClassifyPopup = function(){
@@ -131,12 +140,12 @@ jQuery(function() { $(document).ready(function(){
            },
            close: function() {}
        }).dialog("open");
-    }
+   };
 
     //Called when a map is opened in ScribeUI
     classify.prototype.onMapOpened = function(){
         $('#btn-classify').button('enable');
-    }
+    };
 
     /*  This function is the core of the classify plugin. It generates
      *  classes to add to the map file.
@@ -152,7 +161,7 @@ jQuery(function() { $(document).ready(function(){
         }
 
         return output;
-    }
+    };
 
     /*  This function returns a "base" class to be filled with useful
      *  values by the generateClasses function.
@@ -178,7 +187,7 @@ jQuery(function() { $(document).ready(function(){
                     '    }\n' +
                     '}\n';
         }
-    }
+    };
 
     /*  This function gets any data source in a group using a regex.
      *  Parameters:
@@ -189,21 +198,21 @@ jQuery(function() { $(document).ready(function(){
         //Get data formatted with DATA or DATA: in a single line
         var singleLineRegex = /^[\t ]*DATA[ :]*(['"](.*)['"])/gm;
         var match = singleLineRegex.exec(group.content);
-        while(match != null){
+        while(match !== null){
             datasources.push(match[2]);
             match = singleLineRegex.exec(group.content);
         }
 
         //Get data formatted over multiple lines with DATA { ... }
         var multilineRegex = /(^|[ \t]+)DATA[ \t]*{((.|[\n\r])*?)}/gm;
-        var match = multilineRegex.exec(group.content);
-        while(match != null){
+        match = multilineRegex.exec(group.content);
+        while(match !== null){
             //get each datasource in a DATA {} block
             var innerDataRegex = /['"](.*)['"]/gm;
             var innerMatch = innerDataRegex.exec(match[2]);
-            while(innerMatch != null){
+            while(innerMatch !== null){
                 datasources.push(innerMatch[1]);
-                var innerMatch = innerDataRegex.exec(match[2]);
+                innerMatch = innerDataRegex.exec(match[2]);
             }
             match = multilineRegex.exec(group.content);
         }
@@ -223,35 +232,84 @@ jQuery(function() { $(document).ready(function(){
         });
 
         dropdown.change();
-    }
+    };
 
-    classify.prototype.updateAttributes = function(datasource){
+    classify.prototype.getDatasourcePath = function(){
+        var dropdownDatasources = $('#classify-input-datasource');
+        var datasource = dropdownDatasources.val();
+
         //Get shapefiles path
         var shapepathRegex = /SHAPEPATH[ :]*'(.*)'/;
         var shapepath = shapepathRegex.exec(ScribeUI.workspace.openedMap.map);
+
+        //Get shapefiles path if it exists, else use datasource as is
+        if(shapepath && shapepath.length > 0){
+            datasource = shapepath[1] + datasource;
+        }
+
+        return ScribeUI.workspace.name +
+            '/' + ScribeUI.workspace.openedMap.name +
+            '/map/' + datasource;
+    };
+
+    classify.prototype.updateFields = function(){
+        var datasource = this.getDatasourcePath();
+        $("#classify-field-info").hide();
         $.ajax({
-            url: $API + "/classify/attributes/get",
+            url: $API + "/classify/field/getlist",
             type: "POST",
             data: {
-                'datasource': shapepath[1] + datasource,
-                'map_name': ScribeUI.workspace.openedMap.name,
-                'workspace_name': ScribeUI.workspace.name
+                'datasource': datasource
             },
             success: function(result){
                 //Clear the datasource dropdown
-                var dropdown = $('#classify-input-attribute');
+                var dropdown = $('#classify-input-field');
                 dropdown.empty();
-
-                $.each(result, function(i, item) {
+                $.each(result.fields, function(i, item) {
                     dropdown.append($('<option>', {
                         value: item,
                         text: item
                     }));
                 });
+                dropdown.change();
             }
         });
-    }
+    };
+
+    classify.prototype.getFieldInfo = function(field){
+        var datasource = this.getDatasourcePath();
+        $.ajax({
+            url: $API + "/classify/field/getinfo",
+            type: "POST",
+            data: {
+                'datasource': datasource,
+                'field': field
+            },
+            success: function(result){
+                var fieldType = result.geom_type;
+                var fieldInfo = $("#classify-field-info");
+                fieldInfo.show();
+
+                fieldInfo.text("Informations for field '" + field + "'");
+                fieldInfo.append("\nField type: " + fieldType);
+                fieldInfo.append("\nNumber of values: " + result.nb_values);
+                fieldInfo.append("\nUnique values: " + result.unique_values);
+                switch (fieldType) {
+                    case "String":
+                        break;
+                    case "Real":
+                    case "Integer":
+                        fieldInfo.append("\nMinimum: " + result.minimum);
+                        fieldInfo.append("\nMaximum: " + result.maximum);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
+    };
 
     //Add the plugin to ScribeUI
     ScribeUI.addPlugin(new classify());
-})});
+});});
