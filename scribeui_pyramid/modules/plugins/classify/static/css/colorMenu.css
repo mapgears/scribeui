@@ -1,0 +1,38 @@
+.colorMenu-table td{
+    padding: 5px;
+}
+
+.colorMenu-table input[type="number"]{
+    width: 50px;
+}
+
+.colorMenu-table input[type="color"]{
+    min-width: 50px;
+    width: 100%;
+}
+
+.colorMenu-table label{
+    float: left;
+    padding-top: 5px;
+    padding-right: 10px;
+    text-align: right;
+    width: 140px;
+    display: block;
+}
+
+.colorMenu-selected-colors{
+    background-color: '#dddddd';
+    width: 100%;
+}
+
+.colorMenu-colorSquare{
+    border: solid black 1px;
+    float: left;
+
+    width: 20px;
+    height: 20px;
+}
+
+.colorMenu-colorSquare:hover{
+    border: solid red 1px;
+}

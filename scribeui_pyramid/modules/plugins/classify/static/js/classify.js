@@ -3,6 +3,7 @@ jQuery(function() { $(document).ready(function(){
     //Plugin attributes
     function classify(){
         this.name = "Data Classification Plug-in";
+        this.colorChooser = new colorMenu();
     }
 
     //static enum of syntax styles
@@ -154,9 +155,11 @@ jQuery(function() { $(document).ready(function(){
 
         //Open color menu on color button press
         var colorButton = $('.classify-button-color');
-        var colorChooser = new colorMenu();
         colorButton.click(function(){
-            colorChooser.open();
+            self.colorChooser.open(function(colorRange){
+                $('.color-input').val(colorRange);
+                console.log(colorRange);
+            });
         });
     };
 

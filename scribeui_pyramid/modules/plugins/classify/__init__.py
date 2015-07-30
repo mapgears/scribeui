@@ -8,6 +8,8 @@ def includeme(config):
     config.include(routes_plugins, route_prefix='api')
 
 def getIncludedFiles():
-    return {'css': ['classify/css/classify.css'],
-            'js':  ['classify/js/colorMenu.js',
+    return {'css': ['classify/css/colorMenu.css',
+                    'classify/css/classify.css'],
+            'js':  ['classify/lib/TinyColor/tinycolor.js',
+                    'classify/js/colorMenu.js',
                     'classify/js/classify.js']}
