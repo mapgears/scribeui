@@ -60,12 +60,14 @@ function colorMenu(){
 
     //Add color range
     $('#colorMenu-color-range-button').click(function(){
-        var colorRange = self.generateColorRange(
-            $('#colorMenu-numberOfColors').val(),
-            $('#colorMenu-color1').val(),
-            $('#colorMenu-color2').val());
-        self.colors = $.merge(self.colors, colorRange);
-        self.updateSelectedColors();
+        var nbColors = parseInt($('#colorMenu-numberOfColors').val());
+        var color1 = $('#colorMenu-color1').val();
+        var color2 = $('#colorMenu-color2').val();
+        if(nbColors > 0 && color1 && color2){
+            var colorRange = self.generateColorRange(nbColors, color1, color2);
+            self.colors = $.merge(self.colors, colorRange);
+            self.updateSelectedColors();
+        }
     });
 }
 
