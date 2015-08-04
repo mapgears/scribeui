@@ -32,60 +32,9 @@ jQuery(function() { $(document).ready(function(){
         });
         $('#btn-classify').button('disable');
 
-        var self = this;
-
         //Create the dialog
-        var dialogDiv = $('<div id="classify-dialog"/>');
-        dialogDiv.load("classify/html/classifyMenu.html", null, function(){
-            //At this point, the dialog is done loading
-            $('.main').append(dialogDiv);
-            dialogDiv.hide();
-            //Setup events
-            //Refresh data sources on change
-            var dropdownGroups = $('#classify-input-group');
-            dropdownGroups.change(function(){
-                self.updateDatasources(
-                    ScribeUI.workspace.openedMap.getGroupByName(
-                    dropdownGroups.val()));
-            });
-
-            //Refresh fields on datasource change
-            var dropdownDatasources = $('#classify-input-datasource');
-            dropdownDatasources.change(function(){
-                self.updateFields();
-            });
-
-            //Get field info on field change
-            var dropdownFields = $('#classify-input-field');
-            dropdownFields.change(function(){
-                if(dropdownFields.val() !== null){
-                    self.getFieldInfo(dropdownFields.val());
-                }
-            });
-
-            //Change displayed option on class type change
-            var dropdownClassType = $('#classify-input-classType')
-            dropdownClassType.change(function(){
-                switch(dropdownClassType.val()){
-                    case 'Sequential':
-                        $('#classify-options-sequential').show();
-                        $('#classify-options-qualitative').hide();
-                        break;
-                    case 'Qualitative':
-                        $('#classify-options-sequential').hide();
-                        $('#classify-options-qualitative').show();
-                        break;
-                }
-            });
-
-            //Open color menu on color button press
-            var colorButton = $('.classify-buttonColor');
-            colorButton.click(function(){
-                self.colorChooser.open(function(colorRange){
-                    $('.color-input').val(colorRange);
-                });
-            });
-        });
+        $.get("classify/html/classifyMenu.html", null,
+            $.proxy(this.handleDialogLoadComplete, this));
     };
 
     //Function called when the Classify button is pressed
@@ -407,6 +356,82 @@ jQuery(function() { $(document).ready(function(){
             }
         });
     };
+
+    //Event handlers
+    classify.prototype.handleDialogLoadComplete = function(content){
+
+        var self = this;
+        var dialogDiv = $('<div id="classify-dialog"/>');
+        dialogDiv.append(content);
+
+        //At this point, the dialog is done loading
+        $('.main').append(dialogDiv);
+        dialogDiv.hide();
+        //Setup events
+        //Refresh data sources on change
+        $('#classify-input-group').change(
+            $.proxy(this.handleDropdownGroupsChange, this)
+        );
+
+        //Refresh fields on datasource change
+        $('#classify-input-datasource').change(
+            $.proxy(this.handleDropdownDatasourcesChange, this)
+        );
+
+        //Get field info on field change
+        $('#classify-input-field').change(
+            $.proxy(this.handleDropdownFieldsChange, this)
+        );
+
+        //Change displayed option on class type change
+        $('#classify-input-classType').change(
+            $.proxy(this.handleDropdownClassTypeChange, this)
+        );
+
+        //Open color menu on color button press
+        $('.classify-buttonColor').click(
+            $.proxy(this.handleColorButtonPress, this)
+        );
+    }
+
+    classify.prototype.handleDropdownGroupsChange = function(event){
+        this.updateDatasources(
+            ScribeUI.workspace.openedMap.getGroupByName(
+                $(event.target).val()));
+    }
+
+    classify.prototype.handleDropdownDatasourcesChange = function(event){
+        this.updateFields();
+    }
+
+    classify.prototype.handleDropdownFieldsChange = function(event){
+        var dropdownFields = $(event.target);
+        if(dropdownFields.val() !== null){
+            this.getFieldInfo(dropdownFields.val());
+        }
+    }
+
+    classify.prototype.handleDropdownClassTypeChange = function(event){
+        var dropdownClassType = $(event.target);
+        switch(dropdownClassType.val()){
+            case 'Sequential':
+                $('#classify-options-sequential').show();
+                $('#classify-options-qualitative').hide();
+                break;
+            case 'Qualitative':
+                $('#classify-options-sequential').hide();
+                $('#classify-options-qualitative').show();
+                break;
+        }
+    }
+
+    classify.prototype.handleColorButtonPress = function(event){
+        this.colorChooser.open(this.handleColorChooserClose);
+    }
+
+    classify.prototype.handleColorChooserClose = function(colorRange){
+        $('.color-input').val(colorRange);
+    }
 
     //Add the plugin to ScribeUI
     ScribeUI.addPlugin(new classify());

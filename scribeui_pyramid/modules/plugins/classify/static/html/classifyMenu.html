@@ -1,4 +1,4 @@
-<div id="left-panel">
+<div class="left-panel">
     <div class="control-group">
         <label>Group/Layer</label>
         <div class="control">
@@ -17,12 +17,8 @@
             <select id="classify-input-field"/>
         </div>
     </div>
-    <img id="field-load-spinner" class="load-spinner"
-        src="/static/img/ajax-loader.gif" style="display: none;"/>
-    <pre id="classify-field-info" style="display: none;">
-    </pre>
     <div id="classify-options">
-        <div class="control-group" id="classify-type-select">
+        <div class="control-group">
             <label>Class type</label>
             <div class="control">
                 <select id="classify-input-classType">
@@ -33,13 +29,21 @@
         </div>
         <div id="classify-options-sequential">
             <div class="control-group">
+                <label>Mode</label>
+                <div class="control">
+                    <select id="classify-input-mode">
+                        <option>Equal intervals</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
                 <label>Number of classes</label>
                 <div class="control">
                     <input type="number" min="1"
                     id="classify-input-numberClasses"/>
                 </div>
             </div>
-            <div class="control-group">
+            <!--<div class="control-group">
                 <label>Start value</label>
                 <div class="control">
                     <input type="number"
@@ -52,9 +56,9 @@
                     <input type="number"
                     id="classify-input-endValue"/>
                 </div>
-            </div>
+            </div>-->
             <div class="control-group">
-                <label id="noclass">Colors</label>
+                <label>Colors</label>
                 <div class="control">
                     <input type="text" class="color-input"/>
                     <button type="button" class="classify-buttonColor">
@@ -75,4 +79,22 @@
             </div>
         </div>
     </div>
+</div>
+<div class="right-panel">
+    <img id="field-load-spinner" class="load-spinner"
+        src="/static/img/ajax-loader.gif" style="display: none;"/>
+    <pre id="classify-field-info" style="display: none;">
+    </pre>
+    <table id="classify-class-table">
+        <tr>
+            <th>Color</th>
+            <th>Lower bound</th>
+            <th>Upper bound</th>
+        </tr>
+        <tr>
+            <td>Blue</td>
+            <td>0</td>
+            <td>10</td>
+        </tr>
+    </table>
 </div>

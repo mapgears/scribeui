@@ -1,9 +1,43 @@
+#classify-class-table {
+    margin: 5px;
+    width: 100%;
+}
+
+#classify-class-table tr {
+    border: solid gray 1px;
+    border-collapse: collapse;
+}
+
+#classify-class-table th {
+    background-color: lightgray;
+    border: solid gray 1px;
+    border-collapse: collapse;
+    padding: 1px;
+}
+
+#classify-class-table td {
+    border: solid gray 1px;
+    border-collapse: collapse;
+    padding: 3px;
+}
+
 #classify-field-info{
     border: solid lightgray 1px;
+    margin: 5px;
     padding: 5px;
 }
 
 input.color-input{
     margin-right: 8px;
     width: 130px;
+}
+
+.left-panel{
+    float: left;
+    width: 350px;
+}
+
+.right-panel{
+    float: right;
+    width: 350px;
 }
