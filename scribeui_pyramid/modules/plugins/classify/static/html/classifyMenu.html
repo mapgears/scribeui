@@ -1,0 +1,78 @@
+<div id="left-panel">
+    <div class="control-group">
+        <label>Group/Layer</label>
+        <div class="control">
+            <select id="classify-input-group"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label>Data source</label>
+        <div class="control">
+            <select id="classify-input-datasource"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label>Field</label>
+        <div class="control">
+            <select id="classify-input-field"/>
+        </div>
+    </div>
+    <img id="field-load-spinner" class="load-spinner"
+        src="/static/img/ajax-loader.gif" style="display: none;"/>
+    <pre id="classify-field-info" style="display: none;">
+    </pre>
+    <div id="classify-options">
+        <div class="control-group" id="classify-type-select">
+            <label>Class type</label>
+            <div class="control">
+                <select id="classify-input-classType">
+                    <option>Sequential</option>
+                    <option>Qualitative</option>
+                </select>
+            </div>
+        </div>
+        <div id="classify-options-sequential">
+            <div class="control-group">
+                <label>Number of classes</label>
+                <div class="control">
+                    <input type="number" min="1"
+                    id="classify-input-numberClasses"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Start value</label>
+                <div class="control">
+                    <input type="number"
+                    id="classify-input-startValue"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>End value</label>
+                <div class="control">
+                    <input type="number"
+                    id="classify-input-endValue"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label id="noclass">Colors</label>
+                <div class="control">
+                    <input type="text" class="color-input"/>
+                    <button type="button" class="classify-buttonColor">
+                        Choose
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="classify-options-qualitative" style="display: none;">
+            <div class="control-group">
+                <label id="noclass">Colors</label>
+                <div class="control">
+                    <input type="text" class="color-input"/>
+                    <button type="button" class="classify-buttonColor">
+                        Choose
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

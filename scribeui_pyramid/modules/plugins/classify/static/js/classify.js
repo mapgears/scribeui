@@ -32,133 +32,58 @@ jQuery(function() { $(document).ready(function(){
         });
         $('#btn-classify').button('disable');
 
-        //Create the dialog
-        var dialogDiv = $('' +
-        '<div id="classify-dialog">' +
-            '<div class="control-group">' +
-                '<label>Group/Layer</label>' +
-                '<div class="control">' +
-                    '<select id="classify-input-group"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="control-group">' +
-                '<label>Data source</label>' +
-                '<div class="control">' +
-                    '<select id="classify-input-datasource"/>' +
-                '</div>' +
-            '</div>' +
-            '<div class="control-group">' +
-                '<label>Field</label>' +
-                '<div class="control">' +
-                    '<select id="classify-input-field"/>' +
-                '</div>' +
-            '</div>' +
-            '<img id="field-load-spinner" class="load-spinner" ' +
-                'src="/static/img/ajax-loader.gif" style="display: none;"/>' +
-            '<pre id="classify-field-info" style="display: none;">' +
-            '</pre>' +
-            '<div id="classify-options">' +
-                '<div class="control-group" id="classify-type-select">' +
-                    '<label>Class type</label>' +
-                    '<div class="control">' +
-                        '<select id="classify-input-classtype">' +
-                            '<option>Sequential</option>' +
-                            '<option>Qualitative</option>' +
-                        '</select>' +
-                    '</div>' +
-                '</div>' +
-                '<div id="classify-sequential-options">' +
-                    '<div class="control-group">' +
-                        '<label>Number of classes</label>' +
-                        '<div class="control">' +
-                            '<input type="number" min="1"/>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="control-group">' +
-                        '<label>Start value</label>' +
-                        '<div class="control">' +
-                            '<input type="number"/>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="control-group">' +
-                        '<label>End value</label>' +
-                        '<div class="control">' +
-                            '<input type="number"/>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="control-group">' +
-                        '<label id="noclass">Colors</label>' +
-                        '<div class="control">' +
-                            '<input type="text" class="color-input"/>' +
-                            '<button type="button" class="classify-button-color">' +
-                                'Choose' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<div id="classify-qualitative-options" style="display: none;">' +
-                    '<div class="control-group">' +
-                        '<label id="noclass">Colors</label>' +
-                        '<div class="control">' +
-                            '<input type="text" class="color-input"/>' +
-                            '<button type="button" class="classify-button-color">' +
-                                'Choose' +
-                            '</button>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-            '</div>' +
-        '</div>');
-		dialogDiv.hide();
-		$('.main').append(dialogDiv);
-
         var self = this;
 
-        //Setup events
+        //Create the dialog
+        var dialogDiv = $('<div id="classify-dialog"/>');
+        dialogDiv.load("classify/html/classifyMenu.html", null, function(){
+            //At this point, the dialog is done loading
+            $('.main').append(dialogDiv);
+            dialogDiv.hide();
+            //Setup events
+            //Refresh data sources on change
+            var dropdownGroups = $('#classify-input-group');
+            dropdownGroups.change(function(){
+                self.updateDatasources(
+                    ScribeUI.workspace.openedMap.getGroupByName(
+                    dropdownGroups.val()));
+            });
 
-        //Refresh data sources on change
-        var dropdownGroups = $('#classify-input-group');
-        dropdownGroups.change(function(){
-            self.updateDatasources(
-                ScribeUI.workspace.openedMap.getGroupByName(
-                dropdownGroups.val()));
-        });
+            //Refresh fields on datasource change
+            var dropdownDatasources = $('#classify-input-datasource');
+            dropdownDatasources.change(function(){
+                self.updateFields();
+            });
 
-        //Refresh fields on datasource change
-        var dropdownDatasources = $('#classify-input-datasource');
-        dropdownDatasources.change(function(){
-            self.updateFields();
-        });
+            //Get field info on field change
+            var dropdownFields = $('#classify-input-field');
+            dropdownFields.change(function(){
+                if(dropdownFields.val() !== null){
+                    self.getFieldInfo(dropdownFields.val());
+                }
+            });
 
-        //Get field info on field change
-        var dropdownFields = $('#classify-input-field');
-        dropdownFields.change(function(){
-            if(dropdownFields.val() !== null){
-                self.getFieldInfo(dropdownFields.val());
-            }
-        });
+            //Change displayed option on class type change
+            var dropdownClassType = $('#classify-input-classType')
+            dropdownClassType.change(function(){
+                switch(dropdownClassType.val()){
+                    case 'Sequential':
+                        $('#classify-options-sequential').show();
+                        $('#classify-options-qualitative').hide();
+                        break;
+                    case 'Qualitative':
+                        $('#classify-options-sequential').hide();
+                        $('#classify-options-qualitative').show();
+                        break;
+                }
+            });
 
-        //Change displayed option on class type change
-        var dropdownClassType = $('#classify-input-classtype')
-        dropdownClassType.change(function(){
-            switch(dropdownClassType.val()){
-                case 'Sequential':
-                    $('#classify-sequential-options').show();
-                    $('#classify-qualitative-options').hide();
-                    break;
-                case 'Qualitative':
-                    $('#classify-sequential-options').hide();
-                    $('#classify-qualitative-options').show();
-                    break;
-            }
-        });
-
-        //Open color menu on color button press
-        var colorButton = $('.classify-button-color');
-        colorButton.click(function(){
-            self.colorChooser.open(function(colorRange){
-                $('.color-input').val(colorRange);
-                console.log(colorRange);
+            //Open color menu on color button press
+            var colorButton = $('.classify-buttonColor');
+            colorButton.click(function(){
+                self.colorChooser.open(function(colorRange){
+                    $('.color-input').val(colorRange);
+                });
             });
         });
     };
@@ -196,12 +121,29 @@ jQuery(function() { $(document).ready(function(){
            buttons: {
                Classify: function() {
                    //Get values
-                   var errors = [];
-                   var nbClasses = $('#classify-nbclasses').val();
+                   var errors = "";
+                   var dropdownClassType = $('#classify-input-classType').val();
+                   var nbClasses = parseInt($('#classify-input-numberClasses').val());
+                   var startValue = parseFloat($('#classify-input-startValue').val());
+                   var endValue = parseFloat($('#classify-input-endValue').val());
+                   var colors = $('.color-input').val().split(',');
+                   var field = $('#classify-input-field').val();
 
                    //Validate values
-                   if(!$.isNumeric(nbClasses)){
-                       errors.push("Please enter a valid number of classes\n");
+                   switch(dropdownClassType){
+                       case 'Sequential':
+                           if(!$.isNumeric(nbClasses)){
+                               errors += "Please enter a valid number of classes\n";
+                           }
+                           if(!$.isNumeric(nbClasses)){
+                               errors += "Please enter a valid start value\n";
+                           }
+                           if(!$.isNumeric(nbClasses)){
+                               errors += "Please enter a valid end value\n";
+                           }
+                           break;
+                       case 'Qualitative':
+                           break;
                    }
 
                    if(errors.length > 0){
@@ -209,7 +151,12 @@ jQuery(function() { $(document).ready(function(){
                    }
                    else {
                        console.log(self.generateClasses(
+                           dropdownClassType,
                            nbClasses,
+                           startValue,
+                           endValue,
+                           colors,
+                           field,
                            classify.getOpenedMapSyntax()
                        ));
                        $(this).dialog("close");
@@ -231,14 +178,54 @@ jQuery(function() { $(document).ready(function(){
     /*  This function is the core of the classify plugin. It generates
      *  classes to add to the map file.
      *  Parameters:
-     *      nbClasses:int, How many classes to generate
+     *      classType:string, Sequential or Qualitative
+     *      nbClasses:number, How many classes to generate
+     *      startValue:number, Starting value for sequential classes
+     *      endValue:number, Final value for sequential classes
+     *      colors:array of string, Colors to be used if any
+     *      field:string, Field to evaluate
      *      syntax:SyntaxEnum, syntax used for the map
      */
-    classify.prototype.generateClasses = function(nbClasses, syntax){
+    classify.prototype.generateClasses = function(classType, nbClasses,
+            startValue, endValue, colors, field, syntax){
         var output = "";
+        var addColors = !(!colors || colors.length == 0 || colors[0].length == 0);
 
         for(var i = 0; i < nbClasses; i++) {
-            output += this.getBaseClass(syntax);
+            output += this.getBaseClass(syntax, addColors);
+        }
+
+        //Set expression tags
+        var expressions = [];
+        switch(classType){
+            case "Sequential":
+                //Create expressions
+                var step = (endValue - startValue) / nbClasses;
+                var baseExp = '([FIELD] >= LOWERBOUND AND [FIELD] < UPPERBOUND)'
+                for(var i = 0; i < nbClasses; i++){
+                    var lowerBound = startValue + (step * i);
+                    var upperBound = startValue + (step * (i+1));
+                    expressions.push(baseExp
+                        .replace(/FIELD/g,field)
+                        .replace('LOWERBOUND', lowerBound)
+                        .replace('UPPERBOUND', upperBound));
+                }
+                break;
+            case "Qualitative":
+                break;
+        }
+        //Place expressions
+        var nbExpressions = expressions.length;
+        for(var i = 0; i < nbExpressions; i++){
+            output = output.replace('[FLAGEXPRESSION]', expressions[i]);
+        }
+
+        //Place colors if defined
+        if(addColors){
+            var nbColors = colors.length;
+            for(var i = 0; i < nbColors; i++){
+                output = output.replace('[FLAGCOLOR]', colors[i]);
+            }
         }
 
         return output;
@@ -248,26 +235,40 @@ jQuery(function() { $(document).ready(function(){
      *  values by the generateClasses function.
      *  Parameters:
      *      syntax:SyntaxEnum, syntax used for the map
+     *      addColors:bool, add a style tag for colors or not.
      */
-    classify.prototype.getBaseClass = function(syntax){
+    classify.prototype.getBaseClass = function(syntax, addColors){
+        var classStart, classEnd, style;
+
         switch(syntax){
             case classify.SyntaxEnum.MAPSERVER:
-                return '' +
+                classStart =  '' +
                     'CLASS\n' +
-                    '    EXPRESSION [FLAGEXPRESSION]\n' +
+                    '    EXPRESSION [FLAGEXPRESSION]\n';
+                style = '' +
                     '    STYLE\n' +
-                    '        COLOR [FLAGCOLOR]\n' +
-                    '    END\n' +
+                    '        COLOR \'[FLAGCOLOR]\'\n' +
+                    '    END\n';
+                classEnd =  '' +
                     'END\n';
+                break;
             case classify.SyntaxEnum.SCRIBE:
-                return '' +
+                classStart =  '' +
                     'CLASS {\n' +
-                    '    EXPRESSION: [FLAGEXPRESSION]\n' +
+                    '    EXPRESSION: [FLAGEXPRESSION]\n';
+                style = '' +
                     '    STYLE {\n' +
-                    '        COLOR: [FLAGCOLOR]\n' +
-                    '    }\n' +
+                    '        COLOR: \'[FLAGCOLOR]\'\n' +
+                    '    }\n'
+                classEnd =  '' +
                     '}\n';
+                break;
         }
+
+        if(!addColors){
+            style = '';
+        }
+        return classStart + style + classEnd;
     };
 
     /*  This function gets any data source in a group using a regex.

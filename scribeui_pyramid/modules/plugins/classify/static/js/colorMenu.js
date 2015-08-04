@@ -1,73 +1,32 @@
 function colorMenu(){
     this.colors = [];
-    var dialogDiv = $('' +
-    '<div id="colorMenu-dialog">' +
-        '<table class="colorMenu-table">' +
-            '<tr>' +
-                '<td>' +
-                    '<label>Add single color</label>' +
-                '</td>' +
-                '<td colspan="3">' +
-                    '<input class="colorMenu-color-single-input" ' +
-                    'id="colorMenu-color-single-input" type="color"/>' +
-                '</td>' +
-                '<td>' +
-                    '<button type="button" id="colorMenu-color-single-button">' +
-                        'Add' +
-                    '</button>' +
-                '</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>' +
-                    '<label>Add range of colors</label>' +
-                '</td>' +
-                '<td>' +
-                    '<input type="color" id="colorMenu-color1"/>' +
-                '</td>' +
-                '<td>' +
-                    '<input type="color" id="colorMenu-color2"/>' +
-                '</td>' +
-                '<td>' +
-                    '<input type="number" min="2" value="2" '+
-                    'id="colorMenu-numberOfColors"/>' +
-                '</td>' +
-                '<td>' +
-                    '<button type="button" id="colorMenu-color-range-button">' +
-                        'Add' +
-                    '</button>' +
-                '</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>' +
-                    '<label>Selected colors</label>' +
-                '</td>' +
-                '<td colspan="4">' +
-                    '<div class="colorMenu-selected-colors"/>' +
-                '</td>' +
-            '</tr>' +
-        '</table>' +
-    '</div>');
-    dialogDiv.hide();
-    $('.main').append(dialogDiv);
-
-    //Setup events
-    //Add single color
     var self = this;
-    $('#colorMenu-color-single-button').click(function(){
-        self.colors.push($('#colorMenu-color-single-input').val());
-        self.updateSelectedColors();
-    });
 
-    //Add color range
-    $('#colorMenu-color-range-button').click(function(){
-        var nbColors = parseInt($('#colorMenu-numberOfColors').val());
-        var color1 = $('#colorMenu-color1').val();
-        var color2 = $('#colorMenu-color2').val();
-        if(nbColors > 0 && color1 && color2){
-            var colorRange = self.generateColorRange(nbColors, color1, color2);
-            self.colors = $.merge(self.colors, colorRange);
+    //Create the dialog
+    var dialogDiv = $('<div id="colorMenu-dialog"/>');
+    dialogDiv.load("classify/html/colorMenu.html", null, function() {
+        //Dialog done loading
+        dialogDiv.hide();
+        $('.main').append(dialogDiv);
+
+        //Setup events
+        //Add single color
+        $('#colorMenu-color-single-button').click(function(){
+            self.colors.push($('#colorMenu-color-single-input').val());
             self.updateSelectedColors();
-        }
+        });
+
+        //Add color range
+        $('#colorMenu-color-range-button').click(function(){
+            var nbColors = parseInt($('#colorMenu-numberOfColors').val());
+            var color1 = $('#colorMenu-color1').val();
+            var color2 = $('#colorMenu-color2').val();
+            if(nbColors > 0 && color1 && color2){
+                var colorRange = self.generateColorRange(nbColors, color1, color2);
+                self.colors = $.merge(self.colors, colorRange);
+                self.updateSelectedColors();
+            }
+        });
     });
 }
 

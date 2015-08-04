@@ -1,0 +1,44 @@
+<table class="colorMenu-table">
+    <tr>
+        <td>
+            <label>Add single color</label>
+        </td>
+        <td colspan="3">
+            <input class="colorMenu-color-single-input"
+            id="colorMenu-color-single-input" type="color"/>
+        </td>
+        <td>
+            <button type="button" id="colorMenu-color-single-button">
+                Add
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Add range of colors</label>
+        </td>
+        <td>
+            <input type="color" id="colorMenu-color1"/>
+        </td>
+        <td>
+            <input type="color" id="colorMenu-color2"/>
+        </td>
+        <td>
+            <input type="number" min="2" value="2"
+            id="colorMenu-numberOfColors"/>
+        </td>
+        <td>
+            <button type="button" id="colorMenu-color-range-button">
+                Add
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label>Selected colors</label>
+        </td>
+        <td colspan="4">
+            <div class="colorMenu-selected-colors"/>
+        </td>
+    </tr>
+</table>
