@@ -48,7 +48,7 @@ colorMenu.prototype.open = function(callback){
                 callback(self.colors);
                 $(this).dialog("close");
             },
-            Close: function(){
+            Cancel: function(){
                 $(this).dialog("close");
             }
         },

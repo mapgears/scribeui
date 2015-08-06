@@ -1,6 +1,6 @@
 #classify-class-table {
     margin: 5px;
-    width: 100%;
+    width: 320px;
 }
 
 #classify-class-table tr {
@@ -21,10 +21,19 @@
     padding: 3px;
 }
 
+#classify-class-table .color-col {
+    width: 40px;
+}
+
 #classify-field-info{
     border: solid lightgray 1px;
     margin: 5px;
     padding: 5px;
+}
+
+#classify-table-container{
+    max-height: 350px;
+    overflow: auto;
 }
 
 input.color-input{

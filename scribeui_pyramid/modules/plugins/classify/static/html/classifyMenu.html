@@ -39,24 +39,10 @@
             <div class="control-group">
                 <label>Number of classes</label>
                 <div class="control">
-                    <input type="number" min="1"
+                    <input type="number" min="1" value="3"
                     id="classify-input-numberClasses"/>
                 </div>
             </div>
-            <!--<div class="control-group">
-                <label>Start value</label>
-                <div class="control">
-                    <input type="number"
-                    id="classify-input-startValue"/>
-                </div>
-            </div>
-            <div class="control-group">
-                <label>End value</label>
-                <div class="control">
-                    <input type="number"
-                    id="classify-input-endValue"/>
-                </div>
-            </div>-->
             <div class="control-group">
                 <label>Colors</label>
                 <div class="control">
@@ -85,16 +71,12 @@
         src="/static/img/ajax-loader.gif" style="display: none;"/>
     <pre id="classify-field-info" style="display: none;">
     </pre>
-    <table id="classify-class-table">
-        <tr>
-            <th>Color</th>
-            <th>Lower bound</th>
-            <th>Upper bound</th>
-        </tr>
-        <tr>
-            <td>Blue</td>
-            <td>0</td>
-            <td>10</td>
-        </tr>
-    </table>
+    <div id="classify-table-container">
+        <table id="classify-class-table">
+            <thead id="classify-class-table-header">
+            </thead>
+            <tbody id="classify-class-table-content">
+            </tbody>
+        </table>
+    </div>
 </div>

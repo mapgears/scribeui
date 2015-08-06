@@ -55,6 +55,12 @@ class ClassifyView(object):
         file = (self.request.registry.settings.get('workspaces.directory', '')
             + '/' + self.request.POST.get('datasource'))
         field = self.request.POST.get('field').encode('utf-8', 'ignore')
+        
+        try:
+            field = self.request.POST.get('field').encode('utf-8', 'ignore')
+        except AttributeError:
+            response['errors'].append('Invalid field')
+            return response
 
         # Open the datasource
         datasource = ogr.Open(file)
@@ -85,4 +91,51 @@ class ClassifyView(object):
 
         response['status'] = 1
 
+        return response
+
+
+    @view_config(
+        route_name='classify.field.getdata',
+        permission='view',
+        renderer='json',
+        request_method='POST'
+    )
+    def get_data(self):
+        response = {
+            'status': 0,
+            'errors': [],
+            'values': []
+            }
+
+        file = (self.request.registry.settings.get('workspaces.directory', '')
+            + '/' + self.request.POST.get('datasource'))
+
+        try:
+            field = self.request.POST.get('field').encode('utf-8', 'ignore')
+        except AttributeError:
+            response['errors'].append('Invalid field')
+            return response
+
+        # Open the datasource
+        datasource = ogr.Open(file)
+        if not datasource:
+            datasource = ogr.Open(file + '.shp')
+            if not datasource:
+                response['errors'].append("No shapefile found for " + file)
+                return response
+        layer = datasource.GetLayer()
+        layer_defn = layer.GetLayerDefn()
+        field_defn = layer_defn.GetFieldDefn(layer_defn.GetFieldIndex(field))
+        response['geom_type'] = field_defn.GetTypeName()
+
+        unique_values = Set()
+        for i in range(layer.GetFeatureCount()):
+            feature = layer.GetFeature(i)
+            field_value = feature.GetField(field)
+            if type(field_value) is str:
+                field_value = field_value.decode('utf-8', 'ignore')
+            unique_values.add(field_value)
+
+        response['values'] = list(unique_values)
+        response['status'] = 1
         return response

@@ -1,6 +1,7 @@
 def routes_plugins(config):
     config.add_route('classify.field.getlist', '/classify/field/getlist')
     config.add_route('classify.field.getinfo', '/classify/field/getinfo')
+    config.add_route('classify.field.getdata', '/classify/field/getdata')
 
 def includeme(config):
     config.add_static_view(name='classify', path='static')
