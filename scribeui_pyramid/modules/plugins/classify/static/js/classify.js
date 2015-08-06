@@ -1,7 +1,7 @@
-jQuery(function() { $(document).ready(function(){
+jQuery(function() { $(document).ready(function() {
 
     //Plugin attributes
-    function classify(){
+    function classify() {
         this.name = "Data Classification Plug-in";
         this.colorChooser = new colorMenu();
         this.classes = [];
@@ -19,14 +19,14 @@ jQuery(function() { $(document).ready(function(){
 
     //static enum of syntax styles
     classify.SyntaxEnum = Object.freeze({
-        MAPSERVER : 0,
-        SCRIBE : 1
+        MAPSERVER: 0,
+        SCRIBE: 1
     });
 
     //Get the current map's syntax, return a SyntaxEnum
-    classify.getOpenedMapSyntax = function(){
+    classify.getOpenedMapSyntax = function() {
         var syntaxString = ScribeUI.workspace.openedMap.type;
-        switch(syntaxString){
+        switch(syntaxString) {
             case "Scribe":
                 return classify.SyntaxEnum.SCRIBE;
             case "Standard":
@@ -35,12 +35,13 @@ jQuery(function() { $(document).ready(function(){
     };
 
     //Function ran when the plugin is loaded
-    classify.prototype.init = function(){
+    classify.prototype.init = function() {
         //Add a button to the editor toolbar
-        ScribeUI.UI.addButton("Classify", "#editor-toolbar",{
-            onclick: $.proxy(this.openClassifyPopup, this),
-            buttonid: 'btn-classify'
-        });
+        ScribeUI.UI.addButton("Classify",
+            "#editor-toolbar", {
+                onclick: $.proxy(this.openClassifyPopup, this),
+                buttonid: 'btn-classify'
+            });
         $('#btn-classify').button('disable');
 
         //Create the dialog
@@ -49,7 +50,7 @@ jQuery(function() { $(document).ready(function(){
     };
 
     //Function called when the Classify button is pressed
-    classify.prototype.openClassifyPopup = function(){
+    classify.prototype.openClassifyPopup = function() {
         //Get the local map
         var map = ScribeUI.workspace.openedMap;
         this.syntax = classify.getOpenedMapSyntax();
@@ -72,36 +73,36 @@ jQuery(function() { $(document).ready(function(){
 
         //Open the dialog
         dialogDiv.dialog({
-           autoOpen: false,
-           resizable: false,
-           width: "auto",
-           height: "auto",
-           modal: true,
-           title: "Classify",
-           buttons: {
-               Classify: function() {
-                   console.log("Hello");
-               },
-               Cancel: function() {
-                   $(this).dialog("close");
-               }
-           },
-           close: function() {}
-       }).dialog("open");
-   };
+            autoOpen: false,
+            resizable: false,
+            width: "auto",
+            height: "auto",
+            modal: true,
+            title: "Classify",
+            buttons: {
+                Classify: function() {
+                    console.log("Hello");
+                },
+                Cancel: function() {
+                    $(this).dialog("close");
+                }
+            },
+            close: function() {}
+        }).dialog("open");
+    };
 
     //Called when a map is opened in ScribeUI
-    classify.prototype.onMapOpened = function(){
+    classify.prototype.onMapOpened = function() {
         $('#btn-classify').button('enable');
     };
 
     /*  This function is the core of the classify plugin. It generates
      *  classes to add to the map file.
      */
-    classify.prototype.generateClasses = function(){
+    classify.prototype.generateClasses = function() {
         var classes = [];
         var nbClasses = 0;
-        switch(this.classType){
+        switch(this.classType) {
             case "Sequential":
                 nbClasses = this.nbClasses;
                 break;
@@ -110,7 +111,7 @@ jQuery(function() { $(document).ready(function(){
                 break;
         }
 
-        for(var i = 0; i < nbClasses; i++){
+        for(var i = 0; i < nbClasses; i++) {
             //Declare vars to be used;
             var color = null;
             var lowerBound = null;
@@ -119,18 +120,18 @@ jQuery(function() { $(document).ready(function(){
             var expression = null;
 
             //Get color
-            if(this.colors[i]){
+            if(this.colors[i]) {
                 color = this.colors[i];
-            }
-            else{
+            } else {
                 color = null;
             }
 
-            switch(this.classType){
+            switch(this.classType) {
                 case "Sequential":
                     var bounds = this.generateBounds(
                         this.mode, this.nbClasses, i,
-                        this.startValue, this.endValue);
+                        this.startValue, this.endValue
+                    );
                     lowerBound = bounds[0];
                     upperBound = bounds[1];
                     expression = this.generateSequentialExpression(
@@ -145,11 +146,13 @@ jQuery(function() { $(document).ready(function(){
 
 
             //Create the class
-            var tmpClass = {"color": color,
-                            "lowerBound": lowerBound,
-                            "upperBound": upperBound,
-                            "value": value,
-                            "expression": expression};
+            var tmpClass = {
+                "color": color,
+                "lowerBound": lowerBound,
+                "upperBound": upperBound,
+                "value": value,
+                "expression": expression
+            };
 
             //Add it to the classes array
             classes.push(tmpClass);
@@ -168,10 +171,10 @@ jQuery(function() { $(document).ready(function(){
      *      max:number, the maximum value
      */
     classify.prototype.generateBounds = function(
-            mode, nbClasses, classIndex, min, max){
+            mode, nbClasses, classIndex, min, max) {
 
         var bounds = [null, null];
-        switch(mode){
+        switch(mode) {
             case "Equal intervals":
                 var step = (max - min) / nbClasses;
                 bounds[0] = min + (step * classIndex);
@@ -188,11 +191,11 @@ jQuery(function() { $(document).ready(function(){
      *      lowerBound:number,
      *      upperBound:number
      */
-    classify.prototype.generateSequentialExpression = function(
-            field, lowerBound, upperBound){
+    classify.prototype.generateSequentialExpression =
+            function(field, lowerBound, upperBound) {
 
         var baseExp = '([FIELD] >= LOWERBOUND AND [FIELD] <= UPPERBOUND)'
-            .replace(/FIELD/g,field)
+            .replace(/FIELD/g, field)
             .replace('LOWERBOUND', lowerBound)
             .replace('UPPERBOUND', upperBound);
 
@@ -205,8 +208,8 @@ jQuery(function() { $(document).ready(function(){
      *      field:string, the field to evaluate
      *      value:string, the value to match
      */
-    classify.prototype.generateQualitativeExpression = function(
-            field, value){
+    classify.prototype.generateQualitativeExpression =
+            function(field, value) {
 
         var baseExp = '([FIELD] = "VALUE")'
             .replace('FIELD', field)
@@ -222,35 +225,35 @@ jQuery(function() { $(document).ready(function(){
      *      syntax:SyntaxEnum, syntax used for the map
      *      addColors:bool, add a style tag for colors or not.
      */
-    classify.prototype.getBaseClass = function(syntax, addColors){
+    classify.prototype.getBaseClass = function(syntax, addColors) {
         var classStart, classEnd, style;
 
-        switch(syntax){
+        switch(syntax) {
             case classify.SyntaxEnum.MAPSERVER:
-                classStart =  '' +
+                classStart = '' +
                     'CLASS\n' +
                     '    EXPRESSION [FLAGEXPRESSION]\n';
                 style = '' +
                     '    STYLE\n' +
                     '        COLOR \'[FLAGCOLOR]\'\n' +
                     '    END\n';
-                classEnd =  '' +
+                classEnd = '' +
                     'END\n';
                 break;
             case classify.SyntaxEnum.SCRIBE:
-                classStart =  '' +
+                classStart = '' +
                     'CLASS {\n' +
                     '    EXPRESSION: [FLAGEXPRESSION]\n';
                 style = '' +
                     '    STYLE {\n' +
                     '        COLOR: \'[FLAGCOLOR]\'\n' +
                     '    }\n';
-                classEnd =  '' +
+                classEnd = '' +
                     '}\n';
                 break;
         }
 
-        if(!addColors){
+        if(!addColors) {
             style = '';
         }
         return classStart + style + classEnd;
@@ -262,7 +265,7 @@ jQuery(function() { $(document).ready(function(){
      *      classes:array, array of class "objects"
      *      classType:string, Sequential or Qualitative
      */
-    classify.prototype.displayClasses = function(classes, classType){
+    classify.prototype.displayClasses = function(classes, classType) {
         //Get the table elements
         var tableHeader = $('#classify-class-table-header');
         var tableContent = $('#classify-class-table-content');
@@ -273,39 +276,44 @@ jQuery(function() { $(document).ready(function(){
 
         //Create the rows
         var nbClasses = classes.length;
-        switch(classType){
+        switch(classType) {
             case 'Sequential':
-                tableHeader.append('<tr><th class="color-col">Color</th>' +
-                    '<th>Lower bound</th><th>Upper bound</th></tr>');
-                for(var i = 0; i < nbClasses; i++){
+                tableHeader.append(
+                    '<tr><th class="color-col">Color</th>' +
+                    '<th>Lower bound</th><th>Upper bound</th></tr>'
+                );
+                for(var i = 0; i < nbClasses; i++) {
                     var row = ['',
-                    '<tr>',
-                        '<td class="color-col" bgcolor = "',
-                            classes[i].color,
-                        '"/>',
-                        '<td>',
-                            classes[i].lowerBound,
-                        '</td>',
-                        '<td>',
-                            classes[i].upperBound,
-                        '</td>',
-                    '</tr>'].join('');
+                        '<tr>',
+                            '<td class="color-col" bgcolor = "',
+                                classes[i].color,
+                                '"/>',
+                            '<td>',
+                                classes[i].lowerBound,
+                            '</td>',
+                            '<td>',
+                                classes[i].upperBound,
+                            '</td>',
+                        '</tr>'
+                    ].join('');
                     tableContent.append(row);
                 }
                 break;
             case 'Qualitative':
-                tableHeader.append('<tr><th class="color-col">Color</th>' +
+                tableHeader.append(
+                    '<tr><th class="color-col">Color</th>' +
                     '<th>Value</th></tr>');
-                for(var i = 0; i < nbClasses; i++){
+                for(var i = 0; i < nbClasses; i++) {
                     var row = ['',
-                    '<tr>',
-                        '<td class="color-col" bgcolor = "',
-                            classes[i].color,
-                        '"/>',
-                        '<td>',
-                            classes[i].value,
-                        '</td>',
-                    '</tr>'].join('');
+                        '<tr>',
+                            '<td class="color-col" bgcolor = "',
+                                classes[i].color,
+                            '"/>',
+                            '<td>',
+                                classes[i].value,
+                            '</td>',
+                        '</tr>'
+                    ].join('');
                     tableContent.append(row);
                 }
                 break;
@@ -317,12 +325,12 @@ jQuery(function() { $(document).ready(function(){
      *  Parameters:
      *      group:Group, contains the text to parse for datasources
      */
-    classify.prototype.updateDatasources = function(group){
+    classify.prototype.updateDatasources = function(group) {
         var datasources = [];
         //Get data formatted with DATA or DATA: in a single line
         var singleLineRegex = /^[\t\ ]*DATA[\ :]*(['"](.*)['"])/gm;
         var match = singleLineRegex.exec(group.content);
-        while(match !== null){
+        while(match !== null) {
             datasources.push(match[2]);
             match = singleLineRegex.exec(group.content);
         }
@@ -330,11 +338,11 @@ jQuery(function() { $(document).ready(function(){
         //Get data formatted over multiple lines with DATA { ... }
         var multilineRegex = /(^|[\ \t]+)DATA[\ \t]*\{((.|[\n\r])*?)\}/gm;
         match = multilineRegex.exec(group.content);
-        while(match !== null){
+        while(match !== null) {
             //get each datasource in a DATA {} block
             var innerDataRegex = /['"](.*)['"]/gm;
             var innerMatch = innerDataRegex.exec(match[2]);
-            while(innerMatch !== null){
+            while(innerMatch !== null) {
                 datasources.push(innerMatch[1]);
                 innerMatch = innerDataRegex.exec(match[2]);
             }
@@ -358,7 +366,7 @@ jQuery(function() { $(document).ready(function(){
         dropdown.change();
     };
 
-    classify.prototype.getDatasourcePath = function(){
+    classify.prototype.getDatasourcePath = function() {
         var dropdownDatasources = $('#classify-input-datasource');
         var datasource = dropdownDatasources.val();
 
@@ -367,7 +375,7 @@ jQuery(function() { $(document).ready(function(){
         var shapepath = shapepathRegex.exec(ScribeUI.workspace.openedMap.map);
 
         //Get shapefiles path if it exists, else use datasource as is
-        if(shapepath && shapepath.length > 0){
+        if(shapepath && shapepath.length > 0) {
             datasource = shapepath[1] + datasource;
         }
 
@@ -376,7 +384,7 @@ jQuery(function() { $(document).ready(function(){
             '/map/' + datasource;
     };
 
-    classify.prototype.updateFields = function(){
+    classify.prototype.updateFields = function() {
         var datasource = this.getDatasourcePath();
         $("#classify-field-info").hide();
         $.ajax({
@@ -385,16 +393,15 @@ jQuery(function() { $(document).ready(function(){
             data: {
                 'datasource': datasource
             },
-            success: function(result){
+            success: function(result) {
                 var dropdown = $('#classify-input-field');
                 dropdown.empty();
 
-                if(result.errors.length > 0){
+                if(result.errors.length > 0) {
                     var fieldInfo = $("#classify-field-info");
                     fieldInfo.show();
                     fieldInfo.text(result.errors);
-                }
-                else{
+                } else {
                     //Clear the datasource dropdown
                     $.each(result.fields, function(i, item) {
                         dropdown.append($('<option>', {
@@ -408,7 +415,7 @@ jQuery(function() { $(document).ready(function(){
         });
     };
 
-    classify.prototype.getFieldInfo = function(field){
+    classify.prototype.getFieldInfo = function(field) {
         var datasource = this.getDatasourcePath();
 
         var loadSpinner = $('#field-load-spinner');
@@ -425,7 +432,7 @@ jQuery(function() { $(document).ready(function(){
                 'datasource': datasource,
                 'field': field,
             },
-            success: function(result){
+            success: function(result) {
                 var fieldType = result.geom_type;
 
                 fieldInfo.show();
@@ -436,7 +443,7 @@ jQuery(function() { $(document).ready(function(){
                 fieldInfo.append("\nNumber of values: " + result.nb_values);
                 fieldInfo.append("\nUnique values: " + result.unique_values);
 
-                switch (fieldType) {
+                switch(fieldType) {
                     case "String":
                         break;
                     case "Real":
@@ -458,9 +465,9 @@ jQuery(function() { $(document).ready(function(){
     /*  This function gets every unique value for field and saves them to
      *  this.values using a callback
      */
-    classify.prototype.setValues = function(field){
+    classify.prototype.setValues = function(field) {
         var self = this;
-        if(field){
+        if(field) {
             $.ajax({
                 url: $API + "/classify/field/getdata",
                 type: "POST",
@@ -468,8 +475,8 @@ jQuery(function() { $(document).ready(function(){
                     'datasource': self.getDatasourcePath(),
                     'field': field
                 },
-                success: function(result){
-                    if(result.status == 1){
+                success: function(result) {
+                    if(result.status == 1) {
                         self.handleSetValuesComplete(result.values);
                     }
                 }
@@ -478,7 +485,7 @@ jQuery(function() { $(document).ready(function(){
     };
 
     //Event handlers
-    classify.prototype.handleDialogLoadComplete = function(content){
+    classify.prototype.handleDialogLoadComplete = function(content) {
 
         var dialogDiv = $('<div id="classify-dialog"/>');
         dialogDiv.append(content);
@@ -523,36 +530,36 @@ jQuery(function() { $(document).ready(function(){
         );
     };
 
-    classify.prototype.handleSetValuesComplete = function(values){
+    classify.prototype.handleSetValuesComplete = function(values) {
         this.values = values;
         this.generateClasses();
     };
 
-    classify.prototype.handleDropdownGroupsChange = function(event){
+    classify.prototype.handleDropdownGroupsChange = function(event) {
         this.updateDatasources(
             ScribeUI.workspace.openedMap.getGroupByName(
                 $(event.target).val()));
     };
 
-    classify.prototype.handleDropdownDatasourcesChange = function(event){
+    classify.prototype.handleDropdownDatasourcesChange = function(event) {
         this.updateFields();
     };
 
-    classify.prototype.handleDropdownFieldsChange = function(event){
+    classify.prototype.handleDropdownFieldsChange = function(event) {
         var dropdownFieldsVal = $(event.target).val();
-        if(dropdownFieldsVal !== null){
+        if(dropdownFieldsVal !== null) {
             this.field = dropdownFieldsVal;
             this.getFieldInfo(dropdownFieldsVal);
-            if(this.classType == "Qualitative"){
+            if(this.classType == "Qualitative") {
                 this.setValues(this.field);
             }
         }
     };
 
-    classify.prototype.handleDropdownClassTypeChange = function(event){
+    classify.prototype.handleDropdownClassTypeChange = function(event) {
         var dropdownClassType = $(event.target);
         this.classType = dropdownClassType.val();
-        switch(this.classType){
+        switch(this.classType) {
             case 'Sequential':
                 $('#classify-options-sequential').show();
                 $('#classify-options-qualitative').hide();
@@ -566,21 +573,21 @@ jQuery(function() { $(document).ready(function(){
         this.generateClasses();
     };
 
-    classify.prototype.handleColorButtonPress = function(event){
+    classify.prototype.handleColorButtonPress = function(event) {
         this.colorChooser.open(
             $.proxy(this.handleColorChooserClose, this)
         );
     };
 
-    classify.prototype.handleColorChooserClose = function(colorRange){
+    classify.prototype.handleColorChooserClose = function(colorRange) {
         $('.color-input').val(colorRange);
         this.colors = colorRange;
         this.generateClasses();
     };
 
-    classify.prototype.handleNumberClassesChange = function(event){
+    classify.prototype.handleNumberClassesChange = function(event) {
         var nbClassesInput = $(event.target);
-        if(nbClassesInput){
+        if(nbClassesInput) {
             this.nbClasses = nbClassesInput.val();
             this.generateClasses();
         }
