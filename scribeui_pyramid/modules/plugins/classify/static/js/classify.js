@@ -4,7 +4,6 @@ jQuery(function() { $(document).ready(function() {
     function classify() {
         this.name = "Data Classification Plug-in";
         this.colorChooser = new colorMenu();
-        this.classes = [];
 
         //A few variables to save locally
         this.classType = "";
@@ -15,6 +14,7 @@ jQuery(function() { $(document).ready(function() {
         this.startValue = 0;
         this.endValue = 0;
         this.values = [];
+        this.fieldType = "";
     }
 
     //static enum of syntax styles
@@ -209,9 +209,14 @@ jQuery(function() { $(document).ready(function() {
     classify.prototype.generateQualitativeExpression =
             function(field, value) {
 
-        var baseExp = '(\'[FIELD]\' = \'VALUE\')'
-            .replace('FIELD', field)
-            .replace('VALUE', value);
+        if(this.fieldType.toLowerCase() == "string") {
+            var baseExp = '(\'[FIELD]\' = \'VALUE\')';
+        } else {
+            var baseExp = '([FIELD] = VALUE)';
+        }
+
+        baseExp = baseExp.replace('FIELD', field)
+        baseExp = baseExp.replace('VALUE', value);
 
         return baseExp;
     };
@@ -253,8 +258,90 @@ jQuery(function() { $(document).ready(function() {
             output += classText;
         }
 
-        console.log(output);
         return output;
+    };
+
+    /*  Insert the classes text into the correct group
+     *  Parameters:
+     *      text:string, text to insert
+     *      group:Group, group to insert the text in
+     *      datasource:string, after which datasource to insert the text
+     */
+    classify.prototype.insertText = function(text, group, datasource) {
+        //Get group content
+        var groupLines = group.content.split('\n');
+
+        //Find the datasource
+        var nbLines = groupLines.length;
+        var lineIndex = -1;
+        for(var i = 0; i < nbLines && lineIndex == -1; i++) {
+            var index = groupLines[i].indexOf(datasource);
+            if(index != -1){
+                lineIndex = i;
+            }
+        }
+
+        var indent = '';
+        var line = groupLines[lineIndex];
+        var dataLine = '';
+        var insertPosition;
+
+        //Find where to insert the data
+        if(line.toUpperCase().indexOf('DATA') != -1) {
+            //Data located on a single line
+            dataLine = line;
+            insertPosition = lineIndex;
+        } else {
+            //Data located in a { ... } block
+            //Get data line
+            for(var i = lineIndex; i >= 0 && !dataLine; i--) {
+                if(groupLines[i].toUpperCase().indexOf('DATA') != -1) {
+                    dataLine = groupLines[i];
+                }
+            }
+            //Find where to insert it
+            for(var i = lineIndex; i < nbLines && !insertPosition; i++) {
+                if(groupLines[i].indexOf('}') != -1) {
+                    insertPosition = i;
+                }
+            }
+        }
+
+        //Get indentation
+        var indentRegex = /(\s*)/;
+        indent = indentRegex.exec(dataLine)[0];
+
+        //Rebuild group
+        var output = ''
+        for(var i = 0; i < nbLines; i++) {
+            output += groupLines[i] + '\n';
+            if(i == insertPosition){
+                var textLines = text.split('\n');
+                var nbTextLines = textLines.length;
+                for(var j = 0; j < nbTextLines; j++) {
+                    output += indent + textLines[j] + '\n';
+                }
+            }
+        }
+
+        //Open the interface at the right place
+        ScribeUI.UI.openSecondaryPanel(ScribeUI.editorManager.get('groups'));
+        ScribeUI.UI.editor.groupSelect().val(group.name).trigger('change');
+        ScribeUI.UI.editor.groupSelect().trigger('chosen:updated');
+
+        //Set the value
+        var editor = ScribeUI.editorManager.get('groups').CMEditor;
+        editor.setValue(output);
+
+        /* Scroll to taken from
+        http://codemirror.977696.n3.nabble.com/Scroll-to-line-td4028275.html
+        */
+        var h = editor.getScrollInfo().clientHeight;
+        var coords = editor.charCoords({line: insertPosition, ch: 0}, "local");
+        editor.scrollTo(null, (coords.top + coords.bottom - h) / 2);
+
+        //Save the changes
+        ScribeUI.workspace.selectedMap.save();
     };
 
 
@@ -262,7 +349,6 @@ jQuery(function() { $(document).ready(function() {
      *  values by the generateClasses function.
      *  Parameters:
      *      syntax:SyntaxEnum, syntax used for the map
-     *      addColors:bool, add a style tag for colors or not.
      *  Returns: Array of 3 strings:
      *      start: Start of the class, until the style section
      *      style: Style section, sent seperatly to allow not using it
@@ -491,6 +577,8 @@ jQuery(function() { $(document).ready(function() {
                 fieldInfo.append("\nNumber of values: " + result.nb_values);
                 fieldInfo.append("\nUnique values: " + result.unique_values);
 
+                self.fieldType = fieldType;
+
                 switch(fieldType) {
                     case "String":
                         //Don't let the users classify strings in a sequence
@@ -612,7 +700,16 @@ jQuery(function() { $(document).ready(function() {
 
     classify.prototype.handleClassifyButtonClick = function(event) {
         var classes = this.generateClasses();
-        this.generateText(classes);
+        var output = this.generateText(classes);
+
+        var group = ScribeUI.workspace.openedMap.getGroupByName(
+            $('#classify-input-group').val()
+        );
+        var datasource = $('#classify-input-datasource').val();
+
+        this.insertText(output, group, datasource);
+
+        $('#classify-dialog').dialog('close');
     }
 
     classify.prototype.handleSetValuesComplete = function(values) {
