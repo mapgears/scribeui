@@ -80,9 +80,7 @@ jQuery(function() { $(document).ready(function() {
             modal: true,
             title: "Classify",
             buttons: {
-                Classify: function() {
-                    console.log("Hello");
-                },
+                Classify: $.proxy(this.handleClassifyButtonClick, this),
                 Cancel: function() {
                     $(this).dialog("close");
                 }
@@ -216,6 +214,15 @@ jQuery(function() { $(document).ready(function() {
             .replace('VALUE', value);
 
         return baseExp;
+    };
+
+
+    /*  This function generates the text to insert into the map file
+     *  Parameters:
+     *      classes:array
+     */
+    classify.prototype.generateText = function(classes) {
+        console.log("Hello jello");
     };
 
 
@@ -445,11 +452,20 @@ jQuery(function() { $(document).ready(function() {
 
                 switch(fieldType) {
                     case "String":
+                        //Don't let the users classify strings in a sequence
+                        self.setClassTypeDropdownOptions(['Qualitative']);
                         break;
                     case "Real":
                     case "Integer":
+                        //Let the users classify numbers like they want
+                        self.setClassTypeDropdownOptions(
+                            ['Sequential', 'Qualitative']);
+
+                        //Display minimum and maximum
                         fieldInfo.append("\nMinimum: " + result.minimum);
                         fieldInfo.append("\nMaximum: " + result.maximum);
+
+                        //Set start and end value
                         self.startValue = result.minimum;
                         self.endValue = result.maximum;
                         break;
@@ -482,6 +498,29 @@ jQuery(function() { $(document).ready(function() {
                 }
             });
         }
+    };
+
+
+    /*  Set the different options in the 'Class type' dropdown
+     *  Parameters:
+     *      options:array, array of strings to insert as options
+     */
+
+    classify.prototype.setClassTypeDropdownOptions = function(options) {
+        //Get the element
+        var dropdown = $('#classify-input-classType');
+
+        //Remove existing options
+        dropdown.empty();
+
+        //Insert new options
+        var nbOptions = options.length;
+        for(var i = 0; i < nbOptions; i++) {
+            dropdown.append('<option>' + options[i] + '</option>');
+        }
+        
+        //Call change handler
+        dropdown.change();
     };
 
     //Event handlers
@@ -529,6 +568,11 @@ jQuery(function() { $(document).ready(function() {
             $.proxy(this.handleNumberClassesChange, this)
         );
     };
+
+    classify.prototype.handleClassifyButtonClick = function(event) {
+        var classes = this.generateClasses();
+        this.generateText(classes);
+    }
 
     classify.prototype.handleSetValuesComplete = function(values) {
         this.values = values;
