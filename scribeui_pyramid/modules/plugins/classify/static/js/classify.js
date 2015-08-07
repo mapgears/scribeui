@@ -209,7 +209,7 @@ jQuery(function() { $(document).ready(function() {
     classify.prototype.generateQualitativeExpression =
             function(field, value) {
 
-        var baseExp = '([FIELD] = "VALUE")'
+        var baseExp = '(\'[FIELD]\' = \'VALUE\')'
             .replace('FIELD', field)
             .replace('VALUE', value);
 
@@ -222,7 +222,39 @@ jQuery(function() { $(document).ready(function() {
      *      classes:array
      */
     classify.prototype.generateText = function(classes) {
-        console.log("Hello jello");
+        var nbClasses = classes.length;
+        var output = "";
+        for(var i = 0; i < nbClasses; i++) {
+            //Get the base class, split in three sections
+            var baseClass = this.getBaseClass(this.syntax);
+            var classText = "";
+
+            if(classes[i].color) {
+                //Replace color flag
+                baseClass['style'] = baseClass['style'].replace(
+                    '[FLAGCOLOR]', classes[i].color
+                );
+
+                //Create text for this class
+                classText =
+                    baseClass['start'] +
+                    baseClass['style'] +
+                    baseClass['end'];
+            } else {
+                //Create text for this class
+                classText =
+                    baseClass['start'] +
+                    baseClass['end'];
+            }
+
+            //Replace expression flag
+            classText = classText.replace(
+                '[FLAGEXPRESSION]', classes[i].expression);
+            output += classText;
+        }
+
+        console.log(output);
+        return output;
     };
 
 
@@ -231,8 +263,12 @@ jQuery(function() { $(document).ready(function() {
      *  Parameters:
      *      syntax:SyntaxEnum, syntax used for the map
      *      addColors:bool, add a style tag for colors or not.
+     *  Returns: Array of 3 strings:
+     *      start: Start of the class, until the style section
+     *      style: Style section, sent seperatly to allow not using it
+     *      end: End of the class
      */
-    classify.prototype.getBaseClass = function(syntax, addColors) {
+    classify.prototype.getBaseClass = function(syntax) {
         var classStart, classEnd, style;
 
         switch(syntax) {
@@ -260,10 +296,11 @@ jQuery(function() { $(document).ready(function() {
                 break;
         }
 
-        if(!addColors) {
-            style = '';
-        }
-        return classStart + style + classEnd;
+        return {
+            "start": classStart,
+            "style": style,
+            "end": classEnd
+        };
     };
 
 
