@@ -41,6 +41,11 @@ input.color-input{
     width: 130px;
 }
 
+span.novalue{
+    color: #aaaaaa;
+    font-style: italic;
+}
+
 .left-panel{
     float: left;
     width: 350px;

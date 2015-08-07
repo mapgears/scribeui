@@ -311,13 +311,17 @@ jQuery(function() { $(document).ready(function() {
                     '<tr><th class="color-col">Color</th>' +
                     '<th>Value</th></tr>');
                 for(var i = 0; i < nbClasses; i++) {
+                    var value = classes[i].value;
+                    if(!value) {
+                        value = '<span class="novalue">Empty (null)</span>';
+                    }
                     var row = ['',
                         '<tr>',
                             '<td class="color-col" bgcolor = "',
                                 classes[i].color,
                             '"/>',
                             '<td>',
-                                classes[i].value,
+                                value,
                             '</td>',
                         '</tr>'
                     ].join('');
@@ -518,7 +522,7 @@ jQuery(function() { $(document).ready(function() {
         for(var i = 0; i < nbOptions; i++) {
             dropdown.append('<option>' + options[i] + '</option>');
         }
-        
+
         //Call change handler
         dropdown.change();
     };
