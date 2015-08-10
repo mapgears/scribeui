@@ -22,6 +22,7 @@ jQuery(function() { $(document).ready(function() {
         this.startValue = 0;
         this.endValue = 0;
         this.values = null;
+        this.orderedValues = [];
         this.fieldType = "";
     }
 
@@ -185,9 +186,40 @@ jQuery(function() { $(document).ready(function() {
                 bounds[1] = min + (step * (classIndex + 1));
                 break;
             case "Quantile (Equal Count)":
-                //Get values if not set
+                var keys = this.getKeys(this.values);
+                var nbKeys = keys.length;
+                var nbValues = 0;
+
+                //Get the nb of values
+                for(var i = 0; i < nbKeys; i++) {
+                    nbValues += this.values[keys[i]];
+                }
+
+                //Get and sort all values
+                if(this.orderedValues.length == 0) {
+                    var array = [];
+                    for(var i = 0; i < nbValues; i++) {
+                        for(var j = 0; j < this.values[keys[i]]; j++) {
+                            array.push(parseFloat(keys[i]));
+                        }
+                    }
+                    this.orderedValues = array.sort(
+                        function(a, b){return a - b});
+                }
+
+                var nbItemsPerClass = nbValues / nbClasses;
+
+                var lowerPos = Math.round(nbItemsPerClass * classIndex);
+                var upperPos = Math.round(nbItemsPerClass * (classIndex + 1));
+                if(upperPos >= this.orderedValues.length) {
+                    upperPos = this.orderedValues.length - 1;
+                }
+
+                bounds[0] = this.orderedValues[lowerPos];
+                bounds[1] = this.orderedValues[upperPos];
                 break;
         }
+
         return bounds;
     };
 
@@ -243,7 +275,7 @@ jQuery(function() { $(document).ready(function() {
                         this.field, lowerBound, upperBound);
 
                     for(var j = 0; j < keys.length; j++) {
-                        if(keys[j] >= lowerBound && keys[j] <= upperBound) {
+                        if(keys[j] >= lowerBound && keys[j] < upperBound) {
                             occurrences += this.values[keys[j]];
                         }
                     }
@@ -776,6 +808,7 @@ jQuery(function() { $(document).ready(function() {
 
     classify.prototype.handleGetValuesComplete = function(result) {
         this.values = result.data_dict;
+        this.orderedValues = [];
         this.getFieldInfo(this.field, result);
         this.generateClasses();
     };
