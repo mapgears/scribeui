@@ -1,5 +1,13 @@
 jQuery(function() { $(document).ready(function() {
 
+    //Initialisation functions
+
+    //static enum of syntax styles
+    classify.SyntaxEnum = Object.freeze({
+        MAPSERVER: 0,
+        SCRIBE: 1
+    });
+
     //Plugin attributes
     function classify() {
         this.name = "Data Classification Plug-in";
@@ -16,23 +24,6 @@ jQuery(function() { $(document).ready(function() {
         this.values = [];
         this.fieldType = "";
     }
-
-    //static enum of syntax styles
-    classify.SyntaxEnum = Object.freeze({
-        MAPSERVER: 0,
-        SCRIBE: 1
-    });
-
-    //Get the current map's syntax, return a SyntaxEnum
-    classify.getOpenedMapSyntax = function() {
-        var syntaxString = ScribeUI.workspace.openedMap.type;
-        switch(syntaxString) {
-            case "Scribe":
-                return classify.SyntaxEnum.SCRIBE;
-            case "Standard":
-                return classify.SyntaxEnum.MAPSERVER;
-        }
-    };
 
     //Function ran when the plugin is loaded
     classify.prototype.init = function() {
@@ -93,6 +84,97 @@ jQuery(function() { $(document).ready(function() {
     classify.prototype.onMapOpened = function() {
         $('#btn-classify').button('enable');
     };
+
+
+    /*  Function to generate a table from classes
+     *  Parameters:
+     *      classes:array, array of class "objects"
+     *      classType:string, Sequential or Qualitative
+     */
+    classify.prototype.displayClasses = function(classes, classType) {
+        //Get the table elements
+        var tableHeader = $('#classify-class-table-header');
+        var tableContent = $('#classify-class-table-content');
+
+        //Empty the table
+        tableHeader.empty();
+        tableContent.empty();
+
+        //Create the rows
+        var nbClasses = classes.length;
+        switch(classType) {
+            case 'Sequential':
+                tableHeader.append(
+                    '<tr><th class="color-col">Color</th>' +
+                    '<th>Lower bound</th><th>Upper bound</th></tr>'
+                );
+                for(var i = 0; i < nbClasses; i++) {
+                    var row = ['',
+                        '<tr>',
+                            '<td class="color-col" bgcolor = "',
+                                classes[i].color,
+                                '"/>',
+                            '<td>',
+                                classes[i].lowerBound,
+                            '</td>',
+                            '<td>',
+                                classes[i].upperBound,
+                            '</td>',
+                        '</tr>'
+                    ].join('');
+                    tableContent.append(row);
+                }
+                break;
+            case 'Qualitative':
+                tableHeader.append(
+                    '<tr><th class="color-col">Color</th>' +
+                    '<th>Value</th></tr>');
+                for(var i = 0; i < nbClasses; i++) {
+                    var value = classes[i].value;
+                    if(!value) {
+                        value = '<span class="novalue">Empty (null)</span>';
+                    }
+                    var row = ['',
+                        '<tr>',
+                            '<td class="color-col" bgcolor = "',
+                                classes[i].color,
+                            '"/>',
+                            '<td>',
+                                value,
+                            '</td>',
+                        '</tr>'
+                    ].join('');
+                    tableContent.append(row);
+                }
+                break;
+        }
+    };
+
+
+    // Generator functions
+
+    /*  This function generates class bounds using different techniques
+     *  Parameters:
+     *      mode:string, type of classes to generate
+     *      nbClasses:number, number of classes in total
+     *      classIndex:number, the index of the current class to generate
+     *      min:number, the minimum value
+     *      max:number, the maximum value
+     */
+    classify.prototype.generateBounds = function(
+            mode, nbClasses, classIndex, min, max) {
+
+        var bounds = [null, null];
+        switch(mode) {
+            case "Equal intervals":
+                var step = (max - min) / nbClasses;
+                bounds[0] = min + (step * classIndex);
+                bounds[1] = min + (step * (classIndex + 1));
+                break;
+        }
+        return bounds;
+    };
+
 
     /*  This function is the core of the classify plugin. It generates
      *  classes to add to the map file.
@@ -160,47 +242,6 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
-    /*  This function generates class bounds using different techniques
-     *  Parameters:
-     *      mode:string, type of classes to generate
-     *      nbClasses:number, number of classes in total
-     *      classIndex:number, the index of the current class to generate
-     *      min:number, the minimum value
-     *      max:number, the maximum value
-     */
-    classify.prototype.generateBounds = function(
-            mode, nbClasses, classIndex, min, max) {
-
-        var bounds = [null, null];
-        switch(mode) {
-            case "Equal intervals":
-                var step = (max - min) / nbClasses;
-                bounds[0] = min + (step * classIndex);
-                bounds[1] = min + (step * (classIndex + 1));
-                break;
-        }
-        return bounds;
-    };
-
-
-    /*  This function generates an expression tag for a sequential class
-     *  Parameters:
-     *      field:string, the field to evaluate
-     *      lowerBound:number,
-     *      upperBound:number
-     */
-    classify.prototype.generateSequentialExpression =
-            function(field, lowerBound, upperBound) {
-
-        var baseExp = '([FIELD] >= LOWERBOUND AND [FIELD] <= UPPERBOUND)'
-            .replace(/FIELD/g, field)
-            .replace('LOWERBOUND', lowerBound)
-            .replace('UPPERBOUND', upperBound);
-
-        return baseExp;
-    };
-
-
     /*  This function generates an expression tag for a qualitative class
      *  Parameters:
      *      field:string, the field to evaluate
@@ -217,6 +258,24 @@ jQuery(function() { $(document).ready(function() {
 
         baseExp = baseExp.replace('FIELD', field)
         baseExp = baseExp.replace('VALUE', value);
+
+        return baseExp;
+    };
+
+
+    /*  This function generates an expression tag for a sequential class
+     *  Parameters:
+     *      field:string, the field to evaluate
+     *      lowerBound:number,
+     *      upperBound:number
+     */
+    classify.prototype.generateSequentialExpression =
+            function(field, lowerBound, upperBound) {
+
+        var baseExp = '([FIELD] >= LOWERBOUND AND [FIELD] <= UPPERBOUND)'
+            .replace(/FIELD/g, field)
+            .replace('LOWERBOUND', lowerBound)
+            .replace('UPPERBOUND', upperBound);
 
         return baseExp;
     };
@@ -260,6 +319,7 @@ jQuery(function() { $(document).ready(function() {
 
         return output;
     };
+
 
     /*  Insert the classes text into the correct group
      *  Parameters:
@@ -345,6 +405,8 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
+    //Getter functions
+
     /*  This function returns a "base" class to be filled with useful
      *  values by the generateClasses function.
      *  Parameters:
@@ -390,116 +452,7 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
-    /*  Function to generate a table from classes
-     *  Parameters:
-     *      classes:array, array of class "objects"
-     *      classType:string, Sequential or Qualitative
-     */
-    classify.prototype.displayClasses = function(classes, classType) {
-        //Get the table elements
-        var tableHeader = $('#classify-class-table-header');
-        var tableContent = $('#classify-class-table-content');
-
-        //Empty the table
-        tableHeader.empty();
-        tableContent.empty();
-
-        //Create the rows
-        var nbClasses = classes.length;
-        switch(classType) {
-            case 'Sequential':
-                tableHeader.append(
-                    '<tr><th class="color-col">Color</th>' +
-                    '<th>Lower bound</th><th>Upper bound</th></tr>'
-                );
-                for(var i = 0; i < nbClasses; i++) {
-                    var row = ['',
-                        '<tr>',
-                            '<td class="color-col" bgcolor = "',
-                                classes[i].color,
-                                '"/>',
-                            '<td>',
-                                classes[i].lowerBound,
-                            '</td>',
-                            '<td>',
-                                classes[i].upperBound,
-                            '</td>',
-                        '</tr>'
-                    ].join('');
-                    tableContent.append(row);
-                }
-                break;
-            case 'Qualitative':
-                tableHeader.append(
-                    '<tr><th class="color-col">Color</th>' +
-                    '<th>Value</th></tr>');
-                for(var i = 0; i < nbClasses; i++) {
-                    var value = classes[i].value;
-                    if(!value) {
-                        value = '<span class="novalue">Empty (null)</span>';
-                    }
-                    var row = ['',
-                        '<tr>',
-                            '<td class="color-col" bgcolor = "',
-                                classes[i].color,
-                            '"/>',
-                            '<td>',
-                                value,
-                            '</td>',
-                        '</tr>'
-                    ].join('');
-                    tableContent.append(row);
-                }
-                break;
-        }
-    };
-
-
-    /*  This function gets any data source in a group using a regex.
-     *  Parameters:
-     *      group:Group, contains the text to parse for datasources
-     */
-    classify.prototype.updateDatasources = function(group) {
-        var datasources = [];
-        //Get data formatted with DATA or DATA: in a single line
-        var singleLineRegex = /^[\t\ ]*DATA[\ :]*(['"](.*)['"])/gm;
-        var match = singleLineRegex.exec(group.content);
-        while(match !== null) {
-            datasources.push(match[2]);
-            match = singleLineRegex.exec(group.content);
-        }
-
-        //Get data formatted over multiple lines with DATA { ... }
-        var multilineRegex = /(^|[\ \t]+)DATA[\ \t]*\{((.|[\n\r])*?)\}/gm;
-        match = multilineRegex.exec(group.content);
-        while(match !== null) {
-            //get each datasource in a DATA {} block
-            var innerDataRegex = /['"](.*)['"]/gm;
-            var innerMatch = innerDataRegex.exec(match[2]);
-            while(innerMatch !== null) {
-                datasources.push(innerMatch[1]);
-                innerMatch = innerDataRegex.exec(match[2]);
-            }
-            match = multilineRegex.exec(group.content);
-        }
-
-        datasources = $.unique(datasources); //Remove duplicates
-
-        //Clear the datasource dropdown
-        var dropdown = $('#classify-input-datasource');
-        dropdown.empty();
-
-        //Add datasources to the dropdown
-        $.each(datasources, function(i, item) {
-            dropdown.append($('<option>', {
-                value: item,
-                text: item
-            }));
-        });
-
-        dropdown.change();
-    };
-
+    // Look through the opened map to find where the data files are stored
     classify.prototype.getDatasourcePath = function() {
         var dropdownDatasources = $('#classify-input-datasource');
         var datasource = dropdownDatasources.val();
@@ -518,37 +471,11 @@ jQuery(function() { $(document).ready(function() {
             '/map/' + datasource;
     };
 
-    classify.prototype.updateFields = function() {
-        var datasource = this.getDatasourcePath();
-        $("#classify-field-info").hide();
-        $.ajax({
-            url: $API + "/classify/field/getlist",
-            type: "POST",
-            data: {
-                'datasource': datasource
-            },
-            success: function(result) {
-                var dropdown = $('#classify-input-field');
-                dropdown.empty();
 
-                if(result.errors.length > 0) {
-                    var fieldInfo = $("#classify-field-info");
-                    fieldInfo.show();
-                    fieldInfo.text(result.errors);
-                } else {
-                    //Clear the datasource dropdown
-                    $.each(result.fields, function(i, item) {
-                        dropdown.append($('<option>', {
-                            value: item,
-                            text: item
-                        }));
-                    });
-                    dropdown.change();
-                }
-            }
-        });
-    };
-
+    /*  This functions takes a field (String) and prints some informations
+     *  about it such as its type, minimum and maximum values. It is called
+     *  everytime a new field is selected
+     */
     classify.prototype.getFieldInfo = function(field) {
         var datasource = this.getDatasourcePath();
 
@@ -607,6 +534,119 @@ jQuery(function() { $(document).ready(function() {
         });
     };
 
+
+    //Get the current map's syntax, return a SyntaxEnum
+    classify.getOpenedMapSyntax = function() {
+        var syntaxString = ScribeUI.workspace.openedMap.type;
+        switch(syntaxString) {
+            case "Scribe":
+                return classify.SyntaxEnum.SCRIBE;
+            case "Standard":
+                return classify.SyntaxEnum.MAPSERVER;
+        }
+    };
+
+
+    /*  This function gets any data source in a group using a regex.
+     *  Parameters:
+     *      group:Group, contains the text to parse for datasources
+     */
+    classify.prototype.updateDatasources = function(group) {
+        var datasources = [];
+        //Get data formatted with DATA or DATA: in a single line
+        var singleLineRegex = /^[\t\ ]*DATA[\ :]*(['"](.*)['"])/gm;
+        var match = singleLineRegex.exec(group.content);
+        while(match !== null) {
+            datasources.push(match[2]);
+            match = singleLineRegex.exec(group.content);
+        }
+
+        //Get data formatted over multiple lines with DATA { ... }
+        var multilineRegex = /(^|[\ \t]+)DATA[\ \t]*\{((.|[\n\r])*?)\}/gm;
+        match = multilineRegex.exec(group.content);
+        while(match !== null) {
+            //get each datasource in a DATA {} block
+            var innerDataRegex = /['"](.*)['"]/gm;
+            var innerMatch = innerDataRegex.exec(match[2]);
+            while(innerMatch !== null) {
+                datasources.push(innerMatch[1]);
+                innerMatch = innerDataRegex.exec(match[2]);
+            }
+            match = multilineRegex.exec(group.content);
+        }
+
+        datasources = $.unique(datasources); //Remove duplicates
+
+        //Clear the datasource dropdown
+        var dropdown = $('#classify-input-datasource');
+        dropdown.empty();
+
+        //Add datasources to the dropdown
+        $.each(datasources, function(i, item) {
+            dropdown.append($('<option>', {
+                value: item,
+                text: item
+            }));
+        });
+
+        dropdown.change();
+    };
+
+
+    classify.prototype.updateFields = function() {
+        var datasource = this.getDatasourcePath();
+        $("#classify-field-info").hide();
+        $.ajax({
+            url: $API + "/classify/field/getlist",
+            type: "POST",
+            data: {
+                'datasource': datasource
+            },
+            success: function(result) {
+                var dropdown = $('#classify-input-field');
+                dropdown.empty();
+
+                if(result.errors.length > 0) {
+                    var fieldInfo = $("#classify-field-info");
+                    fieldInfo.show();
+                    fieldInfo.text(result.errors);
+                } else {
+                    //Clear the datasource dropdown
+                    $.each(result.fields, function(i, item) {
+                        dropdown.append($('<option>', {
+                            value: item,
+                            text: item
+                        }));
+                    });
+                    dropdown.change();
+                }
+            }
+        });
+    };
+
+
+    /*  Set the different options in the 'Class type' dropdown
+     *  Parameters:
+     *      options:array, array of strings to insert as options
+     */
+    classify.prototype.setClassTypeDropdownOptions = function(options) {
+        //Get the element
+        var dropdown = $('#classify-input-classType');
+
+        //Remove existing options
+        dropdown.empty();
+
+        //Insert new options
+        var nbOptions = options.length;
+        for(var i = 0; i < nbOptions; i++) {
+            dropdown.append('<option>' + options[i] + '</option>');
+        }
+
+        //Call change handler
+        dropdown.change();
+    };
+
+
     /*  This function gets every unique value for field and saves them to
      *  this.values using a callback
      */
@@ -629,28 +669,6 @@ jQuery(function() { $(document).ready(function() {
         }
     };
 
-
-    /*  Set the different options in the 'Class type' dropdown
-     *  Parameters:
-     *      options:array, array of strings to insert as options
-     */
-
-    classify.prototype.setClassTypeDropdownOptions = function(options) {
-        //Get the element
-        var dropdown = $('#classify-input-classType');
-
-        //Remove existing options
-        dropdown.empty();
-
-        //Insert new options
-        var nbOptions = options.length;
-        for(var i = 0; i < nbOptions; i++) {
-            dropdown.append('<option>' + options[i] + '</option>');
-        }
-
-        //Call change handler
-        dropdown.change();
-    };
 
     //Event handlers
     classify.prototype.handleDialogLoadComplete = function(content) {
@@ -698,6 +716,7 @@ jQuery(function() { $(document).ready(function() {
         );
     };
 
+
     classify.prototype.handleClassifyButtonClick = function(event) {
         var classes = this.generateClasses();
         var output = this.generateText(classes);
@@ -712,10 +731,12 @@ jQuery(function() { $(document).ready(function() {
         $('#classify-dialog').dialog('close');
     }
 
+
     classify.prototype.handleSetValuesComplete = function(values) {
         this.values = values;
         this.generateClasses();
     };
+
 
     classify.prototype.handleDropdownGroupsChange = function(event) {
         this.updateDatasources(
@@ -723,9 +744,11 @@ jQuery(function() { $(document).ready(function() {
                 $(event.target).val()));
     };
 
+
     classify.prototype.handleDropdownDatasourcesChange = function(event) {
         this.updateFields();
     };
+
 
     classify.prototype.handleDropdownFieldsChange = function(event) {
         var dropdownFieldsVal = $(event.target).val();
@@ -737,6 +760,7 @@ jQuery(function() { $(document).ready(function() {
             }
         }
     };
+
 
     classify.prototype.handleDropdownClassTypeChange = function(event) {
         var dropdownClassType = $(event.target);
@@ -755,17 +779,20 @@ jQuery(function() { $(document).ready(function() {
         this.generateClasses();
     };
 
+
     classify.prototype.handleColorButtonPress = function(event) {
         this.colorChooser.open(
             $.proxy(this.handleColorChooserClose, this)
         );
     };
 
+
     classify.prototype.handleColorChooserClose = function(colorRange) {
         $('.color-input').val(colorRange);
         this.colors = colorRange;
         this.generateClasses();
     };
+
 
     classify.prototype.handleNumberClassesChange = function(event) {
         var nbClassesInput = $(event.target);
