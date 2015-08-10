@@ -1,6 +1,7 @@
 from pyramid.view import view_config
 from osgeo import ogr
 from sets import Set
+import collections
 
 class ClassifyView(object):
     def __init__(self, request):
@@ -49,7 +50,8 @@ class ClassifyView(object):
             'minimum': None,
             'maximum': None,
             'nb_values': None,
-            'unique_values': None
+            'unique_values': None,
+            'data_dict': None
             }
 
         file = (self.request.registry.settings.get('workspaces.directory', '')
@@ -74,22 +76,37 @@ class ClassifyView(object):
         field_defn = layer_defn.GetFieldDefn(layer_defn.GetFieldIndex(field))
         response['geom_type'] = field_defn.GetTypeName()
 
-        unique_values = Set()
-        for i in range(layer.GetFeatureCount()):
+        values = list()
+        nb_features = layer.GetFeatureCount()
+        for i in range(nb_features):
             feature = layer.GetFeature(i)
             field_value = feature.GetField(field)
             if type(field_value) is str:
                 field_value = field_value.decode('utf-8', 'ignore')
-            unique_values.add(field_value)
+            values.append(field_value)
 
         response['nb_values'] = i
-        response['unique_values'] = len(unique_values)
 
+        max_values = 2000
         if response['geom_type'] in ['Real', 'Integer']:
-            response['maximum'] = max(unique_values)
-            response['minimum'] = min(unique_values)
+            max_values = 10000000
+            response['maximum'] = max(values)
+            response['minimum'] = min(values)
 
-        response['values'] = list(unique_values)
+        counter=collections.Counter(values)
+        response['data_dict'] = counter
+
+        unique_values = len(counter.keys())
+
+        if unique_values > max_values:
+            response['data_dict'] = None
+            response['errors'].append('Too many different values: ' + str(unique_values))
+            return response
+
+        response['unique_values'] = unique_values
+
+
+
         response['status'] = 1
 
         return response

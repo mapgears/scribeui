@@ -21,7 +21,7 @@ jQuery(function() { $(document).ready(function() {
         this.mode = "";
         this.startValue = 0;
         this.endValue = 0;
-        this.values = [];
+        this.values = null;
         this.fieldType = "";
     }
 
@@ -106,7 +106,8 @@ jQuery(function() { $(document).ready(function() {
             case 'Sequential':
                 tableHeader.append(
                     '<tr><th class="color-col">Color</th>' +
-                    '<th>Lower bound</th><th>Upper bound</th></tr>'
+                    '<th>Lower bound</th><th>Upper bound</th>' +
+                    '<th>Occurrences</th>'
                 );
                 for(var i = 0; i < nbClasses; i++) {
                     var row = ['',
@@ -120,6 +121,9 @@ jQuery(function() { $(document).ready(function() {
                             '<td>',
                                 classes[i].upperBound,
                             '</td>',
+                            '<td>',
+                                classes[i].occurrences,
+                            '</td>',
                         '</tr>'
                     ].join('');
                     tableContent.append(row);
@@ -128,7 +132,7 @@ jQuery(function() { $(document).ready(function() {
             case 'Qualitative':
                 tableHeader.append(
                     '<tr><th class="color-col">Color</th>' +
-                    '<th>Value</th></tr>');
+                    '<th>Value</th><th>Occurrences</th></tr>');
                 for(var i = 0; i < nbClasses; i++) {
                     var value = classes[i].value;
                     if(!value) {
@@ -141,6 +145,9 @@ jQuery(function() { $(document).ready(function() {
                             '"/>',
                             '<td>',
                                 value,
+                            '</td>',
+                            '<td>',
+                                classes[i].occurrences,
                             '</td>',
                         '</tr>'
                     ].join('');
@@ -197,12 +204,14 @@ jQuery(function() { $(document).ready(function() {
 
         var classes = [];
         var nbClasses = 0;
+        var keys = this.getKeys(this.values);
+
         switch(this.classType) {
             case "Sequential":
                 nbClasses = this.nbClasses;
                 break;
             case "Qualitative":
-                nbClasses = this.values.length;
+                nbClasses = keys.length;
                 break;
         }
 
@@ -213,6 +222,7 @@ jQuery(function() { $(document).ready(function() {
             var upperBound = null;
             var value = null;
             var expression = null;
+            var occurrences = 0;
 
             //Get color
             if(this.colors[i]) {
@@ -231,11 +241,18 @@ jQuery(function() { $(document).ready(function() {
                     upperBound = bounds[1];
                     expression = this.generateSequentialExpression(
                         this.field, lowerBound, upperBound);
+
+                    for(var j = 0; j < keys.length; j++) {
+                        if(keys[j] >= lowerBound && keys[j] <= upperBound) {
+                            occurrences += this.values[keys[j]];
+                        }
+                    }
                     break;
                 case "Qualitative":
-                    value = this.values[i];
+                    value = keys[i];
                     expression = this.generateQualitativeExpression(
                         this.field, value);
+                    occurrences = this.values[keys[i]];
                     break;
             }
 
@@ -246,7 +263,8 @@ jQuery(function() { $(document).ready(function() {
                 "lowerBound": lowerBound,
                 "upperBound": upperBound,
                 "value": value,
-                "expression": expression
+                "expression": expression,
+                "occurrences": occurrences
             };
 
             //Add it to the classes array
@@ -533,6 +551,16 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
+    //Get an array of keys from a dictionnary
+    classify.prototype.getKeys = function(values) {
+        var array = [];
+        for (var key in values) {
+            array.push(key);
+        }
+        return array;
+    };
+
+
     //Get the current map's syntax, return a SyntaxEnum
     classify.getOpenedMapSyntax = function() {
         var syntaxString = ScribeUI.workspace.openedMap.type;
@@ -570,6 +598,10 @@ jQuery(function() { $(document).ready(function() {
             success: function(result) {
                 if(result.status == 1) {
                     self.handleGetValuesComplete(result);
+                } else {
+                    fieldInfo.text(result.errors);
+                    fieldInfo.show();
+                    loadSpinner.hide();
                 }
             }
         });
@@ -743,7 +775,7 @@ jQuery(function() { $(document).ready(function() {
 
 
     classify.prototype.handleGetValuesComplete = function(result) {
-        this.values = result.values;
+        this.values = result.data_dict;
         this.getFieldInfo(this.field, result);
         this.generateClasses();
     };

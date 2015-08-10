@@ -1,6 +1,6 @@
 #classify-class-table {
     margin: 5px;
-    width: 320px;
+    width: 410px;
 }
 
 #classify-class-table tr {
@@ -57,5 +57,5 @@ span.novalue{
 
 .right-panel{
     float: right;
-    width: 350px;
+    width: 420px;
 }
