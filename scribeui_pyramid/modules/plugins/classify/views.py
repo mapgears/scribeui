@@ -85,7 +85,7 @@ class ClassifyView(object):
                 field_value = field_value.decode('utf-8', 'ignore')
             values.append(field_value)
 
-        response['nb_values'] = i
+        response['nb_values'] = i+1
 
         max_values = 2000
         if response['geom_type'] in ['Real', 'Integer']:
