@@ -36,6 +36,10 @@
     overflow: auto;
 }
 
+#field-load-spinner{
+    margin-top: 50px;
+}
+
 input.color-input{
     margin-right: 8px;
     width: 130px;

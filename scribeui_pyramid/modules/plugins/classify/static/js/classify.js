@@ -148,6 +148,12 @@ jQuery(function() { $(document).ready(function() {
                 }
                 break;
         }
+
+        var loadSpinner = $('#field-load-spinner');
+        loadSpinner.hide();
+
+        var classTable = $('#classify-class-table');
+        classTable.show();
     };
 
 
@@ -171,6 +177,9 @@ jQuery(function() { $(document).ready(function() {
                 bounds[0] = min + (step * classIndex);
                 bounds[1] = min + (step * (classIndex + 1));
                 break;
+            case "Quantile (Equal Count)":
+                //Get values if not set
+                break;
         }
         return bounds;
     };
@@ -180,6 +189,12 @@ jQuery(function() { $(document).ready(function() {
      *  classes to add to the map file.
      */
     classify.prototype.generateClasses = function() {
+        var loadSpinner = $('#field-load-spinner');
+        loadSpinner.show();
+
+        var classTable = $('#classify-class-table');
+        classTable.hide();
+
         var classes = [];
         var nbClasses = 0;
         switch(this.classType) {
@@ -237,6 +252,7 @@ jQuery(function() { $(document).ready(function() {
             //Add it to the classes array
             classes.push(tmpClass);
         }
+
         this.displayClasses(classes, this.classType);
         return classes;
     };
@@ -476,62 +492,44 @@ jQuery(function() { $(document).ready(function() {
      *  about it such as its type, minimum and maximum values. It is called
      *  everytime a new field is selected
      */
-    classify.prototype.getFieldInfo = function(field) {
-        var datasource = this.getDatasourcePath();
-
-        var loadSpinner = $('#field-load-spinner');
-        loadSpinner.show();
+    classify.prototype.getFieldInfo = function(field, result) {
 
         var fieldInfo = $("#classify-field-info");
-        fieldInfo.hide();
 
-        var self = this;
-        $.ajax({
-            url: $API + "/classify/field/getinfo",
-            type: "POST",
-            data: {
-                'datasource': datasource,
-                'field': field,
-            },
-            success: function(result) {
-                var fieldType = result.geom_type;
+        var fieldType = result.geom_type;
 
-                fieldInfo.show();
-                loadSpinner.hide();
+        fieldInfo.text("Informations for field '" + field + "'");
+        fieldInfo.append("\nField type: " + fieldType);
+        fieldInfo.append("\nNumber of values: " + result.nb_values);
+        fieldInfo.append("\nUnique values: " + result.unique_values);
 
-                fieldInfo.text("Informations for field '" + field + "'");
-                fieldInfo.append("\nField type: " + fieldType);
-                fieldInfo.append("\nNumber of values: " + result.nb_values);
-                fieldInfo.append("\nUnique values: " + result.unique_values);
+        this.fieldType = fieldType;
 
-                self.fieldType = fieldType;
+        switch(fieldType) {
+            case "String":
+                //Don't let the users classify strings in a sequence
+                this.setClassTypeDropdownOptions(['Qualitative']);
+                break;
+            case "Real":
+            case "Integer":
+                //Let the users classify numbers like they want
+                this.setClassTypeDropdownOptions(
+                    ['Sequential', 'Qualitative']);
 
-                switch(fieldType) {
-                    case "String":
-                        //Don't let the users classify strings in a sequence
-                        self.setClassTypeDropdownOptions(['Qualitative']);
-                        break;
-                    case "Real":
-                    case "Integer":
-                        //Let the users classify numbers like they want
-                        self.setClassTypeDropdownOptions(
-                            ['Sequential', 'Qualitative']);
+                //Display minimum and maximum
+                fieldInfo.append("\nMinimum: " + result.minimum);
+                fieldInfo.append("\nMaximum: " + result.maximum);
 
-                        //Display minimum and maximum
-                        fieldInfo.append("\nMinimum: " + result.minimum);
-                        fieldInfo.append("\nMaximum: " + result.maximum);
+                //Set start and end value
+                this.startValue = result.minimum;
+                this.endValue = result.maximum;
+                break;
+            default:
+                break;
+        }
 
-                        //Set start and end value
-                        self.startValue = result.minimum;
-                        self.endValue = result.maximum;
-                        break;
-                    default:
-                        break;
-                }
-                self.generateClasses();
+        fieldInfo.show();
 
-            }
-        });
     };
 
 
@@ -544,6 +542,37 @@ jQuery(function() { $(document).ready(function() {
             case "Standard":
                 return classify.SyntaxEnum.MAPSERVER;
         }
+    };
+
+
+    /*  This function gets every unique value for field and saves them to
+     *  this.values using a callback
+     */
+    classify.prototype.getValues = function(field) {
+        var self = this;
+
+        var loadSpinner = $('#field-load-spinner');
+        loadSpinner.show();
+
+        var fieldInfo = $("#classify-field-info");
+        fieldInfo.hide();
+
+        var classTable = $('#classify-class-table');
+        classTable.hide();
+
+        $.ajax({
+            url: $API + "/classify/field/getdata",
+            type: "POST",
+            data: {
+                'datasource': self.getDatasourcePath(),
+                'field': field
+            },
+            success: function(result) {
+                if(result.status == 1) {
+                    self.handleGetValuesComplete(result);
+                }
+            }
+        });
     };
 
 
@@ -647,29 +676,6 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
-    /*  This function gets every unique value for field and saves them to
-     *  this.values using a callback
-     */
-    classify.prototype.setValues = function(field) {
-        var self = this;
-        if(field) {
-            $.ajax({
-                url: $API + "/classify/field/getdata",
-                type: "POST",
-                data: {
-                    'datasource': self.getDatasourcePath(),
-                    'field': field
-                },
-                success: function(result) {
-                    if(result.status == 1) {
-                        self.handleSetValuesComplete(result.values);
-                    }
-                }
-            });
-        }
-    };
-
-
     //Event handlers
     classify.prototype.handleDialogLoadComplete = function(content) {
 
@@ -714,6 +720,10 @@ jQuery(function() { $(document).ready(function() {
         $('#classify-input-numberClasses').change(
             $.proxy(this.handleNumberClassesChange, this)
         );
+
+        $('#classify-input-mode').change(
+            $.proxy(this.handleDropdownModeChange, this)
+        );
     };
 
 
@@ -732,8 +742,9 @@ jQuery(function() { $(document).ready(function() {
     }
 
 
-    classify.prototype.handleSetValuesComplete = function(values) {
-        this.values = values;
+    classify.prototype.handleGetValuesComplete = function(result) {
+        this.values = result.values;
+        this.getFieldInfo(this.field, result);
         this.generateClasses();
     };
 
@@ -754,10 +765,7 @@ jQuery(function() { $(document).ready(function() {
         var dropdownFieldsVal = $(event.target).val();
         if(dropdownFieldsVal !== null) {
             this.field = dropdownFieldsVal;
-            this.getFieldInfo(dropdownFieldsVal);
-            if(this.classType == "Qualitative") {
-                this.setValues(this.field);
-            }
+            this.getValues(this.field);
         }
     };
 
@@ -773,12 +781,16 @@ jQuery(function() { $(document).ready(function() {
             case 'Qualitative':
                 $('#classify-options-sequential').hide();
                 $('#classify-options-qualitative').show();
-                this.setValues(this.field);
                 break;
         }
         this.generateClasses();
     };
 
+
+    classify.prototype.handleDropdownModeChange = function(event) {
+        this.mode = $(event.target).val();
+        this.generateClasses();
+    }
 
     classify.prototype.handleColorButtonPress = function(event) {
         this.colorChooser.open(
