@@ -1,33 +1,11 @@
 function colorMenu(){
     this.colors = [];
+    this.selectedColor = null;
     var self = this;
 
     //Create the dialog
-    var dialogDiv = $('<div id="colorMenu-dialog"/>');
-    dialogDiv.load("classify/html/colorMenu.html", null, function() {
-        //Dialog done loading
-        dialogDiv.hide();
-        $('.main').append(dialogDiv);
-
-        //Setup events
-        //Add single color
-        $('#colorMenu-color-single-button').click(function(){
-            self.colors.push($('#colorMenu-color-single-input').val());
-            self.updateSelectedColors();
-        });
-
-        //Add color range
-        $('#colorMenu-color-range-button').click(function(){
-            var nbColors = parseInt($('#colorMenu-numberOfColors').val());
-            var color1 = $('#colorMenu-color1').val();
-            var color2 = $('#colorMenu-color2').val();
-            if(nbColors > 0 && color1 && color2){
-                var colorRange = self.generateColorRange(nbColors, color1, color2);
-                self.colors = $.merge(self.colors, colorRange);
-                self.updateSelectedColors();
-            }
-        });
-    });
+    $.get("classify/html/colorMenu.html", null,
+        $.proxy(this.handleDialogLoadComplete, this));
 }
 
 /*  Open the colorMenu dialog
@@ -67,9 +45,12 @@ colorMenu.prototype.updateSelectedColors = function(){
          );
         colorSquare.css('background-color', item);
         colorSquare.data("number", i);
-        colorSquare.click(function(){
-            self.colors.splice($(this).data("number"), 1);
-            self.updateSelectedColors();
+        colorSquare.click(function() {
+            if(self.selectedColor) {
+                self.selectedColor.removeClass('colorMenu-colorSquare-selected');
+            }
+            $(this).addClass('colorMenu-colorSquare-selected');
+            self.selectedColor = $(this);
         })
         colorsContainer.append(colorSquare);
     });
@@ -89,3 +70,96 @@ colorMenu.prototype.generateColorRange = function(
     colorRange.push(color2.toHexString());
     return colorRange;
 }
+
+colorMenu.prototype.handleDialogLoadComplete = function(content) {
+
+    var dialogDiv = $('<div id="colorMenu-dialog"/>');
+    dialogDiv.append(content);
+
+    //Dialog done loading
+    dialogDiv.hide();
+    $('.main').append(dialogDiv);
+
+    //Setup events
+    //Add single color
+    $('#colorMenu-color-single-button').click(
+        $.proxy(this.handleColorSingleButtonClick, this)
+    );
+
+    //Add color range
+    $('#colorMenu-color-range-button').click(
+        $.proxy(this.handleColorRangeButtonClick, this)
+    );
+
+    $('#colorMenu-remove').click(
+        $.proxy(this.handleRemoveButtonClick, this)
+    );
+
+    $('#colorMenu-move-left').click(
+        $.proxy(this.handleMoveLeftClick, this)
+    );
+
+    $('#colorMenu-move-right').click(
+        $.proxy(this.handleMoveRightClick, this)
+    );
+
+    $('#colorMenu-clear').click(
+        $.proxy(this.handleClearButtonClick, this)
+    );
+};
+
+colorMenu.prototype.handleRemoveButtonClick = function(event) {
+    var selectedIndex = this.selectedColor.data().number;
+    this.colors.splice(selectedIndex, 1);
+    this.updateSelectedColors();
+    this.selectedColor = null;
+};
+
+colorMenu.prototype.handleMoveLeftClick = function(event) {
+    var selectedIndex = this.selectedColor.data().number;
+    if(selectedIndex > 0) {
+        var tmpColor = this.colors[selectedIndex - 1];
+        this.colors[selectedIndex - 1] = this.colors[selectedIndex];
+        this.colors[selectedIndex] = tmpColor;
+        this.updateSelectedColors();
+
+        this.selectedColor = $($('.colorMenu-colorSquare')[selectedIndex - 1]);
+        this.selectedColor.addClass('colorMenu-colorSquare-selected');
+    }
+};
+
+colorMenu.prototype.handleMoveRightClick = function(event) {
+    var selectedIndex = this.selectedColor.data().number;
+    if(selectedIndex < this.colors.length - 1) {
+        var tmpColor = this.colors[selectedIndex + 1];
+        this.colors[selectedIndex + 1] = this.colors[selectedIndex];
+        this.colors[selectedIndex] = tmpColor;
+        this.updateSelectedColors();
+
+        this.selectedColor = $($('.colorMenu-colorSquare')[selectedIndex + 1]);
+        console.log(this.selectedColor);
+        this.selectedColor.addClass('colorMenu-colorSquare-selected');
+    }
+};
+
+colorMenu.prototype.handleClearButtonClick = function(event) {
+    this.colors = [];
+    this.updateSelectedColors();
+    this.selectedColor = null;
+};
+
+colorMenu.prototype.handleColorSingleButtonClick = function(event) {
+    this.colors.push($('#colorMenu-color-single-input').val());
+    this.updateSelectedColors();
+};
+
+colorMenu.prototype.handleColorRangeButtonClick = function(event) {
+    var nbColors = parseInt($('#colorMenu-numberOfColors').val());
+    var color1 = $('#colorMenu-color1').val();
+    var color2 = $('#colorMenu-color2').val();
+    if(nbColors > 0 && color1 && color2){
+        var colorRange = this.generateColorRange(nbColors, color1, color2);
+        this.colors = $.merge(this.colors, colorRange);
+        this.updateSelectedColors();
+    }
+};

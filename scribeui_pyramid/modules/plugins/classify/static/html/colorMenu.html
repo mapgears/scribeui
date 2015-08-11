@@ -8,8 +8,9 @@
             id="colorMenu-color-single-input" type="color"/>
         </td>
         <td>
-            <button type="button" id="colorMenu-color-single-button">
-                Add
+            <button type="button" id="colorMenu-color-single-button"
+                class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                <span class='ui-button-text'>Add</span>
             </button>
         </td>
     </tr>
@@ -28,8 +29,9 @@
             id="colorMenu-numberOfColors"/>
         </td>
         <td>
-            <button type="button" id="colorMenu-color-range-button">
-                Add
+            <button type="button" id="colorMenu-color-range-button"
+                class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                <span class='ui-button-text'>Add</span>
             </button>
         </td>
     </tr>
@@ -41,4 +43,25 @@
             <div class="colorMenu-selected-colors"/>
         </td>
     </tr>
+    <tr>
+        <td colspan="5">
+            <div class="colorMenu-controls">
+                <button type="button" id="colorMenu-remove"
+                    class='ui-button btn-group-first ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                    <span class='ui-button-text'>Remove</span>
+                </button>
+                <button type="button" id="colorMenu-move-left"
+                    class='ui-button btn-group-middle ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                    <span class='ui-button-text'>Move left</span>
+                </button>
+                <button type="button" id="colorMenu-move-right"
+                    class='ui-button btn-group-middle ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                    <span class='ui-button-text'>Move right</span>
+                </button>
+                <button type="button" id="colorMenu-clear"
+                    class='ui-button btn-group-last ui-widget ui-state-default ui-corner-all ui-button-text-only'>
+                    <span class='ui-button-text'>Clear</span>
+                </button>
+            </div>
+        </td>
 </table>

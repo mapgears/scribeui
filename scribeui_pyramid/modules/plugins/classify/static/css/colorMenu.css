@@ -25,7 +25,13 @@
     width: 100%;
 }
 
+.colorMenu-controls{
+    text-align: center;
+}
+
 .colorMenu-colorSquare{
+    position: relative;
+
     border: solid black 1px;
     float: left;
 
@@ -34,5 +40,11 @@
 }
 
 .colorMenu-colorSquare:hover{
-    border: solid red 1px;
+    outline: ridge orange 3px;
+    z-index: 2;
+}
+
+.colorMenu-colorSquare-selected{
+    outline: ridge lightgray 3px;
+    z-index: 1;
 }
