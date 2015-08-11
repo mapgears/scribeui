@@ -71,6 +71,13 @@ colorMenu.prototype.generateColorRange = function(
     return colorRange;
 }
 
+//Get color square from index
+colorMenu.prototype.getColorElementFromIndex = function(index) {
+    var colorElements = $('.colorMenu-colorSquare');
+    var element = colorElements[index];
+    return $(element);
+}
+
 colorMenu.prototype.handleDialogLoadComplete = function(content) {
 
     var dialogDiv = $('<div id="colorMenu-dialog"/>');
@@ -109,36 +116,41 @@ colorMenu.prototype.handleDialogLoadComplete = function(content) {
 };
 
 colorMenu.prototype.handleRemoveButtonClick = function(event) {
-    var selectedIndex = this.selectedColor.data().number;
-    this.colors.splice(selectedIndex, 1);
-    this.updateSelectedColors();
-    this.selectedColor = null;
+    if(this.selectedColor) {
+        var selectedIndex = this.selectedColor.data().number;
+        this.colors.splice(selectedIndex, 1);
+        this.updateSelectedColors();
+        this.selectedColor = null;
+    }
 };
 
 colorMenu.prototype.handleMoveLeftClick = function(event) {
-    var selectedIndex = this.selectedColor.data().number;
-    if(selectedIndex > 0) {
-        var tmpColor = this.colors[selectedIndex - 1];
-        this.colors[selectedIndex - 1] = this.colors[selectedIndex];
-        this.colors[selectedIndex] = tmpColor;
-        this.updateSelectedColors();
+    if(this.selectedColor) {
+        var selectedIndex = this.selectedColor.data().number;
+        if(selectedIndex > 0) {
+            var tmpColor = this.colors[selectedIndex - 1];
+            this.colors[selectedIndex - 1] = this.colors[selectedIndex];
+            this.colors[selectedIndex] = tmpColor;
+            this.updateSelectedColors();
 
-        this.selectedColor = $($('.colorMenu-colorSquare')[selectedIndex - 1]);
-        this.selectedColor.addClass('colorMenu-colorSquare-selected');
+            this.selectedColor = this.getColorElementFromIndex(selectedIndex - 1);
+            this.selectedColor.addClass('colorMenu-colorSquare-selected');
+        }
     }
 };
 
 colorMenu.prototype.handleMoveRightClick = function(event) {
-    var selectedIndex = this.selectedColor.data().number;
-    if(selectedIndex < this.colors.length - 1) {
-        var tmpColor = this.colors[selectedIndex + 1];
-        this.colors[selectedIndex + 1] = this.colors[selectedIndex];
-        this.colors[selectedIndex] = tmpColor;
-        this.updateSelectedColors();
+    if(this.selectedColor) {
+        var selectedIndex = this.selectedColor.data().number;
+        if(selectedIndex < this.colors.length - 1) {
+            var tmpColor = this.colors[selectedIndex + 1];
+            this.colors[selectedIndex + 1] = this.colors[selectedIndex];
+            this.colors[selectedIndex] = tmpColor;
+            this.updateSelectedColors();
 
-        this.selectedColor = $($('.colorMenu-colorSquare')[selectedIndex + 1]);
-        console.log(this.selectedColor);
-        this.selectedColor.addClass('colorMenu-colorSquare-selected');
+            this.selectedColor = this.getColorElementFromIndex(selectedIndex + 1);
+            this.selectedColor.addClass('colorMenu-colorSquare-selected');
+        }
     }
 };
 
