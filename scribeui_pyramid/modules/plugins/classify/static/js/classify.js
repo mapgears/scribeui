@@ -518,6 +518,34 @@ jQuery(function() { $(document).ready(function() {
     };
 
 
+    //Find connection information if there is any
+    classify.prototype.getConnection = function() {
+        var connectionRegex = /connection[: ]*\"(.*)\"/gi;
+        var map = ScribeUI.workspace.openedMap;
+        var texts = [];
+        var groups = map.groups;
+
+        texts.push(map.map); //Check in the map layer
+        texts.push(map.variables); //Check in the variables layer
+
+        var nbGroups = map.groups.length;
+        for(var i = 0; i < nbGroups; i++) {
+            //Check in every group
+            texts.push(groups[i]);
+        }
+
+        var nbTexts = texts.length;
+        for(var i = 0; i < nbTexts; i++) {
+            var connection = connectionRegex.exec(texts[i]);
+            if(connection && connection.length > 0) {
+                return connection[1];
+            }
+        }
+
+        return null;
+    }
+
+
     // Look through the opened map to find where the data files are stored
     classify.prototype.getDatasourcePath = function() {
         var dropdownDatasources = $('#classify-input-datasource');
@@ -610,6 +638,7 @@ jQuery(function() { $(document).ready(function() {
      */
     classify.prototype.getValues = function(field) {
         var self = this;
+        var originalDatasource = $('#classify-input-datasource').val();
 
         var loadSpinner = $('#field-load-spinner');
         loadSpinner.show();
@@ -624,7 +653,9 @@ jQuery(function() { $(document).ready(function() {
             url: $API + "/classify/field/getdata",
             type: "POST",
             data: {
+                'connection': self.getConnection(),
                 'datasource': self.getDatasourcePath(),
+                'original_datasource': originalDatasource,
                 'field': field
             },
             success: function(result) {
@@ -688,11 +719,13 @@ jQuery(function() { $(document).ready(function() {
 
     classify.prototype.updateFields = function() {
         var datasource = this.getDatasourcePath();
+        var connection = this.getConnection();
         $("#classify-field-info").hide();
         $.ajax({
             url: $API + "/classify/field/getlist",
             type: "POST",
             data: {
+                'connection': connection,
                 'datasource': datasource
             },
             success: function(result) {

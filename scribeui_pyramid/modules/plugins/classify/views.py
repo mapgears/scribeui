@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from osgeo import ogr
 from sets import Set
 import collections
+import re
 
 class ClassifyView(object):
     def __init__(self, request):
@@ -22,14 +23,18 @@ class ClassifyView(object):
 
         file = (self.request.registry.settings.get('workspaces.directory', '')
             + '/' + self.request.POST.get('datasource'))
+        connection = self.request.POST.get('connection')
+
 
         # Open the datasource
         datasource = ogr.Open(file)
         if not datasource:
             datasource = ogr.Open(file + '.shp')
             if not datasource:
-                response['errors'].append("No shapefile found for " + self.request.POST.get('datasource'))
-                return response
+                datasource = ogr.Open("PG: " + connection)
+                if not datasource:
+                    response['errors'].append("No shapefile found for " + file)
+                    return response
         layer = datasource.GetLayer()
         layer_defn = layer.GetLayerDefn()
         response['fields'] = [layer_defn.GetFieldDefn(i).GetName() for i in range(layer_defn.GetFieldCount())]
@@ -56,7 +61,10 @@ class ClassifyView(object):
 
         file = (self.request.registry.settings.get('workspaces.directory', '')
             + '/' + self.request.POST.get('datasource'))
+        connection = self.request.POST.get('connection')
+        use_db = False
         field = self.request.POST.get('field').encode('utf-8', 'ignore')
+        original_datasource = self.request.POST.get('original_datasource').encode('utf-8', 'ignore')
 
         try:
             field = self.request.POST.get('field').encode('utf-8', 'ignore')
@@ -69,17 +77,35 @@ class ClassifyView(object):
         if not datasource:
             datasource = ogr.Open(file + '.shp')
             if not datasource:
-                response['errors'].append("No shapefile found for " + file)
+                datasource = ogr.Open("PG: " + connection)
+                use_db = True
+                if not datasource:
+                    response['errors'].append("No shapefile found for " + file)
+                    return response
+
+        if use_db:
+            regex_result = re.search('(.*)\sfrom\s\((.*)\)', original_datasource, flags=re.IGNORECASE)
+            try:
+                layer = datasource.ExecuteSQL(regex_result.group(2))
+            except AttributeError:
+                response['errors'].append('Invalid query')
                 return response
-        layer = datasource.GetLayer()
+        else:
+            layer = datasource.GetLayer()
+
         layer_defn = layer.GetLayerDefn()
         field_defn = layer_defn.GetFieldDefn(layer_defn.GetFieldIndex(field))
-        response['geom_type'] = field_defn.GetTypeName()
+        try:
+            response['geom_type'] = field_defn.GetTypeName()
+        except AttributeError:
+            response['errors'].append('Invalid field')
+            return response
 
         values = list()
+        layer.ResetReading()
         nb_features = layer.GetFeatureCount()
         for i in range(nb_features):
-            feature = layer.GetFeature(i)
+            feature = layer.GetNextFeature()
             field_value = feature.GetField(field)
             if type(field_value) is str:
                 field_value = field_value.decode('utf-8', 'ignore')
