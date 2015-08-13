@@ -720,13 +720,16 @@ jQuery(function() { $(document).ready(function() {
     classify.prototype.updateFields = function() {
         var datasource = this.getDatasourcePath();
         var connection = this.getConnection();
+        var originalDatasource = $('#classify-input-datasource').val();
+
         $("#classify-field-info").hide();
         $.ajax({
             url: $API + "/classify/field/getlist",
             type: "POST",
             data: {
                 'connection': connection,
-                'datasource': datasource
+                'datasource': datasource,
+                'original_datasource': originalDatasource
             },
             success: function(result) {
                 var dropdown = $('#classify-input-field');

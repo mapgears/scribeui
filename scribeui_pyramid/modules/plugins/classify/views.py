@@ -24,18 +24,30 @@ class ClassifyView(object):
         file = (self.request.registry.settings.get('workspaces.directory', '')
             + '/' + self.request.POST.get('datasource'))
         connection = self.request.POST.get('connection')
-
+        original_datasource = self.request.POST.get('original_datasource').encode('utf-8', 'ignore')
+        use_db = False
 
         # Open the datasource
         datasource = ogr.Open(file)
         if not datasource:
             datasource = ogr.Open(file + '.shp')
             if not datasource:
+                use_db = True
                 datasource = ogr.Open("PG: " + connection)
                 if not datasource:
                     response['errors'].append("No shapefile found for " + file)
                     return response
-        layer = datasource.GetLayer()
+
+        if use_db:
+            regex_result = re.search('(.*)\sfrom\s\((.*)\)', original_datasource, flags=re.IGNORECASE)
+            try:
+                layer = datasource.ExecuteSQL(regex_result.group(2))
+            except AttributeError:
+                response['errors'].append('Invalid query')
+                return response
+        else:
+            layer = datasource.GetLayer()
+
         layer_defn = layer.GetLayerDefn()
         response['fields'] = [layer_defn.GetFieldDefn(i).GetName() for i in range(layer_defn.GetFieldCount())]
         response['status'] = 1
@@ -94,7 +106,14 @@ class ClassifyView(object):
             layer = datasource.GetLayer()
 
         layer_defn = layer.GetLayerDefn()
-        field_defn = layer_defn.GetFieldDefn(layer_defn.GetFieldIndex(field))
+        field_index = layer_defn.GetFieldIndex(field)
+
+        if field_index == -1:
+            response['errors'].append('Field "' + field + '" not found')
+            return response
+
+        field_defn = layer_defn.GetFieldDefn(field_index)
+
         try:
             response['geom_type'] = field_defn.GetTypeName()
         except AttributeError:
