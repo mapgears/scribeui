@@ -14,7 +14,7 @@ layout: default
 
 ## Before you start
 
-If you haven't installed ScribeUI yet, see [this guide](installation.html) first. 
+If you haven't installed ScribeUI yet, see [this guide](installation.html) first.
 
 ## Creating your first workspace
 
@@ -34,13 +34,13 @@ You will now see your workspace in the dropdown menu where _default_ was written
 
 After you've logged in to your new workspace, you will see this:
 
-![Manager](https://cloud.githubusercontent.com/assets/2997638/7815185/ec6cbeb4-0394-11e5-8fc3-254c842396b3.png)
+![Manager](https://cloud.githubusercontent.com/assets/2997638/9281301/21612506-4292-11e5-96ba-455caf2eafc4.png)
 
 This is the **Manager** tab, where you will find and create the maps in your workspace. On the upper left corner of the screen, there are two other tabs, **Editor** and **Browse**. These tabs won't be useful without a map, so they will be described later. On the upper right corner of the screen, there is a dropdown menu with the workspace's name. To return to the login screen, press on your workspace's name then **Logout**. On the bottom right, there is a dropdown menu. This is the **Points of interest** dropdown, which will also be described after we have a map.
 
 ### Creating a map
 
-Press on the **New Map** button on the left side of the screen to create a map. A popup will open: 
+Press on the **New Map** button on the left side of the screen to create a map. A popup will open:
 
 ![Creating a new map](https://cloud.githubusercontent.com/assets/2997638/7815407/26e82d02-0396-11e5-8c41-6f718649e208.png)
 
@@ -54,11 +54,11 @@ If you press on the **+** button at the bottom of the screen, two more options w
 
 When you're done, press on the **Create** button to create the map. It will now appear on the left part of the screen. Press on its thumbnail to show a preview and a few options:
 
-![Previewing a map](https://cloud.githubusercontent.com/assets/2997638/7815856/fa0c75a6-0398-11e5-8fca-2cdabd2c56f1.png)
+![Previewing a map](https://cloud.githubusercontent.com/assets/2997638/9281398/c881bb70-4292-11e5-9cf7-0b88d58b64df.png)
 
 Under the preview of the map, you will find seven options:
  * **Open map**: Opens the map in the right side of the screen, allows using the **Editor** and **Browse** tabs
- * **Export map**: Currently not implemented
+ * **Export map**: Export the map to a .zip file
  * **Delete map**: Deletes the map from the workspace
  * **Configure**: Use this to set a Git URL
  * **Pull**: Pulls the latest version of the configured project using Git
@@ -71,12 +71,12 @@ Press on **Open map** to open your new map. You should see a map of the world. O
 
 With your map open, you can now access the **Editor** tab, the second tab located in the upper left corner of your screen. In this interface, you will be able to modify the map:
 
-![Editor view](https://cloud.githubusercontent.com/assets/2997638/7818924/8c101706-03ac-11e5-890f-d1aab19dbef4.png)
+![Editor view](https://cloud.githubusercontent.com/assets/2997638/9281446/2becfe54-4293-11e5-8ae9-cd7f05961275.png)
 
 On the top left, there are two dropdown menus. In the first one, you have these options:
 
 * **Groups**: These are the layers of the map. If selected, the left part of the screen will only show the layer selected in the second dropdown. Otherwise, the layer selected will appear in the bottom left corner of the screen.
-* **Map**: This section is the Map section of a regular Mapfile. If the active map has been set to use the Scribe syntax, the code in the editor will also use that syntax. This is true for every option. 
+* **Map**: This section is the Map section of a regular Mapfile. If the active map has been set to use the Scribe syntax, the code in the editor will also use that syntax. This is true for every option.
 * **Variables**: The Scribe variables. This section will be empty if the map wasn't set to use the Scribe syntax since regular mapfiles do not have variables.
 * **Scales**: The numerical values for every scale level.
 * **Symbols**: The symbols definition file.
