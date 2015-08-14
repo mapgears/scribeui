@@ -7,7 +7,63 @@ import re
 class ClassifyView(object):
     def __init__(self, request):
         self.request = request
+        self.datasource = None
 
+    # Read a layer from a file or a connection
+    def get_layer(self, file, connection, original_datasource):
+        response = {
+            'layer': None,
+            'errors': []
+        }
+
+        use_db = False
+        layer = None
+
+        # Open the datasource as a file, as is
+        self.datasource = ogr.Open(file)
+        if not self.datasource:
+            # Open failed, try again by appending .shp to the file name
+            self.datasource = ogr.Open(file + '.shp')
+            if not self.datasource:
+                # Open failed, try to open a connection instead
+                use_db = True
+                self.datasource = ogr.Open("PG: " + connection)
+                if not self.datasource:
+                    # No valid shapefile, no valid connection
+                    response['errors'].append("No shapefile found for " + file)
+                    return response
+
+        if use_db:
+            # Additional steps to get the layer from the database
+            query = ''
+
+            # First, try the structure 'geometry from (SELECT column FROM table)'
+            regex_result = re.search('(.*)\sfrom\s\((.*)\)', original_datasource, flags=re.IGNORECASE)
+            if regex_result is None:
+                # If not found, try 'geometry from TABLE'
+                regex_result = re.search('\s*(.*\sfrom\s[^\s]+)', original_datasource, flags=re.IGNORECASE)
+                if regex_result is None:
+                    # Not a known form of data query
+                    response['errors'].append('Could not interpret the query')
+                    return response
+                else:
+                    query = 'SELECT ' + regex_result.group(1)
+            else:
+                query = regex_result.group(2)
+
+            # Execute the query to get the layer
+            try:
+                layer = self.datasource.ExecuteSQL(query)
+            except AttributeError:
+                response['errors'].append('Invalid query')
+                return response
+        else:
+            layer = self.datasource.GetLayer()
+
+        response['layer'] = layer
+        return response
+
+    # This view returns all fields of a table or shapefile
     @view_config(
         route_name='classify.field.getlist',
         permission='view',
@@ -27,32 +83,24 @@ class ClassifyView(object):
         original_datasource = self.request.POST.get('original_datasource').encode('utf-8', 'ignore')
         use_db = False
 
-        # Open the datasource
-        datasource = ogr.Open(file)
-        if not datasource:
-            datasource = ogr.Open(file + '.shp')
-            if not datasource:
-                use_db = True
-                datasource = ogr.Open("PG: " + connection)
-                if not datasource:
-                    response['errors'].append("No shapefile found for " + file)
-                    return response
+        layer_result = self.get_layer(file, connection, original_datasource)
+        if len(layer_result['errors']) > 0:
+            response['errors'].extend(layer_result['errors'])
+            return response
 
-        if use_db:
-            regex_result = re.search('(.*)\sfrom\s\((.*)\)', original_datasource, flags=re.IGNORECASE)
-            try:
-                layer = datasource.ExecuteSQL(regex_result.group(2))
-            except AttributeError:
-                response['errors'].append('Invalid query')
-                return response
-        else:
-            layer = datasource.GetLayer()
-
+        layer = layer_result['layer']
         layer_defn = layer.GetLayerDefn()
+
+        if layer_defn.GetFieldCount() == 0:
+            response['errors'].append('No valid fields found for this table')
+            return response
+
         response['fields'] = [layer_defn.GetFieldDefn(i).GetName() for i in range(layer_defn.GetFieldCount())]
+
         response['status'] = 1
         return response
 
+    # This view returns all the data for a field in a table or file
     @view_config(
         route_name='classify.field.getdata',
         permission='view',
@@ -85,26 +133,12 @@ class ClassifyView(object):
             return response
 
         # Open the datasource
-        datasource = ogr.Open(file)
-        if not datasource:
-            datasource = ogr.Open(file + '.shp')
-            if not datasource:
-                datasource = ogr.Open("PG: " + connection)
-                use_db = True
-                if not datasource:
-                    response['errors'].append("No shapefile found for " + file)
-                    return response
+        layer_result = self.get_layer(file, connection, original_datasource)
+        if len(layer_result['errors']) > 0:
+            response['errors'].extend(layer_result['errors'])
+            return response
 
-        if use_db:
-            regex_result = re.search('(.*)\sfrom\s\((.*)\)', original_datasource, flags=re.IGNORECASE)
-            try:
-                layer = datasource.ExecuteSQL(regex_result.group(2))
-            except AttributeError:
-                response['errors'].append('Invalid query')
-                return response
-        else:
-            layer = datasource.GetLayer()
-
+        layer = layer_result['layer']
         layer_defn = layer.GetLayerDefn()
         field_index = layer_defn.GetFieldIndex(field)
 
@@ -138,6 +172,7 @@ class ClassifyView(object):
             response['maximum'] = max(values)
             response['minimum'] = min(values)
 
+        # Placing the values in a counter allows storing the same values only once while keeping the amount of copies
         counter=collections.Counter(values)
         response['data_dict'] = counter
 
@@ -149,8 +184,6 @@ class ClassifyView(object):
             return response
 
         response['unique_values'] = unique_values
-
-
 
         response['status'] = 1
 

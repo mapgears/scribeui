@@ -739,6 +739,8 @@ jQuery(function() { $(document).ready(function() {
                     var fieldInfo = $("#classify-field-info");
                     fieldInfo.show();
                     fieldInfo.text(result.errors);
+                    var classTable = $('#classify-class-table');
+                    classTable.hide();
                 } else {
                     //Clear the datasource dropdown
                     $.each(result.fields, function(i, item) {
