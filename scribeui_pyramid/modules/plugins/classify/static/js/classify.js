@@ -63,6 +63,7 @@ jQuery(function() { $(document).ready(function() {
 
         var dialogDiv = $('#classify-dialog');
 
+        var self = this;
         //Open the dialog
         dialogDiv.dialog({
             autoOpen: false,
@@ -77,7 +78,17 @@ jQuery(function() { $(document).ready(function() {
                     $(this).dialog("close");
                 }
             },
-            close: function() {}
+            close: function() {
+                //Get the table content
+                var tableContent = $('#classify-class-table-content');
+
+                //Empty the table
+                tableContent.html('');
+
+                //Empty some larger attributes
+                this.values = null;
+                this.orderedValues = [];
+            }
         }).dialog("open");
     };
 
