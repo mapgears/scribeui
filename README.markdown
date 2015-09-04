@@ -116,9 +116,9 @@ Edit the proxy.cgi file and add your server host to the list of allowed hosts if
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
+        sudo make
         export CPLUS_INCLUDE_PATH=/usr/include/gdal
         export C_INCLUDE_PATH=/usr/include/gdal
-        sudo make
         make install
 
 This will download and install the required dependencies, setup the differents
