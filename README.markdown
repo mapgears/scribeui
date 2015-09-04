@@ -50,9 +50,9 @@ Create a file 'pyramid.wsgi' with the following content, editing the path to you
 
 You can use the Makefile to automatically setup ScribeUI for you, simply run:
 
+       sudo make
        export CPLUS_INCLUDE_PATH=/usr/include/gdal
        export C_INCLUDE_PATH=/usr/include/gdal
-       sudo make
        sudo chown -R youruser .
        make install
        sudo make perms
