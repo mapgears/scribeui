@@ -19,7 +19,6 @@ requires = [
     'waitress',
     'wtforms',
     'cryptacular',
-    'm2crypto',
     'psycopg2',
     'alembic',
     'fixture==1.5',
