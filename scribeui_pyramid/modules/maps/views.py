@@ -234,8 +234,9 @@ class APIMap(object):
                         for line in mapfile_lines:
                             line = line.strip()
                             index = line.find('UNITS')
-                            if index != -1:
+                            if index != -1 and line.find('SIZEUNITS') == -1:
                                 data['OLUnits'] = line[index+6:].replace(':', '').strip()
+                                break
 
                         try:
                             scales = json.loads(string2json(data['scales']))
