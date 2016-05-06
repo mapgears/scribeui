@@ -213,7 +213,12 @@ ScribeUI.Map.prototype.save = function(){
     ScribeUI.UI.logs.pre().text('');
 
     //Create the debugging query to be run with mapserv
-    queryString = self.WMSLayer.getFullRequestString().replace($SETTINGS.cgibin_url + "/mapserv?", '')
+    //Capture everything before map= and remove it.
+    var regexExp = /(.*\?)map=/
+    var match = regexExp.exec(self.WMSLayer.getFullRequestString())
+
+    queryString = self.WMSLayer.getFullRequestString().replace(match[1], '')
+    //Then add some debugging parameters
         + "&BBOX=" + self.WMSLayer.getTilesBounds().toBBOX()
         + '&WIDTH=' + self.WMSLayer.getImageSize().w
         + '&HEIGHT=' + self.WMSLayer.getImageSize().h;
