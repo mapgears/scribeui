@@ -5,12 +5,39 @@ layout: default
 
 # Installing ScribeUI
 
-First, [download the latest release of ScribeUI on github](https://github.com/mapgears/scribeui).
+## Install on Windows
 
-## Installing
+To install ScribeUI on Windows, you will need to use docker container:
+
+1) First, [download and install Docker Toolbox](https://www.docker.com/products/docker-toolbox).
+
+2) In Docker Toolbox run this command line to download ScribeUI docker image kindly provided by [@christianbeland](https://twitter.com/christianbeland)
+
+	$ docker pull christianbeland/scribeui-docker
+
+3) Run ScribeUI docker image for local usage
+
+	$ docker run --name scribeui -p 8080:80 -e "SCRIBEUI_URL=localhost:8080" -d christianbeland/scribeui-docker apachectl -D FOREGROUND
+
+4) Test your installation with this URL in your browser [http://localhost:8080/scribeui](http://localhost:8080/scribeui)
+
+5) Check your docker container status
+
+	$ docker ps
+	CONTAINER ID   IMAGE                            COMMAND                  CREATED     STATUS         PORTS     NAMES
+	1789dae582e0   christianbeland/scribeui-docker  "/opt/entrypoint apac"   9 days ago  Up 55 minutes  443/tcp, 0.0.0.0:8080->80/tcp   scribeui
+
+
+6) After running your container the first time with this scribeui docker image, you will be able to **Start/Stop** container on your laptop
+
+	$ docker stop scribeui
+	$ docker start scribeui
+
+## Install on Linux
 
 The following instruction installations were tested on ubuntu precise.
 
+First, [download the latest release of ScribeUI on github](https://github.com/mapgears/scribeui).
 
 **Requirements**
 
