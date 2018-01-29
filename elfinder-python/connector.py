@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import cgi
 ## CGI debug
 # import cgitb
@@ -89,7 +90,10 @@ if len(header) >= 1:
 if not response is None and status == 200:
 	# send file
 	if 'file' in response and isinstance(response['file'], file):
-		print response['file'].read()
+                sys.stdout.flush()
+                f = response['file']
+                for blk in iter(lambda: f.read(4096), ''):
+                        sys.stdout.write(blk)
 		response['file'].close()
 	# output json
 	else:
