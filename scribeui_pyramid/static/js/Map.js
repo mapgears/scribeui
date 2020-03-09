@@ -18,8 +18,10 @@
     this.updatedGroups = [];
     this.pois = [];
     this.errorWidgets = [];
+    this.OLScales = [];
 
     if(options){
+        this.OLScales = options.OLScales ? options.OLScales : this.OLScales; 
         this.id = options.id ? options.id : this.id;
         this.name = options.name ? options.name : this.name;
         this.url = options.url ? options.url : this.url;
