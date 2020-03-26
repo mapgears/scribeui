@@ -501,7 +501,7 @@ ScribeUI.Map.prototype.display = function(){
     if(this.OLUnits == "meters" || this.OLUnits == null){
         for(i in this.OLScales){
             scale = parseInt(this.OLScales[i]);
-            resolutions.push(scale * 72 / 25.4);
+            resolutions.push(scale * 0.0254 / 72);
         }
     }
 
