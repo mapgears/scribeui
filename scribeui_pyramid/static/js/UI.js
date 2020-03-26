@@ -613,6 +613,7 @@ ScribeUI.UI.resizeEditors = function(){
 }
 
 ScribeUI.UI.resizeMapViewport = function(){
+    /*
     if($('#logs').is(':visible')){
         $('#map').css("bottom", 30 + $('#logs').height() + "px");
     }
@@ -624,6 +625,7 @@ ScribeUI.UI.resizeMapViewport = function(){
     //This ugly fix refreshes the viewport size, fixes a bug where the viewport doesn't take its place back after resizing the logs
     ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='99%'
     setTimeout(function() { ScribeUI.workspace.openedMap.OLMap.viewPortDiv.style.height='100%'; }, 30);
+    */
 }
 
 ScribeUI.UI.openSecondaryPanel = function(editor){

@@ -495,16 +495,13 @@ ScribeUI.Map.prototype.searchLine = function(needle, haystack){
 }
 
 ScribeUI.Map.prototype.display = function(){
-    var scales = [];
+    var resolutions = [];
     var self = this;
 
     if(this.OLUnits == "meters" || this.OLUnits == null){
         for(i in this.OLScales){
-            scales.push(parseInt(this.OLScales[i]));
-        }
-    } else if(this.OLUnits == "dd"){
-        for(i in this.OLScales){
-            scales.push(this.OLScales[i]);
+            scale = parseInt(this.OLScales[i]);
+            resolutions.push(scale * 72 / 25.4);
         }
     }
 
@@ -516,9 +513,11 @@ ScribeUI.Map.prototype.display = function(){
             allOverlays: true,
             projection: projection,
             maxExtent: extent,
-            scales:  scales,
+            resolutions: resolutions,
             units: projection.getUnits()
         };
+
+        
 
         var OLMap = new OpenLayers.Map('map', mapOptions);
         //Openlayers control to display the current zoom level
@@ -553,8 +552,8 @@ ScribeUI.Map.prototype.display = function(){
                 format: "image/png"
             }, {
                 singleTile: true,
-                projection: projection//,
-				//resolutions: [156543.03390625, 78271.516953125, 39135.7584765625, 19567.87923828125, 9783.939619140625, 4891.9698095703125, 2445.9849047851562, 1222.9924523925781, 611.4962261962891, 305.74811309814453, 152.87405654907226, 76.43702827453613, 38.218514137268066, 19.109257068634033, 9.554628534317017, 4.777314267158508]
+                projection: projection,
+                resolutions: resolutions
             }
         );
 
