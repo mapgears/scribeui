@@ -626,19 +626,22 @@ img.load-spinner{
 	text-shadow: 1px 1px rgba(255,255,255,0.4);
 }
 #map div.olControlMousePosition{
-	bottom:2.5em;
-  font-size: small;
+    top: 3em;
+	bottom: initial;
+    font-size: small;
 }
 #map .olControlScale{
-	bottom:1em;
-  font-size: small;
+    top: 4.5em;
+    bottom: initial;
+    font-size: small;
 }
 #map .olCurrentZoomLevelControl{
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-shadow: 1px 1px rgba(255,255,255,0.4);
 	color:#444;
 	position:absolute;
-	bottom: 3em;
+    top: 1em;
+    bottom: initial;
 	right:3px;
 	display:block;
     font-size: 1.4em;
