@@ -1,5 +1,5 @@
 Chameleon==2.11
-Jinja2==2.6
+Jinja2==2.11.3
 Mako==0.7.3
 MarkupSafe==0.15
 PasteDeploy==1.5.0
