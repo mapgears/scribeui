@@ -34,7 +34,7 @@ transaction==1.4.1
 translationstring==1.1
 venusian==1.0a7
 waitress==0.8.2
-werkzeug==0.9.4
+werkzeug==0.15.5
 wsgiref==0.1.2
 zope.deprecation==4.0.2
 zope.interface==4.0.5
